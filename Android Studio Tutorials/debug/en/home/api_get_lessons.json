@@ -1,0 +1,85 @@
+[
+  {
+    "id": "1",
+    "title": "Start a new project",
+    "description": "Learn the base of how to start a new Android Studio project, how to configure, how to set package, API levels and many more…",
+    "type": "full_banner",
+    "tags": [
+      "Android Studio",
+      "Beginner",
+      "Project Setup"
+    ],
+    "bannerImageUrl": "https://i.ibb.co/Fz4DqDP/lesson-1-banner.png",
+    "deepLinkPath": "myapp://lesson_1"
+  },
+  {
+    "id": "2",
+    "title": "History of Android",
+    "description": "Learn about the history of Android, from its beta release in 2007 to becoming the world\\'s most popular mobile operating system. Discover the features that make Android unique and the benefits of using Android Studio to develop your apps with Kotlin.",
+    "type": "square_image",
+    "tags": [
+      "Android OS",
+      "Android UI",
+      "UI Development",
+      "Kotlin"
+    ],
+    "squareImageUrl": "https://i.ibb.co/pnBpw1f/hisotry-of-android.png",
+    "deepLinkPath": "myapp://lesson_2"
+  },
+  {
+    "id": "3",
+    "title": "View binding",
+    "description": "New in Android Studio 3.6, view binding gives you the ability to replace findViewById with generated binding objects to simplify code, remove bugs, and avoid all the boilerplate of findViewById.",
+    "type": "full_banner",
+    "deepLinkPath": "myapp://lesson_3",
+    "tags": [
+      "Android Studio",
+      "View binding",
+      "Project Setup",
+      "Kotlin"
+    ],
+    "bannerImageUrl": "https://i.ibb.co/fq3Pqdb/how-to-configure-view-binding-in-android.png"
+  },
+  {
+    "id": "4",
+    "title": "Per-app language preferences",
+    "description": "Learn how to use per-app languages to make your app more accessible and user-friendly. This feature lets you choose a different language for each app on your device, without the user changing their device language.",
+    "type": "full_banner",
+    "deepLinkPath": "myapp://lesson_4",
+    "tags": [
+      "Multilingual Support",
+      "Accessibility",
+      "Project Setup",
+      "Kotlin"
+    ],
+    "bannerImageUrl": "https://i.ibb.co/C74jRtg/per-app-language-preferences.png"
+  },
+  {
+    "id": "5",
+    "title": "Predictive back gestures",
+    "description": "Android 13 (API level 33) introduces a predictive back gesture for Android devices such as phones, large screens, and foldables. It is part of a multi-year release; when fully implemented, this feature will let users preview the destination or other result of a back gesture before fully completing it, allowing them to decide whether to continue or stay in the current view.",
+    "type": "full_banner",
+    "deepLinkPath": "myapp://lesson_5",
+    "tags": [
+      "Android 14",
+      "Project Setup",
+      "XML",
+      "Accessibility"
+    ],
+    "bannerImageUrl": "https://i.ibb.co/P5spN36/predictive-back-gestures-on-android.png"
+  },
+  {
+    "id": "6",
+    "title": "How to add a text filed",
+    "description": "A user interface element for entering and modifying text. When you define an edit text widget, you must specify the R.styleable.TextView_inputType attribute…",
+    "type": "full_banner",
+    "deepLinkPath": "myapp://lesson_5",
+    "tags": [
+      "Kotlin",
+      "Java",
+      "XML",
+      "Beginner"
+    ],
+    "bannerImageUrl": "https://i.ibb.co/wd5D0W4/how-to-add-text-boxes-in-android.png"
+  }
+]
