@@ -1,0 +1,59 @@
+{
+  "title": "Create a New Android Project",
+  "content": [
+    {
+      "id": "1",
+      "type": "header",
+      "text": "Step 1: Start a New Project"
+    },
+    {
+      "id": "2",
+      "type": "text",
+      "text": "To begin creating a new Android project, open Android Studio and click on the <b>New Project</b> button from the Welcome screen. If you already have a project open, you can also create a new one by selecting <b>File > New > New Project</b> from the main menu."
+    },
+    {
+      "id": "3",
+      "type": "image",
+      "src": "https://developer.android.com/static/studio/images/new-project-templates.png"
+    },
+    {
+      "id": "5",
+      "type": "header",
+      "text": "Step 2: Choose a Project Template"
+    },
+    {
+      "id": "6",
+      "type": "text",
+      "text": "On the New Project screen, select a project template that matches your app's primary device type, such as phone, tablet, Wear OS, or Android TV. Each template includes sample code and resources to help you get started quickly. Once you've selected a template, click <b>Next</b>."
+    },
+    {
+      "id": "7",
+      "type": "image",
+      "src": "https://developer.android.com/static/studio/images/projects/new-project-wizard-configure-2x.png"
+    },
+    {
+      "id": "8",
+      "type": "header",
+      "text": "Step 3: Configure Project Settings"
+    },
+    {
+      "id": "9",
+      "type": "text",
+      "text": "In this step, configure the essential settings for your project. Specify details such as the <b>app name</b>, <b>package name</b>, <b>programming language</b> (Kotlin or Java), and <b>minimum API level</b> that your app will support. If you’re unsure about the API level, click <b>Help me choose</b> for guidance on device compatibility based on API level distribution. You can find more details on these settings at <a href=\"https://developer.android.com/\">Android Developers</a>."
+    },
+    {
+      "id": "10",
+      "type": "image",
+      "src": "https://developer.android.com/static/studio/images/projects/new-project-wizard-choose-api-level_2x.png"
+    },
+    {
+      "id": "11",
+      "type": "text",
+      "text": "When ready, click <b>Finish</b> to create your project. Android Studio will generate your project with the selected template and configurations. This includes basic code and resources to get you started on your app development journey."
+    },
+    {
+      "id": "12",
+      "type": "ad_banner"
+    }
+  ]
+}
