@@ -81,5 +81,19 @@
       "Beginner"
     ],
     "bannerImageUrl": "https://i.ibb.co/wd5D0W4/how-to-add-text-boxes-in-android.png"
+  },
+  {
+    "id": "7",
+    "title": "Test lesson for Debug",
+    "description": "If you see this lesson just ignore it",
+    "type": "full_banner",
+    "deepLinkPath": "myapp://lesson_6",
+    "tags": [
+      "Kotlin",
+      "Java",
+      "XML",
+      "Beginner"
+    ],
+    "bannerImageUrl": "https://i.ibb.co/wd5D0W4/how-to-add-text-boxes-in-android.png"
   }
 ]
