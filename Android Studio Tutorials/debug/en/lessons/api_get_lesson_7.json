@@ -1,0 +1,87 @@
+{
+  "title": "Understanding and Using Linear Layouts in Android",
+  "content": [
+    {
+      "id": "1",
+      "type": "header",
+      "text": "Introduction to Linear Layouts"
+    },
+    {
+      "id": "2",
+      "type": "text",
+      "text": "Linear layouts are fundamental layout components in Android development, allowing you to arrange UI elements either horizontally or vertically in a single direction.  They provide a simple and effective way to organize views within your application's user interface."
+    },
+    {
+      "id": "3",
+      "type": "header",
+      "text": "LinearLayout vs. LinearLayoutCompat"
+    },
+    {
+      "id": "4",
+      "type": "text",
+      "text": "While the traditional `LinearLayout` exists, `LinearLayoutCompat` from the AppCompat library is generally preferred. It offers backward compatibility with older Android versions, ensuring consistent behavior across different API levels.  For instance, features like dividers, introduced in API 11, are readily available in `LinearLayoutCompat` regardless of the target API."
+    },
+    {
+      "id": "5",
+      "type": "header",
+      "text": "Adding the Dependency"
+    },
+    {
+      "id": "6",
+      "type": "text",
+      "text": "To use `LinearLayoutCompat`, ensure you have the androidx AppCompat library included in your project's dependencies:"
+    },
+    {
+      "id": "7",
+      "type": "code",
+      "language": "gradle",
+      "code": "implementation 'androidx.appcompat:appcompat:1.5.1' // Replace with latest version"
+    },
+    {
+      "id": "8",
+      "type": "header",
+      "text": "Orientation: Vertical and Horizontal"
+    },
+    {
+      "id": "9",
+      "type": "text",
+      "text": "Linear layouts can be oriented either vertically (elements arranged from top to bottom) or horizontally (elements arranged from left to right).  This is controlled by the `orientation` attribute."
+    },
+    {
+      "id": "10",
+      "type": "header",
+      "text": "Example: Vertical Orientation"
+    },
+    {
+      "id": "11",
+      "type": "image",
+      "src": "vertical_linear_layout_example.png",
+      "alt": "Example of a vertical linear layout with buttons"
+    },
+    {
+      "id": "12",
+      "type": "code",
+      "language": "XML",
+      "code": "<LinearLayout\n  android:layout_width=\"match_parent\"\n  android:layout_height=\"wrap_content\"\n  android:orientation=\"vertical\">\n\n  <Button ... />\n  <Button ... />\n  <Button ... />\n</LinearLayout>"
+    },
+    {
+      "id": "13",
+      "type": "header",
+      "text": "Example: Horizontal Orientation"
+    },
+    {
+      "id": "14",
+      "type": "image",
+      "src": "horizontal_linear_layout_example.png",
+      "alt": "Example of a horizontal linear layout with buttons"
+    },
+    {
+      "id": "15",
+      "type": "code",
+      "language": "XML",
+      "code": "<LinearLayout\n  android:layout_width=\"match_parent\"\n  android:layout_height=\"wrap_content\"\n  android:orientation=\"horizontal\">\n\n  <Button ... />\n  <Button ... />\n  <Button ... />\n</LinearLayout>"
+    }
+
+
+  ]
+}

@@ -87,7 +87,7 @@
     "title": "Test lesson for Debug",
     "description": "If you see this lesson just ignore it",
     "type": "square_image",
-    "deepLinkPath": "myapp://lesson_6",
+    "deepLinkPath": "myapp://lesson_7",
     "tags": [
       "Kotlin",
       "Java",
