@@ -1,5 +1,5 @@
 {
-  "title": "Understanding and Using Linear Layouts in Android",
+  "title": "Linear Layouts in Android",
   "content": [
     {
       "id": "1",
@@ -9,7 +9,7 @@
     {
       "id": "2",
       "type": "text",
-      "text": "Linear layouts are fundamental layout components in Android development, allowing you to arrange UI elements either horizontally or vertically in a single direction.  They provide a simple and effective way to organize views within your application's user interface."
+      "text": "Linear layouts are fundamental layout components in Android development, allowing you to arrange UI elements either horizontally or vertically in a single direction. They provide a simple and effective way to organize views within your application's user interface."
     },
     {
       "id": "3",
@@ -19,7 +19,7 @@
     {
       "id": "4",
       "type": "text",
-      "text": "While the traditional `LinearLayout` exists, `LinearLayoutCompat` from the AppCompat library is generally preferred. It offers backward compatibility with older Android versions, ensuring consistent behavior across different API levels.  For instance, features like dividers, introduced in API 11, are readily available in `LinearLayoutCompat` regardless of the target API."
+      "text": "While the traditional `LinearLayout` exists, `LinearLayoutCompat` from the AppCompat library is generally preferred. It offers backward compatibility with older Android versions, ensuring consistent behavior across different API levels. For instance, features like dividers, introduced in API 11, are readily available in `LinearLayoutCompat` regardless of the target API."
     },
     {
       "id": "5",
@@ -35,53 +35,59 @@
       "id": "7",
       "type": "code",
       "language": "gradle",
-      "code": "implementation 'androidx.appcompat:appcompat:1.5.1' // Replace with latest version"
+      "code": "dependencies {\n    def appcompat_version = \"1.7.0\"\n\n    implementation \"androidx.appcompat:appcompat:$appcompat_version\"\n    // For loading and tinting drawables on older versions of the platform\n    implementation \"androidx.appcompat:appcompat-resources:$appcompat_version\"\n}"
+    },
+        {
+      "id": "8",
+      "type": "ad_banner"
     },
     {
-      "id": "8",
+      "id": "9",
       "type": "header",
       "text": "Orientation: Vertical and Horizontal"
     },
     {
-      "id": "9",
+      "id": "10",
       "type": "text",
-      "text": "Linear layouts can be oriented either vertically (elements arranged from top to bottom) or horizontally (elements arranged from left to right).  This is controlled by the `orientation` attribute."
+      "text": "Linear layouts can be oriented either vertically (elements arranged from top to bottom) or horizontally (elements arranged from left to right). This is controlled by the `orientation` attribute."
     },
     {
-      "id": "10",
+      "id": "11",
       "type": "header",
       "text": "Example: Vertical Orientation"
     },
     {
-      "id": "11",
+      "id": "12",
       "type": "image",
       "src": "vertical_linear_layout_example.png",
       "alt": "Example of a vertical linear layout with buttons"
     },
     {
-      "id": "12",
+      "id": "13",
       "type": "code",
       "language": "XML",
-      "code": "<LinearLayout\n  android:layout_width=\"match_parent\"\n  android:layout_height=\"wrap_content\"\n  android:orientation=\"vertical\">\n\n  <Button ... />\n  <Button ... />\n  <Button ... />\n</LinearLayout>"
+      "code": "<LinearLayout\n    android:id=\"@+id/linear_layout_vertical\"\n    android:layout_width=\"match_parent\"\n    android:layout_height=\"wrap_content\"\n    android:layout_margin=\"24dp\"\n    android:orientation=\"vertical\"\n    android:gravity=\"center\">\n    <com.google.android.material.button.MaterialButton\n        style=\"@style/Widget.Material3.Button.ElevatedButton\"\n        android:layout_width=\"wrap_content\"\n        android:layout_height=\"wrap_content\"\n        android:text=\"@string/button\"\n        tools:ignore=\"DuplicateSpeakableTextCheck\"/>\n    <com.google.android.material.button.MaterialButton\n        style=\"@style/Widget.Material3.Button.ElevatedButton\"\n        android:layout_width=\"wrap_content\"\n        android:layout_height=\"wrap_content\"\n        android:text=\"@string/button\"/>\n    <com.google.android.material.button.MaterialButton\n        style=\"@style/Widget.Material3.Button.ElevatedButton\"\n        android:layout_width=\"wrap_content\"\n        android:layout_height=\"0dp\"\n        android:text=\"@string/button\"\n        android:layout_weight=\"1\"/>\n</LinearLayout>"
     },
     {
-      "id": "13",
+      "id": "14",
       "type": "header",
       "text": "Example: Horizontal Orientation"
     },
     {
-      "id": "14",
+      "id": "15",
       "type": "image",
       "src": "horizontal_linear_layout_example.png",
       "alt": "Example of a horizontal linear layout with buttons"
     },
     {
-      "id": "15",
+      "id": "16",
       "type": "code",
       "language": "XML",
-      "code": "<LinearLayout\n  android:layout_width=\"match_parent\"\n  android:layout_height=\"wrap_content\"\n  android:orientation=\"horizontal\">\n\n  <Button ... />\n  <Button ... />\n  <Button ... />\n</LinearLayout>"
+      "code": "<LinearLayout\n    android:id=\"@+id/linear_layout_horizontal\"\n    android:layout_width=\"match_parent\"\n    android:layout_height=\"wrap_content\"\n    android:layout_margin=\"24dp\"\n    android:orientation=\"horizontal\"\n    android:gravity=\"center\">\n    <com.google.android.material.button.MaterialButton\n        style=\"@style/Widget.Material3.Button.ElevatedButton\"\n        android:layout_width=\"wrap_content\"\n        android:layout_height=\"wrap_content\"\n        android:text=\"@string/button\"\n        tools:ignore=\"DuplicateSpeakableTextCheck\"/>\n    <com.google.android.material.button.MaterialButton\n        style=\"@style/Widget.Material3.Button.ElevatedButton\"\n        android:layout_width=\"wrap_content\"\n        android:layout_height=\"wrap_content\"\n        android:text=\"@string/button\"/>\n    <com.google.android.material.button.MaterialButton\n        style=\"@style/Widget.Material3.Button.ElevatedButton\"\n        android:layout_width=\"wrap_content\"\n        android:layout_height=\"0dp\"\n        android:text=\"@string/button\"\n        android:layout_weight=\"1\"/>\n</LinearLayout>"
+    },
+    {
+      "id": "17",
+      "type": "ad_large_banner"
     }
-
-
   ]
 }

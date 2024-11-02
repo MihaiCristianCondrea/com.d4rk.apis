@@ -84,13 +84,12 @@
   },
   {
     "id": "7",
-    "title": "Test lesson for Debug",
-    "description": "If you see this lesson just ignore it",
+    "title": "Mastering Linear Layouts in Android",
+    "description": "Learn how to use Linear Layouts to create efficient and adaptable user interfaces in your Android apps.  Explore vertical and horizontal orientations, optimize layout performance, and discover best practices for organizing your views.",
     "type": "square_image",
     "deepLinkPath": "myapp://lesson_7",
     "tags": [
-      "Kotlin",
-      "Java",
+      "Layout",
       "XML",
       "Beginner"
     ],
