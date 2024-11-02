@@ -39,7 +39,7 @@
     },
         {
       "id": "8",
-      "type": "ad_banner"
+      "type": "ad_large_banner"
     },
     {
       "id": "9",
@@ -87,7 +87,7 @@
     },
     {
       "id": "17",
-      "type": "ad_large_banner"
+      "type": "ad_banner"
     }
   ]
 }
