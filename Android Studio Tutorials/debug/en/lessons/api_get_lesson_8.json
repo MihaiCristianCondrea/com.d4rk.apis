@@ -1,0 +1,45 @@
+{
+  "title": "Relative Layouts in Android",
+  "content": [
+    {
+      "id": "1",
+      "type": "header",
+      "text": "Introduction to Relative Layouts"
+    },
+    {
+      "id": "2",
+      "type": "text",
+      "text": "Relative layouts allow you to position UI elements relative to each other or to the parent container.  This offers flexibility in creating complex layouts."
+    },
+    {
+      "id": "3",
+      "type": "note",
+      "text": "For better performance and tooling support, consider using ConstraintLayout instead of RelativeLayout."
+    },
+    {
+      "id": "4",
+      "type": "header",
+      "text": "Positioning Views"
+    },
+    {
+      "id": "5",
+      "type": "text",
+      "text": "You can specify positions using properties like `android:layout_below`, `android:layout_toRightOf`, `android:layout_alignParentTop`, etc.  Refer to the `RelativeLayout.LayoutParams` documentation for a complete list."
+    },
+    {
+      "id": "6",
+      "type": "header",
+      "text": "Example"
+    },
+    {
+      "id": "7",
+      "type": "code",
+      "language": "xml",
+      "code": "<RelativeLayout\n  android:layout_width=\"match_parent\"\n  android:layout_height=\"match_parent\"\n  xmlns:android=\"http://schemas.android.com/apk/res/android\"\n  xmlns:app=\"http://schemas.android.com/apk/res-auto\">\n  <com.google.android.material.card.MaterialCardView\n    ...\n  </com.google.android.material.card.MaterialCardView>\n  <com.google.android.material.button.MaterialButton\n    ...\n  </com.google.android.material.button.MaterialButton>\n  ...\n</RelativeLayout>"
+    },
+    {
+      "id": "8",
+      "type": "ad_large_banner" 
+    }
+  ]
+}

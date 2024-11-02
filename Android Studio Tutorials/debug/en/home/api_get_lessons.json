@@ -94,5 +94,19 @@
       "Beginner"
     ],
     "squareImageUrl": "https://i.ibb.co/Z2P5S8X/linear-layout-in-android.png"
+  },
+  {
+    "id": "8",
+    "title": "Relative Layouts in Android",
+    "description": "Learn to position UI elements relative to each other or the parent view, creating dynamic and flexible layouts.",
+    "type": "square_image",
+    "deepLinkPath": "myapp://lesson_8",
+    "tags": [
+      "Layout",
+      "Relative Layout",
+      "UI",
+      "Views"
+    ],
+    "squareImageUrl": "https://i.ibb.co/tJYnQ2w/relative-layout-android.png" 
   }
 ]
