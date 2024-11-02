@@ -86,7 +86,7 @@
     "id": "7",
     "title": "Test lesson for Debug",
     "description": "If you see this lesson just ignore it",
-    "type": "full_banner",
+    "type": "square_image",
     "deepLinkPath": "myapp://lesson_6",
     "tags": [
       "Kotlin",
@@ -94,6 +94,6 @@
       "XML",
       "Beginner"
     ],
-    "bannerImageUrl": "https://lofrev.net/wp-content/photos/2016/06/funny-android-Logo.jpg"
+    "squareImageUrl": "https://lofrev.net/wp-content/photos/2016/06/funny-android-Logo.jpg"
   }
 ]
