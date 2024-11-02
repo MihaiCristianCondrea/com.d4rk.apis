@@ -10,12 +10,12 @@
       "Project Setup"
     ],
     "bannerImageUrl": "https://i.ibb.co/Fz4DqDP/lesson-1-banner.png",
-    "deepLinkPath": "myapp://lesson_1"
+    "deepLinkPath": "com.d4rk.androidtutorials://lesson/lesson_1"
   },
   {
     "id": "2",
     "title": "History of Android",
-    "description": "Learn about the history of Android, from its beta release in 2007 to becoming the world\\'s most popular mobile operating system. Discover the features that make Android unique and the benefits of using Android Studio to develop your apps with Kotlin.",
+    "description": "Learn about the history of Android, from its beta release in 2007 to becoming the world's most popular mobile operating system. Discover the features that make Android unique and the benefits of using Android Studio to develop your apps with Kotlin.",
     "type": "square_image",
     "tags": [
       "Android OS",
@@ -24,14 +24,14 @@
       "Kotlin"
     ],
     "squareImageUrl": "https://i.ibb.co/pnBpw1f/hisotry-of-android.png",
-    "deepLinkPath": "myapp://lesson_2"
+    "deepLinkPath": "com.d4rk.androidtutorials://lesson/lesson_2"
   },
   {
     "id": "3",
     "title": "View binding",
     "description": "New in Android Studio 3.6, view binding gives you the ability to replace findViewById with generated binding objects to simplify code, remove bugs, and avoid all the boilerplate of findViewById.",
     "type": "full_banner",
-    "deepLinkPath": "myapp://lesson_3",
+    "deepLinkPath": "com.d4rk.androidtutorials://lesson/lesson_3",
     "tags": [
       "Android Studio",
       "View binding",
@@ -45,7 +45,7 @@
     "title": "Per-app language preferences",
     "description": "Learn how to use per-app languages to make your app more accessible and user-friendly. This feature lets you choose a different language for each app on your device, without the user changing their device language.",
     "type": "full_banner",
-    "deepLinkPath": "myapp://lesson_4",
+    "deepLinkPath": "com.d4rk.androidtutorials://lesson/lesson_4",
     "tags": [
       "Multilingual Support",
       "Accessibility",
@@ -59,7 +59,7 @@
     "title": "Predictive back gestures",
     "description": "Android 13 (API level 33) introduces a predictive back gesture for Android devices such as phones, large screens, and foldables. It is part of a multi-year release; when fully implemented, this feature will let users preview the destination or other result of a back gesture before fully completing it, allowing them to decide whether to continue or stay in the current view.",
     "type": "full_banner",
-    "deepLinkPath": "myapp://lesson_5",
+    "deepLinkPath": "com.d4rk.androidtutorials://lesson/lesson_5",
     "tags": [
       "Android 14",
       "Project Setup",
@@ -73,7 +73,7 @@
     "title": "How to add a text filed",
     "description": "A user interface element for entering and modifying text. When you define an edit text widget, you must specify the R.styleable.TextView_inputType attribute…",
     "type": "full_banner",
-    "deepLinkPath": "myapp://lesson_5",
+    "deepLinkPath": "com.d4rk.androidtutorials://lesson/lesson_5",
     "tags": [
       "Kotlin",
       "Java",
@@ -85,14 +85,28 @@
   {
     "id": "7",
     "title": "Mastering Linear Layouts in Android",
-    "description": "Learn how to use Linear Layouts to create efficient and adaptable user interfaces in your Android apps.  Explore vertical and horizontal orientations, optimize layout performance, and discover best practices for organizing your views.",
+    "description": "Learn how to use Linear Layouts to create efficient and adaptable user interfaces in your Android apps. Explore vertical and horizontal orientations, optimize layout performance, and discover best practices for organizing your views.",
     "type": "square_image",
-    "deepLinkPath": "myapp://lesson_7",
+    "deepLinkPath": "com.d4rk.androidtutorials://lesson/lesson_7",
     "tags": [
       "Layout",
       "XML",
       "Beginner"
     ],
     "squareImageUrl": "https://i.ibb.co/Z2P5S8X/linear-layout-in-android.png"
+  },
+  {
+    "id": "8",
+    "title": "Relative Layouts in Android",
+    "description": "Learn to position UI elements relative to each other or the parent view, creating dynamic and flexible layouts.",
+    "type": "square_image",
+    "deepLinkPath": "com.d4rk.androidtutorials://lesson/lesson_8",
+    "tags": [
+      "Layout",
+      "Relative Layout",
+      "UI",
+      "Views"
+    ],
+    "squareImageUrl": "https://i.ibb.co/6gVYTYM/how-to-use-relative-layouts-in-android.png" 
   }
 ]
