@@ -81,5 +81,18 @@
       "Beginner"
     ],
     "bannerImageUrl": "https://i.ibb.co/wd5D0W4/how-to-add-text-boxes-in-android.png"
+  },
+  {
+    "id": "7",
+    "title": "Mastering Linear Layouts in Android",
+    "description": "Learn how to use Linear Layouts to create efficient and adaptable user interfaces in your Android apps.  Explore vertical and horizontal orientations, optimize layout performance, and discover best practices for organizing your views.",
+    "type": "square_image",
+    "deepLinkPath": "myapp://lesson_7",
+    "tags": [
+      "Layout",
+      "XML",
+      "Beginner"
+    ],
+    "squareImageUrl": "https://i.ibb.co/Z2P5S8X/linear-layout-in-android.png"
   }
 ]
