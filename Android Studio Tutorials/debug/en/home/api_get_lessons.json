@@ -15,7 +15,7 @@
   {
     "id": "2",
     "title": "History of Android",
-    "description": "Learn about the history of Android, from its beta release in 2007 to becoming the world\\'s most popular mobile operating system. Discover the features that make Android unique and the benefits of using Android Studio to develop your apps with Kotlin.",
+    "description": "Learn about the history of Android, from its beta release in 2007 to becoming the world's most popular mobile operating system. Discover the features that make Android unique and the benefits of using Android Studio to develop your apps with Kotlin.",
     "type": "square_image",
     "tags": [
       "Android OS",
@@ -85,7 +85,7 @@
   {
     "id": "7",
     "title": "Mastering Linear Layouts in Android",
-    "description": "Learn how to use Linear Layouts to create efficient and adaptable user interfaces in your Android apps.  Explore vertical and horizontal orientations, optimize layout performance, and discover best practices for organizing your views.",
+    "description": "Learn how to use Linear Layouts to create efficient and adaptable user interfaces in your Android apps. Explore vertical and horizontal orientations, optimize layout performance, and discover best practices for organizing your views.",
     "type": "square_image",
     "deepLinkPath": "myapp://lesson_7",
     "tags": [
