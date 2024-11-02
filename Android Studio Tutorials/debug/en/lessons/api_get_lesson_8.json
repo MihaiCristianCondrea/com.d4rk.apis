@@ -13,7 +13,7 @@
     },
     {
       "id": "3",
-      "type": "note",
+      "type": "text",
       "text": "<i>For better performance and tooling support, consider using ConstraintLayout instead of RelativeLayout.</i>"
     },
     {
