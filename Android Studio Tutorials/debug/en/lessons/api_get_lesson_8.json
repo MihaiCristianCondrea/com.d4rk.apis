@@ -14,32 +14,42 @@
     {
       "id": "3",
       "type": "note",
-      "text": "For better performance and tooling support, consider using ConstraintLayout instead of RelativeLayout."
+      "text": "<i>For better performance and tooling support, consider using ConstraintLayout instead of RelativeLayout.</i>"
     },
     {
       "id": "4",
+      "type": "ad_large_banner"
+    },
+    {
+      "id": "5",
       "type": "header",
       "text": "Positioning Views"
     },
     {
-      "id": "5",
+      "id": "6",
       "type": "text",
       "text": "You can specify positions using properties like `android:layout_below`, `android:layout_toRightOf`, `android:layout_alignParentTop`, etc.  Refer to the `RelativeLayout.LayoutParams` documentation for a complete list."
     },
     {
-      "id": "6",
+      "id": "7",
       "type": "header",
       "text": "Example"
     },
     {
-      "id": "7",
-      "type": "code",
-      "language": "xml",
-      "code": "<RelativeLayout\n  android:layout_width=\"match_parent\"\n  android:layout_height=\"match_parent\"\n  xmlns:android=\"http://schemas.android.com/apk/res/android\"\n  xmlns:app=\"http://schemas.android.com/apk/res-auto\">\n  <com.google.android.material.card.MaterialCardView\n    ...\n  </com.google.android.material.card.MaterialCardView>\n  <com.google.android.material.button.MaterialButton\n    ...\n  </com.google.android.material.button.MaterialButton>\n  ...\n</RelativeLayout>"
+      "id": "8",
+      "type": "image",
+      "src": "https://i.ibb.co/y07SsNZ/Screenshot-20241102-124348-2.jpg",
+      "alt": "Example of a horizontal linear layout with buttons"
     },
     {
-      "id": "8",
-      "type": "ad_large_banner" 
+      "id": "9",
+      "type": "code",
+      "language": "xml",
+      "code": "<RelativeLayout\n  android:layout_width=\"match_parent\"\n  android:layout_height=\"match_parent\"\n  xmlns:android=\"http://schemas.android.com/apk/res/android\"\n  xmlns:app=\"http://schemas.android.com/apk/res-auto\">\n  <com.google.android.material.card.MaterialCardView\n    style=\"@style/Widget.Material3.CardView.Elevated\"\n    android:id=\"@+id/card_view\"\n    android:layout_width=\"wrap_content\"\n    android:layout_height=\"wrap_content\"\n    android:layout_centerHorizontal=\"true\"\n    app:cardCornerRadius=\"24dp\">\n    <androidx.appcompat.widget.AppCompatImageView\n      android:id=\"@+id/image_view\"\n      android:layout_width=\"wrap_content\"\n      android:layout_height=\"wrap_content\"\n      android:importantForAccessibility=\"no\"\n      android:src=\"@drawable/im_image_view\"/>\n  </com.google.android.material.card.MaterialCardView>\n  <com.google.android.material.button.MaterialButton\n    android:layout_width=\"wrap_content\"\n    android:layout_height=\"wrap_content\"\n    android:text=\"@string/button\"\n    android:id=\"@+id/button_1\"\n    android:layout_marginTop=\"24dp\"\n    android:layout_below=\"@id/card_view\"/>\n  <com.google.android.material.button.MaterialButton\n    android:layout_width=\"wrap_content\"\n    android:layout_height=\"wrap_content\"\n    android:text=\"@string/button\"\n    android:layout_below=\"@id/card_view\"\n    android:layout_marginTop=\"24dp\"\n    android:layout_toEndOf=\"@+id/button_1\"/>\n  <com.google.android.material.button.MaterialButton\n    android:layout_width=\"wrap_content\"\n    android:layout_height=\"wrap_content\"\n    android:text=\"@string/button\"\n    android:layout_below=\"@id/button_1\"/>\n  <com.google.android.material.button.MaterialButton\n    android:layout_width=\"wrap_content\"\n    android:layout_height=\"wrap_content\"\n    android:layout_marginTop=\"24dp\"\n    android:layout_below=\"@id/card_view\"\n    android:layout_alignParentEnd=\"true\"\n    android:text=\"@string/button\"/>\n</RelativeLayout>"
+    },
+    {
+      "id": "10",
+      "type": "ad_banner"
     }
   ]
 }
