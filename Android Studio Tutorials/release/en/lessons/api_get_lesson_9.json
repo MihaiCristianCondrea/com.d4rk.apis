@@ -38,7 +38,7 @@
     {
       "id": "8",
       "type": "code",
-      "language": "xml",
+      "language": "XML",
       "code": "<TableLayout xmlns:android=\"http://schemas.android.com/apk/res/android\"\n    android:layout_width=\"match_parent\"\n    android:layout_height=\"match_parent\"\n    android:stretchColumns=\"1\">\n\n    <TableRow>\n        <TextView\n            android:text=\"Open...\"\n            android:padding=\"3dip\" />\n        <TextView\n            android:text=\"Ctrl-O\"\n            android:gravity=\"right\"\n            android:padding=\"3dip\" />\n    </TableRow>\n\n    <TableRow>\n        <TextView\n            android:text=\"Save...\"\n            android:padding=\"3dip\" />\n        <TextView\n            android:text=\"Ctrl-S\"\n            android:gravity=\"right\"\n            android:padding=\"3dip\" />\n    </TableRow>\n\n    <TableRow>\n        <TextView\n            android:text=\"Save As...\"\n            android:padding=\"3dip\" />\n        <TextView\n            android:text=\"Ctrl-Shift-S\"\n            android:gravity=\"right\"\n            android:padding=\"3dip\" />\n    </TableRow>\n</TableLayout>"
     },
     {
