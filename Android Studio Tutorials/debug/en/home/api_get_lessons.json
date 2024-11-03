@@ -114,7 +114,7 @@
     "title": "Table Layouts",
     "description": "Learn how to organize UI elements in rows and columns using TableLayout. While ConstraintLayout is generally preferred for performance, understanding TableLayout can be beneficial for specific use cases.",
     "type": "square_image",
-    "deepLinkPath": "com.d4rk.androidtutorials://lesson/table_layout",
+    "deepLinkPath": "com.d4rk.androidtutorials://lesson/table_layout_lesson",
     "tags": [
       "Layout",
       "UI",
