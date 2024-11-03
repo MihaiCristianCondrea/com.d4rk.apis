@@ -108,5 +108,21 @@
       "Views"
     ],
     "squareImageUrl": "https://i.ibb.co/6gVYTYM/how-to-use-relative-layouts-in-android.png" 
-  }
+  },
+  {
+    "id": "table_layout_lesson",
+    "title": "Table Layouts",
+    "description": "Learn how to organize UI elements in rows and columns using TableLayout. While ConstraintLayout is generally preferred for performance, understanding TableLayout can be beneficial for specific use cases.",
+    "type": "square_image",
+    "deepLinkPath": "com.d4rk.androidtutorials://lesson/table_layout",
+    "tags": [
+      "Layout",
+      "UI",
+      "Views",
+      "TableLayout",
+      "TableRow",
+      "Android"
+    ],
+    "squareImageUrl": "https://i.ibb.co/pzDqwSb/Screenshot-20241102-193801.png"
+}
 ]
