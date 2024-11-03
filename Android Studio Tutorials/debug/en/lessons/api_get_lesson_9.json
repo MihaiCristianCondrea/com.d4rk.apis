@@ -33,30 +33,32 @@
     },
     {
       "id": "7",
+      "type": "ad_large_banner"
+    },
+    {
+      "id": "8",
       "type": "code",
       "language": "xml",
       "code": "<TableLayout xmlns:android=\"http://schemas.android.com/apk/res/android\"\n    android:layout_width=\"match_parent\"\n    android:layout_height=\"match_parent\"\n    android:stretchColumns=\"1\">\n\n    <TableRow>\n        <TextView\n            android:text=\"Open...\"\n            android:padding=\"3dip\" />\n        <TextView\n            android:text=\"Ctrl-O\"\n            android:gravity=\"right\"\n            android:padding=\"3dip\" />\n    </TableRow>\n\n    <TableRow>\n        <TextView\n            android:text=\"Save...\"\n            android:padding=\"3dip\" />\n        <TextView\n            android:text=\"Ctrl-S\"\n            android:gravity=\"right\"\n            android:padding=\"3dip\" />\n    </TableRow>\n\n    <TableRow>\n        <TextView\n            android:text=\"Save As...\"\n            android:padding=\"3dip\" />\n        <TextView\n            android:text=\"Ctrl-Shift-S\"\n            android:gravity=\"right\"\n            android:padding=\"3dip\" />\n    </TableRow>\n</TableLayout>"
     },
     {
-      "id": "8",
-      "type": "image",
-      "src": "https://i.ibb.co/pzDqwSb/Screenshot-20241102-193801.png",
-      "alt": "Example of a simple TableLayout"
-    },
-        {
       "id": "9",
+      "type": "image",
+      "src": "https://developer.android.com/static/images/table_layout.png"
+    },
+    {
+      "id": "10",
       "type": "header",
       "text": "Column Control"
     },
     {
-      "id": "10",
+      "id": "11",
       "type": "text",
       "text": "Columns can be manipulated for responsiveness. `android:stretchColumns` allows columns to expand to fill available space, while `android:shrinkColumns` makes columns shrink when necessary. `android:collapseColumns` hides specific columns."
     },
     {
-      "id": "11",
+      "id": "12",
       "type": "ad_banner"
     }
-
   ]
 }
