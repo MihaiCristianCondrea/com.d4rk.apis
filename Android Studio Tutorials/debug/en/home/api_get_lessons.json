@@ -140,5 +140,21 @@
       "Android"
     ],
     "squareImageUrl": "https://i.ibb.co/C20380y/how-to-use-table-layouts-in-android.png"
+  },
+  {
+    "id": "11",
+    "title": "Scaffold in Jetpack Compose",
+    "description": "Scaffold provides a fundamental structure for Material Design layouts in Jetpack Compose, allowing you to easily implement common UI elements like app bars, floating action buttons, drawers, and snackbars.",
+    "type": "full_banner",
+    "deepLinkPath": "com.d4rk.androidtutorials://lesson/scaffold",
+    "tags": [
+      "Jetpack Compose",
+      "Kotlin",
+      "UI",
+      "Layout",
+      "Material Design",
+      "Android"
+    ],
+    "squareImageUrl": "https://developer.android.com/images/jetpack/compose/scaffold-anatomy.png"
   }
 ]
