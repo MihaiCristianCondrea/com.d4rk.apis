@@ -132,8 +132,9 @@
     "type": "square_image",
     "deepLinkPath": "com.d4rk.androidtutorials://lesson/grid_view",
     "tags": [
-      "Layout",
-      "UI",
+      "Kotlin",
+      "Java",
+      "XML",
       "Views",
       "Grid",
       "Android"
