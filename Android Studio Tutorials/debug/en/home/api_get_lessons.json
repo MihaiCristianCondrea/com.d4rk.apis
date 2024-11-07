@@ -111,7 +111,7 @@
   },
   {
     "id": "9",
-    "title": "Table Layouts",
+    "title": "Table Layouts in Android",
     "description": "Learn how to organize UI elements in rows and columns using TableLayout. While ConstraintLayout is generally preferred for performance, understanding TableLayout can be beneficial for specific use cases.",
     "type": "square_image",
     "deepLinkPath": "com.d4rk.androidtutorials://lesson/table_layouts",
@@ -121,6 +121,21 @@
       "Views",
       "TableLayout",
       "TableRow",
+      "Android"
+    ],
+    "squareImageUrl": "https://i.ibb.co/C20380y/how-to-use-table-layouts-in-android.png"
+  },
+  {
+    "id": "10",
+    "title": "Grid View in Android",
+    "description": "A grid view is a view group that displays items in a two-dimensional scrolling grid. Grid views are often used to display images, lists, or other types of data in a grid-like format.",
+    "type": "square_image",
+    "deepLinkPath": "com.d4rk.androidtutorials://lesson/grid_view",
+    "tags": [
+      "Layout",
+      "UI",
+      "Views",
+      "Grid",
       "Android"
     ],
     "squareImageUrl": "https://i.ibb.co/C20380y/how-to-use-table-layouts-in-android.png"
