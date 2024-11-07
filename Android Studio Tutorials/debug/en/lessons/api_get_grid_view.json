@@ -1,127 +1,63 @@
 {
-  "title": "Text Fields in Android",
+  "title": "Grid Layouts in Android",
   "content": [
     {
       "id": "1",
       "type": "header",
-      "text": "Introduction to Text Fields"
+      "text": "Introduction to Grid Layouts"
     },
     {
       "id": "2",
       "type": "text",
-      "text": "Text fields are essential UI components that allow users to enter and edit text. They are widely used in forms, dialogs, and various input scenarios in mobile applications."
+      "text": "Grid Layouts arrange items in a two-dimensional, scrollable grid. They are excellent for displaying collections of items of a similar nature, such as images or text items."
     },
     {
       "id": "3",
       "type": "header",
-      "text": "Types of Text Fields"
+      "text": "Key Attributes"
     },
     {
       "id": "4",
       "type": "text",
-      "text": "There are two main types of text fields in Android: <b>Filled</b> and <b>Outlined</b>."
+      "text": "Important attributes include `numColumns` (number of columns), `columnWidth` (width of each column), and `android:stretchMode` to control how items fill their space."
     },
     {
       "id": "5",
       "type": "header",
-      "text": "Filled Text Fields"
+      "text": "Example Layout (XML)"
     },
     {
       "id": "6",
-      "type": "text",
-      "text": "Filled text fields have a container with a background color. This style is often used to make the input area more prominent, especially in forms."
+      "type": "code",
+      "language": "XML",
+      "code": "<androidx.constraintlayout.widget.ConstraintLayout\n    xmlns:android=\"http://schemas.android.com/apk/res/android\"\n    xmlns:app=\"http://schemas.android.com/apk/res-auto\"\n    android:layout_width=\"match_parent\"\n    android:layout_height=\"match_parent\">\n    <GridView\n        android:id=\"@+id/grid_view\"\n        android:layout_width=\"match_parent\"\n        android:layout_height=\"match_parent\"\n        android:numColumns=\"auto_fit\"\n        android:columnWidth=\"48dp\"\n        android:layout_margin=\"24dp\"/>\n</androidx.constraintlayout.widget.ConstraintLayout>"
     },
     {
       "id": "7",
-      "type": "image",
-      "src": "https://firebasestorage.googleapis.com/v0/b/design-spec/o/projects%2Fgoogle-material-3%2Fimages%2Flx31ssyn-1.png?alt=media&token=17fe50a8-ccc7-491b-b8b2-a8c3bd1487f3"
+      "type": "header",
+      "text": "Kotlin Example"
     },
     {
       "id": "8",
-      "type": "header",
-      "text": "Outlined Text Fields"
+      "type": "code",
+      "language": "Kotlin",
+      "code": "// Import the necessary classes and libraries\nimport android.content.Intent\nimport android.os.Bundle\nimport android.os.Handler\nimport android.widget.AdapterView\nimport android.widget.ArrayAdapter\nimport android.widget.TextView\nimport android.widget.Toast\nimport androidx.appcompat.app.AppCompatActivity\n\n// This class extends AppCompatActivity and represents the main activity of an Android app\nclass MainActivity : AppCompatActivity() {\n\n    // Declare a private lateinit variable for binding the layout with this activity\n    private lateinit var binding: ActivityMainBinding\n\n    // Array of numbers\n    private val numbers = arrayOf(\"A\", \"B\", \"C\", \"D\", \"E\", \"F\", \"G\", \"H\", \"I\", \"J\", \"K\", \"L\", \"M\", \"N\", \"O\", \"P\", \"Q\", \"R\", \"S\", \"T\", \"U\", \"V\", \"W\", \"X\", \"Y\", \"Z\")\n\n    // This method is called when the activity is first created\n    override fun onCreate(savedInstanceState: Bundle?) {\n        super.onCreate(savedInstanceState)\n\n        // Inflate the layout and set it as the content view for this activity\n        binding = ActivityMainBinding.inflate(layoutInflater)\n\n        // Set the content view to the root view of the inflated layout\n        setContentView(binding.root)\n\n        // Create an adapter for the grid view\n        val adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, numbers)\n\n        // Set the adapter for the grid view\n        binding.gridView.adapter = adapter\n\n        // Set an on-item-click listener for the grid view\n        binding.gridView.onItemClickListener = AdapterView.OnItemClickListener { _, view, _, _ ->\n            // Show a toast with the text of the clicked item\n            Toast.makeText(applicationContext, (view as TextView).text, Toast.LENGTH_SHORT).show()\n        }\n    }\n}"
     },
     {
       "id": "9",
-      "type": "text",
-      "text": "Outlined text fields have a border instead of a background fill, which gives them a less prominent look and is suitable for minimalistic designs."
+      "type": "header",
+      "text": "Java Example"
     },
     {
       "id": "10",
-      "type": "image",
-      "src": "outlined_text_field_example.png",
-      "alt": "Example of an outlined text field"
+      "type": "code",
+      "language": "Java",
+      "code": "// Import the necessary classes and libraries\nimport android.content.Intent;\nimport android.os.Bundle;\nimport android.os.Handler;\nimport android.view.LayoutInflater;\nimport android.view.View;\nimport android.widget.AdapterView;\nimport android.widget.ArrayAdapter;\nimport android.widget.TextView;\nimport android.widget.Toast;\nimport androidx.appcompat.app.AppCompatActivity;\n\n// This class extends AppCompatActivity and represents the main activity of an Android app\npublic class MainActivity extends AppCompatActivity {\n\n    // Declare a private lateinit variable for binding the layout with this activity\n    private ActivityMainBinding binding;\n\n    // Array of numbers\n    private String[] numbers = {\"A\", \"B\", \"C\", \"D\", \"E\", \"F\", \"G\", \"H\", \"I\", \"J\", \"K\", \"L\", \"M\", \"N\", \"O\", \"P\", \"Q\", \"R\", \"S\", \"T\", \"U\", \"V\", \"W\", \"X\", \"Y\", \"Z\"};\n\n    // This method is called when the activity is first created\n    @Override\n    protected void onCreate(Bundle savedInstanceState) {\n        super.onCreate(savedInstanceState);\n\n        // Inflate the layout and set it as the content view for this activity\n        binding = ActivityMainBinding.inflate(getLayoutInflater());\n\n        // Set the content view\n        setContentView(binding.root);\n\n        // Create an adapter for the grid view\n        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, numbers);\n\n        // Set the adapter for the grid view\n        binding.gridView.setAdapter(adapter);\n\n        // Set an on-item-click listener for the grid view\n        binding.gridView.setOnItemClickListener((adapterView, view, i, l) -> {\n            final TextView textView = view.findViewById(android.R.id.text1);\n            // Show a toast with the text of the clicked item\n            Toast.makeText(this, textView.getText(), Toast.LENGTH_SHORT).show();\n        });\n    }\n}"
+
     },
     {
       "id": "11",
       "type": "ad_large_banner"
-    },
-    {
-      "id": "12",
-      "type": "header",
-      "text": "Best Practices"
-    },
-    {
-      "id": "13",
-      "type": "text",
-      "text": "For a consistent design, use either filled or outlined text fields within the same form or section."
-    },
-    {
-      "id": "14",
-      "type": "header",
-      "text": "Text Field Anatomy"
-    },
-    {
-      "id": "15",
-      "type": "text",
-      "text": "Each text field consists of multiple components, including a <b>label</b>, <b>input text area</b>, <b>supporting text</b>, and optional <b>icons</b> for additional actions (e.g., clear text)."
-    },
-    {
-      "id": "16",
-      "type": "header",
-      "text": "Implementation Example"
-    },
-    {
-      "id": "17",
-      "type": "text",
-      "text": "Here’s how you can set up a simple filled text field in XML."
-    },
-    {
-      "id": "18",
-      "type": "code",
-      "language": "XML",
-      "code": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<RelativeLayout xmlns:android=\"http://schemas.android.com/apk/res/android\"\n    android:layout_width=\"match_parent\"\n    android:layout_height=\"match_parent\"\n    android:padding=\"16dp\">\n\n    <com.google.android.material.textfield.TextInputLayout\n        android:id=\"@+id/textInputLayout\"\n        android:layout_width=\"match_parent\"\n        android:layout_height=\"wrap_content\"\n        android:hint=\"Enter your name\">\n\n        <com.google.android.material.textfield.TextInputEditText\n            android:id=\"@+id/textField\"\n            android:layout_width=\"match_parent\"\n            android:layout_height=\"wrap_content\"\n            android:inputType=\"textPersonName\" />\n    </com.google.android.material.textfield.TextInputLayout>\n\n</RelativeLayout>\n"
-    },
-    {
-      "id": "19",
-      "type": "header",
-      "text": "Using Text Fields in Code"
-    },
-    {
-      "id": "20",
-      "type": "text",
-      "text": "In Kotlin, you can access and manipulate text fields by using view binding. Here’s an example for setting up a text field programmatically."
-    },
-    {
-      "id": "21",
-      "type": "code",
-      "language": "Kotlin",
-      "code": "import android.os.Bundle\nimport androidx.appcompat.app.AppCompatActivity\nimport com.example.textfielddemo.databinding.ActivityMainBinding\n\nclass MainActivity : AppCompatActivity() {\n\n    // View binding property\n    private lateinit var binding: ActivityMainBinding\n\n    override fun onCreate(savedInstanceState: Bundle?) {\n        super.onCreate(savedInstanceState)\n\n        // Initialize view binding\n        binding = ActivityMainBinding.inflate(layoutInflater)\n        setContentView(binding.root)\n\n        // Access and set the hint for text field\n        binding.textField.hint = \"Enter your text\"\n    }\n}"
-    },
-    {
-      "id": "22",
-      "type": "text",
-      "text": "For those who prefer Java, here’s the equivalent setup using view binding to handle the TextInputEditText."
-    },
-    {
-      "id": "23",
-      "type": "code",
-      "language": "Java",
-      "code": "import android.os.Bundle;\nimport androidx.appcompat.app.AppCompatActivity;\nimport com.example.textfielddemo.databinding.ActivityMainBinding;\n\npublic class MainActivity extends AppCompatActivity {\n\n    // View binding property\n    private ActivityMainBinding binding;\n\n    @Override\n    protected void onCreate(Bundle savedInstanceState) {\n        super.onCreate(savedInstanceState);\n\n        // Initialize view binding\n        binding = ActivityMainBinding.inflate(getLayoutInflater());\n        setContentView(binding.getRoot());\n\n        // Access and set the hint for text field\n        binding.textField.setHint(\"Enter your text\");\n    }\n}"
-    },
-    {
-      "id": "24",
-      "type": "ad_banner"
     }
   ]
 }
