@@ -13,86 +13,91 @@
     },
     {
       "id": "3",
-      "type": "ad_large_banner"
+      "type": "image",
+      "src": "https://developer.android.com/static/develop/ui/compose/images/components/scaffold.png"
     },
     {
       "id": "4",
+      "type": "ad_large_banner"
+    },
+    {
+      "id": "5",
       "type": "header",
       "text": "Basic Usage"
     },
     {
-      "id": "5",
+      "id": "6",
       "type": "text",
       "text": "The `Scaffold` composable simplifies layout construction. Key parameters include `topBar`, `bottomBar`, `floatingActionButton`, and `content`."
     },
     {
-      "id": "6",
+      "id": "7",
       "type": "code",
       "language": "Kotlin",
       "code": "@Composable\nfun ScaffoldExample() {\n    var presses by remember { mutableIntStateOf(0) }\n\n    Scaffold(\n        topBar = {\n            TopAppBar(\n                colors = topAppBarColors(\n                    containerColor = MaterialTheme.colorScheme.primaryContainer,\n                    titleContentColor = MaterialTheme.colorScheme.primary,\n                ),\n                title = {\n                    Text(\"Top app bar\")\n                }\n            )\n        },\n        bottomBar = {\n            BottomAppBar(\n                containerColor = MaterialTheme.colorScheme.primaryContainer,\n                contentColor = MaterialTheme.colorScheme.primary,\n            ) {\n                Text(\n                    modifier = Modifier\n                        .fillMaxWidth(),\n                    textAlign = TextAlign.Center,\n                    text = \"Bottom app bar\",\n                )\n            }\n        },\n        floatingActionButton = {\n            FloatingActionButton(onClick = { presses++ }) {\n                Icon(Icons.Default.Add, contentDescription = \"Add\")\n            }\n        }\n    ) { innerPadding ->\n        Column(\n            modifier = Modifier\n                .padding(innerPadding),\n            verticalArrangement = Arrangement.spacedBy(16.dp),\n        ) {\n            Text(\n                modifier = Modifier.padding(8.dp),\n                text =\n                \"\"\"\n                    This is an example of a scaffold. It uses the Scaffold composable's parameters to create a screen with a simple top app bar, bottom app bar, and floating action button.\n\n                    It also contains some basic inner content, such as this text.\n\n                    You have pressed the floating action button $presses times.\n                \"\"\".trimIndent(),\n            )\n        }\n    }\n}"
     },
     {
-      "id": "7",
+      "id": "8",
       "type": "header",
       "text": "Drawers"
     },
     {
-      "id": "8",
+      "id": "9",
       "type": "text",
       "text": "Use `drawerContent` to define the content of a navigation drawer that slides in from the left (or right in RTL layouts). Control drawer behavior with `drawerState` inside `scaffoldState`."
     },
     {
-      "id": "9",
+      "id": "10",
       "type": "code",
       "language": "Kotlin",
       "code": "// ... (SimpleScaffoldExample code above)\n        drawerContent = { Text(\"Drawer Content\") },\n// ..."
 
     },
     {
-      "id": "10",
+      "id": "11",
       "type": "header",
       "text": "Snackbars"
     },
     {
-      "id": "11",
+      "id": "12",
       "type": "text",
       "text": "Show snackbars using `scaffoldState.snackbarHostState.showSnackbar()`."
     },
     {
-      "id": "12",
+      "id": "13",
       "type": "code",
       "language": "Kotlin",
       "code": "scope.launch {\n    scaffoldState.snackbarHostState.showSnackbar(\"Message\")\n}"
     },
     {
-      "id": "13",
+      "id": "14",
       "type": "header",
       "text": "Advanced Usage: Bottom App Bar with FAB Cutout"
     },
     {
-      "id": "14",
+      "id": "15",
       "type": "text",
       "text": "Dock the FAB to the `BottomAppBar` and create a cutout for it using `cutoutShape`."
     },
     {
-      "id": "15",
+      "id": "16",
       "type": "code",
       "language": "Kotlin",
       "code": "// ...\nbottomBar = {\n    BottomAppBar(cutoutShape = CircleShape) {\n        // ...\n    }\n},\nfloatingActionButtonPosition = FabPosition.Center,\nisFloatingActionButtonDocked = true,\n// ..."
 
     },
     {
-      "id": "16",
+      "id": "17",
       "type": "header",
       "text": "Parameters"
     },
     {
-      "id": "17",
+      "id": "18",
       "type": "text",
       "text": "`Scaffold` has many parameters to customize its appearance and behavior, including `contentWindowInsets` for handling system UI, `drawerGesturesEnabled`, `drawerShape`, `drawerElevation`, etc. Refer to the documentation for the full list."
     },
     {
-      "id": "18",
+      "id": "19",
       "type": "ad_large_banner"
     }
   ]
