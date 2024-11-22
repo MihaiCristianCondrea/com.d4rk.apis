@@ -1,18 +1,5 @@
 [
   {
-    "id": "1",
-    "title": "Start a new project",
-    "description": "Learn the base of how to start a new Android Studio project, how to configure, how to set package, API levels and many more…",
-    "type": "full_banner",
-    "tags": [
-      "Android Studio",
-      "Beginner",
-      "Project Setup"
-    ],
-    "bannerImageUrl": "https://i.ibb.co/Fz4DqDP/lesson-1-banner.png",
-    "deepLinkPath": "com.d4rk.androidtutorials://lesson/start_a_new_project"
-  },
-  {
     "id": "2",
     "title": "History of Android",
     "description": "Learn about the history of Android, from its beta release in 2007 to becoming the world's most popular mobile operating system. Discover the features that make Android unique and the benefits of using Android Studio to develop your apps with Kotlin.",
@@ -140,5 +127,18 @@
       "Android"
     ],
     "squareImageUrl": "https://i.ibb.co/C20380y/how-to-use-table-layouts-in-android.png"
+  },
+  {
+    "id": "1",
+    "title": "Start a new project",
+    "description": "Learn the base of how to start a new Android Studio project, how to configure, how to set package, API levels and many more…",
+    "type": "full_banner",
+    "tags": [
+      "Android Studio",
+      "Beginner",
+      "Project Setup"
+    ],
+    "bannerImageUrl": "https://i.ibb.co/Fz4DqDP/lesson-1-banner.png",
+    "deepLinkPath": "com.d4rk.androidtutorials://lesson/start_a_new_project"
   }
 ]
