@@ -1,5 +1,20 @@
 [
   {
+    "lesson_id": "12",
+    "lesson_title": "Creating and Using Alert Dialogs in Android",
+    "lesson_description": "Alert dialogs are essential UI components in Android for displaying important information or prompting user decisions.",
+    "lesson_type": "square_image",
+    "deep_link_path": "com.d4rk.androidtutorials://lesson/alert_dialogs",
+    "lesson_tags": [
+      "Kotlin",
+      "Java",
+      "UI",
+      "Dialogs",
+      "Android"
+    ],
+    "square_image_url": "https://i.ibb.co/b3qR4sg/android-alert-dialogs.png"
+  },
+  {
     "lesson_id": "11",
     "lesson_title": "Scaffold in Jetpack Compose",
     "lesson_description": "Scaffold provides a fundamental structure for Material Design layouts in Jetpack Compose, allowing you to easily implement common UI elements like app bars, floating action buttons, drawers, and snackbars.",
