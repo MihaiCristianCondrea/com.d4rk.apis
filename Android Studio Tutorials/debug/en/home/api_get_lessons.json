@@ -1,129 +1,19 @@
 [
   {
-    "lesson_id": "1",
-    "lesson_title": "Start a new project",
-    "lesson_description": "Learn the base of how to start a new Android Studio project, how to configure, how to set package, API levels and many more…",
+    "lesson_id": "11",
+    "lesson_title": "Scaffold in Jetpack Compose",
+    "lesson_description": "Scaffold provides a fundamental structure for Material Design layouts in Jetpack Compose, allowing you to easily implement common UI elements like app bars, floating action buttons, drawers, and snackbars.",
     "lesson_type": "full_banner",
+    "deep_link_path": "com.d4rk.androidtutorials://lesson/compose_scaffold",
     "lesson_tags": [
-      "Android Studio",
-      "Beginner",
-      "Project Setup"
-    ],
-    "thumbnail_image_url": "https://i.ibb.co/Fz4DqDP/lesson-1-banner.png",
-    "deep_link_path": "com.d4rk.androidtutorials://lesson/start_a_new_project"
-  },
-  {
-    "lesson_id": "2",
-    "lesson_title": "History of Android",
-    "lesson_description": "Learn about the history of Android, from its beta release in 2007 to becoming the world's most popular mobile operating system. Discover the features that make Android unique and the benefits of using Android Studio to develop your apps with Kotlin.",
-    "lesson_type": "square_image",
-    "lesson_tags": [
-      "Android OS",
-      "Android UI",
-      "UI Development",
-      "Kotlin"
-    ],
-    "square_image_url": "https://i.ibb.co/pnBpw1f/hisotry-of-android.png",
-    "deep_link_path": "com.d4rk.androidtutorials://lesson/android_history"
-  },
-  {
-    "lesson_id": "3",
-    "lesson_title": "View binding",
-    "lesson_description": "New in Android Studio 3.6, view binding gives you the ability to replace findViewById with generated binding objects to simplify code, remove bugs, and avoid all the boilerplate of findViewById.",
-    "lesson_type": "full_banner",
-    "deep_link_path": "com.d4rk.androidtutorials://lesson/view_binding",
-    "lesson_tags": [
-      "Android Studio",
-      "View binding",
-      "Project Setup",
-      "Kotlin"
-    ],
-    "thumbnail_image_url": "https://i.ibb.co/fq3Pqdb/how-to-configure-view-binding-in-android.png"
-  },
-  {
-    "lesson_id": "4",
-    "lesson_title": "Per-app language preferences",
-    "lesson_description": "Learn how to use per-app languages to make your app more accessible and user-friendly. This feature lets you choose a different language for each app on your device, without the user changing their device language.",
-    "lesson_type": "full_banner",
-    "deep_link_path": "com.d4rk.androidtutorials://lesson/per_app_language_preferences",
-    "lesson_tags": [
-      "Multilingual Support",
-      "Accessibility",
-      "Project Setup",
-      "Kotlin"
-    ],
-    "thumbnail_image_url": "https://i.ibb.co/C74jRtg/per-app-language-preferences.png"
-  },
-  {
-    "lesson_id": "5",
-    "lesson_title": "Predictive back gestures",
-    "lesson_description": "Android 13 (API level 33) introduces a predictive back gesture for Android devices such as phones, large screens, and foldables. It is part of a multi-year release; when fully implemented, this feature will let users preview the destination or other result of a back gesture before fully completing it, allowing them to decide whether to continue or stay in the current view.",
-    "lesson_type": "full_banner",
-    "deep_link_path": "com.d4rk.androidtutorials://lesson/predictive_back_gesture",
-    "lesson_tags": [
-      "Android 14",
-      "Project Setup",
-      "XML",
-      "Accessibility"
-    ],
-    "thumbnail_image_url": "https://i.ibb.co/P5spN36/predictive-back-gestures-on-android.png"
-  },
-  {
-    "lesson_id": "6",
-    "lesson_title": "How to add a text filed",
-    "lesson_description": "A user interface element for entering and modifying text. When you define an edit text widget, you must specify the R.styleable.TextView_inputType attribute…",
-    "lesson_type": "full_banner",
-    "deep_link_path": "com.d4rk.androidtutorials://lesson/text_fields",
-    "lesson_tags": [
+      "Jetpack Compose",
       "Kotlin",
-      "Java",
-      "XML",
-      "Beginner"
-    ],
-    "thumbnail_image_url": "https://i.ibb.co/wd5D0W4/how-to-add-text-boxes-in-android.png"
-  },
-  {
-    "lesson_id": "7",
-    "lesson_title": "Mastering Linear Layouts in Android",
-    "lesson_description": "Learn how to use Linear Layouts to create efficient and adaptable user interfaces in your Android apps. Explore vertical and horizontal orientations, optimize layout performance, and discover best practices for organizing your views.",
-    "lesson_type": "square_image",
-    "deep_link_path": "com.d4rk.androidtutorials://lesson/linear_layouts",
-    "lesson_tags": [
-      "Layout",
-      "XML",
-      "Beginner"
-    ],
-    "square_image_url": "https://i.ibb.co/Z2P5S8X/linear-layout-in-android.png"
-  },
-  {
-    "lesson_id": "8",
-    "lesson_title": "Relative Layouts in Android",
-    "lesson_description": "Learn to position UI elements relative to each other or the parent view, creating dynamic and flexible layouts.",
-    "lesson_type": "square_image",
-    "deep_link_path": "com.d4rk.androidtutorials://lesson/relative_layouts",
-    "lesson_tags": [
-      "Layout",
-      "Relative Layout",
       "UI",
-      "Views"
-    ],
-    "square_image_url": "https://i.ibb.co/6gVYTYM/how-to-use-relative-layouts-in-android.png"
-  },
-  {
-    "lesson_id": "9",
-    "lesson_title": "Table Layouts in Android",
-    "lesson_description": "Learn how to organize UI elements in rows and columns using TableLayout. While ConstraintLayout is generally preferred for performance, understanding TableLayout can be beneficial for specific use cases.",
-    "lesson_type": "square_image",
-    "deep_link_path": "com.d4rk.androidtutorials://lesson/table_layouts",
-    "lesson_tags": [
       "Layout",
-      "UI",
-      "Views",
-      "TableLayout",
-      "TableRow",
+      "Material Design",
       "Android"
     ],
-    "square_image_url": "https://i.ibb.co/C20380y/how-to-use-table-layouts-in-android.png"
+    "thumbnail_image_url": "https://i.ibb.co/BfG4GrR/how-to-use-scaffold-in-android.png"
   },
   {
     "lesson_id": "10",
@@ -142,19 +32,129 @@
     "square_image_url": "https://i.ibb.co/vk5LxFd/how-to-use-grid-layouts-in-android.png"
   },
   {
-    "lesson_id": "11",
-    "lesson_title": "Scaffold in Jetpack Compose",
-    "lesson_description": "Scaffold provides a fundamental structure for Material Design layouts in Jetpack Compose, allowing you to easily implement common UI elements like app bars, floating action buttons, drawers, and snackbars.",
-    "lesson_type": "full_banner",
-    "deep_link_path": "com.d4rk.androidtutorials://lesson/compose_scaffold",
+    "lesson_id": "9",
+    "lesson_title": "Table Layouts in Android",
+    "lesson_description": "Learn how to organize UI elements in rows and columns using TableLayout. While ConstraintLayout is generally preferred for performance, understanding TableLayout can be beneficial for specific use cases.",
+    "lesson_type": "square_image",
+    "deep_link_path": "com.d4rk.androidtutorials://lesson/table_layouts",
     "lesson_tags": [
-      "Jetpack Compose",
-      "Kotlin",
-      "UI",
       "Layout",
-      "Material Design",
+      "UI",
+      "Views",
+      "TableLayout",
+      "TableRow",
       "Android"
     ],
-    "thumbnail_image_url": "https://i.ibb.co/BfG4GrR/how-to-use-scaffold-in-android.png"
+    "square_image_url": "https://i.ibb.co/C20380y/how-to-use-table-layouts-in-android.png"
+  },
+  {
+    "lesson_id": "8",
+    "lesson_title": "Relative Layouts in Android",
+    "lesson_description": "Learn to position UI elements relative to each other or the parent view, creating dynamic and flexible layouts.",
+    "lesson_type": "square_image",
+    "deep_link_path": "com.d4rk.androidtutorials://lesson/relative_layouts",
+    "lesson_tags": [
+      "Layout",
+      "Relative Layout",
+      "UI",
+      "Views"
+    ],
+    "square_image_url": "https://i.ibb.co/6gVYTYM/how-to-use-relative-layouts-in-android.png"
+  },
+  {
+    "lesson_id": "7",
+    "lesson_title": "Mastering Linear Layouts in Android",
+    "lesson_description": "Learn how to use Linear Layouts to create efficient and adaptable user interfaces in your Android apps. Explore vertical and horizontal orientations, optimize layout performance, and discover best practices for organizing your views.",
+    "lesson_type": "square_image",
+    "deep_link_path": "com.d4rk.androidtutorials://lesson/linear_layouts",
+    "lesson_tags": [
+      "Layout",
+      "XML",
+      "Beginner"
+    ],
+    "square_image_url": "https://i.ibb.co/Z2P5S8X/linear-layout-in-android.png"
+  },
+  {
+    "lesson_id": "6",
+    "lesson_title": "How to add a text filed",
+    "lesson_description": "A user interface element for entering and modifying text. When you define an edit text widget, you must specify the R.styleable.TextView_inputType attribute…",
+    "lesson_type": "full_banner",
+    "deep_link_path": "com.d4rk.androidtutorials://lesson/text_fields",
+    "lesson_tags": [
+      "Kotlin",
+      "Java",
+      "XML",
+      "Beginner"
+    ],
+    "thumbnail_image_url": "https://i.ibb.co/wd5D0W4/how-to-add-text-boxes-in-android.png"
+  },
+  {
+    "lesson_id": "5",
+    "lesson_title": "Predictive back gestures",
+    "lesson_description": "Android 13 (API level 33) introduces a predictive back gesture for Android devices such as phones, large screens, and foldables. It is part of a multi-year release; when fully implemented, this feature will let users preview the destination or other result of a back gesture before fully completing it, allowing them to decide whether to continue or stay in the current view.",
+    "lesson_type": "full_banner",
+    "deep_link_path": "com.d4rk.androidtutorials://lesson/predictive_back_gesture",
+    "lesson_tags": [
+      "Android 14",
+      "Project Setup",
+      "XML",
+      "Accessibility"
+    ],
+    "thumbnail_image_url": "https://i.ibb.co/P5spN36/predictive-back-gestures-on-android.png"
+  },
+  {
+    "lesson_id": "4",
+    "lesson_title": "Per-app language preferences",
+    "lesson_description": "Learn how to use per-app languages to make your app more accessible and user-friendly. This feature lets you choose a different language for each app on your device, without the user changing their device language.",
+    "lesson_type": "full_banner",
+    "deep_link_path": "com.d4rk.androidtutorials://lesson/per_app_language_preferences",
+    "lesson_tags": [
+      "Multilingual Support",
+      "Accessibility",
+      "Project Setup",
+      "Kotlin"
+    ],
+    "thumbnail_image_url": "https://i.ibb.co/C74jRtg/per-app-language-preferences.png"
+  },
+  {
+    "lesson_id": "3",
+    "lesson_title": "View binding",
+    "lesson_description": "New in Android Studio 3.6, view binding gives you the ability to replace findViewById with generated binding objects to simplify code, remove bugs, and avoid all the boilerplate of findViewById.",
+    "lesson_type": "full_banner",
+    "deep_link_path": "com.d4rk.androidtutorials://lesson/view_binding",
+    "lesson_tags": [
+      "Android Studio",
+      "View binding",
+      "Project Setup",
+      "Kotlin"
+    ],
+    "thumbnail_image_url": "https://i.ibb.co/fq3Pqdb/how-to-configure-view-binding-in-android.png"
+  },
+  {
+    "lesson_id": "2",
+    "lesson_title": "History of Android",
+    "lesson_description": "Learn about the history of Android, from its beta release in 2007 to becoming the world's most popular mobile operating system. Discover the features that make Android unique and the benefits of using Android Studio to develop your apps with Kotlin.",
+    "lesson_type": "square_image",
+    "lesson_tags": [
+      "Android OS",
+      "Android UI",
+      "UI Development",
+      "Kotlin"
+    ],
+    "square_image_url": "https://i.ibb.co/pnBpw1f/hisotry-of-android.png",
+    "deep_link_path": "com.d4rk.androidtutorials://lesson/android_history"
+  },
+  {
+    "lesson_id": "1",
+    "lesson_title": "Start a new project",
+    "lesson_description": "Learn the base of how to start a new Android Studio project, how to configure, how to set package, API levels and many more…",
+    "lesson_type": "full_banner",
+    "lesson_tags": [
+      "Android Studio",
+      "Beginner",
+      "Project Setup"
+    ],
+    "thumbnail_image_url": "https://i.ibb.co/Fz4DqDP/lesson-1-banner.png",
+    "deep_link_path": "com.d4rk.androidtutorials://lesson/start_a_new_project"
   }
 ]
