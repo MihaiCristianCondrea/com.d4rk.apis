@@ -51,7 +51,6 @@
       "content_type": "content_code",
       "content_code_programming_language": "Kotlin",
       "content_code": "// ... (SimpleScaffoldExample code above)\n        drawerContent = { Text(\"Drawer Content\") },\n// ..."
-
     },
     {
       "content_id": "11",
@@ -71,33 +70,36 @@
     },
     {
       "content_id": "14",
+      "content_type": "ad_large_banner"
+    },
+    {
+      "content_id": "15",
       "content_type": "header",
       "content_text": "Advanced Usage: Bottom App Bar with FAB Cutout"
     },
     {
-      "content_id": "15",
+      "content_id": "16",
       "content_type": "content_text",
       "content_text": "Dock the FAB to the `BottomAppBar` and create a cutout for it using `cutoutShape`."
     },
     {
-      "content_id": "16",
+      "content_id": "17",
       "content_type": "content_code",
       "content_code_programming_language": "Kotlin",
       "content_code": "// ...\nbottomBar = {\n    BottomAppBar(cutoutShape = CircleShape) {\n        // ...\n    }\n},\nfloatingActionButtonPosition = FabPosition.Center,\nisFloatingActionButtonDocked = true,\n// ..."
-
     },
     {
-      "content_id": "17",
+      "content_id": "18",
       "content_type": "header",
       "content_text": "Parameters"
     },
     {
-      "content_id": "18",
+      "content_id": "19",
       "content_type": "content_text",
       "content_text": "`Scaffold` has many parameters to customize its appearance and behavior, including `contentWindowInsets` for handling system UI, `drawerGesturesEnabled`, `drawerShape`, `drawerElevation`, etc. Refer to the documentation for the full list."
     },
     {
-      "content_id": "19",
+      "content_id": "20",
       "content_type": "ad_banner"
     }
   ]

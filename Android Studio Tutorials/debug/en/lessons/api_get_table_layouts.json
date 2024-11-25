@@ -43,21 +43,25 @@
     },
     {
       "content_id": "9",
+      "content_type": "ad_large_banner"
+    },
+    {
+      "content_id": "10",
       "content_type": "image",
       "content_image_src": "https://developer.android.com/static/images/table_layout.png"
     },
     {
-      "content_id": "10",
+      "content_id": "11",
       "content_type": "header",
       "content_text": "Column Control"
     },
     {
-      "content_id": "11",
+      "content_id": "12",
       "content_type": "content_text",
       "content_text": "Columns can be manipulated for responsiveness. `android:stretchColumns` allows columns to expand to fill available space, while `android:shrinkColumns` makes columns shrink when necessary. `android:collapseColumns` hides specific columns."
     },
     {
-      "content_id": "12",
+      "content_id": "13",
       "content_type": "ad_banner"
     }
   ]
