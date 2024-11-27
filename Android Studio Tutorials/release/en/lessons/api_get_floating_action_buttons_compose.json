@@ -1,0 +1,91 @@
+{
+  "lesson_title": "Floating Action Buttons in Android",
+  "lesson_content": [
+    {
+      "content_id": "1",
+      "content_type": "content_text",
+      "content_text": "<p>Floating action buttons (FABs) are prominent circular buttons that perform key actions on a screen.  They are visually distinct and make it easy for users to find and trigger important functions.</p><p>Use a FAB for:</p><ul><li>The most common or important action on a screen.</li><li>Actions that create new items, add contacts, or center locations (e.g., on a map).</li></ul><p>There are three FAB sizes:</p><ul><li><b>FAB:</b> Standard size.</li><li><b>Small FAB:</b> For secondary actions or compact layouts.</li><li><b>Large FAB:</b> For prominent actions, especially in larger layouts.</li></ul><p>Consider these three use cases where you might use a FAB:</p><ul><li><b>Create new item:</b> In a note-taking app, a FAB might be used to quickly create a new note.</li><li><b>Add new contact:</b> In a chat app, a FAB could open an interface that lets the user add someone to a conversation.</li><li><b>Center location:</b> In a map interface, a FAB could center the map on the user's current location.</li></ul><p>In Material Design, there are four types of FAB:</p><ul><li><b>FAB:</b> A floating action button of ordinary size.</li><li><b>Small FAB:</b> A smaller floating action button.</li><li><b>Large FAB:</b> A larger floating action button.</li><li><b>Extended FAB:</b> A floating action button that contains more than just an icon.</li></ul>"
+    },
+    {
+      "content_id": "2",
+      "content_type": "ad_large_banner"
+    },
+    {
+      "content_id": "3",
+      "content_type": "header",
+      "content_text": "Implementation in Jetpack Compose / Create a basic floating action button"
+    },
+    {
+      "content_id": "4",
+      "content_type": "content_code",
+      "content_code_programming_language": "Kotlin",
+      "content_code": "@Composable\nfun Example(onClick: () -> Unit) {\n    FloatingActionButton(\n        onClick = { onClick() },\n    ) {\n        Icon(Icons.Filled.Add, \"Floating action button.\")\n    }\n}"
+    },
+    {
+      "content_id": "5",
+      "content_type": "image",
+      "content_image_src": "https://firebasestorage.googleapis.com/v0/b/design-spec/o/projects%2Fgoogle-material-3%2Fimages%2Flwg8277k-1.png?alt=media&token=761f2846-1eea-4d52-a9b4-508dd285bc1f"
+    },
+    {
+      "content_id": "6",
+      "content_type": "header",
+      "content_text": "Small FAB Example / Create a small floating action button"
+    },
+    {
+      "content_id": "7",
+      "content_type": "content_code",
+      "content_code_programming_language": "Kotlin",
+      "content_code": "@Composable\nfun SmallExample(onClick: () -> Unit) {\n    SmallFloatingActionButton(\n        onClick = { onClick() },\n        containerColor = MaterialTheme.colorScheme.secondaryContainer,\n        contentColor = MaterialTheme.colorScheme.secondary\n    ) {\n        Icon(Icons.Filled.Add, \"Small floating action button.\")\n    }\n}"
+    },
+    {
+      "content_id": "8",
+      "content_type": "image",
+      "content_image_src": "https://lh3.googleusercontent.com/Yv9zFQhIeOkl-H-xkMzLgYh6sFp2ClL26yVUhT2a5j2vk6EKSLW2HN2iLO1gnxYelJScAoB7AASxwaM0CLty45ASehM7EjH1TEeAFRa9qAqn=s0"
+    },
+    {
+      "content_id": "9",
+      "content_type": "ad_large_banner"
+    }
+    {
+      "content_id": "10",
+      "content_type": "header",
+      "content_text": "Large FAB Example / Create a large floating action button"
+    },
+    {
+      "content_id": "11",
+      "content_type": "content_code",
+      "content_code_programming_language": "Kotlin",
+      "content_code": "@Composable\nfun LargeExample(onClick: () -> Unit) {\n    LargeFloatingActionButton(\n        onClick = { onClick() },\n        shape = CircleShape,\n    ) {\n        Icon(Icons.Filled.Add, \"Large floating action button\")\n    }\n}"
+    },
+    {
+      "content_id": "12",
+      "content_type": "image",
+      "content_image_src": "https://firebasestorage.googleapis.com/v0/b/design-spec/o/projects%2Fgoogle-material-3%2Fimages%2Flwg841ri-5.png?alt=media&token=542edd57-1675-4b76-acfe-4863b5d2cee9"
+    },
+    {
+      "content_id": "13",
+      "content_type": "header",
+      "content_text": "Extended FAB Example / Create an extended floating action button"
+    },
+    {
+      "content_id": "14",
+      "content_type": "content_code",
+      "content_code_programming_language": "Kotlin",
+      "content_code": "@Composable\nfun ExtendedExample(onClick: () -> Unit) {\n    ExtendedFloatingActionButton(\n        onClick = { onClick() },\n        icon = { Icon(Icons.Filled.Edit, \"Extended floating action button.\") },\n        text = { Text(text = \"Extended FAB\") },\n    )\n}"
+    },
+    {
+      "content_id": "15",
+      "content_type": "image",
+      "content_image_src": "https://firebasestorage.googleapis.com/v0/b/design-spec/o/projects%2Fgoogle-material-3%2Fimages%2Flwugh3ls-1.png?alt=media&token=9a2940ef-f8d0-4e20-9620-a60b55bc2592"
+    },
+    {
+      "content_id": "16",
+      "content_type": "content_text",
+      "content_text": "<p><b>Key Considerations:</b></p><ul><li><b>Icon Clarity:</b> Use clear, understandable icons.</li><li><b>Single Primary Action:</b> Avoid multiple FABs on one screen.</li><li><b>Placement:</b> Typically anchored to the bottom right.</li><li><b>Responsive Layout:</b> Consider upper left for larger screens.</li><li><b>Animation:</b> Use enter/exit transitions.  FABs can morph between states.</li><li><b>Actions:</b> Prioritize create, favorite, share, start process actions. Avoid minor or destructive actions (e.g., delete). </li></ul>"
+    },
+    {
+      "content_id": "17",
+      "content_type": "ad_banner"
+    }
+  ]
+}
