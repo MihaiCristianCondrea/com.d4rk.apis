@@ -1,5 +1,21 @@
 [
   {
+    "lesson_id": "13",
+    "lesson_title": "Floating Action Buttons in Android",
+    "lesson_description": "Learn how to implement Floating Action Buttons (FABs) in your Android app using Jetpack Compose. This lesson covers different FAB sizes, usage examples, and key considerations for effective implementation.",
+    "lesson_type": "full_banner",
+    "deep_link_path": "com.d4rk.androidtutorials://lesson/floating_action_buttons_compose",
+    "lesson_tags": [
+      "Android",
+      "Jetpack Compose",
+      "Kotlin",
+      "UI",
+      "FAB",
+      "Material Design"
+    ],
+    "thumbnail_image_url": "https://i.ibb.co/pZLffvM/how-to-use-fabs-compose.png"
+  },
+  {
     "lesson_id": "12",
     "lesson_title": "Creating and Using Alert Dialogs in Android",
     "lesson_description": "Alert dialogs are essential UI components in Android for displaying important information or prompting user decisions.",
