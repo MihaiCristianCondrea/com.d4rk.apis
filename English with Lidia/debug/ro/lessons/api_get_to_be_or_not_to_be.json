@@ -3,7 +3,9 @@
         {
             "lesson_id": 1,
             "lesson_title": "Tell me about yourself",
-            "lesson_banner": "https://i.ibb.co/p4sQcLn/im-lesson1.webp",
+            "lesson_type": "",
+            "thumbnail_image_url": "https://i.ibb.co/p4sQcLn/im-lesson1.webp",
+            "deep_link_path": "deep_link_path",
             "lesson_details": {
                 "lesson_details_title_extension": "(in a job interview)",
                 "lesson_details_podcast": "https://firebasestorage.googleapis.com/v0/b/d4rk-plus-apps---android.appspot.com/o/tell_me_about_yourself.mp3?alt=media&token=c2926593-370d-447b-b725-45b8385dba92",
