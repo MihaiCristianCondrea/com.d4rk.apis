@@ -11,12 +11,9 @@
       "Kotlin",
       "UI",
       "Chips",
-      "Material Design",
-      "Input",
-      "Filter",
-      "Suggestion"
+      "Material Design"
     ],
-    "thumbnail_image_url": "https://developer.android.com/images/compose/chips/assist_chip.png"
+    "thumbnail_image_url": "https://i.ibb.co/Wpk8h3N/how-to-use-chips-in-compose.png"
   },
   {
     "lesson_id": "13",

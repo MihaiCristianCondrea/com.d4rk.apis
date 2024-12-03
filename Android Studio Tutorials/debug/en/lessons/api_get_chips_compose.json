@@ -38,7 +38,7 @@
       "content_id": "8",
       "content_type": "content_code",
       "content_code_programming_language": "Kotlin",
-      "content_code": "AssistChip(\n    onClick = { /* Action on click */ },\n    label = { Text(\"Assist Chip\") },\n    leadingIcon = { Icon(Icons.Filled.Info, contentDescription = \"Info\") }\n)"
+      "content_code": "// Creates an Assist Chip\nAssistChip(\n    onClick = { /* Action to perform when clicked */ },\n    label = { Text(\"Assist Chip\") },\n    leadingIcon = { Icon(Icons.Filled.Info, contentDescription = \"Info\") }\n)"
     },
     {
       "content_id": "9",
@@ -53,7 +53,7 @@
       "content_id": "11",
       "content_type": "content_code",
       "content_code_programming_language": "Kotlin",
-      "content_code": "var selected by remember { mutableStateOf(false) }\n\nFilterChip(\n    selected = selected,\n    onClick = { selected = !selected },\n    label = { Text(\"Filter Chip\") },\n    leadingIcon = { if (selected) Icon(Icons.Filled.Check, contentDescription = \"Selected\") }\n)"
+      "content_code": "// Creates a Filter Chip with state management for selection\nvar selected by remember { mutableStateOf(false) }\n\nFilterChip(\n    selected = selected,\n    onClick = { selected = !selected }, // Toggle selection\n    label = { Text(\"Filter Chip\") },\n    leadingIcon = { if (selected) Icon(Icons.Filled.Check, contentDescription = \"Selected\") } // Show checkmark if selected\n)"
     },
     {
       "content_id": "12",
@@ -64,7 +64,7 @@
       "content_id": "13",
       "content_type": "content_code",
       "content_code_programming_language": "Kotlin",
-      "content_code": "InputChip(\n    selected = true, // Example: Initially selected\n    onClick = { /* Dismiss action */ },\n    label = { Text(\"Input Chip\") },\n    trailingIcon = { Icon(Icons.Filled.Close, contentDescription = \"Close\") }\n)"
+      "content_code": "// Creates an Input Chip (typically removable)\nInputChip(\n    selected = true, // Example: Initially selected\n    onClick = { /* Action to perform when clicked (e.g., remove chip) */ },\n    label = { Text(\"Input Chip\") },\n    trailingIcon = { Icon(Icons.Filled.Close, contentDescription = \"Close\") }\n)"
     },
     {
       "content_id": "14",
@@ -79,7 +79,7 @@
       "content_id": "16",
       "content_type": "content_code",
       "content_code_programming_language": "Kotlin",
-      "content_code": "SuggestionChip(\n    onClick = { /* Action on click */ },\n    label = { Text(\"Suggestion Chip\") }\n)"
+      "content_code": "// Creates a Suggestion Chip\nSuggestionChip(\n    onClick = { /* Action to perform when clicked */ },\n    label = { Text(\"Suggestion Chip\") }\n)"
     },
     {
       "content_id": "17",
@@ -94,7 +94,7 @@
       "content_id": "19",
       "content_type": "content_code",
       "content_code_programming_language": "Kotlin",
-      "content_code": "// ... (Code example from previous response, expanded with more details if needed)"
+      "content_code": "// Single selection Chip Group - manages selected chip\nvar selectedChip by remember { mutableStateOf<String?>(null) } \n\nChipGroup(selectedChip = selectedChip) { chip -> \n    FilterChip(\n        selected = selectedChip == chip,\n        onClick = { selectedChip = chip },\n        label = { Text(chip) }\n    )\n}"
     },
     {
       "content_id": "20",
@@ -105,7 +105,7 @@
       "content_id": "21",
       "content_type": "content_code",
       "content_code_programming_language": "Kotlin",
-      "content_code": "// ... (Code example from previous response, expanded with more details)"
+      "content_code": "// Multi-selection Chip Group\nval selectedChips = remember { mutableStateOf(setOf<String>()) }\n\nChipGroup { \n    listOf(\"Chip 1\", \"Chip 2\", \"Chip 3\").forEach { chip ->\n        FilterChip(\n            selected = chip in selectedChips.value,\n            onClick = { \n                selectedChips.value = if (chip in selectedChips.value) {\n                    selectedChips.value - chip\n                } else {\n                    selectedChips.value + chip\n                }\n            },\n            label = { Text(chip) }\n        )\n    }\n}"
     },
     {
       "content_id": "22",
