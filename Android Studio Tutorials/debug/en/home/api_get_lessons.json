@@ -1,5 +1,24 @@
 [
   {
+    "lesson_id": "14",
+    "lesson_title": "Chips for Complex Entities in Compose",
+    "lesson_description": "Learn how to use Chips in Jetpack Compose to represent complex entities like contacts, tags, or filters.  Explore different Chip types, customization options, and Chip Group implementations for single and multi-selection.",
+    "lesson_type": "full_banner", 
+    "deep_link_path": "com.d4rk.androidtutorials://lesson/chips_compose",
+    "lesson_tags": [
+      "Android",
+      "Jetpack Compose",
+      "Kotlin",
+      "UI",
+      "Chips",
+      "Material Design",
+      "Input",
+      "Filter",
+      "Suggestion"
+    ],
+    "thumbnail_image_url": "https://developer.android.com/images/compose/chips/assist_chip.png"
+  },
+  {
     "lesson_id": "13",
     "lesson_title": "Floating Action Buttons in Android",
     "lesson_description": "Learn how to implement Floating Action Buttons (FABs) in your Android app using Jetpack Compose. This lesson covers different FAB sizes, usage examples, and key considerations for effective implementation.",
