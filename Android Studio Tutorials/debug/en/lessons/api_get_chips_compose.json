@@ -23,11 +23,11 @@
     {
       "content_id": "5",
       "content_type": "image",
-      "content_image_src": "https://developer.android.com/images/compose/chips/assist_chip.png"
+      "content_image_src": "https://developer.android.com/static/develop/ui/compose/images/components/chip-assist.png"
     },
     {
       "content_id": "6",
-      "content_type": "ad_banner"
+      "content_type": "ad_large_banner"
     },
     {
       "content_id": "7",
@@ -68,7 +68,7 @@
     },
     {
       "content_id": "14",
-      "content_type": "ad_banner"
+      "content_type": "ad_large_banner"
     },
     {
       "content_id": "15",
