@@ -1,12 +1,17 @@
 {
     "data": [
         {
-            "lesson_id": "a",        
+            "lesson_id": "banner_image_local",        
             "lesson_type": "banner_image_local"
         },
         {
-            "lesson_id": "b",
+            "lesson_id": "row_buttons_local",
             "lesson_type": "row_buttons_local"
+        },
+
+        {
+            "lesson_id": "ad_view_banner",
+            "lesson_type": "ad_view_banner"
         },
         {
             "lesson_id": "2",
@@ -21,6 +26,10 @@
             "lesson_type": "full_banner",
             "thumbnail_image_url": "https://i.ibb.co/p4sQcLn/im-lesson1.webp",
             "deep_link_path": "com.d4rk.englishwithlidia.plus://lesson/tell_me_about_yourself"
+        },
+        {
+            "lesson_id": "ad_view_banner_large",
+            "lesson_type": "ad_view_banner_large"
         }
     ]
 }
