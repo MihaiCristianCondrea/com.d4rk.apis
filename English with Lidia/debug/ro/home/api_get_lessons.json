@@ -1,14 +1,13 @@
 {
     "data": [
         {
-            "lesson_id": "banner_image_local",        
+            "lesson_id": "banner_image_local",
             "lesson_type": "banner_image_local"
         },
         {
             "lesson_id": "row_buttons_local",
             "lesson_type": "row_buttons_local"
         },
-
         {
             "lesson_id": "ad_view_banner",
             "lesson_type": "ad_view_banner"
@@ -17,15 +16,15 @@
             "lesson_id": "2",
             "lesson_title": "To be or not to be",
             "lesson_type": "full_banner",
-            "thumbnail_image_url": "https://i.ibb.co/Y4SmcSz/im-lesson2.webp",
-            "deep_link_path": "com.d4rk.englishwithlidia.plus://lesson/to_be_or_not_to_be"
+            "lesson_thumbnail_image_url": "https://i.ibb.co/Y4SmcSz/im-lesson2.webp",
+            "lesson_deep_link_path": "com.d4rk.englishwithlidia.plus://lesson/to_be_or_not_to_be"
         },
         {
             "lesson_id": "1",
             "lesson_title": "Tell me about yourself",
             "lesson_type": "full_banner",
-            "thumbnail_image_url": "https://i.ibb.co/p4sQcLn/im-lesson1.webp",
-            "deep_link_path": "com.d4rk.englishwithlidia.plus://lesson/tell_me_about_yourself"
+            "lesson_thumbnail_image_url": "https://i.ibb.co/p4sQcLn/im-lesson1.webp",
+            "lesson_deep_link_path": "com.d4rk.englishwithlidia.plus://lesson/tell_me_about_yourself"
         },
         {
             "lesson_id": "ad_view_banner_large",
