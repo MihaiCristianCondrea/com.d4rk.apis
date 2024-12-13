@@ -1,54 +1,58 @@
 {
-  "lesson_title": "Alert Dialogs in Android",
-  "lesson_content": [
+  "data": [
     {
-      "content_id": "1",
-      "content_type": "content_text",
-      "content_text": "<p>Alert dialogs are UI elements that inform users about critical information and prompt them to confirm actions. These dialogs appear on top of the current activity and require user interaction before continuing. They serve various purposes, including:</p><ul><li><b>Confirmation Dialogs:</b> Seek confirmation before performing an action.</li><li><b>Information Dialogs:</b> Display important information or status updates.</li><li><b>Error Dialogs:</b> Indicate errors or problems that require user attention.</li><li><b>Input Dialogs:</b> Gather user input through text fields.</li></ul>"
-    },
-    {
-      "content_id": "2",
-      "content_type": "ad_large_banner"
-    },
-    {
-      "content_id": "3",
-      "content_type": "header",
-      "content_text": "Creating Alert Dialogs in Java"
-    },
-    {
-      "content_id": "4",
-      "content_type": "content_code",
-      "content_code_programming_language": "Java",
-      "content_code": "// Import the necessary classes and libraries\nimport android.content.Intent;\nimport android.os.Bundle;\nimport androidx.appcompat.app.AppCompatActivity;\nimport com.google.android.material.dialog.MaterialAlertDialogBuilder;\n\n// This class extends AppCompatActivity and represents the main activity of an Android app\npublic class MainActivity extends AppCompatActivity {\n\n    // Declare a private lateinit variable for binding the layout with this activity\n    private ActivityMainBinding binding;\n\n    // This method is called when the activity is first created\n    @Override\n    protected void onCreate(Bundle savedInstanceState) {\n        super.onCreate(savedInstanceState);\n\n        // Inflate the layout and set it as the content view for this activity\n        binding = ActivityMainBinding.inflate(getLayoutInflater());\n        setContentView(binding.getRoot());\n\n        // Set a click listener on the button in the layout\n        binding.button.setOnClickListener(view -> {\n            // Create and show an alert dialog using MaterialAlertDialogBuilder\n            new MaterialAlertDialogBuilder(this)\n                    .setTitle(\"Your title\") // Set title of dialog\n                    .setMessage(\"This will be the message you will see on screen!\") // Set message of dialog\n                    .setPositiveButton(\"O.K.\", null) // Set positive button text and click listener (null means no action)\n                    .setNegativeButton(\"Cancel\", null) // Set negative button text and click listener (null means no action)\n                    .create() // Create the dialog\n                    .show(); // Show the dialog on screen\n        });\n    }\n}"
-    },
-    {
-      "content_id": "5",
-      "content_type": "image",
-      "content_image_src": "https://lh3.googleusercontent.com/CALQMWbk3gorcQxp9OVdyMDi5IJ6A1K0iYFlnfj9Hlz_ku_lomkjTjBvPKI_m9r-Y5g5HjMNtuHyEVnoMLc1vLkuWY2BjN5ekNKunKLla1_v=s0"
-    },
-    {
-      "content_id": "6",
-      "content_type": "content_text",
-      "content_text": "A dialog is a modal window that appears in front of app content to provide critical information or ask for a decision. Dialogs disable all app functionality when they appear, and remain on screen until confirmed, dismissed, or a required action has been taken.<p>Dialogs are purposefully interruptive, so they should be used sparingly. A less disruptive alternative is to use a menu, which provides options without interrupting a user’s experience.</p><h3>Types of Dialogs</h3><p>There are two types of dialogs:</p><ul><li>Basic dialog</li><li>Full-screen dialog</li></ul><p><b>Do:</b> Use dialogs for prompts that block an app’s normal operation, and for critical information that requires a specific user task, decision, or acknowledgement.</p><p><b>Don’t:</b> Don’t use dialogs for low- or medium-priority information. Instead use a snackbar, which can be dismissed or disappear automatically.</p><h3>Similar Components</h3><p>Snackbars and banners are also designed to show important messages. Choose the right component based on the importance of the message. This component messaging strategy can help avoid overusing dialogs.</p><ul><li><b>Snackbars:</b> Low importance, optional action, can disappear automatically.</li><li><b>Banners:</b> Medium importance, optional action, remain on screen until acted on, dismissed, or the triggering state is resolved.</li><li><b>Dialogs:</b> High importance, required action, block the main content until action is confirmed.</li></ul>"
-    },
-    {
-      "content_id": "7",
-      "content_type": "ad_large_banner"
-    },
-    {
-      "content_id": "9",
-      "content_type": "header",
-      "content_text": "Creating Alert Dialogs in Kotlin"
-    },
-    {
-      "content_id": "9",
-      "content_type": "content_code",
-      "content_code_programming_language": "Kotlin",
-      "content_code": "// Import the necessary classes and libraries\nimport android.content.Intent\nimport android.os.Bundle\nimport com.google.android.material.dialog.MaterialAlertDialogBuilder\nimport androidx.appcompat.app.AppCompatActivity\n\n// This class extends AppCompatActivity and represents the main activity of an Android app\nclass MainActivity : AppCompatActivity() {\n\n    // Declare a private lateinit variable for binding the layout with this activity\n    private lateinit var binding : ActivityMainBinding\n\n    // This method is called when the activity is first created\n    override fun onCreate(savedInstanceState: Bundle?) {\n        super.onCreate(savedInstanceState)\n\n        // Inflate the layout and set it as the content view for this activity\n        binding = ActivityMainBinding.inflate(layoutInflater)\n\n        // Set the content view to the root view of the inflated layout\n        setContentView(binding.root)\n\n        // Set a click listener on the button to display an alert dialog when clicked\n        binding.button.setOnClickListener {\n\n            // Create a new MaterialAlertDialogBuilder instance and set its properties\n            MaterialAlertDialogBuilder(this)\n                .setTitle(\"Your title\") // Set the title of the dialog\n                .setMessage(\"This will be the message you will see on screen!\") // Set the message of the dialog\n                .setPositiveButton(\"O.K.\", null) // Set the text and callback for the positive button\n                .setNegativeButton(\"Cancel\", null) // Set the text and callback for the negative button\n                .create() // Create the alert dialog\n                .show() // Show the alert dialog on the screen\n        }\n    }\n}"
-    },
-    {
-      "content_id": "10",
-      "content_type": "ad_banner"
+      "lesson_title": "Alert Dialogs in Android",
+      "lesson_content": [
+        {
+          "content_id": "1",
+          "content_type": "content_text",
+          "content_text": "<p>Alert dialogs are UI elements that inform users about critical information and prompt them to confirm actions. These dialogs appear on top of the current activity and require user interaction before continuing. They serve various purposes, including:</p><ul><li><b>Confirmation Dialogs:</b> Seek confirmation before performing an action.</li><li><b>Information Dialogs:</b> Display important information or status updates.</li><li><b>Error Dialogs:</b> Indicate errors or problems that require user attention.</li><li><b>Input Dialogs:</b> Gather user input through text fields.</li></ul>"
+        },
+        {
+          "content_id": "2",
+          "content_type": "ad_large_banner"
+        },
+        {
+          "content_id": "3",
+          "content_type": "header",
+          "content_text": "Creating Alert Dialogs in Java"
+        },
+        {
+          "content_id": "4",
+          "content_type": "content_code",
+          "content_code_programming_language": "Java",
+          "content_code": "// Import the necessary classes and libraries\nimport android.content.Intent;\nimport android.os.Bundle;\nimport androidx.appcompat.app.AppCompatActivity;\nimport com.google.android.material.dialog.MaterialAlertDialogBuilder;\n\n// This class extends AppCompatActivity and represents the main activity of an Android app\npublic class MainActivity extends AppCompatActivity {\n\n    // Declare a private lateinit variable for binding the layout with this activity\n    private ActivityMainBinding binding;\n\n    // This method is called when the activity is first created\n    @Override\n    protected void onCreate(Bundle savedInstanceState) {\n        super.onCreate(savedInstanceState);\n\n        // Inflate the layout and set it as the content view for this activity\n        binding = ActivityMainBinding.inflate(getLayoutInflater());\n        setContentView(binding.getRoot());\n\n        // Set a click listener on the button in the layout\n        binding.button.setOnClickListener(view -> {\n            // Create and show an alert dialog using MaterialAlertDialogBuilder\n            new MaterialAlertDialogBuilder(this)\n                    .setTitle(\"Your title\") // Set title of dialog\n                    .setMessage(\"This will be the message you will see on screen!\") // Set message of dialog\n                    .setPositiveButton(\"O.K.\", null) // Set positive button text and click listener (null means no action)\n                    .setNegativeButton(\"Cancel\", null) // Set negative button text and click listener (null means no action)\n                    .create() // Create the dialog\n                    .show(); // Show the dialog on screen\n        });\n    }\n}"
+        },
+        {
+          "content_id": "5",
+          "content_type": "image",
+          "content_image_src": "https://lh3.googleusercontent.com/CALQMWbk3gorcQxp9OVdyMDi5IJ6A1K0iYFlnfj9Hlz_ku_lomkjTjBvPKI_m9r-Y5g5HjMNtuHyEVnoMLc1vLkuWY2BjN5ekNKunKLla1_v=s0"
+        },
+        {
+          "content_id": "6",
+          "content_type": "content_text",
+          "content_text": "A dialog is a modal window that appears in front of app content to provide critical information or ask for a decision. Dialogs disable all app functionality when they appear, and remain on screen until confirmed, dismissed, or a required action has been taken.<p>Dialogs are purposefully interruptive, so they should be used sparingly. A less disruptive alternative is to use a menu, which provides options without interrupting a user’s experience.</p><h3>Types of Dialogs</h3><p>There are two types of dialogs:</p><ul><li>Basic dialog</li><li>Full-screen dialog</li></ul><p><b>Do:</b> Use dialogs for prompts that block an app’s normal operation, and for critical information that requires a specific user task, decision, or acknowledgement.</p><p><b>Don’t:</b> Don’t use dialogs for low- or medium-priority information. Instead use a snackbar, which can be dismissed or disappear automatically.</p><h3>Similar Components</h3><p>Snackbars and banners are also designed to show important messages. Choose the right component based on the importance of the message. This component messaging strategy can help avoid overusing dialogs.</p><ul><li><b>Snackbars:</b> Low importance, optional action, can disappear automatically.</li><li><b>Banners:</b> Medium importance, optional action, remain on screen until acted on, dismissed, or the triggering state is resolved.</li><li><b>Dialogs:</b> High importance, required action, block the main content until action is confirmed.</li></ul>"
+        },
+        {
+          "content_id": "7",
+          "content_type": "ad_large_banner"
+        },
+        {
+          "content_id": "9",
+          "content_type": "header",
+          "content_text": "Creating Alert Dialogs in Kotlin"
+        },
+        {
+          "content_id": "9",
+          "content_type": "content_code",
+          "content_code_programming_language": "Kotlin",
+          "content_code": "// Import the necessary classes and libraries\nimport android.content.Intent\nimport android.os.Bundle\nimport com.google.android.material.dialog.MaterialAlertDialogBuilder\nimport androidx.appcompat.app.AppCompatActivity\n\n// This class extends AppCompatActivity and represents the main activity of an Android app\nclass MainActivity : AppCompatActivity() {\n\n    // Declare a private lateinit variable for binding the layout with this activity\n    private lateinit var binding : ActivityMainBinding\n\n    // This method is called when the activity is first created\n    override fun onCreate(savedInstanceState: Bundle?) {\n        super.onCreate(savedInstanceState)\n\n        // Inflate the layout and set it as the content view for this activity\n        binding = ActivityMainBinding.inflate(layoutInflater)\n\n        // Set the content view to the root view of the inflated layout\n        setContentView(binding.root)\n\n        // Set a click listener on the button to display an alert dialog when clicked\n        binding.button.setOnClickListener {\n\n            // Create a new MaterialAlertDialogBuilder instance and set its properties\n            MaterialAlertDialogBuilder(this)\n                .setTitle(\"Your title\") // Set the title of the dialog\n                .setMessage(\"This will be the message you will see on screen!\") // Set the message of the dialog\n                .setPositiveButton(\"O.K.\", null) // Set the text and callback for the positive button\n                .setNegativeButton(\"Cancel\", null) // Set the text and callback for the negative button\n                .create() // Create the alert dialog\n                .show() // Show the alert dialog on the screen\n        }\n    }\n}"
+        },
+        {
+          "content_id": "10",
+          "content_type": "ad_banner"
+        }
+      ]
     }
   ]
 }
