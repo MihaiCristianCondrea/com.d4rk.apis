@@ -1,81 +1,85 @@
 {
-  "lesson_title": "View Binding",
-  "lesson_content": [
+  "data": [
     {
-      "content_id": "1",
-      "content_type": "header",
-      "content_text": "Introduction to View Binding"
-    },
-    {
-      "content_id": "2",
-      "content_type": "content_text",
-      "content_text": "<b>View binding</b> is a Jetpack feature that simplifies view interaction by generating a binding class for each XML layout file. This class provides direct references to all views with an ID, minimizing the need for <i>findViewById</i> and reducing code complexity."
-    },
-    {
-      "content_id": "3",
-      "content_type": "header",
-      "content_text": "Setup"
-    },
-    {
-      "content_id": "4",
-      "content_type": "content_text",
-      "content_text": "View binding is enabled on a per-module basis by adding it to the <i>build.gradle</i> file, generating binding classes for XML layouts within that module."
-    },
-    {
-      "content_id": "5",
-      "content_type": "content_code",
-      "content_code_programming_language": "Groovy",
-      "content_code": "android {\n    ...\n    buildFeatures {\n        viewBinding = true\n    }\n}"
-    },
-    {
-      "content_id": "6",
-      "content_type": "content_text",
-      "content_text": "To exclude a layout from binding generation, add <i>tools:viewBindingIgnore=\"true\"</i> in the root view of that layout."
-    },
-    {
-      "content_id": "7",
-      "content_type": "ad_large_banner"
-    },
-    {
-      "content_id": "8",
-      "content_type": "header",
-      "content_text": "Using View Binding in Activities"
-    },
-    {
-      "content_id": "9",
-      "content_type": "content_text",
-      "content_text": "Create a binding instance in the activity's <i>onCreate()</i> method and set the root view as the active layout."
-    },
-    {
-      "content_id": "10",
-      "content_type": "content_code",
-      "content_code_programming_language": "Kotlin",
-      "content_code": "private lateinit var binding: ResultProfileBinding\n\noverride fun onCreate(savedInstanceState: Bundle?) {\n    super.onCreate(savedInstanceState)\n    binding = ResultProfileBinding.inflate(layoutInflater)\n    val view = binding.root\n    setContentView(view)\n}"
-    },
-    {
-      "content_id": "12",
-      "content_type": "header",
-      "content_text": "Using View Binding in Fragments"
-    },
-    {
-      "content_id": "13",
-      "content_type": "content_text",
-      "content_text": "In fragments, create the binding instance in <i>onCreateView()</i> and release it in <i>onDestroyView()</i> to avoid memory leaks."
-    },
-    {
-      "content_id": "14",
-      "content_type": "content_code",
-      "content_code_programming_language": "Kotlin",
-      "content_code": "private var _binding: ResultProfileBinding? = null\n// This property is only valid between onCreateView and\n// onDestroyView.\nprivate val binding get() = _binding!!\n\noverride fun onCreateView(\n    inflater: LayoutInflater,\n    container: ViewGroup?,\n    savedInstanceState: Bundle?\n): View? {\n    _binding = ResultProfileBinding.inflate(inflater, container, false)\n    val view = binding.root\n    return view\n}\n\noverride fun onDestroyView() {\n    super.onDestroyView()\n    _binding = null\n}"
-    },
-    {
-      "content_id": "15",
-      "content_type": "content_text",
-      "content_text": "Task completed. You can now incorporate ID attributes into your XML layout files and leverage View Binding for efficient view access."
-    },
-    {
-      "content_id": "16",
-      "content_type": "ad_banner"
+      "lesson_title": "View Binding",
+      "lesson_content": [
+        {
+          "content_id": "1",
+          "content_type": "header",
+          "content_text": "Introduction to View Binding"
+        },
+        {
+          "content_id": "2",
+          "content_type": "content_text",
+          "content_text": "<b>View binding</b> is a Jetpack feature that simplifies view interaction by generating a binding class for each XML layout file. This class provides direct references to all views with an ID, minimizing the need for <i>findViewById</i> and reducing code complexity."
+        },
+        {
+          "content_id": "3",
+          "content_type": "header",
+          "content_text": "Setup"
+        },
+        {
+          "content_id": "4",
+          "content_type": "content_text",
+          "content_text": "View binding is enabled on a per-module basis by adding it to the <i>build.gradle</i> file, generating binding classes for XML layouts within that module."
+        },
+        {
+          "content_id": "5",
+          "content_type": "content_code",
+          "content_code_programming_language": "Groovy",
+          "content_code": "android {\n    ...\n    buildFeatures {\n        viewBinding = true\n    }\n}"
+        },
+        {
+          "content_id": "6",
+          "content_type": "content_text",
+          "content_text": "To exclude a layout from binding generation, add <i>tools:viewBindingIgnore=\"true\"</i> in the root view of that layout."
+        },
+        {
+          "content_id": "7",
+          "content_type": "ad_large_banner"
+        },
+        {
+          "content_id": "8",
+          "content_type": "header",
+          "content_text": "Using View Binding in Activities"
+        },
+        {
+          "content_id": "9",
+          "content_type": "content_text",
+          "content_text": "Create a binding instance in the activity's <i>onCreate()</i> method and set the root view as the active layout."
+        },
+        {
+          "content_id": "10",
+          "content_type": "content_code",
+          "content_code_programming_language": "Kotlin",
+          "content_code": "private lateinit var binding: ResultProfileBinding\n\noverride fun onCreate(savedInstanceState: Bundle?) {\n    super.onCreate(savedInstanceState)\n    binding = ResultProfileBinding.inflate(layoutInflater)\n    val view = binding.root\n    setContentView(view)\n}"
+        },
+        {
+          "content_id": "12",
+          "content_type": "header",
+          "content_text": "Using View Binding in Fragments"
+        },
+        {
+          "content_id": "13",
+          "content_type": "content_text",
+          "content_text": "In fragments, create the binding instance in <i>onCreateView()</i> and release it in <i>onDestroyView()</i> to avoid memory leaks."
+        },
+        {
+          "content_id": "14",
+          "content_type": "content_code",
+          "content_code_programming_language": "Kotlin",
+          "content_code": "private var _binding: ResultProfileBinding? = null\n// This property is only valid between onCreateView and\n// onDestroyView.\nprivate val binding get() = _binding!!\n\noverride fun onCreateView(\n    inflater: LayoutInflater,\n    container: ViewGroup?,\n    savedInstanceState: Bundle?\n): View? {\n    _binding = ResultProfileBinding.inflate(inflater, container, false)\n    val view = binding.root\n    return view\n}\n\noverride fun onDestroyView() {\n    super.onDestroyView()\n    _binding = null\n}"
+        },
+        {
+          "content_id": "15",
+          "content_type": "content_text",
+          "content_text": "Task completed. You can now incorporate ID attributes into your XML layout files and leverage View Binding for efficient view access."
+        },
+        {
+          "content_id": "16",
+          "content_type": "ad_banner"
+        }
+      ]
     }
   ]
 }

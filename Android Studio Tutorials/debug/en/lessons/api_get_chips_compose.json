@@ -1,124 +1,128 @@
 {
-  "lesson_title": "Chips in Android with Jetpack Compose",
-  "lesson_content": [
+  "data": [
     {
-      "content_id": "1",
-      "content_type": "content_text",
-      "content_text": "<p>Chips are compact, interactive UI elements representing complex entities like contacts or tags. They often include an icon and label, and can be checkable, dismissible, or clickable.</p>"
-    },
-    {
-      "content_id": "2",
-      "content_type": "ad_large_banner"
-    },
-    {
-      "content_id": "3",
-      "content_type": "header",
-      "content_text": "Chip Types"
-    },
-    {
-      "content_id": "4",
-      "content_type": "image",
-      "content_image_src": "https://firebasestorage.googleapis.com/v0/b/design-spec/o/projects%2Fgoogle-material-3%2Fimages%2Flzthj7vk-1.png?alt=media&token=87bf4249-1c98-406e-bf83-32e0e1b6d5a6"
-    },
-    {
-      "content_id": "5",
-      "content_type": "content_text",
-      "content_text": "<ul><li><b>1. Assist:</b> Guides users during tasks. Often temporary.</li><li><b>2. Filter:</b> Allows content refinement. Selectable with checkmarks.</li><li><b>3. Input:</b> Displays user-provided information.  Removable.</li><li><b>4. Suggestion:</b> Offers dynamic recommendations.</li>"
-    },
-    {
-      "content_id": "6",
-      "content_type": "ad_large_banner"
-    },
-    {
-      "content_id": "7",
-      "content_type": "header",
-      "content_text": "Creating an Assist Chip"
-    },
-    {
-      "content_id": "8",
-      "content_type": "content_code",
-      "content_code_programming_language": "Kotlin",
-      "content_code": "// Creates an Assist Chip\nAssistChip(\n    onClick = { /* Action to perform when clicked */ },\n    label = { Text(\"Assist Chip\") },\n    leadingIcon = { Icon(Icons.Filled.Info, contentDescription = \"Info\") }\n)"
-    },
-    {
-      "content_id": "9",
-      "content_type": "header",
-      "content_text": "Creating a Filter Chip"
-    },
-    {
-      "content_id": "10",
-      "content_type": "ad_large_banner"
-    },
-    {
-      "content_id": "11",
-      "content_type": "content_code",
-      "content_code_programming_language": "Kotlin",
-      "content_code": "// Creates a Filter Chip with state management for selection\nvar selected by remember { mutableStateOf(false) }\n\nFilterChip(\n    selected = selected,\n    onClick = { selected = !selected }, // Toggle selection\n    label = { Text(\"Filter Chip\") },\n    leadingIcon = { if (selected) Icon(Icons.Filled.Check, contentDescription = \"Selected\") } // Show checkmark if selected\n)"
-    },
-    {
-      "content_id": "12",
-      "content_type": "header",
-      "content_text": "Creating an Input Chip"
-    },
-    {
-      "content_id": "13",
-      "content_type": "content_code",
-      "content_code_programming_language": "Kotlin",
-      "content_code": "// Creates an Input Chip (typically removable)\nInputChip(\n    selected = true, // Example: Initially selected\n    onClick = { /* Action to perform when clicked (e.g., remove chip) */ },\n    label = { Text(\"Input Chip\") },\n    trailingIcon = { Icon(Icons.Filled.Close, contentDescription = \"Close\") }\n)"
-    },
-    {
-      "content_id": "14",
-      "content_type": "ad_large_banner"
-    },
-    {
-      "content_id": "15",
-      "content_type": "header",
-      "content_text": "Creating a Suggestion Chip"
-    },
-    {
-      "content_id": "16",
-      "content_type": "content_code",
-      "content_code_programming_language": "Kotlin",
-      "content_code": "// Creates a Suggestion Chip\nSuggestionChip(\n    onClick = { /* Action to perform when clicked */ },\n    label = { Text(\"Suggestion Chip\") }\n)"
-    },
-    {
-      "content_id": "17",
-      "content_type": "header",
-      "content_text": "Creating a Chip Group (Single Selection)"
-    },
-    {
-      "content_id": "18",
-      "content_type": "ad_large_banner"
-    },
-    {
-      "content_id": "19",
-      "content_type": "content_code",
-      "content_code_programming_language": "Kotlin",
-      "content_code": "// Single selection Chip Group - manages selected chip\nvar selectedChip by remember { mutableStateOf<String?>(null) } \n\nChipGroup(selectedChip = selectedChip) { chip -> \n    FilterChip(\n        selected = selectedChip == chip,\n        onClick = { selectedChip = chip },\n        label = { Text(chip) }\n    )\n}"
-    },
-    {
-      "content_id": "20",
-      "content_type": "header",
-      "content_text": "Creating a Chip Group (Multi Selection)"
-    },
-    {
-      "content_id": "21",
-      "content_type": "content_code",
-      "content_code_programming_language": "Kotlin",
-      "content_code": "// Multi-selection Chip Group\nval selectedChips = remember { mutableStateOf(setOf<String>()) }\n\nChipGroup { \n    listOf(\"Chip 1\", \"Chip 2\", \"Chip 3\").forEach { chip ->\n        FilterChip(\n            selected = chip in selectedChips.value,\n            onClick = { \n                selectedChips.value = if (chip in selectedChips.value) {\n                    selectedChips.value - chip\n                } else {\n                    selectedChips.value + chip\n                }\n            },\n            label = { Text(chip) }\n        )\n    }\n}"
-    },
-    {
-      "content_id": "22",
-      "content_type": "ad_large_banner"
-    },
-    {
-      "content_id": "23",
-      "content_type": "content_text",
-      "content_text": "<p>Key Parameters:</p><ul><li><b>label:</b> The text displayed on the chip.</li><li><b>icon/leadingIcon/trailingIcon:</b> Icons for the chip.</li><li><b>onClick:</b>  The action triggered when the chip is clicked.</li><li><b>selected:</b>  Indicates if the chip is selected (for filter and input chips).</li></ul><p>Remember to handle state appropriately and customize chip appearance using Modifiers.</p>"
-    },
-    {
-      "content_id": "25",
-      "content_type": "ad_banner"
+      "lesson_title": "Chips in Android with Jetpack Compose",
+      "lesson_content": [
+        {
+          "content_id": "1",
+          "content_type": "content_text",
+          "content_text": "<p>Chips are compact, interactive UI elements representing complex entities like contacts or tags. They often include an icon and label, and can be checkable, dismissible, or clickable.</p>"
+        },
+        {
+          "content_id": "2",
+          "content_type": "ad_large_banner"
+        },
+        {
+          "content_id": "3",
+          "content_type": "header",
+          "content_text": "Chip Types"
+        },
+        {
+          "content_id": "4",
+          "content_type": "image",
+          "content_image_src": "https://firebasestorage.googleapis.com/v0/b/design-spec/o/projects%2Fgoogle-material-3%2Fimages%2Flzthj7vk-1.png?alt=media&token=87bf4249-1c98-406e-bf83-32e0e1b6d5a6"
+        },
+        {
+          "content_id": "5",
+          "content_type": "content_text",
+          "content_text": "<ul><li><b>1. Assist:</b> Guides users during tasks. Often temporary.</li><li><b>2. Filter:</b> Allows content refinement. Selectable with checkmarks.</li><li><b>3. Input:</b> Displays user-provided information.  Removable.</li><li><b>4. Suggestion:</b> Offers dynamic recommendations.</li>"
+        },
+        {
+          "content_id": "6",
+          "content_type": "ad_large_banner"
+        },
+        {
+          "content_id": "7",
+          "content_type": "header",
+          "content_text": "Creating an Assist Chip"
+        },
+        {
+          "content_id": "8",
+          "content_type": "content_code",
+          "content_code_programming_language": "Kotlin",
+          "content_code": "// Creates an Assist Chip\nAssistChip(\n    onClick = { /* Action to perform when clicked */ },\n    label = { Text(\"Assist Chip\") },\n    leadingIcon = { Icon(Icons.Filled.Info, contentDescription = \"Info\") }\n)"
+        },
+        {
+          "content_id": "9",
+          "content_type": "header",
+          "content_text": "Creating a Filter Chip"
+        },
+        {
+          "content_id": "10",
+          "content_type": "ad_large_banner"
+        },
+        {
+          "content_id": "11",
+          "content_type": "content_code",
+          "content_code_programming_language": "Kotlin",
+          "content_code": "// Creates a Filter Chip with state management for selection\nvar selected by remember { mutableStateOf(false) }\n\nFilterChip(\n    selected = selected,\n    onClick = { selected = !selected }, // Toggle selection\n    label = { Text(\"Filter Chip\") },\n    leadingIcon = { if (selected) Icon(Icons.Filled.Check, contentDescription = \"Selected\") } // Show checkmark if selected\n)"
+        },
+        {
+          "content_id": "12",
+          "content_type": "header",
+          "content_text": "Creating an Input Chip"
+        },
+        {
+          "content_id": "13",
+          "content_type": "content_code",
+          "content_code_programming_language": "Kotlin",
+          "content_code": "// Creates an Input Chip (typically removable)\nInputChip(\n    selected = true, // Example: Initially selected\n    onClick = { /* Action to perform when clicked (e.g., remove chip) */ },\n    label = { Text(\"Input Chip\") },\n    trailingIcon = { Icon(Icons.Filled.Close, contentDescription = \"Close\") }\n)"
+        },
+        {
+          "content_id": "14",
+          "content_type": "ad_large_banner"
+        },
+        {
+          "content_id": "15",
+          "content_type": "header",
+          "content_text": "Creating a Suggestion Chip"
+        },
+        {
+          "content_id": "16",
+          "content_type": "content_code",
+          "content_code_programming_language": "Kotlin",
+          "content_code": "// Creates a Suggestion Chip\nSuggestionChip(\n    onClick = { /* Action to perform when clicked */ },\n    label = { Text(\"Suggestion Chip\") }\n)"
+        },
+        {
+          "content_id": "17",
+          "content_type": "header",
+          "content_text": "Creating a Chip Group (Single Selection)"
+        },
+        {
+          "content_id": "18",
+          "content_type": "ad_large_banner"
+        },
+        {
+          "content_id": "19",
+          "content_type": "content_code",
+          "content_code_programming_language": "Kotlin",
+          "content_code": "// Single selection Chip Group - manages selected chip\nvar selectedChip by remember { mutableStateOf<String?>(null) } \n\nChipGroup(selectedChip = selectedChip) { chip -> \n    FilterChip(\n        selected = selectedChip == chip,\n        onClick = { selectedChip = chip },\n        label = { Text(chip) }\n    )\n}"
+        },
+        {
+          "content_id": "20",
+          "content_type": "header",
+          "content_text": "Creating a Chip Group (Multi Selection)"
+        },
+        {
+          "content_id": "21",
+          "content_type": "content_code",
+          "content_code_programming_language": "Kotlin",
+          "content_code": "// Multi-selection Chip Group\nval selectedChips = remember { mutableStateOf(setOf<String>()) }\n\nChipGroup { \n    listOf(\"Chip 1\", \"Chip 2\", \"Chip 3\").forEach { chip ->\n        FilterChip(\n            selected = chip in selectedChips.value,\n            onClick = { \n                selectedChips.value = if (chip in selectedChips.value) {\n                    selectedChips.value - chip\n                } else {\n                    selectedChips.value + chip\n                }\n            },\n            label = { Text(chip) }\n        )\n    }\n}"
+        },
+        {
+          "content_id": "22",
+          "content_type": "ad_large_banner"
+        },
+        {
+          "content_id": "23",
+          "content_type": "content_text",
+          "content_text": "<p>Key Parameters:</p><ul><li><b>label:</b> The text displayed on the chip.</li><li><b>icon/leadingIcon/trailingIcon:</b> Icons for the chip.</li><li><b>onClick:</b>  The action triggered when the chip is clicked.</li><li><b>selected:</b>  Indicates if the chip is selected (for filter and input chips).</li></ul><p>Remember to handle state appropriately and customize chip appearance using Modifiers.</p>"
+        },
+        {
+          "content_id": "25",
+          "content_type": "ad_banner"
+        }
+      ]
     }
   ]
 }

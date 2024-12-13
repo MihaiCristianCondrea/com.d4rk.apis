@@ -1,134 +1,138 @@
 {
-  "lesson_title": "Text Fields in Android",
-  "lesson_content": [
+  "data": [
     {
-      "content_id": "1",
-      "content_type": "header",
-      "content_text": "Introduction to Text Fields"
-    },
-    {
-      "content_id": "2",
-      "content_type": "content_text",
-      "content_text": "Text fields are essential UI components that allow users to enter and edit text. They are widely used in forms, dialogs, and various input scenarios in mobile applications."
-    },
-    {
-      "content_id": "3",
-      "content_type": "ad_large_banner"
-    },
-    {
-      "content_id": "4",
-      "content_type": "header",
-      "content_text": "Types of Text Fields"
-    },
-    {
-      "content_id": "5",
-      "content_type": "content_text",
-      "content_text": "There are two main types of text fields in Android: <b>Filled</b> and <b>Outlined</b>."
-    },
-    {
-      "content_id": "6",
-      "content_type": "header",
-      "content_text": "Filled Text Fields"
-    },
-    {
-      "content_id": "7",
-      "content_type": "content_text",
-      "content_text": "Filled text fields have a container with a background color. This style is often used to make the input area more prominent, especially in forms."
-    },
-    {
-      "content_id": "8",
-      "content_type": "image",
-      "content_image_src": "https://firebasestorage.googleapis.com/v0/b/design-spec/o/projects%2Fgoogle-material-3%2Fimages%2Flx322ww5-17.png?alt=media&token=fa62d7da-ffa4-49f8-bb0f-fa7273b6c4d2"
-    },
-    {
-      "content_id": "9",
-      "content_type": "header",
-      "content_text": "Outlined Text Fields"
-    },
-    {
-      "content_id": "10",
-      "content_type": "content_text",
-      "content_text": "Outlined text fields have a border instead of a background fill, which gives them a less prominent look and is suitable for minimalistic designs."
-    },
-    {
-      "content_id": "11",
-      "content_type": "image",
-      "content_image_src": "https://firebasestorage.googleapis.com/v0/b/design-spec/o/projects%2Fgoogle-material-3%2Fimages%2Flx31u7r0-4.png?alt=media&token=bb9357e8-b1d0-4ff8-890f-b21939e78de0"
-    },
-    {
-      "content_id": "12",
-      "content_type": "ad_large_banner"
-    },
-    {
-      "content_id": "13",
-      "content_type": "header",
-      "content_text": "Best Practices"
-    },
-    {
-      "content_id": "14",
-      "content_type": "content_text",
-      "content_text": "For a consistent design, use either filled or outlined text fields within the same form or section."
-    },
-    {
-      "content_id": "15",
-      "content_type": "header",
-      "content_text": "Text Field Anatomy"
-    },
-    {
-      "content_id": "16",
-      "content_type": "content_text",
-      "content_text": "Each text field consists of multiple components, including a <b>label</b>, <b>input text area</b>, <b>supporting text</b>, and optional <b>icons</b> for additional actions (e.g., clear text)."
-    },
-    {
-      "content_id": "17",
-      "content_type": "header",
-      "content_text": "Implementation Example"
-    },
-    {
-      "content_id": "18",
-      "content_type": "content_text",
-      "content_text": "Here’s how you can set up a simple filled text field in XML."
-    },
-    {
-      "content_id": "19",
-      "content_type": "content_code",
-      "content_code_programming_language": "XML",
-      "content_code": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<RelativeLayout xmlns:android=\"http://schemas.android.com/apk/res/android\"\n    android:layout_width=\"match_parent\"\n    android:layout_height=\"match_parent\"\n    android:padding=\"16dp\">\n\n    <com.google.android.material.textfield.TextInputLayout\n        android:id=\"@+id/textInputLayout\"\n        android:layout_width=\"match_parent\"\n        android:layout_height=\"wrap_content\"\n        android:hint=\"Enter your name\">\n\n        <com.google.android.material.textfield.TextInputEditText\n            android:id=\"@+id/textField\"\n            android:layout_width=\"match_parent\"\n            android:layout_height=\"wrap_content\"\n            android:inputType=\"textPersonName\" />\n    </com.google.android.material.textfield.TextInputLayout>\n\n</RelativeLayout>\n"
-    },
-    {
-      "content_id": "20",
-      "content_type": "ad_large_banner"
-    },
-    {
-      "content_id": "21",
-      "content_type": "header",
-      "content_text": "Using Text Fields in Code"
-    },
-    {
-      "content_id": "22",
-      "content_type": "content_text",
-      "content_text": "In Kotlin, you can access and manipulate text fields by using view binding. Here’s an example for setting up a text field programmatically."
-    },
-    {
-      "content_id": "23",
-      "content_type": "content_code",
-      "content_code_programming_language": "Kotlin",
-      "content_code": "import android.os.Bundle\nimport androidx.appcompat.app.AppCompatActivity\nimport com.example.textfielddemo.databinding.ActivityMainBinding\n\nclass MainActivity : AppCompatActivity() {\n\n    // View binding property\n    private lateinit var binding: ActivityMainBinding\n\n    override fun onCreate(savedInstanceState: Bundle?) {\n        super.onCreate(savedInstanceState)\n\n        // Initialize view binding\n        binding = ActivityMainBinding.inflate(layoutInflater)\n        setContentView(binding.root)\n\n        // Access and set the hint for text field\n        binding.textField.hint = \"Enter your text\"\n    }\n}"
-    },
-    {
-      "content_id": "24",
-      "content_type": "content_text",
-      "content_text": "For those who prefer Java, here’s the equivalent setup using view binding to handle the TextInputEditText."
-    },
-    {
-      "content_id": "25",
-      "content_type": "content_code",
-      "content_code_programming_language": "Java",
-      "content_code": "import android.os.Bundle;\nimport androidx.appcompat.app.AppCompatActivity;\nimport com.example.textfielddemo.databinding.ActivityMainBinding;\n\npublic class MainActivity extends AppCompatActivity {\n\n    // View binding property\n    private ActivityMainBinding binding;\n\n    @Override\n    protected void onCreate(Bundle savedInstanceState) {\n        super.onCreate(savedInstanceState);\n\n        // Initialize view binding\n        binding = ActivityMainBinding.inflate(getLayoutInflater());\n        setContentView(binding.getRoot());\n\n        // Access and set the hint for text field\n        binding.textField.setHint(\"Enter your text\");\n    }\n}"
-    },
-    {
-      "content_id": "26",
-      "content_type": "ad_banner"
+      "lesson_title": "Text Fields in Android",
+      "lesson_content": [
+        {
+          "content_id": "1",
+          "content_type": "header",
+          "content_text": "Introduction to Text Fields"
+        },
+        {
+          "content_id": "2",
+          "content_type": "content_text",
+          "content_text": "Text fields are essential UI components that allow users to enter and edit text. They are widely used in forms, dialogs, and various input scenarios in mobile applications."
+        },
+        {
+          "content_id": "3",
+          "content_type": "ad_large_banner"
+        },
+        {
+          "content_id": "4",
+          "content_type": "header",
+          "content_text": "Types of Text Fields"
+        },
+        {
+          "content_id": "5",
+          "content_type": "content_text",
+          "content_text": "There are two main types of text fields in Android: <b>Filled</b> and <b>Outlined</b>."
+        },
+        {
+          "content_id": "6",
+          "content_type": "header",
+          "content_text": "Filled Text Fields"
+        },
+        {
+          "content_id": "7",
+          "content_type": "content_text",
+          "content_text": "Filled text fields have a container with a background color. This style is often used to make the input area more prominent, especially in forms."
+        },
+        {
+          "content_id": "8",
+          "content_type": "image",
+          "content_image_src": "https://firebasestorage.googleapis.com/v0/b/design-spec/o/projects%2Fgoogle-material-3%2Fimages%2Flx322ww5-17.png?alt=media&token=fa62d7da-ffa4-49f8-bb0f-fa7273b6c4d2"
+        },
+        {
+          "content_id": "9",
+          "content_type": "header",
+          "content_text": "Outlined Text Fields"
+        },
+        {
+          "content_id": "10",
+          "content_type": "content_text",
+          "content_text": "Outlined text fields have a border instead of a background fill, which gives them a less prominent look and is suitable for minimalistic designs."
+        },
+        {
+          "content_id": "11",
+          "content_type": "image",
+          "content_image_src": "https://firebasestorage.googleapis.com/v0/b/design-spec/o/projects%2Fgoogle-material-3%2Fimages%2Flx31u7r0-4.png?alt=media&token=bb9357e8-b1d0-4ff8-890f-b21939e78de0"
+        },
+        {
+          "content_id": "12",
+          "content_type": "ad_large_banner"
+        },
+        {
+          "content_id": "13",
+          "content_type": "header",
+          "content_text": "Best Practices"
+        },
+        {
+          "content_id": "14",
+          "content_type": "content_text",
+          "content_text": "For a consistent design, use either filled or outlined text fields within the same form or section."
+        },
+        {
+          "content_id": "15",
+          "content_type": "header",
+          "content_text": "Text Field Anatomy"
+        },
+        {
+          "content_id": "16",
+          "content_type": "content_text",
+          "content_text": "Each text field consists of multiple components, including a <b>label</b>, <b>input text area</b>, <b>supporting text</b>, and optional <b>icons</b> for additional actions (e.g., clear text)."
+        },
+        {
+          "content_id": "17",
+          "content_type": "header",
+          "content_text": "Implementation Example"
+        },
+        {
+          "content_id": "18",
+          "content_type": "content_text",
+          "content_text": "Here’s how you can set up a simple filled text field in XML."
+        },
+        {
+          "content_id": "19",
+          "content_type": "content_code",
+          "content_code_programming_language": "XML",
+          "content_code": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<RelativeLayout xmlns:android=\"http://schemas.android.com/apk/res/android\"\n    android:layout_width=\"match_parent\"\n    android:layout_height=\"match_parent\"\n    android:padding=\"16dp\">\n\n    <com.google.android.material.textfield.TextInputLayout\n        android:id=\"@+id/textInputLayout\"\n        android:layout_width=\"match_parent\"\n        android:layout_height=\"wrap_content\"\n        android:hint=\"Enter your name\">\n\n        <com.google.android.material.textfield.TextInputEditText\n            android:id=\"@+id/textField\"\n            android:layout_width=\"match_parent\"\n            android:layout_height=\"wrap_content\"\n            android:inputType=\"textPersonName\" />\n    </com.google.android.material.textfield.TextInputLayout>\n\n</RelativeLayout>\n"
+        },
+        {
+          "content_id": "20",
+          "content_type": "ad_large_banner"
+        },
+        {
+          "content_id": "21",
+          "content_type": "header",
+          "content_text": "Using Text Fields in Code"
+        },
+        {
+          "content_id": "22",
+          "content_type": "content_text",
+          "content_text": "In Kotlin, you can access and manipulate text fields by using view binding. Here’s an example for setting up a text field programmatically."
+        },
+        {
+          "content_id": "23",
+          "content_type": "content_code",
+          "content_code_programming_language": "Kotlin",
+          "content_code": "import android.os.Bundle\nimport androidx.appcompat.app.AppCompatActivity\nimport com.example.textfielddemo.databinding.ActivityMainBinding\n\nclass MainActivity : AppCompatActivity() {\n\n    // View binding property\n    private lateinit var binding: ActivityMainBinding\n\n    override fun onCreate(savedInstanceState: Bundle?) {\n        super.onCreate(savedInstanceState)\n\n        // Initialize view binding\n        binding = ActivityMainBinding.inflate(layoutInflater)\n        setContentView(binding.root)\n\n        // Access and set the hint for text field\n        binding.textField.hint = \"Enter your text\"\n    }\n}"
+        },
+        {
+          "content_id": "24",
+          "content_type": "content_text",
+          "content_text": "For those who prefer Java, here’s the equivalent setup using view binding to handle the TextInputEditText."
+        },
+        {
+          "content_id": "25",
+          "content_type": "content_code",
+          "content_code_programming_language": "Java",
+          "content_code": "import android.os.Bundle;\nimport androidx.appcompat.app.AppCompatActivity;\nimport com.example.textfielddemo.databinding.ActivityMainBinding;\n\npublic class MainActivity extends AppCompatActivity {\n\n    // View binding property\n    private ActivityMainBinding binding;\n\n    @Override\n    protected void onCreate(Bundle savedInstanceState) {\n        super.onCreate(savedInstanceState);\n\n        // Initialize view binding\n        binding = ActivityMainBinding.inflate(getLayoutInflater());\n        setContentView(binding.getRoot());\n\n        // Access and set the hint for text field\n        binding.textField.setHint(\"Enter your text\");\n    }\n}"
+        },
+        {
+          "content_id": "26",
+          "content_type": "ad_banner"
+        }
+      ]
     }
   ]
 }
