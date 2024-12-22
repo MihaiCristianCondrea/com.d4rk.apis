@@ -11,7 +11,7 @@
         {
           "content_id": "20",
           "content_type": "image",
-          "content_image_src": "https://developer.android.com/static/images/about/versions/13/predictive-back-nav-home.gif"
+          "content_image_url": "https://developer.android.com/static/images/about/versions/13/predictive-back-nav-home.gif"
         },
         {
           "content_id": "2",

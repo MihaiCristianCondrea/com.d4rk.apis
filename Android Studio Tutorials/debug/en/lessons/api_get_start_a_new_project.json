@@ -16,7 +16,7 @@
         {
           "content_id": "3",
           "content_type": "image",
-          "content_image_src": "https://developer.android.com/static/studio/images/new-project-templates.png"
+          "content_image_url": "https://developer.android.com/static/studio/images/new-project-templates.png"
         },
         {
           "content_id": "5",
@@ -31,7 +31,7 @@
         {
           "content_id": "7",
           "content_type": "image",
-          "content_image_src": "https://developer.android.com/static/studio/images/projects/new-project-wizard-configure-2x.png"
+          "content_image_url": "https://developer.android.com/static/studio/images/projects/new-project-wizard-configure-2x.png"
         },
         {
           "content_id": "8",
@@ -46,7 +46,7 @@
         {
           "content_id": "10",
           "content_type": "image",
-          "content_image_src": "https://developer.android.com/static/studio/images/projects/new-project-wizard-choose-api-level_2x.png"
+          "content_image_url": "https://developer.android.com/static/studio/images/projects/new-project-wizard-choose-api-level_2x.png"
         },
         {
           "content_id": "11",

@@ -16,7 +16,7 @@
         {
           "content_id": "3",
           "content_type": "image",
-          "content_image_src": "https://developer.android.com/static/develop/ui/compose/images/components/scaffold.png"
+          "content_image_url": "https://developer.android.com/static/develop/ui/compose/images/components/scaffold.png"
         },
         {
           "content_id": "4",

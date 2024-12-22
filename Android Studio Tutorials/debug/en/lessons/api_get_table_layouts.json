@@ -50,7 +50,7 @@
         {
           "content_id": "10",
           "content_type": "image",
-          "content_image_src": "https://developer.android.com/static/images/table_layout.png"
+          "content_image_url": "https://developer.android.com/static/images/table_layout.png"
         },
         {
           "content_id": "11",

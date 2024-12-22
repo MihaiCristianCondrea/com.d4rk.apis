@@ -24,86 +24,106 @@
         },
         {
           "content_id": "5",
-          "content_type": "ad_large_banner"
+          "content_type": "image",
+          "content_image_url": "https://firebasestorage.googleapis.com/v0/b/design-spec/o/projects%2Fgoogle-material-3%2Fimages%2Flwoy2p4f-8.png?alt=media&token=afb9be61-cec7-4121-a176-37c0909a64e8"
         },
         {
           "content_id": "6",
+          "content_type": "ad_large_banner"
+        },
+        {
+          "content_id": "7",
           "content_type": "header",
           "content_text": "Basic Snackbar Implementation (Kotlin)"
         },
         {
-          "content_id": "7",
+          "content_id": "8",
           "content_type": "content_text",
           "content_text": "<p>Here's how to create a basic Snackbar in Kotlin using View Binding. Make sure you've added the Material Components dependency to your `build.gradle` file:</p><pre><code>implementation(\"com.google.android.material:material:YOUR_MATERIAL_VERSION\")</code></pre><p>Replace `YOUR_MATERIAL_VERSION` with the latest version.</p>"
         },
         {
-          "content_id": "8",
+          "content_id": "9",
           "content_type": "content_code",
           "content_code_programming_language": "Kotlin",
           "content_code": "// Import necessary classes from Android and Google Material libraries\nimport android.content.Intent\nimport android.os.Bundle\nimport androidx.appcompat.app.AppCompatActivity\nimport com.google.android.material.snackbar.Snackbar\n\n// Define MainActivity class which extends AppCompatActivity class\nclass MainActivity : AppCompatActivity() {\n    // Declare a private lateinit variable for binding the layout with this activity\n    private lateinit var binding: ActivityMainBinding\n\n    // Override onCreate method which is called when the activity is first created\n    override fun onCreate(savedInstanceState: Bundle?) {\n        // Call super.onCreate to complete the creation of activity\n        super.onCreate(savedInstanceState)\n\n        // Inflate the layout for this activity using layoutInflater and assign it to binding variable\n        binding = ActivityMainBinding.inflate(layoutInflater)\n\n        // Set the content view for this activity using the root view from binding variable\n        setContentView(binding.root)\n\n        // Set an onClickListener for button in layout\n        binding.button.setOnClickListener {\n            // Create a Snackbar object with root view from binding variable as parent view, string resource R.string.this_is_a_snackbar as message text and indefinite duration\n            val snackbar = Snackbar.make(binding.root,\n                R.string.this_is_a_snackbar,\n                Snackbar.LENGTH_INDEFINITE)\n\n            // Set an action for snackbar with string resource android.R.string.ok as action text and dismiss snackbar when action is clicked\n            snackbar.setAction(android.R.string.ok) {\n                snackbar.dismiss()\n            }\n\n            // Show snackbar\n            snackbar.show()\n        }\n    }\n}"
         },
         {
-          "content_id": "9",
+          "content_id": "10",
           "content_type": "header",
           "content_text": "Basic Snackbar Implementation (Java)"
         },
         {
-          "content_id": "10",
+          "content_id": "11",
           "content_type": "ad_large_banner"
         },
         {
-          "content_id": "11",
+          "content_id": "12",
           "content_type": "content_text",
           "content_text": "The Java implementation is quite similar to the Kotlin version:"
         },
         {
-          "content_id": "12",
+          "content_id": "13",
           "content_type": "content_code",
           "content_code_programming_language": "java",
           "content_code": "// Import the necessary classes and libraries\nimport android.content.Intent;\nimport android.os.Bundle;\nimport androidx.appcompat.app.AppCompatActivity;\nimport com.google.android.material.snackbar.Snackbar;\n\n// This class extends AppCompatActivity and represents the main activity of an Android app\npublic class MainActivity extends AppCompatActivity {\n\n    // Declare a private lateinit variable for binding the layout with this activity\n    private ActivityMainBinding binding;\n\n    // This method is called when the activity is first created\n    @Override\n    protected void onCreate(Bundle savedInstanceState) {\n        super.onCreate(savedInstanceState);\n\n        // Inflate the layout and set it as the content view for this activity\n        binding = ActivityMainBinding.inflate(getLayoutInflater());\n        setContentView(binding.getRoot());\n\n        // Set a click listener on getButton in layout using binding object\n        binding.getButton().setOnClickListener(v -> {\n            // Create a Snackbar with text from string resource and indefinite length\n            Snackbar snackbar = Snackbar.make(binding.getRoot(), R.string.this_is_a_snackbar, Snackbar.LENGTH_INDEFINITE);\n\n            // Set an action on snackbar with text from string resource and click listener to dismiss snackbar when clicked\n            snackbar.setAction(android.R.string.ok, v1 -> snackbar.dismiss());\n\n            // Show snackbar\n            snackbar.show();\n        });\n    }\n}"
         },
         {
-          "content_id": "13",
+          "content_id": "14",
           "content_type": "header",
           "content_text": "Layout XML"
         },
         {
-          "content_id": "14",
+          "content_id": "15",
           "content_type": "content_text",
           "content_text": "You'll need a button in your layout to trigger the Snackbar. Here's a basic example:"
         },
         {
-          "content_id": "15",
+          "content_id": "16",
           "content_type": "content_code",
           "content_code_programming_language": "xml",
           "content_code": "<androidx.constraintlayout.widget.ConstraintLayout\n    xmlns:android=\"http://schemas.android.com/apk/res/android\"\n    xmlns:app=\"http://schemas.android.com/apk/res-auto\"\n    android:layout_width=\"match_parent\"\n    android:layout_height=\"match_parent\">\n    <com.google.android.material.button.MaterialButton\n        style=\"@style/Widget.Material3.Button.ElevatedButton\"\n        android:id=\"@+id/button\"\n        android:layout_width=\"wrap_content\"\n        android:layout_height=\"wrap_content\"\n        android:text=\"@string/show\"\n        app:layout_constraintEnd_toEndOf=\"parent\"\n        app:layout_constraintStart_toStartOf=\"parent\"\n        app:layout_constraintTop_toTopOf=\"parent\"\n        app:layout_constraintBottom_toBottomOf=\"parent\"/>\n</androidx.constraintlayout.widget.ConstraintLayout>"
         },
         {
-          "content_id": "16",
+          "content_id": "17",
           "content_type": "ad_large_banner"
         },
         {
-          "content_id": "17",
+          "content_id": "18",
           "content_type": "header",
           "content_text": "Key Aspects and Customization"
         },
         {
-          "content_id": "18",
+          "content_id": "19",
           "content_type": "content_text",
-          "content_text": "<p>Let's break down the key parts of creating a Snackbar:</p><ul><li><b>`Snackbar.make(view, message, duration)`:</b> This static method creates the Snackbar.<ul><li><b>`view`:</b>  The anchor view. The Snackbar will try to find a suitable parent view to attach to, usually coordinating with the Floating Action Button if present. It's recommended to pass the root view of your layout.</li><li><b>`message`:</b> The text you want to display in the Snackbar. Use string resources for localization.</li><li><b>`duration`:</b>  How long the Snackbar will be shown. Predefined constants include:<ul><li>`Snackbar.LENGTH_SHORT`: Shows the Snackbar for a short period.</li><li>`Snackbar.LENGTH_LONG`: Shows the Snackbar for a longer period.</li><li>`Snackbar.LENGTH_INDEFINITE`: Shows the Snackbar until it's dismissed manually or another Snackbar is shown. Use this sparingly, usually with an action.</li></ul></li></ul></li><li><b>`.setAction(text, listener)`:</b>  Adds an action button to the Snackbar.<ul><li><b>`text`:</b> The text to display on the action button (e.g., \"Undo\", \"Retry\"). Use string resources.</li><li><b>`listener`:</b> An `OnClickListener` that defines what happens when the action button is clicked. A common action is `snackbar.dismiss()`.</li></ul></li><li><b>`.show()`:</b>  Displays the Snackbar.</li></ul><p><b>Design Considerations:</b></p><ul><li><b>Brevity:</b> Keep Snackbar messages short and to the point.</li><li><b>Action Clarity:</b> If including an action, make its purpose clear.</li><li><b>Placement:</b> Snackbars typically appear at the bottom of the screen. Avoid obscuring important UI elements.</li><li><b>Accessibility:</b> Ensure sufficient contrast between the text and background for readability.</li></ul>"
+          "content_text": "<p>Let's break down the key parts of creating a Snackbar:</p><ul><li><b>`Snackbar.make(view, message, duration)`:</b> This static method creates the Snackbar.<ul><li><b>`view`:</b>  The anchor view. The Snackbar will try to find a suitable parent view to attach to, usually coordinating with the Floating Action Button if present. It's recommended to pass the root view of your layout.</li><li><b>`message`:</b> The text you want to display in the Snackbar. Use string resources for localization. Keep the message concise, ideally one line. On mobile, you can use up to two lines of text.</li><li><b>`duration`:</b>  How long the Snackbar will be shown. Predefined constants include:<ul><li>`Snackbar.LENGTH_SHORT`: Shows the Snackbar for a short period (around 4 seconds).</li><li>`Snackbar.LENGTH_LONG`: Shows the Snackbar for a longer period (around 6 seconds).</li><li>`Snackbar.LENGTH_INDEFINITE`: Shows the Snackbar until it's dismissed manually or another Snackbar is shown. Use this sparingly, usually with an action.</li></ul></li></ul></li><li><b>`.setAction(text, listener)`:</b>  Adds an action button to the Snackbar.<ul><li><b>`text`:</b> The text to display on the action button (e.g., \"Undo\", \"Retry\"). Use string resources. Action text should be colored to distinguish it from the message.</li><li><b>`listener`:</b> An `OnClickListener` that defines what happens when the action button is clicked. A common action is `snackbar.dismiss()`.</li></ul></li><li><b>`.show()`:</b>  Displays the Snackbar. Only one Snackbar should be displayed at a time.</li></ul>"
         },
         {
-          "content_id": "19",
+          "content_id": "20",
+          "content_type": "image",
+          "content_image_url": "hhttps://firebasestorage.googleapis.com/v0/b/design-spec/o/projects%2Fgoogle-material-3%2Fimages%2Flwoy0ibw-6.png?alt=media&token=e4018d28-38b2-4af5-b7b0-d6f07688ee41"
+        },
+        {
+          "content_id": "21",
+          "content_type": "content_text",
+          "content_text": "<p><b>Design Considerations (based on Material Guidelines):</b></p><ul><li><b>Brevity:</b> Keep Snackbar messages short and to the point. Aim for a single line of text whenever possible.</li><li><b>Action Clarity:</b> If including an action, make its purpose clear. Use actions like \"Undo\" to allow users to amend choices. Avoid using a redundant \"Dismiss\" action as Snackbars disappear automatically.</li><li><b>Placement:</b> Snackbars typically appear at the bottom of the screen, above Floating Action Buttons (FABs) and avoid overlapping navigation elements.</li><li><b>Accessibility:</b> Ensure sufficient contrast between the text and background for readability. For web, consider making Snackbars actionable as auto-dismissing ones can be inaccessible.</li></ul>"
+        },
+        {
+          "content_id": "22",
           "content_type": "header",
           "content_text": "Further Customization"
         },
         {
-          "content_id": "20",
+          "content_id": "23",
           "content_type": "content_text",
-          "content_text": "<p>While the basic implementation covers most use cases, you can further customize Snackbars:</p><ul><li><b>Setting the Action Text Color:</b> Use `snackbar.setActionTextColor(Color.RED)` to change the color of the action button text.</li><li><b>Setting the Background Color:</b> Access the Snackbar's view using `snackbar.view` and then set the background color: `snackbar.view.setBackgroundColor(Color.BLUE)`.</li><li><b>Callbacks:</b> Use `addCallback()` to listen for events like when the Snackbar is shown or dismissed.</li></ul><p>Remember to use customization judiciously to maintain a consistent and user-friendly interface.</p>"
+          "content_text": "<p>While the basic implementation covers most use cases, you can further customize Snackbars:</p><ul><li><b>Setting the Action Text Color:</b> Use `snackbar.setActionTextColor(Color.RED)` to change the color of the action button text.</li><li><b>Setting the Background Color:</b> Access the Snackbar's view using `snackbar.view` and then set the background color: `snackbar.view.setBackgroundColor(Color.BLUE)`. Be cautious with transparency to ensure text legibility.</li><li><b>Callbacks:</b> Use `addCallback()` to listen for events like when the Snackbar is shown or dismissed.</li></ul><p>Remember to use customization judiciously to maintain a consistent and user-friendly interface.</p>"
         },
         {
-          "content_id": "21",
+          "content_id": "24",
+          "content_type": "image",
+          "content_image_url": "https://material.io/static/ರುತ್ತ_comp_snackbars_usage_caution1.png"
+        },
+        {
+          "content_id": "25",
           "content_type": "ad_banner"
         }
       ]
