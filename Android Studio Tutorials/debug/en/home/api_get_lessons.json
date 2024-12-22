@@ -4,7 +4,7 @@
       "lesson_id": "15",
       "lesson_title": "Displaying Transient Messages with Snackbars",
       "lesson_description": "Discover how to use Snackbars in Android to provide brief, informative feedback to the user. Learn about basic implementation in both Kotlin and Java, customization options, and best practices for their usage.",
-      "lesson_type": "full_banner",
+      "lesson_type": "square_image",
       "deep_link_path": "com.d4rk.androidtutorials://lesson/snack_bars",
       "lesson_tags": [
         "Android",
@@ -14,7 +14,7 @@
         "Snackbar",
         "Material Design"
       ],
-      "thumbnail_image_url": "https://i.ibb.co/Wpk8h3N/how-to-use-chips-in-compose.png"
+      "square_image_url": "https://i.ibb.co/YW07k43/snackbars.png"
     },
     {
       "lesson_id": "14",
