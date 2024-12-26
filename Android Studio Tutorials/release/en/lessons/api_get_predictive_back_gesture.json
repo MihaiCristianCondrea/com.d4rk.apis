@@ -1,115 +1,119 @@
 {
-  "lesson_title": "Implementing Predictive Back Gestures in Android",
-  "lesson_content": [
+  "data": [
     {
-      "content_id": "1",
-      "content_type": "content_text",
-      "content_text": "<p>The predictive back gesture, introduced in Android 13, enhances the user experience by providing a preview of the destination screen before the back navigation is completed.  This gives users more control and prevents unintended navigation.</p>"
-    },
-    {
-      "content_id": "20",
-      "content_type": "image",
-      "content_image_src": "https://developer.android.com/static/images/about/versions/13/predictive-back-nav-home.gif"
-    },
-    {
-      "content_id": "2",
-      "content_type": "header",
-      "content_text": "Benefits of Predictive Back Gestures"
-    },
-    {
-      "content_id": "3",
-      "content_type": "content_text",
-      "content_text": "<ul>\n  <li><b>Improved User Control:</b> Previewing the destination screen empowers users to confirm or cancel the back navigation.</li>\n  <li><b>Reduced Unintentional Navigation:</b> Prevents accidental back navigations, especially useful in complex apps.</li>\n  <li><b>Smoother Navigation Experience:</b> The preview animation provides a more intuitive and visually appealing transition.</li>\n  <li><b>Enhanced Accessibility:</b> Provides better feedback for users with motor impairments or those who rely on screen readers.</li>\n</ul>"
-    },
-    {
-      "content_id": "4",
-      "content_type": "header",
-      "content_text": "Implementation Overview"
-    },
-    {
-      "content_id": "5",
-      "content_type": "content_text",
-      "content_text": "<p>Supporting the predictive back gesture requires updating your app to use the appropriate APIs.  AndroidX is strongly recommended for backward compatibility and seamless integration with other Jetpack libraries.</p>"
-    },
-    {
-      "content_id": "6",
-      "content_type": "header",
-      "content_text": "Updating Your App"
-    },
-    {
-      "content_id": "7",
-      "content_type": "ad_large_banner"
-    },
-    {
-      "content_id": "8",
-      "content_type": "content_text",
-      "content_text": "<p>The update process depends on whether your app uses custom back navigation:</p>"
-    },
-    {
-      "content_id": "9",
-      "content_type": "header",
-      "content_text": "1. Apps with Default Back Navigation"
-    },
-    {
-      "content_id": "10",
-      "content_type": "content_text",
-      "content_text": "<p>Simply opt-in by setting <code>android:enableOnBackInvokedCallback</code> to <code>true</code> in your <code>AndroidManifest.xml</code> and upgrade to AndroidX Activity 1.6.0-alpha05 or higher if you use Fragments or the Navigation Component.</p>"
-    },
-    {
-      "content_id": "11",
-      "content_type": "content_code",
-      "content_code_programming_language": "XML",
-      "content_code": "<application\n    ... \n    android:enableOnBackInvokedCallback=\"true\"\n    ... >\n</application>"
-    },
-    {
-      "content_id": "12",
-      "content_type": "header",
-      "content_text": "2. Apps with Custom Back Navigation (Using AndroidX)"
-    },
-    {
-      "content_id": "13",
-      "content_type": "content_text",
-      "content_text": "<p>Migrate your existing <code>OnBackPressedDispatcher</code> logic to use the <code>OnBackPressedCallback</code> API, upgrade to AndroidX Activity 1.6.0-alpha05 or higher, and opt-in as described above.</p>"
-    },
-    {
-      "content_id": "14",
-      "content_type": "header",
-      "content_text": "Opt-in at an activity level"
-    },
-    {
-      "content_id": "15",
-      "content_type": "content_text",
-      "content_text": "<p>You can opt-in to predictive back navigation at the activity level using the same flag in the <code>&lt;activity&gt;</code> tag.</p>"
-    },
-    {
-      "content_id": "16",
-      "content_type": "content_code",
-      "content_code_programming_language": "XML",
-      "content_code": "<activity\n            android:name=\".MainActivity\"\n            android:enableOnBackInvokedCallback=\"true\" />"
-    },
-    {
-      "content_id": "17",
-      "content_type": "header",
-      "content_text": "3. Apps with Custom Back Navigation (Without AndroidX)"
-    },
-    {
-      "content_id": "18",
-      "content_type": "content_text",
-      "content_text": "<p>(Not recommended) Use the <code>OnBackInvokedCallback</code> platform API for Android 13 and higher and continue relying on unsupported APIs for older versions. However, migrating to AndroidX is strongly encouraged for better compatibility and future-proofing.</p>"
-    },
-    {
-      "content_id": "19",
-      "content_type": "header",
-      "content_text": "Testing the Predictive Back Gesture"
-    },
-    {
-      "content_id": "20",
-      "content_type": "content_text",
-      "content_text": "<p>Test the animation by enabling \"Predictive back animations\" in Developer options (on Android 13 and 14). From Android 15 and above, system animations will automatically be enabled for opted-in apps.</p>"
-    },
-    {
-      "content_id": "21",
-      "content_type": "ad_banner"
+      "lesson_title": "Implementing Predictive Back Gestures in Android",
+      "lesson_content": [
+        {
+          "content_id": "1",
+          "content_type": "content_text",
+          "content_text": "<p>The predictive back gesture, introduced in Android 13, enhances the user experience by providing a preview of the destination screen before the back navigation is completed.  This gives users more control and prevents unintended navigation.</p>"
+        },
+        {
+          "content_id": "20",
+          "content_type": "image",
+          "content_image_url": "https://developer.android.com/static/images/about/versions/13/predictive-back-nav-home.gif"
+        },
+        {
+          "content_id": "2",
+          "content_type": "header",
+          "content_text": "Benefits of Predictive Back Gestures"
+        },
+        {
+          "content_id": "3",
+          "content_type": "content_text",
+          "content_text": "<ul>\n  <li><b>Improved User Control:</b> Previewing the destination screen empowers users to confirm or cancel the back navigation.</li>\n  <li><b>Reduced Unintentional Navigation:</b> Prevents accidental back navigations, especially useful in complex apps.</li>\n  <li><b>Smoother Navigation Experience:</b> The preview animation provides a more intuitive and visually appealing transition.</li>\n  <li><b>Enhanced Accessibility:</b> Provides better feedback for users with motor impairments or those who rely on screen readers.</li>\n</ul>"
+        },
+        {
+          "content_id": "4",
+          "content_type": "header",
+          "content_text": "Implementation Overview"
+        },
+        {
+          "content_id": "5",
+          "content_type": "content_text",
+          "content_text": "<p>Supporting the predictive back gesture requires updating your app to use the appropriate APIs.  AndroidX is strongly recommended for backward compatibility and seamless integration with other Jetpack libraries.</p>"
+        },
+        {
+          "content_id": "6",
+          "content_type": "header",
+          "content_text": "Updating Your App"
+        },
+        {
+          "content_id": "7",
+          "content_type": "ad_large_banner"
+        },
+        {
+          "content_id": "8",
+          "content_type": "content_text",
+          "content_text": "<p>The update process depends on whether your app uses custom back navigation:</p>"
+        },
+        {
+          "content_id": "9",
+          "content_type": "header",
+          "content_text": "1. Apps with Default Back Navigation"
+        },
+        {
+          "content_id": "10",
+          "content_type": "content_text",
+          "content_text": "<p>Simply opt-in by setting <code>android:enableOnBackInvokedCallback</code> to <code>true</code> in your <code>AndroidManifest.xml</code> and upgrade to AndroidX Activity 1.6.0-alpha05 or higher if you use Fragments or the Navigation Component.</p>"
+        },
+        {
+          "content_id": "11",
+          "content_type": "content_code",
+          "content_code_programming_language": "XML",
+          "content_code": "<application\n    ... \n    android:enableOnBackInvokedCallback=\"true\"\n    ... >\n</application>"
+        },
+        {
+          "content_id": "12",
+          "content_type": "header",
+          "content_text": "2. Apps with Custom Back Navigation (Using AndroidX)"
+        },
+        {
+          "content_id": "13",
+          "content_type": "content_text",
+          "content_text": "<p>Migrate your existing <code>OnBackPressedDispatcher</code> logic to use the <code>OnBackPressedCallback</code> API, upgrade to AndroidX Activity 1.6.0-alpha05 or higher, and opt-in as described above.</p>"
+        },
+        {
+          "content_id": "14",
+          "content_type": "header",
+          "content_text": "Opt-in at an activity level"
+        },
+        {
+          "content_id": "15",
+          "content_type": "content_text",
+          "content_text": "<p>You can opt-in to predictive back navigation at the activity level using the same flag in the <code>&lt;activity&gt;</code> tag.</p>"
+        },
+        {
+          "content_id": "16",
+          "content_type": "content_code",
+          "content_code_programming_language": "XML",
+          "content_code": "<activity\n            android:name=\".MainActivity\"\n            android:enableOnBackInvokedCallback=\"true\" />"
+        },
+        {
+          "content_id": "17",
+          "content_type": "header",
+          "content_text": "3. Apps with Custom Back Navigation (Without AndroidX)"
+        },
+        {
+          "content_id": "18",
+          "content_type": "content_text",
+          "content_text": "<p>(Not recommended) Use the <code>OnBackInvokedCallback</code> platform API for Android 13 and higher and continue relying on unsupported APIs for older versions. However, migrating to AndroidX is strongly encouraged for better compatibility and future-proofing.</p>"
+        },
+        {
+          "content_id": "19",
+          "content_type": "header",
+          "content_text": "Testing the Predictive Back Gesture"
+        },
+        {
+          "content_id": "20",
+          "content_type": "content_text",
+          "content_text": "<p>Test the animation by enabling \"Predictive back animations\" in Developer options (on Android 13 and 14). From Android 15 and above, system animations will automatically be enabled for opted-in apps.</p>"
+        },
+        {
+          "content_id": "21",
+          "content_type": "ad_banner"
+        }
+      ]
     }
   ]
 }

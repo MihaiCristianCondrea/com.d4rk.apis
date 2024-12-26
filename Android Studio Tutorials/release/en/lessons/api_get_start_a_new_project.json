@@ -1,59 +1,63 @@
 {
-  "lesson_title": "Create a New Android Project",
-  "lesson_content": [
+  "data": [
     {
-      "content_id": "1",
-      "content_type": "header",
-      "content_text": "Step 1: Start a New Project"
-    },
-    {
-      "content_id": "2",
-      "content_type": "content_text",
-      "content_text": "To begin creating a new Android project, open Android Studio and click on the <b>New Project</b> button from the Welcome screen. If you already have a project open, you can also create a new one by selecting <b>File > New > New Project</b> from the main menu."
-    },
-    {
-      "content_id": "3",
-      "content_type": "image",
-      "content_image_src": "https://developer.android.com/static/studio/images/new-project-templates.png"
-    },
-    {
-      "content_id": "5",
-      "content_type": "header",
-      "content_text": "Step 2: Choose a Project Template"
-    },
-    {
-      "content_id": "6",
-      "content_type": "content_text",
-      "content_text": "On the New Project screen, select a project template that matches your app's primary device type, such as phone, tablet, Wear OS, or Android TV. Each template includes sample code and resources to help you get started quickly. Once you've selected a template, click <b>Next</b>."
-    },
-    {
-      "content_id": "7",
-      "content_type": "image",
-      "content_image_src": "https://developer.android.com/static/studio/images/projects/new-project-wizard-configure-2x.png"
-    },
-    {
-      "content_id": "8",
-      "content_type": "header",
-      "content_text": "Step 3: Configure Project Settings"
-    },
-    {
-      "content_id": "9",
-      "content_type": "content_text",
-      "content_text": "In this step, configure the essential settings for your project. Specify details such as the <b>app name</b>, <b>package name</b>, <b>programming language</b> (Kotlin or Java), and <b>minimum API level</b> that your app will support. If you’re unsure about the API level, click <b>Help me choose</b> for guidance on device compatibility based on API level distribution. You can find more details on these settings at <a href=\"https://developer.android.com/\">Android Developers</a>."
-    },
-    {
-      "content_id": "10",
-      "content_type": "image",
-      "content_image_src": "https://developer.android.com/static/studio/images/projects/new-project-wizard-choose-api-level_2x.png"
-    },
-    {
-      "content_id": "11",
-      "content_type": "content_text",
-      "content_text": "When ready, click <b>Finish</b> to create your project. Android Studio will generate your project with the selected template and configurations. This includes basic code and resources to get you started on your app development journey."
-    },
-    {
-      "content_id": "12",
-      "content_type": "ad_banner"
+      "lesson_title": "Create a New Android Project",
+      "lesson_content": [
+        {
+          "content_id": "1",
+          "content_type": "header",
+          "content_text": "Step 1: Start a New Project"
+        },
+        {
+          "content_id": "2",
+          "content_type": "content_text",
+          "content_text": "To begin creating a new Android project, open Android Studio and click on the <b>New Project</b> button from the Welcome screen. If you already have a project open, you can also create a new one by selecting <b>File > New > New Project</b> from the main menu."
+        },
+        {
+          "content_id": "3",
+          "content_type": "image",
+          "content_image_url": "https://developer.android.com/static/studio/images/new-project-templates.png"
+        },
+        {
+          "content_id": "5",
+          "content_type": "header",
+          "content_text": "Step 2: Choose a Project Template"
+        },
+        {
+          "content_id": "6",
+          "content_type": "content_text",
+          "content_text": "On the New Project screen, select a project template that matches your app's primary device type, such as phone, tablet, Wear OS, or Android TV. Each template includes sample code and resources to help you get started quickly. Once you've selected a template, click <b>Next</b>."
+        },
+        {
+          "content_id": "7",
+          "content_type": "image",
+          "content_image_url": "https://developer.android.com/static/studio/images/projects/new-project-wizard-configure-2x.png"
+        },
+        {
+          "content_id": "8",
+          "content_type": "header",
+          "content_text": "Step 3: Configure Project Settings"
+        },
+        {
+          "content_id": "9",
+          "content_type": "content_text",
+          "content_text": "In this step, configure the essential settings for your project. Specify details such as the <b>app name</b>, <b>package name</b>, <b>programming language</b> (Kotlin or Java), and <b>minimum API level</b> that your app will support. If you’re unsure about the API level, click <b>Help me choose</b> for guidance on device compatibility based on API level distribution. You can find more details on these settings at <a href=\"https://developer.android.com/\">Android Developers</a>."
+        },
+        {
+          "content_id": "10",
+          "content_type": "image",
+          "content_image_url": "https://developer.android.com/static/studio/images/projects/new-project-wizard-choose-api-level_2x.png"
+        },
+        {
+          "content_id": "11",
+          "content_type": "content_text",
+          "content_text": "When ready, click <b>Finish</b> to create your project. Android Studio will generate your project with the selected template and configurations. This includes basic code and resources to get you started on your app development journey."
+        },
+        {
+          "content_id": "12",
+          "content_type": "ad_banner"
+        }
+      ]
     }
   ]
 }

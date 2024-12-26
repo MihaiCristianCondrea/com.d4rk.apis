@@ -1,99 +1,103 @@
 {
-  "lesson_title": "Linear Layouts in Android",
-  "lesson_content": [
+  "data": [
     {
-      "content_id": "1",
-      "content_type": "header",
-      "content_text": "Introduction to Linear Layouts"
-    },
-    {
-      "content_id": "2",
-      "content_type": "content_text",
-      "content_text": "Linear layouts are fundamental layout components in Android development, allowing you to arrange UI elements either horizontally or vertically in a single direction. They provide a simple and effective way to organize views within your application's user interface."
-    },
-    {
-      "content_id": "3",
-      "content_type": "ad_large_banner"
-    },
-    {
-      "content_id": "4",
-      "content_type": "header",
-      "content_text": "LinearLayout vs. LinearLayoutCompat"
-    },
-    {
-      "content_id": "5",
-      "content_type": "content_text",
-      "content_text": "While the traditional `LinearLayout` exists, `LinearLayoutCompat` from the AppCompat library is generally preferred. It offers backward compatibility with older Android versions, ensuring consistent behavior across different API levels. For instance, features like dividers, introduced in API 11, are readily available in `LinearLayoutCompat` regardless of the target API."
-    },
-    {
-      "content_id": "6",
-      "content_type": "header",
-      "content_text": "Adding the Dependency"
-    },
-    {
-      "content_id": "7",
-      "content_type": "content_text",
-      "content_text": "To use `LinearLayoutCompat`, ensure you have the androidx AppCompat library included in your project's dependencies:"
-    },
-    {
-      "content_id": "8",
-      "content_type": "content_code",
-      "content_code_programming_language": "gradle",
-      "content_code": "dependencies {\n    def appcompat_version = \"1.7.0\"\n\n    implementation \"androidx.appcompat:appcompat:$appcompat_version\"\n    // For loading and tinting drawables on older versions of the platform\n    implementation \"androidx.appcompat:appcompat-resources:$appcompat_version\"\n}"
-    },
-    {
-      "content_id": "9",
-      "content_type": "ad_large_banner"
-    },
-    {
-      "content_id": "10",
-      "content_type": "header",
-      "content_text": "Orientation: Vertical and Horizontal"
-    },
-    {
-      "content_id": "11",
-      "content_type": "content_text",
-      "content_text": "Linear layouts can be oriented either vertically (elements arranged from top to bottom) or horizontally (elements arranged from left to right). This is controlled by the `orientation` attribute."
-    },
-    {
-      "content_id": "12",
-      "content_type": "header",
-      "content_text": "Example: Vertical Orientation"
-    },
-    {
-      "content_id": "13",
-      "content_type": "image",
-      "content_image_src": "https://i.ibb.co/ngsh7RC/Screenshot-20241102-124322.png"
-    },
-    {
-      "content_id": "14",
-      "content_type": "content_code",
-      "content_code_programming_language": "XML",
-      "content_code": "<LinearLayout\n    android:id=\"@+id/linear_layout_vertical\"\n    android:layout_width=\"match_parent\"\n    android:layout_height=\"wrap_content\"\n    android:layout_margin=\"24dp\"\n    android:orientation=\"vertical\"\n    android:gravity=\"center\">\n    <com.google.android.material.button.MaterialButton\n        style=\"@style/Widget.Material3.Button.ElevatedButton\"\n        android:layout_width=\"wrap_content\"\n        android:layout_height=\"wrap_content\"\n        android:text=\"@string/button\"\n        tools:ignore=\"DuplicateSpeakableTextCheck\"/>\n    <com.google.android.material.button.MaterialButton\n        style=\"@style/Widget.Material3.Button.ElevatedButton\"\n        android:layout_width=\"wrap_content\"\n        android:layout_height=\"wrap_content\"\n        android:text=\"@string/button\"/>\n    <com.google.android.material.button.MaterialButton\n        style=\"@style/Widget.Material3.Button.ElevatedButton\"\n        android:layout_width=\"wrap_content\"\n        android:layout_height=\"0dp\"\n        android:text=\"@string/button\"\n        android:layout_weight=\"1\"/>\n</LinearLayout>"
-    },
-    {
-      "content_id": "15",
-      "content_type": "header",
-      "content_text": "Example: Horizontal Orientation"
-    },
-    {
-      "content_id": "16",
-      "content_type": "image",
-      "content_image_src": "https://i.ibb.co/y07SsNZ/Screenshot-20241102-124348-2.jpg"
-    },
-    {
-      "content_id": "17",
-      "content_type": "ad_large_banner"
-    },
-    {
-      "content_id": "18",
-      "content_type": "content_code",
-      "content_code_programming_language": "XML",
-      "content_code": "<LinearLayout\n    android:id=\"@+id/linear_layout_horizontal\"\n    android:layout_width=\"match_parent\"\n    android:layout_height=\"wrap_content\"\n    android:layout_margin=\"24dp\"\n    android:orientation=\"horizontal\"\n    android:gravity=\"center\">\n    <com.google.android.material.button.MaterialButton\n        style=\"@style/Widget.Material3.Button.ElevatedButton\"\n        android:layout_width=\"wrap_content\"\n        android:layout_height=\"wrap_content\"\n        android:text=\"@string/button\"\n        tools:ignore=\"DuplicateSpeakableTextCheck\"/>\n    <com.google.android.material.button.MaterialButton\n        style=\"@style/Widget.Material3.Button.ElevatedButton\"\n        android:layout_width=\"wrap_content\"\n        android:layout_height=\"wrap_content\"\n        android:text=\"@string/button\"/>\n    <com.google.android.material.button.MaterialButton\n        style=\"@style/Widget.Material3.Button.ElevatedButton\"\n        android:layout_width=\"wrap_content\"\n        android:layout_height=\"0dp\"\n        android:text=\"@string/button\"\n        android:layout_weight=\"1\"/>\n</LinearLayout>"
-    },
-    {
-      "content_id": "19",
-      "content_type": "ad_banner"
+      "lesson_title": "Linear Layouts in Android",
+      "lesson_content": [
+        {
+          "content_id": "1",
+          "content_type": "header",
+          "content_text": "Introduction to Linear Layouts"
+        },
+        {
+          "content_id": "2",
+          "content_type": "content_text",
+          "content_text": "Linear layouts are fundamental layout components in Android development, allowing you to arrange UI elements either horizontally or vertically in a single direction. They provide a simple and effective way to organize views within your application's user interface."
+        },
+        {
+          "content_id": "3",
+          "content_type": "ad_large_banner"
+        },
+        {
+          "content_id": "4",
+          "content_type": "header",
+          "content_text": "LinearLayout vs. LinearLayoutCompat"
+        },
+        {
+          "content_id": "5",
+          "content_type": "content_text",
+          "content_text": "While the traditional `LinearLayout` exists, `LinearLayoutCompat` from the AppCompat library is generally preferred. It offers backward compatibility with older Android versions, ensuring consistent behavior across different API levels. For instance, features like dividers, introduced in API 11, are readily available in `LinearLayoutCompat` regardless of the target API."
+        },
+        {
+          "content_id": "6",
+          "content_type": "header",
+          "content_text": "Adding the Dependency"
+        },
+        {
+          "content_id": "7",
+          "content_type": "content_text",
+          "content_text": "To use `LinearLayoutCompat`, ensure you have the androidx AppCompat library included in your project's dependencies:"
+        },
+        {
+          "content_id": "8",
+          "content_type": "content_code",
+          "content_code_programming_language": "gradle",
+          "content_code": "dependencies {\n    def appcompat_version = \"1.7.0\"\n\n    implementation \"androidx.appcompat:appcompat:$appcompat_version\"\n    // For loading and tinting drawables on older versions of the platform\n    implementation \"androidx.appcompat:appcompat-resources:$appcompat_version\"\n}"
+        },
+        {
+          "content_id": "9",
+          "content_type": "ad_large_banner"
+        },
+        {
+          "content_id": "10",
+          "content_type": "header",
+          "content_text": "Orientation: Vertical and Horizontal"
+        },
+        {
+          "content_id": "11",
+          "content_type": "content_text",
+          "content_text": "Linear layouts can be oriented either vertically (elements arranged from top to bottom) or horizontally (elements arranged from left to right). This is controlled by the `orientation` attribute."
+        },
+        {
+          "content_id": "12",
+          "content_type": "header",
+          "content_text": "Example: Vertical Orientation"
+        },
+        {
+          "content_id": "13",
+          "content_type": "image",
+          "content_image_url": "https://i.ibb.co/ngsh7RC/Screenshot-20241102-124322.png"
+        },
+        {
+          "content_id": "14",
+          "content_type": "content_code",
+          "content_code_programming_language": "XML",
+          "content_code": "<LinearLayout\n    android:id=\"@+id/linear_layout_vertical\"\n    android:layout_width=\"match_parent\"\n    android:layout_height=\"wrap_content\"\n    android:layout_margin=\"24dp\"\n    android:orientation=\"vertical\"\n    android:gravity=\"center\">\n    <com.google.android.material.button.MaterialButton\n        style=\"@style/Widget.Material3.Button.ElevatedButton\"\n        android:layout_width=\"wrap_content\"\n        android:layout_height=\"wrap_content\"\n        android:text=\"@string/button\"\n        tools:ignore=\"DuplicateSpeakableTextCheck\"/>\n    <com.google.android.material.button.MaterialButton\n        style=\"@style/Widget.Material3.Button.ElevatedButton\"\n        android:layout_width=\"wrap_content\"\n        android:layout_height=\"wrap_content\"\n        android:text=\"@string/button\"/>\n    <com.google.android.material.button.MaterialButton\n        style=\"@style/Widget.Material3.Button.ElevatedButton\"\n        android:layout_width=\"wrap_content\"\n        android:layout_height=\"0dp\"\n        android:text=\"@string/button\"\n        android:layout_weight=\"1\"/>\n</LinearLayout>"
+        },
+        {
+          "content_id": "15",
+          "content_type": "header",
+          "content_text": "Example: Horizontal Orientation"
+        },
+        {
+          "content_id": "16",
+          "content_type": "image",
+          "content_image_url": "https://i.ibb.co/y07SsNZ/Screenshot-20241102-124348-2.jpg"
+        },
+        {
+          "content_id": "17",
+          "content_type": "ad_large_banner"
+        },
+        {
+          "content_id": "18",
+          "content_type": "content_code",
+          "content_code_programming_language": "XML",
+          "content_code": "<LinearLayout\n    android:id=\"@+id/linear_layout_horizontal\"\n    android:layout_width=\"match_parent\"\n    android:layout_height=\"wrap_content\"\n    android:layout_margin=\"24dp\"\n    android:orientation=\"horizontal\"\n    android:gravity=\"center\">\n    <com.google.android.material.button.MaterialButton\n        style=\"@style/Widget.Material3.Button.ElevatedButton\"\n        android:layout_width=\"wrap_content\"\n        android:layout_height=\"wrap_content\"\n        android:text=\"@string/button\"\n        tools:ignore=\"DuplicateSpeakableTextCheck\"/>\n    <com.google.android.material.button.MaterialButton\n        style=\"@style/Widget.Material3.Button.ElevatedButton\"\n        android:layout_width=\"wrap_content\"\n        android:layout_height=\"wrap_content\"\n        android:text=\"@string/button\"/>\n    <com.google.android.material.button.MaterialButton\n        style=\"@style/Widget.Material3.Button.ElevatedButton\"\n        android:layout_width=\"wrap_content\"\n        android:layout_height=\"0dp\"\n        android:text=\"@string/button\"\n        android:layout_weight=\"1\"/>\n</LinearLayout>"
+        },
+        {
+          "content_id": "19",
+          "content_type": "ad_banner"
+        }
+      ]
     }
   ]
 }
