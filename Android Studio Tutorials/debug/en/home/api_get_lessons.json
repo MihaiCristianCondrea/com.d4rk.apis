@@ -1,14 +1,6 @@
 {
   "data": [
     {
-      "lesson_id": "101",
-      "lesson_type": "ad_view_banner"
-    },
-    {
-      "lesson_id": "102",
-      "lesson_type": "ad_view_banner_full"
-    },
-    {
       "lesson_id": "15",
       "lesson_title": "Displaying Transient Messages with Snackbars",
       "lesson_description": "Discover how to use Snackbars in Android to provide brief, informative feedback to the user. Learn about basic implementation in both Kotlin and Java, customization options, and best practices for their usage.",
@@ -25,7 +17,7 @@
       "square_image_url": "https://i.ibb.co/YW07k43/snackbars.png"
     },
     {
-      "lesson_id": "103",
+      "lesson_id": "ad_banner_2",
       "lesson_type": "ad_view_banner_large"
     },
     {
@@ -59,6 +51,10 @@
         "Material Design"
       ],
       "thumbnail_image_url": "https://i.ibb.co/pZLffvM/how-to-use-fabs-compose.png"
+    },
+        {
+      "lesson_id": "ad_banner_2",
+      "lesson_type": "ad_view_banner_large"
     },
     {
       "lesson_id": "12",
@@ -177,6 +173,10 @@
         "Accessibility"
       ],
       "thumbnail_image_url": "https://i.ibb.co/P5spN36/predictive-back-gestures-on-android.png"
+    },
+    {
+      "lesson_id": "ad_banner_1",
+      "lesson_type": "ad_view_banner_large"
     },
     {
       "lesson_id": "4",
