@@ -45,6 +45,11 @@ The APIs for Android Studio Tutorials power the following functionalities:
 - **`api_get_snack_bars.json`**: Contains content for the lesson on Snackbars.
 
 ### Documentation
+- All documentation for Android Studio Tutorials APIs is available in the [repository's docs section](https://github.com/D4rK7355608/com.d4rk.apis/tree/main/Android%20Studio%20Tutorials/docs).
+  - [Home Screen API Documentation](https://github.com/D4rK7355608/com.d4rk.apis/blob/main/Android%20Studio%20Tutorials/docs/home_screen_api_documentation.md)
+  - [Lessons API Documentation](https://github.com/D4rK7355608/com.d4rk.apis/blob/main/Android%20Studio%20Tutorials/docs/lessons_api_documentation.md)
+
+### Documentation
 - Detailed documentation for the APIs can be found in the [`Android Studio Tutorials` section](docs/android-studio-tutorials).
 
 ---
