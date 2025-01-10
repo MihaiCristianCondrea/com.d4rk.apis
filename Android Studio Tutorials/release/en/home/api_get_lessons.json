@@ -1,6 +1,22 @@
 {
   "data": [
     {
+      "lesson_id": "16",
+      "lesson_title": "Designing Interfaces with Constraint Layout",
+      "lesson_description": "Learn how to use Constraint Layout to design flexible and efficient UIs.",
+      "lesson_type": "square_image",
+      "square_image_url": "https://i.ibb.co/7YvYQst/how-to-use-constraint-layout-xml.png",
+      "lesson_tags": [
+        "Android",
+        "XML",
+        "UI",
+        "Layouts",
+        "Constraint Layout",
+        "Kotlin"
+      ],
+      "deep_link_path": "com.d4rk.androidtutorials://lesson/constraint_layout"
+    },
+    {
       "lesson_id": "15",
       "lesson_title": "Displaying Transient Messages with Snackbars",
       "lesson_description": "Discover how to use Snackbars in Android to provide brief, informative feedback to the user. Learn about basic implementation in both Kotlin and Java, customization options, and best practices for their usage.",
@@ -52,7 +68,7 @@
       ],
       "thumbnail_image_url": "https://i.ibb.co/pZLffvM/how-to-use-fabs-compose.png"
     },
-        {
+    {
       "lesson_id": "ad_banner_2",
       "lesson_type": "ad_view_banner_large"
     },
