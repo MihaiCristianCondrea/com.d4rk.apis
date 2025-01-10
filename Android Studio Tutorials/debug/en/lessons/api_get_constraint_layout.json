@@ -10,7 +10,7 @@
                 },
                 {
                     "content_id": "2",
-                    "content_type": "ad_banner"
+                    "content_type": "ad_large_banner"
                 },
                 {
                     "content_id": "3",
@@ -25,7 +25,7 @@
                 {
                     "content_id": "5",
                     "content_type": "image",
-                    "content_image_url": "https://example.com/constraint_layout_example.png"
+                    "content_image_url": "https://developer.android.com/static/codelabs/constraint-layout/img/2651ce934f150530.gif"
                 },
                 {
                     "content_id": "6",
