@@ -97,65 +97,77 @@
         },
         {
           "content_id": "19",
+          "content_type": "content_code",
+          "content_code": "WebSettings webSettings = binding.webView.getSettings();\nwebSettings.setJavaScriptEnabled(true);\n",
+          "content_code_programming_language": "Java"
+        },
+        {
+          "content_id": "20",
           "content_type": "content_text",
           "content_text": "<p>You can also configure other settings such as caching, DOM storage, and user-agent strings in a similar manner.</p>"
         },
         {
-          "content_id": "20",
+          "content_id": "21",
           "content_type": "ad_large_banner"
         },
         {
-          "content_id": "21",
+          "content_id": "22",
           "content_type": "header",
           "content_text": "Using a WebViewClient"
         },
         {
-          "content_id": "22",
+          "content_id": "23",
           "content_type": "content_text",
           "content_text": "<p>When the user clicks on a link inside a WebView, the default behavior is to open the link in a browser outside the app. To override this and keep navigation within your WebView, set a custom <code>WebViewClient</code>:</p>"
         },
         {
-          "content_id": "23",
+          "content_id": "24",
           "content_type": "content_code",
-          "content_code": "// In Kotlin\\nimport android.webkit.WebViewClient\\n\\nbinding.webView.webViewClient = WebViewClient()\\n\\n// In Java\\nimport android.webkit.WebViewClient;\\n\\nbinding.webView.setWebViewClient(new WebViewClient());",
+          "content_code": "import android.webkit.WebViewClient\n\nbinding.webView.webViewClient = WebViewClient()\n",
           "content_code_programming_language": "Kotlin"
         },
         {
-          "content_id": "24",
-          "content_type": "content_text",
-          "content_text": "<p>This ensures that any links clicked within the WebView continue to load in the same <code>WebView</code> rather than opening another browser application.</p>"
-        },
-        {
           "content_id": "25",
-          "content_type": "header",
-          "content_text": "Common Pitfalls and Tips"
+          "content_type": "content_code",
+          "content_code": "import android.webkit.WebViewClient;\n\nbinding.webView.setWebViewClient(new WebViewClient());\n",
+          "content_code_programming_language": "Java"
         },
         {
           "content_id": "26",
           "content_type": "content_text",
-          "content_text": "<ul><li><b>Permissions:</b> If your web content requires specific permissions (e.g., camera access for uploading images), ensure they are declared in your <code>AndroidManifest.xml</code>.</li><li><b>File Access:</b> If you need to load local HTML files from the app assets, you can use <code>webView.loadUrl(\"file:///android_asset/filename.html\")</code>.</li><li><b>Security:</b> Enable JavaScript only if you trust the source of the content. Consider using <code>ProGuard/R8</code> rules or other measures for added security.</li><li><b>Performance:</b> Using a WebView can add significant overhead. Cache settings and efficient layout usage can help maintain smooth performance.</li></ul>"
+          "content_text": "<p>This ensures that any links clicked within the WebView continue to load in the same <code>WebView</code> rather than opening another browser application.</p>"
         },
         {
           "content_id": "27",
+          "content_type": "header",
+          "content_text": "Common Pitfalls and Tips"
+        },
+        {
+          "content_id": "28",
+          "content_type": "content_text",
+          "content_text": "<ul><li><b>Permissions:</b> If your web content requires specific permissions (e.g., camera access for uploading images), ensure they are declared in your <code>AndroidManifest.xml</code>.</li><li><b>File Access:</b> If you need to load local HTML files from the app assets, you can use <code>webView.loadUrl(\"file:///android_asset/filename.html\")</code>.</li><li><b>Security:</b> Enable JavaScript only if you trust the source of the content. Consider using <code>ProGuard/R8</code> rules or other measures for added security.</li><li><b>Performance:</b> Using a WebView can add significant overhead. Cache settings and efficient layout usage can help maintain smooth performance.</li></ul>"
+        },
+        {
+          "content_id": "29",
           "content_type": "content_text",
           "content_text": "<p>Always remember to keep user experience, performance, and security in mind when embedding web content in your app.</p>"
         },
         {
-          "content_id": "28",
+          "content_id": "30",
           "content_type": "ad_banner_full"
         },
         {
-          "content_id": "29",
+          "content_id": "31",
           "content_type": "header",
           "content_text": "Conclusion"
         },
         {
-          "content_id": "30",
+          "content_id": "32",
           "content_type": "content_text",
           "content_text": "<p>WebViews provide a flexible way to integrate online resources or custom HTML content within your app. Whether you use Java or Kotlin, the core concepts remain the same. By carefully configuring settings, enabling JavaScript only when necessary, and handling navigation within the WebView, you can offer a secure and seamless experience for your users.</p>"
         },
         {
-          "content_id": "31",
+          "content_id": "33",
           "content_type": "ad_banner"
         }
       ]
