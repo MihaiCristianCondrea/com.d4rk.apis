@@ -1,0 +1,164 @@
+{
+  "data": [
+    {
+      "lesson_title": "Mastering WebViews in Android with Java and Kotlin",
+      "lesson_content": [
+        {
+          "content_id": "1",
+          "content_type": "content_text",
+          "content_text": "<p><b>Introduction</b><br/>WebViews in Android allow you to embed web content directly into your app, enabling users to view web pages without leaving the native environment. In this lesson, we will explore how to set up a basic WebView in both Java and Kotlin, how to configure your project to support a WebView, and best practices when using this powerful component.</p>"
+        },
+        {
+          "content_id": "2",
+          "content_type": "header",
+          "content_text": "Project Setup and Layout (XML)"
+        },
+        {
+          "content_id": "3",
+          "content_type": "content_text",
+          "content_text": "<p>To integrate a WebView into your Android app, you need to add the <code>WebView</code> component to your layout XML file. Below is a sample layout file showing how to define a WebView that occupies the entire screen. This layout can be used for both Kotlin and Java projects.</p>"
+        },
+        {
+          "content_id": "4",
+          "content_type": "content_code",
+          "content_code": "<androidx.constraintlayout.widget.ConstraintLayout\n    xmlns:android=\"http://schemas.android.com/apk/res/android\"\n    xmlns:app=\"http://schemas.android.com/apk/res-auto\"\n    android:layout_width=\"match_parent\"\n    android:layout_height=\"match_parent\">\n    <WebView\n        android:id=\"@+id/webView\"\n        android:layout_width=\"match_parent\"\n        android:layout_height=\"match_parent\"/>\n</androidx.constraintlayout.widget.ConstraintLayout>",
+          "content_code_programming_language": "XML"
+        },
+        {
+          "content_id": "5",
+          "content_type": "content_text",
+          "content_text": "<p>This XML declares a <code>WebView</code> inside a <code>ConstraintLayout</code>. By setting <code>match_parent</code> for both width and height, we ensure the WebView takes up the full screen.</p>"
+        },
+        {
+          "content_id": "6",
+          "content_type": "ad_large_banner"
+        },
+        {
+          "content_id": "7",
+          "content_type": "header",
+          "content_text": "Using WebViews in Kotlin"
+        },
+        {
+          "content_id": "8",
+          "content_type": "content_text",
+          "content_text": "<p>In Kotlin-based projects, Android Studio automatically sets up Kotlin dependencies for you. Below is an example <code>MainActivity</code> demonstrating how to load a URL in the WebView using view binding.</p>"
+        },
+        {
+          "content_id": "9",
+          "content_type": "content_code",
+          "content_code": "// Import the necessary classes and libraries\nimport android.os.Bundle\nimport androidx.appcompat.app.AppCompatActivity\n\n// This class extends AppCompatActivity and represents the main activity of an Android app\nclass MainActivity : AppCompatActivity() {\n\n    // Declare a private lateinit variable for binding the layout with this activity\n    private lateinit var binding: ActivityMainBinding\n\n    // This method is called when the activity is first created\n    override fun onCreate(savedInstanceState: Bundle?) {\n        super.onCreate(savedInstanceState)\n\n        // Inflate the layout and set it as the content view for this activity\n        binding = ActivityMainBinding.inflate(layoutInflater)\n        setContentView(binding.root)\n\n        // Load a URL in the WebView in the layout\n        binding.webView.loadUrl(\"https://sites.google.com/view/d4rk7355608/home\")\n    }\n}\n",
+          "content_code_programming_language": "Kotlin"
+        },
+        {
+          "content_id": "10",
+          "content_type": "content_text",
+          "content_text": "<p>In this example, we use <code>ActivityMainBinding</code> (generated from <code>activity_main.xml</code>) to access the WebView. Note that the WebView is referenced directly by its ID <code>webView</code>.</p>"
+        },
+        {
+          "content_id": "11",
+          "content_type": "ad_banner_full"
+        },
+        {
+          "content_id": "12",
+          "content_type": "header",
+          "content_text": "Using WebViews in Java"
+        },
+        {
+          "content_id": "13",
+          "content_type": "content_text",
+          "content_text": "<p>If your project is using Java, the process remains quite similar. Below is an example <code>MainActivity</code> in Java that shows how to inflate the layout and load a URL:</p>"
+        },
+        {
+          "content_id": "14",
+          "content_type": "content_code",
+          "content_code": "// Import the necessary classes and libraries\nimport android.os.Bundle;\nimport androidx.appcompat.app.AppCompatActivity;\n\n// This class extends AppCompatActivity and represents the main activity of an Android app\npublic class MainActivity extends AppCompatActivity {\n\n    // Declare a private variable for binding the layout with this activity\n    private ActivityMainBinding binding;\n\n    // This method is called when the activity is first created\n    @Override\n    protected void onCreate(Bundle savedInstanceState) {\n        super.onCreate(savedInstanceState);\n\n        // Inflate the layout and set it as the content view for this activity\n        binding = ActivityMainBinding.inflate(getLayoutInflater());\n        setContentView(binding.getRoot());\n\n        // Load a URL in the web view in the layout\n        binding.webView.loadUrl(\"https://sites.google.com/view/d4rk7355608/home\");\n    }\n}\n",
+          "content_code_programming_language": "Java"
+        },
+        {
+          "content_id": "15",
+          "content_type": "content_text",
+          "content_text": "<p>This code snippet demonstrates the same functionality, but in Java. The <code>WebView</code> is accessed through the <code>binding.webView</code> object, and <code>loadUrl</code> is used to load a specified URL.</p>"
+        },
+        {
+          "content_id": "16",
+          "content_type": "header",
+          "content_text": "Enabling JavaScript and Other Configurations"
+        },
+        {
+          "content_id": "17",
+          "content_type": "content_text",
+          "content_text": "<p>By default, JavaScript might be disabled in the WebView for security reasons. To enable JavaScript or apply other advanced settings, you can obtain the WebSettings instance from the WebView and modify it as needed:</p>"
+        },
+        {
+          "content_id": "18",
+          "content_type": "content_code",
+          "content_code": "val webSettings = binding.webView.settings\nwebSettings.javaScriptEnabled = true\n",
+          "content_code_programming_language": "Kotlin"
+        },
+        {
+          "content_id": "19",
+          "content_type": "content_text",
+          "content_text": "<p>You can also configure other settings such as caching, DOM storage, and user-agent strings in a similar manner.</p>"
+        },
+        {
+          "content_id": "20",
+          "content_type": "ad_large_banner"
+        },
+        {
+          "content_id": "21",
+          "content_type": "header",
+          "content_text": "Using a WebViewClient"
+        },
+        {
+          "content_id": "22",
+          "content_type": "content_text",
+          "content_text": "<p>When the user clicks on a link inside a WebView, the default behavior is to open the link in a browser outside the app. To override this and keep navigation within your WebView, set a custom <code>WebViewClient</code>:</p>"
+        },
+        {
+          "content_id": "23",
+          "content_type": "content_code",
+          "content_code": "// In Kotlin\\nimport android.webkit.WebViewClient\\n\\nbinding.webView.webViewClient = WebViewClient()\\n\\n// In Java\\nimport android.webkit.WebViewClient;\\n\\nbinding.webView.setWebViewClient(new WebViewClient());",
+          "content_code_programming_language": "Kotlin"
+        },
+        {
+          "content_id": "24",
+          "content_type": "content_text",
+          "content_text": "<p>This ensures that any links clicked within the WebView continue to load in the same <code>WebView</code> rather than opening another browser application.</p>"
+        },
+        {
+          "content_id": "25",
+          "content_type": "header",
+          "content_text": "Common Pitfalls and Tips"
+        },
+        {
+          "content_id": "26",
+          "content_type": "content_text",
+          "content_text": "<ul><li><b>Permissions:</b> If your web content requires specific permissions (e.g., camera access for uploading images), ensure they are declared in your <code>AndroidManifest.xml</code>.</li><li><b>File Access:</b> If you need to load local HTML files from the app assets, you can use <code>webView.loadUrl(\"file:///android_asset/filename.html\")</code>.</li><li><b>Security:</b> Enable JavaScript only if you trust the source of the content. Consider using <code>ProGuard/R8</code> rules or other measures for added security.</li><li><b>Performance:</b> Using a WebView can add significant overhead. Cache settings and efficient layout usage can help maintain smooth performance.</li></ul>"
+        },
+        {
+          "content_id": "27",
+          "content_type": "content_text",
+          "content_text": "<p>Always remember to keep user experience, performance, and security in mind when embedding web content in your app.</p>"
+        },
+        {
+          "content_id": "28",
+          "content_type": "ad_banner_full"
+        },
+        {
+          "content_id": "29",
+          "content_type": "header",
+          "content_text": "Conclusion"
+        },
+        {
+          "content_id": "30",
+          "content_type": "content_text",
+          "content_text": "<p>WebViews provide a flexible way to integrate online resources or custom HTML content within your app. Whether you use Java or Kotlin, the core concepts remain the same. By carefully configuring settings, enabling JavaScript only when necessary, and handling navigation within the WebView, you can offer a secure and seamless experience for your users.</p>"
+        },
+        {
+          "content_id": "31",
+          "content_type": "ad_banner"
+        }
+      ]
+    }
+  ]
+}
