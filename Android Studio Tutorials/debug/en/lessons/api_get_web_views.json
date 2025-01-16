@@ -21,7 +21,7 @@
         {
           "content_id": "4",
           "content_type": "content_code",
-          "content_code": "<androidx.constraintlayout.widget.ConstraintLayout\\n    xmlns:android=\\\"http://schemas.android.com/apk/res/android\\\"\\n    xmlns:app=\\\"http://schemas.android.com/apk/res-auto\\\"\\n    android:layout_width=\\\"match_parent\\\"\\n    android:layout_height=\\\"match_parent\\\">\\n\\n    <WebView\\n        android:id=\\\"@+id/webView\\\"\\n        android:layout_width=\\\"match_parent\\\"\\n        android:layout_height=\\\"match_parent\\\"/>\\n\\n</androidx.constraintlayout.widget.ConstraintLayout>",
+          "content_code": "<androidx.constraintlayout.widget.ConstraintLayout\n    xmlns:android=\"http://schemas.android.com/apk/res/android\"\n    xmlns:app=\"http://schemas.android.com/apk/res-auto\"\n    android:layout_width=\"match_parent\"\n    android:layout_height=\"match_parent\">\n    <WebView\n        android:id=\"@+id/webView\"\n        android:layout_width=\"match_parent\"\n        android:layout_height=\"match_parent\"/>\n</androidx.constraintlayout.widget.ConstraintLayout>",
           "content_code_programming_language": "XML"
         },
         {
@@ -46,7 +46,7 @@
         {
           "content_id": "9",
           "content_type": "content_code",
-          "content_code": "// Import the necessary classes and libraries\\nimport android.os.Bundle\\nimport androidx.appcompat.app.AppCompatActivity\\n\\n// This class extends AppCompatActivity and represents the main activity of an Android app\\nclass MainActivity : AppCompatActivity() {\\n\\n    // Declare a private lateinit variable for binding the layout with this activity\\n    private lateinit var binding: ActivityMainBinding\\n\\n    // This method is called when the activity is first created\\n    override fun onCreate(savedInstanceState: Bundle?) {\\n        super.onCreate(savedInstanceState)\\n\\n        // Inflate the layout and set it as the content view for this activity\\n        binding = ActivityMainBinding.inflate(layoutInflater)\\n        setContentView(binding.root)\\n\\n        // Load a URL in the WebView in the layout\\n        binding.webView.loadUrl(\"https://sites.google.com/view/d4rk7355608/home\")\\n    }\\n}",
+          "content_code": "// Import the necessary classes and libraries\nimport android.os.Bundle\nimport androidx.appcompat.app.AppCompatActivity\n\n// This class extends AppCompatActivity and represents the main activity of an Android app\nclass MainActivity : AppCompatActivity() {\n\n    // Declare a private lateinit variable for binding the layout with this activity\n    private lateinit var binding: ActivityMainBinding\n\n    // This method is called when the activity is first created\n    override fun onCreate(savedInstanceState: Bundle?) {\n        super.onCreate(savedInstanceState)\n\n        // Inflate the layout and set it as the content view for this activity\n        binding = ActivityMainBinding.inflate(layoutInflater)\n        setContentView(binding.root)\n\n        // Load a URL in the WebView in the layout\n        binding.webView.loadUrl(\"https://sites.google.com/view/d4rk7355608/home\")\n    }\n}\n",
           "content_code_programming_language": "Kotlin"
         },
         {
@@ -71,7 +71,7 @@
         {
           "content_id": "14",
           "content_type": "content_code",
-          "content_code": "// Import the necessary classes and libraries\\nimport android.os.Bundle;\\nimport androidx.appcompat.app.AppCompatActivity;\\n\\n// This class extends AppCompatActivity and represents the main activity of an Android app\\npublic class MainActivity extends AppCompatActivity {\\n\\n    // Declare a private lateinit variable for binding the layout with this activity\\n    private ActivityMainBinding binding;\\n\\n    // This method is called when the activity is first created\\n    @Override\\n    protected void onCreate(Bundle savedInstanceState) {\\n        super.onCreate(savedInstanceState);\\n\\n        // Inflate the layout and set it as the content view for this activity\\n        binding = ActivityMainBinding.inflate(getLayoutInflater());\\n        setContentView(binding.getRoot());\\n\\n        // Load a URL in the web view in the layout\\n        binding.webView.loadUrl(\"https://sites.google.com/view/d4rk7355608/home\");\\n    }\\n}",
+          "content_code": "// Import the necessary classes and libraries\nimport android.os.Bundle;\nimport androidx.appcompat.app.AppCompatActivity;\n\n// This class extends AppCompatActivity and represents the main activity of an Android app\npublic class MainActivity extends AppCompatActivity {\n\n    // Declare a private variable for binding the layout with this activity\n    private ActivityMainBinding binding;\n\n    // This method is called when the activity is first created\n    @Override\n    protected void onCreate(Bundle savedInstanceState) {\n        super.onCreate(savedInstanceState);\n\n        // Inflate the layout and set it as the content view for this activity\n        binding = ActivityMainBinding.inflate(getLayoutInflater());\n        setContentView(binding.getRoot());\n\n        // Load a URL in the web view in the layout\n        binding.webView.loadUrl(\"https://sites.google.com/view/d4rk7355608/home\");\n    }\n}\n",
           "content_code_programming_language": "Java"
         },
         {
@@ -92,7 +92,7 @@
         {
           "content_id": "18",
           "content_type": "content_code",
-          "content_code": "// In Kotlin\\nval webSettings = binding.webView.settings\\nwebSettings.javaScriptEnabled = true\\n\\n// In Java\\nWebSettings webSettings = binding.webView.getSettings();\\nwebSettings.setJavaScriptEnabled(true);",
+          "content_code": "val webSettings = binding.webView.settings\nwebSettings.javaScriptEnabled = true\n",
           "content_code_programming_language": "Kotlin"
         },
         {
