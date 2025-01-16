@@ -1,6 +1,15 @@
 {
   "data": [
     {
+      "lesson_id": "17",
+      "lesson_title": "Mastering WebViews in Android",
+      "lesson_description": "Learn how to embed and configure WebViews to display web content seamlessly in your Android app using Kotlin and Java.",
+      "lesson_type": "square_image",
+      "square_image_url": "https://example.com/images/webviews_square.png",
+      "lesson_tags": ["Android", "Kotlin", "Java", "WebView", "UI"],
+      "deep_link_path": "com.d4rk.androidtutorials://lesson/web_views"
+    },
+    {
       "lesson_id": "16",
       "lesson_title": "Designing Interfaces with Constraint Layout",
       "lesson_description": "Learn how to use Constraint Layout to design flexible and efficient UIs.",
