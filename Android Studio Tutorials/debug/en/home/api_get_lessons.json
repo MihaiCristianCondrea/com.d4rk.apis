@@ -5,7 +5,7 @@
       "lesson_title": "Understanding Permissions in Android",
       "lesson_description": "Learn how to handle permissions, including install-time, runtime, and special permissions.",
       "lesson_type": "square_image",
-      "square_image_url": "https://developer.android.com/static/images/training/permissions/workflow-overview.svg",
+      "square_image_url": "https://i.ibb.co/Tn5H1j4/permissions-in-android.png",
       "lesson_tags": ["Android", "Permissions", "Runtime", "Security", "Kotlin"],
       "deep_link_path": "com.d4rk.androidtutorials://lesson/permissions"
     },
