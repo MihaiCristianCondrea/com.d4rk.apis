@@ -31,7 +31,7 @@
         },
         {
           "content_id": "6",
-          "content_type": "ad_banner"
+          "content_type": "ad_large_banner"
         },
         {
           "content_id": "7",
@@ -46,7 +46,8 @@
         {
           "content_id": "9",
           "content_type": "image",
-          "content_image_url": "https://i.ibb.co/example1/date-picker-open.png"
+          "content_image_url": "https://firebasestorage.googleapis.com/v0/b/design-spec/o/projects%2Fgoogle-material-3%2Fimages%2Flwhgu2np-3.png?alt=media&token=80dab1fc-588a-4871-93b8-31a93024fdee",
+          "content_caption": "The Date Picker Dialog displaying the current month."
         },
         {
           "content_id": "10",
@@ -60,7 +61,7 @@
         },
         {
           "content_id": "12",
-          "content_type": "ad_banner_full"
+          "content_type": "ad_large_banner"
         },
         {
           "content_id": "13",
@@ -75,17 +76,8 @@
         {
           "content_id": "15",
           "content_type": "image",
-          "content_image_url": "https://i.ibb.co/example2/best-practice-ui.png"
-        },
-        {
-          "content_id": "16",
-          "content_type": "header",
-          "content_text": "Image Descriptions"
-        },
-        {
-          "content_id": "17",
-          "content_type": "content_text",
-          "content_text": "<p><strong>Image 1:</strong> The Date Picker Dialog displaying the current month.<br/><strong>Image 2:</strong> A text field showing the formatted selected date.<br/><strong>Image 3:</strong> An event scheduling screen where the Date Picker is integrated.</p>"
+          "content_image_url": "https://firebasestorage.googleapis.com/v0/b/design-spec/o/projects%2Fgoogle-material-3%2Fimages%2Flwhkpzqn-23.png?alt=media&token=54d19958-58dd-4446-abc3-9b72aa675633",
+          "content_caption": "A text field showing the formatted selected date."
         },
         {
           "content_id": "18",
@@ -99,7 +91,7 @@
         },
         {
           "content_id": "20",
-          "content_type": "ad_large_banner"
+          "content_type": "ad_banner"
         }
       ]
     }
