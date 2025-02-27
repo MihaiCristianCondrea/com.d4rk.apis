@@ -46,38 +46,46 @@
         {
           "content_id": "9",
           "content_type": "image",
-          "content_image_url": "https://firebasestorage.googleapis.com/v0/b/design-spec/o/projects%2Fgoogle-material-3%2Fimages%2Flwhgu2np-3.png?alt=media&token=80dab1fc-588a-4871-93b8-31a93024fdee",
-          "content_caption": "The Date Picker Dialog displaying the current month."
+          "content_image_url": "https://firebasestorage.googleapis.com/v0/b/design-spec/o/projects%2Fgoogle-material-3%2Fimages%2Flwhgu2np-3.png?alt=media&token=80dab1fc-588a-4871-93b8-31a93024fdee"
         },
         {
           "content_id": "10",
+          "content_type": "content_text",
+          "content_text": "<p>The Date Picker Dialog displaying the current month.</p>"
+        },
+        {
+          "content_id": "11",
           "content_type": "header",
           "content_text": "Localization Considerations"
         },
         {
-          "content_id": "11",
+          "content_id": "12",
           "content_type": "content_text",
           "content_text": "<p>Locale-aware formatting is essential to ensure dates are displayed correctly for all users. Utilize <code>Locale.getDefault()</code> with <code>SimpleDateFormat</code> or <code>DateTimeFormatter</code> to automatically adjust the date format based on the user’s region.</p>"
         },
         {
-          "content_id": "12",
+          "content_id": "13",
           "content_type": "ad_large_banner"
         },
         {
-          "content_id": "13",
+          "content_id": "14",
           "content_type": "header",
           "content_text": "Best Practices"
         },
         {
-          "content_id": "14",
+          "content_id": "15",
           "content_type": "content_text",
           "content_text": "<p>When implementing Date Pickers, consider the following best practices:<ul><li>Use clear labels (e.g., \"Select Date\").</li><li>Pre-populate the picker with a sensible default value.</li><li>Provide immediate visual feedback by displaying the formatted date.</li><li>Gracefully handle null or invalid selections.</li><li>Ensure compatibility with both light and dark themes.</li></ul></p>"
         },
         {
-          "content_id": "15",
+          "content_id": "16",
           "content_type": "image",
-          "content_image_url": "https://firebasestorage.googleapis.com/v0/b/design-spec/o/projects%2Fgoogle-material-3%2Fimages%2Flwhkpzqn-23.png?alt=media&token=54d19958-58dd-4446-abc3-9b72aa675633",
-          "content_caption": "A text field showing the formatted selected date."
+          "content_image_url": "https://firebasestorage.googleapis.com/v0/b/design-spec/o/projects%2Fgoogle-material-3%2Fimages%2Flwhkpzqn-23.png?alt=media&token=54d19958-58dd-4446-abc3-9b72aa675633"
+        },
+        {
+          "content_id": "17",
+          "content_type": "content_text",
+          "content_text": "<p>A text field showing the formatted selected date.</p>"
         },
         {
           "content_id": "18",
