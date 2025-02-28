@@ -5,7 +5,7 @@
       "lesson_title": "Using Date Pickers in Jetpack Compose",
       "lesson_description": "Learn how to implement a Date Picker Dialog using Jetpack Compose and Material Design 3. The lesson covers code implementation, user interaction, localization, and best practices.",
       "lesson_type": "full_banner",
-      "thumbnail_image_url": "https://i.ibb.co/7Gf3LxV/date-picker-banner.png",
+      "thumbnail_image_url": "https://i.ibb.co/ch0gbRLR/date-picker-banner.png",
       "lesson_tags": [ "Android", "Jetpack Compose", "Date Picker", "Material3", "Localization" ],
       "deep_link_path": "com.d4rk.androidtutorials://lesson/date_picker_dialog"
     },
