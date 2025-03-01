@@ -1,6 +1,15 @@
 {
   "data": [
     {
+      "lesson_id": "20",
+      "lesson_title": "Implementing Parallax Scrolling in Jetpack Compose",
+      "lesson_description": "Learn how to implement a parallax scrolling effect in Jetpack Compose using a custom layout modifier, dependency setup, and Material Design guidelines.",
+      "lesson_type": "full_banner",
+      "thumbnail_image_url": "https://i.ibb.co/placeholder/parallax-banner.png",
+      "lesson_tags": [ "Android", "Jetpack Compose", "Parallax", "UI", "Material Design" ],
+      "deep_link_path": "com.d4rk.androidtutorials://lesson/parallax_scrolling"
+    },
+    {
       "lesson_id": "19",
       "lesson_title": "Using Date Pickers in Jetpack Compose",
       "lesson_description": "Learn how to implement a Date Picker Dialog using Jetpack Compose and Material Design 3. The lesson covers code implementation, user interaction, localization, and best practices.",

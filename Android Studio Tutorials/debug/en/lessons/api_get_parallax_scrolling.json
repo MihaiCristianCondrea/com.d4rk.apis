@@ -1,0 +1,92 @@
+{
+  "data": [
+    {
+      "lesson_title": "Implementing Parallax Scrolling in Jetpack Compose",
+      "lesson_content": [
+        {
+          "content_id": "1",
+          "content_type": "content_text",
+          "content_text": "<p><strong>Introduction:</strong> Parallax scrolling is a UI technique where the background and foreground move at different speeds, creating a sense of depth. This lesson demonstrates how to implement this effect in Jetpack Compose while following Material guidelines.</p>"
+        },
+        {
+          "content_id": "2",
+          "content_type": "header",
+          "content_text": "Version Compatibility and Dependencies"
+        },
+        {
+          "content_id": "3",
+          "content_type": "content_text",
+          "content_text": "<p>This implementation requires your project’s minSDK to be set to API level 21 or higher. To leverage the latest Compose features, include the following dependency in your Gradle configuration:</p>"
+        },
+        {
+          "content_id": "4",
+          "content_type": "content_code",
+          "content_code": "implementation platform('androidx.compose:compose-bom:2025.02.00')",
+          "content_code_programming_language": "groovy"
+        },
+        {
+          "content_id": "5",
+          "content_type": "ad_large_banner"
+        },
+        {
+          "content_id": "6",
+          "content_type": "header",
+          "content_text": "Creating the Parallax Effect"
+        },
+        {
+          "content_id": "7",
+          "content_type": "content_text",
+          "content_text": "<p>To achieve the parallax effect, apply a custom layout modifier that uses a fraction of the scroll value to offset an element’s vertical position. This causes the background image to scroll more slowly compared to the foreground text.</p>"
+        },
+        {
+          "content_id": "8",
+          "content_type": "content_code",
+          "content_code": "@Composable\nfun ParallaxEffect() {\n    fun Modifier.parallaxLayoutModifier(scrollState: ScrollState, rate: Int) =\n        layout { measurable, constraints ->\n            val placeable = measurable.measure(constraints)\n            val offset = if (rate > 0) scrollState.value / rate else scrollState.value\n            layout(placeable.width, placeable.height) {\n                placeable.place(0, offset)\n            }\n        }\n\n    val scrollState = rememberScrollState()\n    Column(\n        modifier = Modifier\n            .fillMaxWidth()\n            .verticalScroll(scrollState)\n    ) {\n        Image(\n            painter = painterResource(id = R.drawable.sample_image),\n            contentDescription = \"Sample background for parallax effect\",\n            contentScale = ContentScale.Crop,\n            modifier = Modifier.parallaxLayoutModifier(scrollState, 2)\n        )\n        Text(\n            text = \"Foreground content scrolls faster than the background image.\",\n            modifier = Modifier\n                .background(Color.White)\n                .padding(horizontal = 8.dp)\n        )\n    }\n}",
+          "content_code_programming_language": "Kotlin"
+        },
+        {
+          "content_id": "9",
+          "content_type": "image",
+          "content_image_url": "https://s3.gifyu.com/images/bbMWU.gif"
+        },
+        {
+          "content_id": "10",
+          "content_type": "content_text",
+          "content_text": "<p><strong>Figure:</strong> The image above illustrates the parallax effect, with the background image scrolling slower than the overlaid text.</p>"
+        },
+        {
+          "content_id": "11",
+          "content_type": "ad_banner_full"
+        },
+        {
+          "content_id": "12",
+          "content_type": "header",
+          "content_text": "Material Design Guidelines and Best Practices"
+        },
+        {
+          "content_id": "13",
+          "content_type": "content_text",
+          "content_text": "<p>In line with Material guidelines, transitions and scrolling effects should be smooth and subtle. Your parallax implementation should enhance the overall user experience without causing distraction. Consult the Material Motion guidelines for further details.</p>"
+        },
+        {
+          "content_id": "14",
+          "content_type": "ad_large_banner"
+        },
+        {
+          "content_id": "15",
+          "content_type": "header",
+          "content_text": "Key Points and Troubleshooting"
+        },
+        {
+          "content_id": "16",
+          "content_type": "content_text",
+          "content_text": "<p>The custom layout modifier calculates the offset based on the scroll state. Common pitfalls include misalignment and performance issues. Ensure to test across different devices and optimize as needed.</p>"
+        },
+        {
+          "content_id": "17",
+          "content_type": "ad_banner"
+        }
+      ]
+    }
+  ]
+}
