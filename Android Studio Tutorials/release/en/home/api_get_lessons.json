@@ -5,7 +5,7 @@
       "lesson_title": "Implementing Parallax Scrolling in Jetpack Compose",
       "lesson_description": "Learn how to implement a parallax scrolling effect in Jetpack Compose using a custom layout modifier, dependency setup, and Material Design guidelines.",
       "lesson_type": "full_banner",
-      "thumbnail_image_url": "hhttps://i.ibb.co/ymPPzLf1/parallax-scrolling-effect.png",
+      "thumbnail_image_url": "https://i.ibb.co/ymPPzLf1/parallax-scrolling-effect.png",
       "lesson_tags": [ "Android", "Jetpack Compose", "Parallax", "UI", "Material Design" ],
       "deep_link_path": "com.d4rk.androidtutorials://lesson/parallax_scrolling"
     },
