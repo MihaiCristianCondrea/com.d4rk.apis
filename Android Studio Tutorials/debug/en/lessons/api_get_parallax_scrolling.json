@@ -90,39 +90,44 @@
         },
         {
           "content_id": "17",
+          "content_type": "image",
+          "content_image_url": "https://s3.gifyu.com/images/bbMWU.gif"
+        },
+        {
+          "content_id": "18",
           "content_type": "content_text",
           "content_text": "<p><strong>Figure:</strong> The visual above demonstrates the parallax effect, where the background image (loaded via Coil) scrolls at a slower pace than the overlaid foreground text.</p>"
         },
         {
-          "content_id": "18",
+          "content_id": "19",
           "content_type": "ad_banner_full"
         },
         {
-          "content_id": "19",
+          "content_id": "20",
           "content_type": "header",
           "content_text": "Material Design Guidelines and Best Practices"
         },
         {
-          "content_id": "20",
+          "content_id": "21",
           "content_type": "content_text",
           "content_text": "<p>According to Material guidelines, transitions and scrolling effects should be smooth and subtle. Your parallax implementation must enhance the user experience without distracting from core content. For more details, refer to the Material Motion guidelines.</p>"
         },
         {
-          "content_id": "21",
+          "content_id": "22",
           "content_type": "ad_large_banner"
         },
         {
-          "content_id": "22",
+          "content_id": "23",
           "content_type": "header",
           "content_text": "Key Points and Troubleshooting"
         },
         {
-          "content_id": "23",
+          "content_id": "24",
           "content_type": "content_text",
           "content_text": "<p>When implementing your custom parallax modifier, keep in mind the following points:</p><ul><li><strong>Scroll State Calculation:</strong> Ensure that the modifier accurately calculates the offset based on the current scroll state to prevent visual glitches.</li><li><strong>Performance:</strong> Test on multiple devices, especially low-end hardware, to verify that the modifier does not introduce lag.</li><li><strong>Layout Consistency:</strong> Confirm that your layout measurements and placements remain consistent across different screen sizes and orientations.</li><li><strong>Error Handling:</strong> Handle cases where the scroll state is zero or fluctuates rapidly, ensuring that the UI remains stable.</li><li><strong>Optimization:</strong> Utilize tools like Android Profiler to monitor performance and apply optimizations as necessary.</li></ul><p>Thorough testing and incremental improvements will help you resolve issues such as misalignment, performance bottlenecks, and unexpected visual behavior.</p>"
         },
         {
-          "content_id": "24",
+          "content_id": "25",
           "content_type": "ad_banner"
         }
       ]
