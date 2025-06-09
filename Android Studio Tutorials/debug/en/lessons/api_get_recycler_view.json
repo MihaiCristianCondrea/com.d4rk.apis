@@ -1,0 +1,176 @@
+{
+  "data": [
+    {
+      "lesson_title": "Building Efficient Lists with RecyclerView",
+      "lesson_content": [
+        {
+          "content_id": "1",
+          "content_type": "header",
+          "content_text": "Why RecyclerView?"
+        },
+        {
+          "content_id": "2",
+          "content_type": "content_text",
+          "content_text": "<p>RecyclerView is the modern, flexible replacement for ListView. It reuses item views and lets you plug in different layout managers for smooth scrolling and better performance.</p>"
+        },
+        {
+          "content_id": "3",
+          "content_type": "ad_large_banner"
+        },
+        {
+          "content_id": "4",
+          "content_type": "header",
+          "content_text": "RecyclerView vs. ListView"
+        },
+        {
+          "content_id": "5",
+          "content_type": "content_text",
+          "content_text": "<p>While ListView handles simple lists, RecyclerView separates layout, data binding, and animation. This separation leads to cleaner code and enables advanced features like item animations and decorations.</p>"
+        },
+        {
+          "content_id": "6",
+          "content_type": "ad_large_banner"
+        },
+        {
+          "content_id": "7",
+          "content_type": "header",
+          "content_text": "Adding the Dependency"
+        },
+        {
+          "content_id": "8",
+          "content_type": "content_code",
+          "content_code_programming_language": "gradle",
+          "content_code": "dependencies {\n    implementation \"androidx.recyclerview:recyclerview:1.3.2\"\n}"
+        },
+        {
+          "content_id": "9",
+          "content_type": "ad_large_banner"
+        },
+        {
+          "content_id": "10",
+          "content_type": "header",
+          "content_text": "Creating the Layout"
+        },
+        {
+          "content_id": "11",
+          "content_type": "content_code",
+          "content_code_programming_language": "XML",
+          "content_code": "<androidx.recyclerview.widget.RecyclerView\n    android:id=\"@+id/recycler_view\"\n    android:layout_width=\"match_parent\"\n    android:layout_height=\"match_parent\"/>"
+        },
+        {
+          "content_id": "12",
+          "content_type": "header",
+          "content_text": "Adapter and ViewHolder"
+        },
+        {
+          "content_id": "13",
+          "content_type": "content_text",
+          "content_text": "<p>Your adapter creates ViewHolder objects to represent each item. The ViewHolder caches view references, ensuring minimal findViewById calls.</p>"
+        },
+        {
+          "content_id": "14",
+          "content_type": "content_code",
+          "content_code_programming_language": "Kotlin",
+          "content_code": "class MyAdapter(private val items: List<String>) : RecyclerView.Adapter<MyViewHolder>() {\n    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {\n        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_layout, parent, false)\n        return MyViewHolder(view)\n    }\n    override fun onBindViewHolder(holder: MyViewHolder, position: Int) {\n        holder.bind(items[position])\n    }\n    override fun getItemCount() = items.size\n}"
+        },
+        {
+          "content_id": "15",
+          "content_type": "ad_large_banner"
+        },
+        {
+          "content_id": "16",
+          "content_type": "header",
+          "content_text": "ViewHolder Layout"
+        },
+        {
+          "content_id": "17",
+          "content_type": "content_code",
+          "content_code_programming_language": "XML",
+          "content_code": "<TextView\n    xmlns:android=\"http://schemas.android.com/apk/res/android\"\n    android:id=\"@+id/text\"\n    android:layout_width=\"match_parent\"\n    android:layout_height=\"wrap_content\"\n    android:padding=\"16dp\"/>"
+        },
+        {
+          "content_id": "18",
+          "content_type": "header",
+          "content_text": "Choosing a LayoutManager"
+        },
+        {
+          "content_id": "19",
+          "content_type": "content_text",
+          "content_text": "<p>RecyclerView doesn't know how to position its children. Use a LayoutManager like LinearLayoutManager for vertical lists, GridLayoutManager for grids, or StaggeredGridLayoutManager for staggered lists.</p>"
+        },
+        {
+          "content_id": "20",
+          "content_type": "content_code",
+          "content_code_programming_language": "Kotlin",
+          "content_code": "recyclerView.layoutManager = LinearLayoutManager(this)"
+        },
+        {
+          "content_id": "21",
+          "content_type": "ad_large_banner"
+        },
+        {
+          "content_id": "22",
+          "content_type": "header",
+          "content_text": "Handling Item Clicks"
+        },
+        {
+          "content_id": "23",
+          "content_type": "content_code",
+          "content_code_programming_language": "Kotlin",
+          "content_code": "class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {\n    init {\n        itemView.setOnClickListener {\n            val position = bindingAdapterPosition\n            if (position != RecyclerView.NO_POSITION) {\n                // Handle click\n            }\n        }\n    }\n}"
+        },
+        {
+          "content_id": "24",
+          "content_type": "header",
+          "content_text": "Optimizing with DiffUtil"
+        },
+        {
+          "content_id": "25",
+          "content_type": "content_text",
+          "content_text": "<p>For large or frequently updated lists, use ListAdapter with DiffUtil to automatically compute changes and animate them efficiently.</p>"
+        },
+        {
+          "content_id": "26",
+          "content_type": "content_code",
+          "content_code_programming_language": "Kotlin",
+          "content_code": "class MyAdapter : ListAdapter<String, MyViewHolder>(DiffCallback()) {\n    class DiffCallback : DiffUtil.ItemCallback<String>() {\n        override fun areItemsTheSame(oldItem: String, newItem: String) = oldItem == newItem\n        override fun areContentsTheSame(oldItem: String, newItem: String) = oldItem == newItem\n    }\n    // onCreateViewHolder / onBindViewHolder...\n}"
+        },
+        {
+          "content_id": "27",
+          "content_type": "header",
+          "content_text": "Item Decoration"
+        },
+        {
+          "content_id": "28",
+          "content_type": "content_code",
+          "content_code_programming_language": "Kotlin",
+          "content_code": "val divider = DividerItemDecoration(this, LinearLayoutManager.VERTICAL)\nrecyclerView.addItemDecoration(divider)"
+        },
+        {
+          "content_id": "29",
+          "content_type": "ad_large_banner"
+        },
+        {
+          "content_id": "30",
+          "content_type": "header",
+          "content_text": "Item Animations"
+        },
+        {
+          "content_id": "31",
+          "content_type": "content_text",
+          "content_text": "<p>RecyclerView supports default animations when items change. For custom effects, set a different ItemAnimator.</p>"
+        },
+        {
+          "content_id": "32",
+          "content_type": "content_code",
+          "content_code_programming_language": "Kotlin",
+          "content_code": "recyclerView.itemAnimator = DefaultItemAnimator()"
+        },
+        {
+          "content_id": "33",
+          "content_type": "ad_banner"
+        }
+      ]
+    }
+  ]
+}
