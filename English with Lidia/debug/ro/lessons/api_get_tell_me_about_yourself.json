@@ -6,7 +6,14 @@
                 {
                     "content_id": "1",
                     "content_type": "content_player",
-                    "content_audio_url": "https://firebasestorage.googleapis.com/v0/b/d4rk-plus-apps---android.appspot.com/o/tell_me_about_yourself.mp3?alt=media&token=c2926593-370d-447b-b725-45b8385dba92"
+                    "content_audio_url": "https://firebasestorage.googleapis.com/v0/b/d4rk-plus-apps---android.appspot.com/o/tell_me_about_yourself.mp3?alt=media&token=c2926593-370d-447b-b725-45b8385dba92",
+                    "content_thumbnail_url": "https://i.ibb.co/p4sQcLn/im-lesson1.webp",
+                    "content_title": "Tell me about yourself",
+                    "content_artist": "Lidia Melinte",
+                    "content_album_title": "Job Interview English Guide",
+                    "content_genre": "English Learning",
+                    "content_description": "A practical guide to answering the 'Tell me about yourself' question in a job interview. Learn how to sell your value with clarity and confidence.",
+                    "content_release_year": 2022
                 },
                 {
                     "content_id": "2",
