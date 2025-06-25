@@ -6,7 +6,14 @@
                 {
                     "content_id": "1",
                     "content_type": "content_player",
-                    "content_audio_url": "https://firebasestorage.googleapis.com/v0/b/d4rk-plus-apps---android.appspot.com/o/to_be_or_not_to_be.mp3?alt=media&token=f240fe96-c403-4a99-a8b2-e761e640e393"
+                    "content_audio_url": "https://firebasestorage.googleapis.com/v0/b/d4rk-plus-apps---android.appspot.com/o/to_be_or_not_to_be.mp3?alt=media&token=f240fe96-c403-4a99-a8b2-e761e640e393",
+                    "content_thumbnail_url": "https://i.ibb.co/Y4SmcSz/im-lesson2.webp",
+                    "content_title": "To be or not to be",
+                    "content_artist": "Lidia Melinte",
+                    "content_album_title": "English with Colors and Emotions",
+                    "content_genre": "English Grammar & Expression",
+                    "content_description": "A dynamic English lesson exploring the verb 'to be' and colorful idioms like 'blue-eyed boy', 'see red', and 'green thumb' with cultural insights and pronunciation practice.",
+                    "content_release_year": 2022
                 },
                 {
                     "content_id": "2",
