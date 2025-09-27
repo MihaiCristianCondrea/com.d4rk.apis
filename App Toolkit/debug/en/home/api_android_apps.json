@@ -5,61 +5,121 @@
         "name": "Android Studio Tutorials",
         "packageName": "com.d4rk.androidtutorials",
         "iconLogo": "https://raw.githubusercontent.com/D4rK7355608/com.d4rk.androidtutorials/refs/heads/master/app/src/main/play/listings/en-US/graphics/ic_launcher-playstore.png",
-        "category": "education"
+        "category": "education",
+        "description": "Learn Android Studio with these tutorials.",
+        "screenshots": [
+          "https://raw.githubusercontent.com/D4rK7355608/com.d4rk.androidtutorials/refs/heads/master/app/src/main/play/listings/en-US/graphics/ic_launcher-playstore.png",
+          "https://raw.githubusercontent.com/D4rK7355608/com.d4rk.androidtutorials/refs/heads/master/app/src/main/play/listings/en-US/graphics/ic_launcher-playstore.png",
+          "https://raw.githubusercontent.com/D4rK7355608/com.d4rk.androidtutorials/refs/heads/master/app/src/main/play/listings/en-US/graphics/ic_launcher-playstore.png"
+        ]
       },
       {
         "name": "Android Studio Tutorials: Java",
         "packageName": "com.d4rk.androidtutorials.java",
         "iconLogo": "https://raw.githubusercontent.com/D4rK7355608/com.d4rk.androidtutorials.java/refs/heads/main/app/src/main/play/listings/en-US/graphics/ic_launcher-playstore.png",
-        "category": "education"
+        "category": "education",
+        "description": "Learn Android Studio with Java.",
+        "screenshots": [
+          "https://raw.githubusercontent.com/D4rK7355608/com.d4rk.androidtutorials/refs/heads/master/app/src/main/play/listings/en-US/graphics/ic_launcher-playstore.png",
+          "https://raw.githubusercontent.com/D4rK7355608/com.d4rk.androidtutorials/refs/heads/master/app/src/main/play/listings/en-US/graphics/ic_launcher-playstore.png",
+          "https://raw.githubusercontent.com/D4rK7355608/com.d4rk.androidtutorials/refs/heads/master/app/src/main/play/listings/en-US/graphics/ic_launcher-playstore.png"
+        ]
       },
       {
         "name": "Cleaner for Android",
         "packageName": "com.d4rk.cleaner",
         "iconLogo": "https://raw.githubusercontent.com/D4rK7355608/com.d4rk.cleaner/refs/heads/master/app/src/main/play/listings/en-US/graphics/ic_launcher-playstore.png",
-        "category": "tools"
+        "category": "tools",
+        "description": "Clean and optimize your Android device.",
+        "screenshots": [
+          "https://raw.githubusercontent.com/D4rK7355608/com.d4rk.androidtutorials/refs/heads/master/app/src/main/play/listings/en-US/graphics/ic_launcher-playstore.png",
+          "https://raw.githubusercontent.com/D4rK7355608/com.d4rk.androidtutorials/refs/heads/master/app/src/main/play/listings/en-US/graphics/ic_launcher-playstore.png",
+          "https://raw.githubusercontent.com/D4rK7355608/com.d4rk.androidtutorials/refs/heads/master/app/src/main/play/listings/en-US/graphics/ic_launcher-playstore.png"
+        ]
       },
       {
         "name": "English with Lidia Plus",
         "packageName": "com.d4rk.englishwithlidia.plus",
         "iconLogo": "https://raw.githubusercontent.com/D4rK7355608/com.d4rk.englishwithlidia.plus/refs/heads/master/app/src/main/play/listings/en-US/graphics/ic_launcher-playstore.png",
-        "category": "education"
+        "category": "education",
+        "description": "Learn English with Lidia.",
+        "screenshots": [
+          "https://raw.githubusercontent.com/D4rK7355608/com.d4rk.androidtutorials/refs/heads/master/app/src/main/play/listings/en-US/graphics/ic_launcher-playstore.png",
+          "https://raw.githubusercontent.com/D4rK7355608/com.d4rk.androidtutorials/refs/heads/master/app/src/main/play/listings/en-US/graphics/ic_launcher-playstore.png",
+          "https://raw.githubusercontent.com/D4rK7355608/com.d4rk.androidtutorials/refs/heads/master/app/src/main/play/listings/en-US/graphics/ic_launcher-playstore.png"
+        ]
       },
       {
         "name": "Low Brightness",
         "packageName": "com.d4rk.lowbrightness",
         "iconLogo": "https://raw.githubusercontent.com/D4rK7355608/com.d4rk.lowbrightness/refs/heads/master/app/src/main/play/listings/en-US/graphics/ic_launcher-playstore.png",
-        "category": "tools"
+        "category": "tools",
+        "description": "Reduce screen brightness.",
+        "screenshots": [
+          "https://raw.githubusercontent.com/D4rK7355608/com.d4rk.androidtutorials/refs/heads/master/app/src/main/play/listings/en-US/graphics/ic_launcher-playstore.png",
+          "https://raw.githubusercontent.com/D4rK7355608/com.d4rk.androidtutorials/refs/heads/master/app/src/main/play/listings/en-US/graphics/ic_launcher-playstore.png",
+          "https://raw.githubusercontent.com/D4rK7355608/com.d4rk.androidtutorials/refs/heads/master/app/src/main/play/listings/en-US/graphics/ic_launcher-playstore.png"
+        ]
       },
       {
         "name": "Music Sleep Timer Plus",
         "packageName": "com.d4rk.musicsleeptimer.plus",
         "iconLogo": "https://raw.githubusercontent.com/D4rK7355608/com.d4rk.musicsleeptimer.plus/refs/heads/master/app/src/main/play/listings/en-US/graphics/ic_launcher-playstore.png",
-        "category": "media"
+        "category": "media",
+        "description": "Set a timer for your music.",
+        "screenshots": [
+          "https://raw.githubusercontent.com/D4rK7355608/com.d4rk.androidtutorials/refs/heads/master/app/src/main/play/listings/en-US/graphics/ic_launcher-playstore.png",
+          "https://raw.githubusercontent.com/D4rK7355608/com.d4rk.androidtutorials/refs/heads/master/app/src/main/play/listings/en-US/graphics/ic_launcher-playstore.png",
+          "https://raw.githubusercontent.com/D4rK7355608/com.d4rk.androidtutorials/refs/heads/master/app/src/main/play/listings/en-US/graphics/ic_launcher-playstore.png"
+        ]
       },
       {
         "name": "Net Probe",
         "packageName": "com.d4rk.netprobe",
         "iconLogo": "https://raw.githubusercontent.com/D4rK7355608/com.d4rk.netprobe/refs/heads/main/app/src/main/play/listings/en-US/graphics/ic_launcher-playstore.png",
-        "category": "tools"
+        "category": "tools",
+        "description": "Network analysis tool.",
+        "screenshots": [
+          "https://raw.githubusercontent.com/D4rK7355608/com.d4rk.androidtutorials/refs/heads/master/app/src/main/play/listings/en-US/graphics/ic_launcher-playstore.png",
+          "https://raw.githubusercontent.com/D4rK7355608/com.d4rk.androidtutorials/refs/heads/master/app/src/main/play/listings/en-US/graphics/ic_launcher-playstore.png",
+          "https://raw.githubusercontent.com/D4rK7355608/com.d4rk.androidtutorials/refs/heads/master/app/src/main/play/listings/en-US/graphics/ic_launcher-playstore.png"
+        ]
       },
       {
         "name": "QR & Bar Code Scanner Plus",
         "packageName": "com.d4rk.qrcodescanner.plus",
         "iconLogo": "https://raw.githubusercontent.com/D4rK7355608/com.d4rk.qrcodescanner.plus/refs/heads/master/app/src/main/play/listings/en-US/graphics/ic_launcher-playstore.png",
-        "category": "tools"
+        "category": "tools",
+        "description": "Scan QR and bar codes.",
+        "screenshots": [
+          "https://raw.githubusercontent.com/D4rK7355608/com.d4rk.androidtutorials/refs/heads/master/app/src/main/play/listings/en-US/graphics/ic_launcher-playstore.png",
+          "https://raw.githubusercontent.com/D4rK7355608/com.d4rk.androidtutorials/refs/heads/master/app/src/main/play/listings/en-US/graphics/ic_launcher-playstore.png",
+          "https://raw.githubusercontent.com/D4rK7355608/com.d4rk.androidtutorials/refs/heads/master/app/src/main/play/listings/en-US/graphics/ic_launcher-playstore.png"
+        ]
       },
       {
         "name": "Shopping Cart Calculator",
         "packageName": "com.d4rk.cartcalculator",
         "iconLogo": "https://raw.githubusercontent.com/D4rK7355608/com.d4rk.cartcalculator/refs/heads/master/app/src/main/play/listings/en-US/graphics/ic_launcher-playstore.png",
-        "category": "utilities"
+        "category": "utilities",
+        "description": "Calculate your shopping cart total.",
+        "screenshots": [
+          "https://raw.githubusercontent.com/D4rK7355608/com.d4rk.androidtutorials/refs/heads/master/app/src/main/play/listings/en-US/graphics/ic_launcher-playstore.png",
+          "https://raw.githubusercontent.com/D4rK7355608/com.d4rk.androidtutorials/refs/heads/master/app/src/main/play/listings/en-US/graphics/ic_launcher-playstore.png",
+          "https://raw.githubusercontent.com/D4rK7355608/com.d4rk.androidtutorials/refs/heads/master/app/src/main/play/listings/en-US/graphics/ic_launcher-playstore.png"
+        ]
       },
       {
         "name": "Weddix - Create/Manage Events",
         "packageName": "com.d4rk.android.apps.weddix",
         "iconLogo": "https://play-lh.googleusercontent.com/WXjYIEVCm14Ngbg8buU4L-_uxH74Oxr3WCKswvMS_8NsAYI7dA5mBYC3pJzT4hSQWUc=w240-h480-rw",
-        "category": "productivity"
+        "category": "productivity",
+        "description": "Create and manage events with Weddix.",
+        "screenshots": [
+          "https://raw.githubusercontent.com/D4rK7355608/com.d4rk.androidtutorials/refs/heads/master/app/src/main/play/listings/en-US/graphics/ic_launcher-playstore.png",
+          "https://raw.githubusercontent.com/D4rK7355608/com.d4rk.androidtutorials/refs/heads/master/app/src/main/play/listings/en-US/graphics/ic_launcher-playstore.png",
+          "https://raw.githubusercontent.com/D4rK7355608/com.d4rk.androidtutorials/refs/heads/master/app/src/main/play/listings/en-US/graphics/ic_launcher-playstore.png"
+        ]
       }
     ]
   }
