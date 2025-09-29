@@ -2,7 +2,7 @@
 md-top-app-bar {
   position: sticky;
   top: 0;
-  z-index: 1000;
+  z-index: 1200;
   min-height: 56px;
   height: calc(56px + var(--safe-area-inset-top));
   border-radius: 0;
@@ -47,6 +47,38 @@ md-top-app-bar .material-symbols-outlined {
 }
 
 /* --- Navigation Drawer --- */
+.navigation-drawer {
+  position: fixed;
+  inset-block: 0;
+  inset-inline-start: 0;
+  max-inline-size: var(--app-drawer-inline-size);
+  z-index: 1100;
+}
+
+.navigation-drawer::part(scrim) {
+  inset-block-start: calc(var(--safe-area-inset-top));
+}
+
+.navigation-drawer::part(container) {
+  border-top-right-radius: 24px;
+  border-bottom-right-radius: 24px;
+}
+
+.drawer-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: var(--app-overlay-bg-color);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 180ms ease;
+  z-index: 1000;
+}
+
+.drawer-overlay.open {
+  opacity: 1;
+  visibility: visible;
+}
+
 .drawer-content {
   display: flex;
   flex-direction: column;
@@ -89,6 +121,23 @@ md-top-app-bar .material-symbols-outlined {
 
 .nested-list .drawer-section {
   padding-inline: 0;
+}
+
+/* --- Buttons --- */
+md-filled-button,
+md-tonal-button {
+  gap: 0.75rem;
+  --_leading-space: 20px;
+  --_trailing-space: 20px;
+  --_with-leading-icon-leading-space: 20px;
+  --_with-leading-icon-trailing-space: 20px;
+  --_with-trailing-icon-leading-space: 20px;
+  --_with-trailing-icon-trailing-space: 20px;
+}
+
+md-filled-button md-icon[slot='icon'],
+md-tonal-button md-icon[slot='icon'] {
+  margin-inline-end: 0.25rem;
 }
 
 /* --- Inline Buttons --- */

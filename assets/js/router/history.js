@@ -1,5 +1,5 @@
 (function (global) {
-    const DOCUMENT_TITLE_SUFFIX = ' - D4rK API Console';
+    const DOCUMENT_TITLE_SUFFIX = ' - API Console';
 
     function updateTitle(appBarHeadline, pageTitle) {
         if (appBarHeadline) {
