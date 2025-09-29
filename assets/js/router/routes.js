@@ -1,5 +1,5 @@
 (function (global) {
-    const DEFAULT_ROUTE_TITLE = 'D4rK API Console';
+    const DEFAULT_ROUTE_TITLE = 'API Console';
     const DEFAULT_METADATA_DESCRIPTION = 'Explore Mihai-Cristian Condrea\'s Android developer portfolio featuring Jetpack Compose apps, Material Design systems, and open-source tools.';
     const DEFAULT_METADATA_KEYWORDS = [
         'Mihai Cristian Condrea',
@@ -237,7 +237,7 @@
     const defaultRoutes = [
         {
             id: 'home',
-            title: 'D4rK API Console',
+            title: 'API Console',
             metadata: {
                 description: 'Design and manage the JSON APIs that power App Toolkit, English with Lidia, and Android Studio Tutorials using a visual builder.',
                 keywords: [
@@ -249,12 +249,12 @@
                 ],
                 canonicalSlug: '/',
                 openGraph: {
-                    title: 'D4rK API Console',
+                    title: 'API Console',
                     description: 'Visual tooling for crafting the JSON APIs behind D4rK\'s Android applications.',
                     type: 'website'
                 },
                 twitter: {
-                    title: 'D4rK API Console',
+                    title: 'API Console',
                     description: 'Visual tooling for crafting the JSON APIs behind D4rK\'s Android applications.'
                 }
             }
@@ -333,21 +333,21 @@
             path: 'pages/settings/code-of-conduct.html',
             title: 'Code of Conduct',
             metadata: {
-                description: 'Understand the collaboration guidelines that keep the D4rK API Console productive and respectful.',
+                description: 'Understand the collaboration guidelines that keep the API Console productive and respectful.',
                 keywords: [
-                    'D4rK API Console code of conduct',
+                    'API Console code of conduct',
                     'collaboration guidelines',
                     'API workspace policy'
                 ],
                 canonicalSlug: 'code-of-conduct',
                 openGraph: {
-                    title: 'Code of Conduct | D4rK API Console',
-                    description: 'Understand the collaboration guidelines that keep the D4rK API Console productive and respectful.',
+                    title: 'Code of Conduct | API Console',
+                    description: 'Understand the collaboration guidelines that keep the API Console productive and respectful.',
                     type: 'article'
                 },
                 twitter: {
-                    title: 'Code of Conduct | D4rK API Console',
-                    description: 'Understand the collaboration guidelines that keep the D4rK API Console productive and respectful.'
+                    title: 'Code of Conduct | API Console',
+                    description: 'Understand the collaboration guidelines that keep the API Console productive and respectful.'
                 }
             }
         }

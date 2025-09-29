@@ -1,5 +1,5 @@
 (function (global) {
-    const DEFAULT_PAGE_TITLE = 'D4rK API Console';
+    const DEFAULT_PAGE_TITLE = 'API Console';
 
     function createErrorHtml(message) {
         return `<div class="page-section active"><p class="error-message text-red-500">${message}</p></div>`;
