@@ -13,7 +13,7 @@
     />
     <meta
       name="keywords"
-      content="D4rK API console, Android API builder, JSON editor, App Toolkit API, English with Lidia API, Android Studio Tutorials API"
+      content="API Console, Android API builder, JSON editor, App Toolkit API, English with Lidia API, Android Studio Tutorials API"
     />
     <meta property="og:title" content="API Console" />
     <meta
@@ -121,7 +121,7 @@
         aria-modal="true"
       >
         <div class="drawer-header">
-          <h2>Workspace</h2>
+          <h2>API Console</h2>
           <md-icon-button
             id="closeDrawerButton"
             aria-label="Close menu"
@@ -206,51 +206,12 @@
               role="group"
               aria-hidden="false"
             >
-              <div class="drawer-section">
-                <p class="drawer-section-title">Theme</p>
-                <div class="theme-button-container">
-                  <md-icon-button
-                    id="lightThemeButton"
-                    aria-label="Light theme"
-                    data-theme="light"
-                  >
-                    <md-icon
-                      ><span class="material-symbols-outlined"
-                        >light_mode</span
-                      ></md-icon
-                    >
-                  </md-icon-button>
-                  <md-icon-button
-                    id="darkThemeButton"
-                    aria-label="Dark theme"
-                    data-theme="dark"
-                  >
-                    <md-icon
-                      ><span class="material-symbols-outlined"
-                        >dark_mode</span
-                      ></md-icon
-                    >
-                  </md-icon-button>
-                  <md-icon-button
-                    id="autoThemeButton"
-                    aria-label="Auto theme"
-                    data-theme="auto"
-                  >
-                    <md-icon
-                      ><span class="material-symbols-outlined"
-                        >brightness_auto</span
-                      ></md-icon
-                    >
-                  </md-icon-button>
-                </div>
-              </div>
               <md-list>
+                <md-list-item href="#privacy-policy">
+                  <div slot="headline">Privacy Policy</div>
+                  <div slot="supporting-text">Data usage across apps</div>
+                </md-list-item>
                 <md-list-item href="#code-of-conduct">
-                  <md-icon slot="start"
-                    ><span class="material-symbols-outlined"
-                      >privacy_tip</span
-                    ></md-icon
-                  >
                   <div slot="headline">Code of Conduct</div>
                   <div slot="supporting-text">
                     Collaboration expectations across workspaces
@@ -259,6 +220,45 @@
               </md-list>
             </div>
           </md-list>
+        </div>
+        <div class="drawer-footer">
+          <div class="theme-toggle-title">Theme</div>
+          <div class="theme-button-container">
+            <md-icon-button
+              id="lightThemeButton"
+              aria-label="Light theme"
+              data-theme="light"
+            >
+              <md-icon
+                ><span class="material-symbols-outlined">light_mode</span></md-icon
+              >
+            </md-icon-button>
+            <md-icon-button
+              id="darkThemeButton"
+              aria-label="Dark theme"
+              data-theme="dark"
+            >
+              <md-icon
+                ><span class="material-symbols-outlined">dark_mode</span></md-icon
+              >
+            </md-icon-button>
+            <md-icon-button
+              id="autoThemeButton"
+              aria-label="Auto theme"
+              data-theme="auto"
+            >
+              <md-icon
+                ><span class="material-symbols-outlined"
+                  >brightness_auto</span
+                ></md-icon
+              >
+            </md-icon-button>
+          </div>
+          <div class="drawer-legal-links">
+            <a href="#privacy-policy">Privacy Policy</a>
+            <span aria-hidden="true">&bull;</span>
+            <a href="#code-of-conduct">Code of Conduct</a>
+          </div>
         </div>
       </md-navigation-drawer>
     </nav>

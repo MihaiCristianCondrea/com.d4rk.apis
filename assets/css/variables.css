@@ -55,6 +55,7 @@
   --app-footer-text-color: #5f6368;
   --app-link-color: #4285f4;
   --app-dialog-bg-color: var(--md-sys-color-surface-container-low);
+  --app-top-app-bar-height: calc(56px + var(--safe-area-inset-top));
   --app-motion-duration-short: 220ms;
   --app-motion-duration-medium: 320ms;
   --app-motion-duration-long: 520ms;
