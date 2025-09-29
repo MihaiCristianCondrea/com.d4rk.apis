@@ -43,7 +43,7 @@ function setCopyrightYear() {
     if (copyrightElement) {
         const currentYear = new Date().getFullYear();
         const yearText = currentYear === 2025 ? '2025' : `2025-${currentYear}`;
-        copyrightElement.textContent = `Copyright © ${yearText}, D4rK API Console`;
+        copyrightElement.textContent = `Copyright © ${yearText}, API Console`;
     }
 }
 

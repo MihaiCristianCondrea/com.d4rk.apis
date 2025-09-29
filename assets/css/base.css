@@ -15,6 +15,10 @@ body {
   min-height: 100dvh;
 }
 
+body.drawer-is-open {
+  overflow: hidden;
+}
+
 button,
 input,
 select,

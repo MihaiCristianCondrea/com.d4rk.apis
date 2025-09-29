@@ -189,7 +189,7 @@ async function loadPageContent(pageId, updateHistory = true) {
                 historyHelper.updateTitle(appBarHeadline, notFoundTitle);
             } else {
                 if (appBarHeadline) appBarHeadline.textContent = notFoundTitle;
-                document.title = `${notFoundTitle} - D4rK API Console`;
+                document.title = `${notFoundTitle} - API Console`;
             }
 
             return;
@@ -261,7 +261,7 @@ async function loadPageContent(pageId, updateHistory = true) {
             }
         });
 
-        const pageTitle = loadResult.title || (routeConfig && routeConfig.title) || (contentLoader && contentLoader.DEFAULT_PAGE_TITLE) || 'D4rK API Console';
+        const pageTitle = loadResult.title || (routeConfig && routeConfig.title) || (contentLoader && contentLoader.DEFAULT_PAGE_TITLE) || 'API Console';
 
         updateMetadataForPage(routeConfig, pageTitle, normalizedPageId, loadResult.status);
 
@@ -269,7 +269,7 @@ async function loadPageContent(pageId, updateHistory = true) {
             historyHelper.updateTitle(appBarHeadline, pageTitle);
         } else {
             if (appBarHeadline) appBarHeadline.textContent = pageTitle;
-            document.title = `${pageTitle} - D4rK API Console`;
+            document.title = `${pageTitle} - API Console`;
         }
 
         if (historyHelper && typeof historyHelper.pushState === 'function') {
