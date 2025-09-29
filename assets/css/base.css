@@ -1,0 +1,97 @@
+body {
+  font-family: 'Google Sans Regular', 'Poppins', sans-serif;
+  background-color: var(--app-bg-color);
+  color: var(--app-text-color);
+  margin: 0;
+  padding: 0;
+  transition:
+    background-color var(--app-motion-duration-medium, 300ms)
+      var(--app-motion-ease-standard, cubic-bezier(0, 0, 0.2, 1)),
+    color var(--app-motion-duration-medium, 300ms)
+      var(--app-motion-ease-standard, cubic-bezier(0, 0, 0.2, 1));
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
+button,
+input,
+select,
+textarea,
+optgroup {
+  font-family: inherit;
+  font-size: 100%;
+  line-height: inherit;
+  margin: 0;
+}
+
+.content-wrapper {
+  max-width: 900px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 1rem;
+  padding-top: calc(70px + var(--safe-area-inset-top));
+  padding-bottom: calc(1rem + var(--safe-area-max-inset-bottom));
+  padding-inline-start: calc(1rem + var(--safe-area-inset-left));
+  padding-inline-end: calc(1rem + var(--safe-area-inset-right));
+  flex-grow: 1;
+}
+
+.page-section {
+  display: none;
+}
+
+.page-section.active {
+  display: block;
+}
+
+.page-section-title {
+  font-size: 1.75rem;
+  font-weight: 500;
+  margin-top: 2.5rem;
+  margin-bottom: 1.5rem;
+  color: var(--app-section-title-color);
+  text-align: left;
+}
+
+.material-symbols-outlined {
+  font-family:
+    var(--material-symbols-font, 'Material Symbols Outlined'),
+    'Material Symbols Outlined', sans-serif;
+  font-weight: normal;
+  font-style: normal;
+  font-size: 20px;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  font-feature-settings: 'liga';
+  -webkit-font-feature-settings: 'liga';
+  -webkit-font-smoothing: antialiased;
+}
+
+.material-symbols-filled {
+  --material-symbols-font: 'Material Symbols Filled';
+  font-family:
+    'Material Symbols Filled', 'Material Symbols Outlined', sans-serif;
+}
+
+.material-symbols-semibold {
+  --material-symbols-font: 'Material Symbols SemiBold';
+  font-family:
+    'Material Symbols SemiBold', 'Material Symbols Outlined', sans-serif;
+}
+
+html.prefers-reduced-motion *,
+html.prefers-reduced-motion *::before,
+html.prefers-reduced-motion *::after {
+  animation-duration: var(--app-motion-reduced-duration, 180ms) !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: var(--app-motion-reduced-duration, 180ms) !important;
+  transition-delay: 0ms !important;
+  scroll-behavior: auto !important;
+}

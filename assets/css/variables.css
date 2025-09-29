@@ -1,0 +1,210 @@
+:root {
+  --md-sys-color-primary: #3ddc84;
+  --md-sys-color-on-primary: #003912;
+  --md-sys-color-primary-container: #b1fbbb;
+  --md-sys-color-on-primary-container: #002108;
+  --md-sys-color-secondary: #516350;
+  --md-sys-color-on-secondary: #ffffff;
+  --md-sys-color-secondary-container: #d4e8d0;
+  --md-sys-color-on-secondary-container: #0f1f11;
+  --md-sys-color-tertiary: #3a665f;
+  --md-sys-color-on-tertiary: #ffffff;
+  --md-sys-color-tertiary-container: #bdece3;
+  --md-sys-color-on-tertiary-container: #00201c;
+  --md-sys-color-error: #ba1a1a;
+  --md-sys-color-on-error: #ffffff;
+  --md-sys-color-error-container: #ffdad6;
+  --md-sys-color-on-error-container: #410002;
+  --md-sys-color-background: #f8fdff;
+  --md-sys-color-on-background: #191c1d;
+  --md-sys-color-surface: #f8fdff;
+  --md-sys-color-on-surface: #191c1d;
+  --md-sys-color-surface-variant: #dee5d8;
+  --md-sys-color-on-surface-variant: #424940;
+  --md-sys-color-outline: #72796f;
+  --md-sys-color-outline-variant: #c2c9bd;
+  --md-sys-color-shadow: #000000;
+  --md-sys-color-scrim: #000000;
+  --md-sys-color-inverse-surface: #2e3132;
+  --md-sys-color-inverse-on-surface: #eff1f1;
+  --md-sys-color-inverse-primary: #96dea1;
+  --md-sys-color-surface-dim: #d8dbda;
+  --md-sys-color-surface-bright: #f8fdff;
+  --md-sys-color-surface-container-lowest: #ffffff;
+  --md-sys-color-surface-container-low: #f2f5f4;
+  --md-sys-color-surface-container: #ecefef;
+  --md-sys-color-surface-container-high: #e6eae9;
+  --md-sys-color-surface-container-highest: #e1e4e4;
+  --app-bg-color: var(--md-sys-color-surface-container-lowest);
+  --app-text-color: var(--md-sys-color-on-surface);
+  --app-secondary-text-color: var(--md-sys-color-on-surface-variant);
+  --app-card-bg-color: var(--md-sys-color-surface);
+  --app-outlined-card-bg-color: var(--md-sys-color-surface);
+  --app-section-title-color: var(--md-sys-color-on-background);
+  --app-border-color: var(--md-sys-color-outline-variant);
+  --app-contribute-card-bg: var(--md-sys-color-primary-container);
+  --app-contribute-card-text: var(--md-sys-color-on-primary-container);
+  --app-social-icon-color: var(--md-sys-color-on-surface-variant);
+  --app-social-icon-hover-color: var(--md-sys-color-primary);
+  --app-drawer-bg-color: var(--md-sys-color-surface-container-low);
+  --app-drawer-tint-color: var(--md-sys-color-primary);
+  --app-drawer-inline-size: min(360px, 100vw);
+  --app-overlay-bg-color: rgba(0, 0, 0, 0.32);
+  --app-nested-list-bg: rgba(0, 0, 0, 0.02);
+  --app-theme-button-selected-bg: rgba(61, 220, 132, 0.15);
+  --app-footer-text-color: #5f6368;
+  --app-link-color: #4285f4;
+  --app-dialog-bg-color: var(--md-sys-color-surface-container-low);
+  --app-motion-duration-short: 220ms;
+  --app-motion-duration-medium: 320ms;
+  --app-motion-duration-long: 520ms;
+  --app-motion-reduced-duration: 180ms;
+  --app-motion-ease-accelerate: cubic-bezier(0.4, 0, 1, 1);
+  --app-motion-ease-decelerate: cubic-bezier(0, 0, 0.2, 1);
+  --app-motion-ease-standard: var(--app-motion-ease-decelerate);
+  --app-motion-ease-emphasized: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --safe-area-inset-top: env(safe-area-inset-top, 0px);
+  --safe-area-inset-right: env(safe-area-inset-right, 0px);
+  --safe-area-inset-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-area-inset-left: env(safe-area-inset-left, 0px);
+  --safe-area-max-inset-bottom: max(
+    env(safe-area-max-inset-bottom, 36px),
+    var(--safe-area-inset-bottom)
+  );
+  --safe-area-bottom-offset: calc(
+    env(safe-area-inset-bottom, 0px) - var(--safe-area-max-inset-bottom)
+  );
+  --md-sys-typescale-label-large-font-family-name: 'Google Sans Regular';
+  --md-sys-typescale-label-large-font: 'Google Sans Regular',
+    'Poppins', sans-serif;
+  --md-sys-typescale-label-large-weight: 500;
+  --md-sys-typescale-label-medium-font-family-name: 'Google Sans Regular';
+  --md-sys-typescale-label-medium-font: 'Google Sans Regular',
+    'Poppins', sans-serif;
+  --md-sys-typescale-label-medium-weight: 500;
+  --md-sys-typescale-label-small-font-family-name: 'Google Sans Regular';
+  --md-sys-typescale-label-small-font: 'Google Sans Regular',
+    'Poppins', sans-serif;
+  --md-sys-typescale-label-small-weight: 500;
+  --md-sys-typescale-body-large-font-family-name: 'Google Sans Regular';
+  --md-sys-typescale-body-large-font: 'Google Sans Regular',
+    'Poppins', sans-serif;
+  --md-sys-typescale-body-large-weight: 400;
+  --md-sys-typescale-body-medium-font-family-name: 'Google Sans Regular';
+  --md-sys-typescale-body-medium-font: 'Google Sans Regular',
+    'Poppins', sans-serif;
+  --md-sys-typescale-body-medium-weight: 400;
+  --md-sys-typescale-body-small-font-family-name: 'Google Sans Regular';
+  --md-sys-typescale-body-small-font: 'Google Sans Regular',
+    'Poppins', sans-serif;
+  --md-sys-typescale-body-small-weight: 400;
+  --md-sys-typescale-title-large-font-family-name: 'Google Sans Regular';
+  --md-sys-typescale-title-large-font: 'Google Sans Regular',
+    'Poppins', sans-serif;
+  --md-sys-typescale-title-large-weight: 500;
+  --md-sys-typescale-title-medium-font-family-name: 'Google Sans Regular';
+  --md-sys-typescale-title-medium-font: 'Google Sans Regular',
+    'Poppins', sans-serif;
+  --md-sys-typescale-title-medium-weight: 500;
+  --md-sys-typescale-title-small-font-family-name: 'Google Sans Regular';
+  --md-sys-typescale-title-small-font: 'Google Sans Regular',
+    'Poppins', sans-serif;
+  --md-sys-typescale-title-small-weight: 500;
+  --md-sys-typescale-headline-large-font-family-name: 'Google Sans Regular';
+  --md-sys-typescale-headline-large-font: 'Google Sans Regular',
+    'Poppins', sans-serif;
+  --md-sys-typescale-headline-large-weight: 500;
+  --md-sys-typescale-headline-medium-font-family-name: 'Google Sans Regular';
+  --md-sys-typescale-headline-medium-font: 'Google Sans Regular',
+    'Poppins', sans-serif;
+  --md-sys-typescale-headline-medium-weight: 500;
+  --md-sys-typescale-headline-small-font-family-name: 'Google Sans Regular';
+  --md-sys-typescale-headline-small-font: 'Google Sans Regular',
+    'Poppins', sans-serif;
+  --md-sys-typescale-headline-small-weight: 500;
+  --md-sys-typescale-display-large-font-family-name: 'Google Sans Regular';
+  --md-sys-typescale-display-large-font: 'Google Sans Regular',
+    'Poppins', sans-serif;
+  --md-sys-typescale-display-large-weight: 500;
+  --md-sys-typescale-display-medium-font-family-name: 'Google Sans Regular';
+  --md-sys-typescale-display-medium-font: 'Google Sans Regular',
+    'Poppins', sans-serif;
+  --md-sys-typescale-display-medium-weight: 500;
+  --md-sys-typescale-display-small-font-family-name: 'Google Sans Regular';
+  --md-sys-typescale-display-small-font: 'Google Sans Regular',
+    'Poppins', sans-serif;
+  --md-sys-typescale-display-small-weight: 500;
+}
+
+@supports (animation-timing-function: linear(0, 0.5, 1)) {
+  :root {
+    --app-motion-spring: linear(0, 0.35 20%, 0.72 45%, 1.08 75%, 1);
+    --app-motion-bounce: linear(0, 0.55 25%, 1.05 60%, 1);
+  }
+}
+
+@supports not (animation-timing-function: linear(0, 0.5, 1)) {
+  :root {
+    --app-motion-spring: ease;
+    --app-motion-bounce: ease;
+  }
+}
+
+html.dark {
+  --md-sys-color-primary: #96dea1;
+  --md-sys-color-on-primary: #003912;
+  --md-sys-color-primary-container: #20512a;
+  --md-sys-color-on-primary-container: #b1fbbb;
+  --md-sys-color-secondary: #b8ccb5;
+  --md-sys-color-on-secondary: #243424;
+  --md-sys-color-secondary-container: #3a4b3a;
+  --md-sys-color-on-secondary-container: #d4e8d0;
+  --md-sys-color-tertiary: #a1d0c7;
+  --md-sys-color-on-tertiary: #033731;
+  --md-sys-color-tertiary-container: #204e47;
+  --md-sys-color-on-tertiary-container: #bdece3;
+  --md-sys-color-error: #ffb4ab;
+  --md-sys-color-on-error: #690005;
+  --md-sys-color-error-container: #93000a;
+  --md-sys-color-on-error-container: #ffdad6;
+  --md-sys-color-background: #101415;
+  --md-sys-color-on-background: #e1e4e4;
+  --md-sys-color-surface: #101415;
+  --md-sys-color-on-surface: #e1e4e4;
+  --md-sys-color-surface-variant: #424940;
+  --md-sys-color-on-surface-variant: #c2c9bd;
+  --md-sys-color-outline: #8c9388;
+  --md-sys-color-outline-variant: #424940;
+  --md-sys-color-shadow: #000000;
+  --md-sys-color-scrim: #000000;
+  --md-sys-color-inverse-surface: #e1e4e4;
+  --md-sys-color-inverse-on-surface: #191c1d;
+  --md-sys-color-inverse-primary: #3c6943;
+  --md-sys-color-surface-dim: #101415;
+  --md-sys-color-surface-bright: #363a3b;
+  --md-sys-color-surface-container-lowest: #0b0f0f;
+  --md-sys-color-surface-container-low: #191c1d;
+  --md-sys-color-surface-container: #1d2021;
+  --md-sys-color-surface-container-high: #272b2b;
+  --md-sys-color-surface-container-highest: #323636;
+  --app-bg-color: var(--md-sys-color-surface-container-lowest);
+  --app-text-color: var(--md-sys-color-on-surface);
+  --app-secondary-text-color: var(--md-sys-color-on-surface-variant);
+  --app-card-bg-color: var(--md-sys-color-surface-container-low);
+  --app-outlined-card-bg-color: var(--md-sys-color-surface-container);
+  --app-section-title-color: var(--md-sys-color-on-background);
+  --app-border-color: var(--md-sys-color-outline-variant);
+  --app-contribute-card-bg: var(--md-sys-color-primary-container);
+  --app-contribute-card-text: var(--md-sys-color-on-primary-container);
+  --app-social-icon-color: var(--md-sys-color-on-surface-variant);
+  --app-social-icon-hover-color: var(--md-sys-color-primary);
+  --app-drawer-bg-color: var(--md-sys-color-surface-container);
+  --app-drawer-tint-color: var(--md-sys-color-primary);
+  --app-drawer-inline-size: min(360px, 100vw);
+  --app-overlay-bg-color: rgba(0, 0, 0, 0.32);
+  --app-nested-list-bg: rgba(255, 255, 255, 0.03);
+  --app-theme-button-selected-bg: rgba(150, 222, 161, 0.2);
+  --app-footer-text-color: #a0a0a0;
+  --app-link-color: #8ab4f8;
+  --app-dialog-bg-color: var(--md-sys-color-surface-container);
+}
