@@ -241,7 +241,7 @@
             metadata: {
                 description: 'Design and manage the JSON APIs that power App Toolkit, English with Lidia, and Android Studio Tutorials using a visual builder.',
                 keywords: [
-                    'D4rK API console',
+                    'API Console',
                     'Android API builder',
                     'App Toolkit JSON',
                     'English with Lidia API',
@@ -325,6 +325,29 @@
                 twitter: {
                     title: 'Android Studio Tutorials API workspace',
                     description: 'Design home feed cards and Compose-ready lesson content for Android Studio Tutorials.'
+                }
+            }
+        },
+        {
+            id: 'privacy-policy',
+            path: 'pages/drawer/more/privacy-policy.html',
+            title: 'Privacy Policy',
+            metadata: {
+                description: 'Review how the API Console handles usage data, theme preferences, and integrations with external services.',
+                keywords: [
+                    'API Console privacy policy',
+                    'data usage',
+                    'theme preferences storage'
+                ],
+                canonicalSlug: 'privacy-policy',
+                openGraph: {
+                    title: 'Privacy Policy | API Console',
+                    description: 'Learn about data handling, analytics, and storage practices used by the API Console.',
+                    type: 'article'
+                },
+                twitter: {
+                    title: 'Privacy Policy | API Console',
+                    description: 'Learn about data handling, analytics, and storage practices used by the API Console.'
                 }
             }
         },
