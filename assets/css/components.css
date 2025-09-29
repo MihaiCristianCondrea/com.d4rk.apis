@@ -450,6 +450,62 @@ md-tonal-button md-icon[slot='icon'] {
   align-items: center;
 }
 
+.builder-remote-card {
+  margin-top: 1.5rem;
+}
+
+.builder-remote-card .card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.builder-remote-header h2 {
+  margin: 0 0 0.25rem 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--app-text-color);
+}
+
+.builder-remote-header p {
+  margin: 0;
+  color: var(--app-secondary-text-color);
+  font-size: 0.95rem;
+}
+
+.builder-remote-controls {
+  display: grid;
+  grid-template-columns: minmax(240px, 1fr) auto;
+  gap: 0.75rem;
+  align-items: end;
+}
+
+.builder-remote-controls md-outlined-text-field {
+  width: 100%;
+}
+
+.builder-remote-presets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.builder-remote-presets-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--app-secondary-text-color);
+}
+
+.builder-remote-presets md-text-button {
+  --md-text-button-container-shape: 999px;
+  --md-text-button-label-text-size: 0.85rem;
+  --md-text-button-hover-label-text-color: var(--md-sys-color-primary);
+  --md-text-button-pressed-label-text-color: var(--md-sys-color-primary);
+}
+
 .builder-layout {
   display: grid;
   grid-template-columns: minmax(0, 2fr) minmax(260px, 1fr);
@@ -664,6 +720,10 @@ md-tonal-button md-icon[slot='icon'] {
 
 @media (max-width: 1024px) {
   .builder-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .builder-remote-controls {
     grid-template-columns: 1fr;
   }
 }

@@ -25,6 +25,10 @@
           When you are done, export the JSON and replace the existing file in
           <code>App Toolkit/[debug|release]/en/home/api_android_apps.json</code>.
         </li>
+        <li>
+          Use <strong>Fetch existing JSON</strong> to pull the latest data from a
+          remote file before editing.
+        </li>
       </ul>
     </div>
   </md-filled-card>
@@ -60,6 +64,58 @@
         Clear workspace
       </md-text-button>
     </div>
+
+    <md-filled-card class="builder-remote-card" id="appToolkitRemoteImport">
+      <div class="card-body">
+        <div class="builder-remote-header">
+          <div>
+            <h2>Fetch existing JSON</h2>
+            <p>Pull the latest payload before you start editing entries.</p>
+          </div>
+        </div>
+        <div class="builder-remote-controls">
+          <md-outlined-text-field
+            id="appToolkitFetchInput"
+            type="url"
+            label="JSON URL"
+            placeholder="https://example.com/api_android_apps.json"
+            supporting-text="Paste a direct link to the current api_android_apps.json file"
+            spellcheck="false"
+          >
+            <md-icon slot="leading-icon"
+              ><span class="material-symbols-outlined">link</span></md-icon
+            >
+          </md-outlined-text-field>
+          <md-filled-tonal-button id="appToolkitFetchButton">
+            <md-icon slot="icon"
+              ><span class="material-symbols-outlined">cloud_download</span></md-icon
+            >
+            Fetch from URL
+          </md-filled-tonal-button>
+        </div>
+        <div class="builder-remote-presets" aria-label="Quick fetch shortcuts">
+          <span class="builder-remote-presets-label">Quick links</span>
+          <md-text-button
+            data-app-toolkit-preset="https://raw.githubusercontent.com/MihaiCristianCondrea/com.d4rk.apis/refs/heads/main/App%20Toolkit/debug/en/home/api_android_apps.json"
+            id="appToolkitDebugPreset"
+          >
+            <md-icon slot="icon"
+              ><span class="material-symbols-outlined">download</span></md-icon
+            >
+            Debug · EN
+          </md-text-button>
+          <md-text-button
+            data-app-toolkit-preset="https://raw.githubusercontent.com/MihaiCristianCondrea/com.d4rk.apis/refs/heads/main/App%20Toolkit/release/en/home/api_android_apps.json"
+            id="appToolkitReleasePreset"
+          >
+            <md-icon slot="icon"
+              ><span class="material-symbols-outlined">download</span></md-icon
+            >
+            Release · EN
+          </md-text-button>
+        </div>
+      </div>
+    </md-filled-card>
 
     <div class="builder-layout">
       <div class="builder-forms" id="appToolkitEntries" aria-live="polite"></div>
