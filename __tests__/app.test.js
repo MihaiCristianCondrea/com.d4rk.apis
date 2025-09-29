@@ -8,7 +8,11 @@ const OPTIONAL_GLOBALS = [
   'fetchCommittersRanking',
   'loadSongs',
   'initProjectsPage',
-  'initResumePage'
+  'initResumePage',
+  'initAppToolkitWorkspace',
+  'initEnglishWorkspace',
+  'initAndroidTutorialsWorkspace',
+  'initPagerControls'
 ];
 
 const CORE_GLOBALS = [
@@ -100,9 +104,6 @@ describe('app.js bootstrap integration', () => {
       <section id="mainContentPage"><p>Welcome!</p></section>
       <h1 id="appBarHeadline"></h1>
       <header id="topAppBar"></header>
-      <div id="newsGrid"></div>
-      <div id="committers-rank"></div>
-      <div id="songsGrid"></div>
     `;
 
     const initRouter = jest.fn();
@@ -120,21 +121,19 @@ describe('app.js bootstrap integration', () => {
     const showPageLoadingOverlay = jest.fn();
     const hidePageLoadingOverlay = jest.fn();
     const closeDrawer = jest.fn();
-    const fetchBlogPosts = jest.fn();
-    const fetchCommittersRanking = jest.fn();
-    const loadSongs = jest.fn();
-    const initProjectsPage = jest.fn();
-    const initResumePage = jest.fn();
+    const initAppToolkitWorkspace = jest.fn();
+    const initEnglishWorkspace = jest.fn();
+    const initAndroidTutorialsWorkspace = jest.fn();
+    const initPagerControls = jest.fn();
 
     Object.assign(global, {
       showPageLoadingOverlay,
       hidePageLoadingOverlay,
       closeDrawer,
-      fetchBlogPosts,
-      fetchCommittersRanking,
-      loadSongs,
-      initProjectsPage,
-      initResumePage
+      initAppToolkitWorkspace,
+      initEnglishWorkspace,
+      initAndroidTutorialsWorkspace,
+      initPagerControls
     });
 
     loadAppModule();
@@ -146,12 +145,14 @@ describe('app.js bootstrap integration', () => {
     expect(routerOptions.showOverlay).toBeInstanceOf(Function);
     expect(routerOptions.hideOverlay).toBeInstanceOf(Function);
     expect(routerOptions.closeDrawer).toBeInstanceOf(Function);
-    expect(routerOptions.onHomeLoad).toBeInstanceOf(Function);
-    expect(routerOptions.pageHandlers).toEqual(expect.objectContaining({
-      songs: expect.any(Function),
-      projects: initProjectsPage,
-      resume: initResumePage
-    }));
+    expect(routerOptions.onHomeLoad).toBeUndefined();
+    expect(routerOptions.pageHandlers).toEqual(
+      expect.objectContaining({
+        'app-toolkit-api': expect.any(Function),
+        'english-with-lidia-api': expect.any(Function),
+        'android-studio-tutorials-api': expect.any(Function)
+      })
+    );
 
     routerOptions.showOverlay();
     expect(showPageLoadingOverlay).toHaveBeenCalledTimes(1);
@@ -162,12 +163,16 @@ describe('app.js bootstrap integration', () => {
     routerOptions.closeDrawer();
     expect(closeDrawer).toHaveBeenCalledTimes(1);
 
-    routerOptions.onHomeLoad();
-    expect(fetchBlogPosts).toHaveBeenCalledTimes(1);
-    expect(fetchCommittersRanking).toHaveBeenCalledTimes(1);
+    routerOptions.pageHandlers['app-toolkit-api']();
+    expect(initAppToolkitWorkspace).toHaveBeenCalledTimes(1);
 
-    routerOptions.pageHandlers.songs();
-    expect(loadSongs).toHaveBeenCalledTimes(1);
+    routerOptions.pageHandlers['english-with-lidia-api']();
+    expect(initEnglishWorkspace).toHaveBeenCalledTimes(1);
+    expect(initPagerControls).toHaveBeenCalledWith('englishPager');
+
+    routerOptions.pageHandlers['android-studio-tutorials-api']();
+    expect(initAndroidTutorialsWorkspace).toHaveBeenCalledTimes(1);
+    expect(initPagerControls).toHaveBeenCalledWith('androidPager');
   });
 
   test('navigation interception delegates to loadPageContent and avoids duplicate registration', () => {
@@ -176,14 +181,16 @@ describe('app.js bootstrap integration', () => {
       <section id="mainContentPage"></section>
       <h1 id="appBarHeadline"></h1>
       <header id="topAppBar"></header>
-      <a id="songsLink" href="#songs"><span>Songs</span></a>
+      <a id="toolkitLink" href="#app-toolkit-api"><span>App Toolkit</span></a>
       <a id="missingLink" href="#missing"><span>Missing</span></a>
       <a id="externalLink" href="#home" target="_blank">External</a>
-      <md-list-item id="projectsItem" href="#projects"></md-list-item>
+      <md-list-item id="englishItem" href="#english-with-lidia-api"></md-list-item>
     `;
 
     const loadPageContent = jest.fn();
-    const hasRoute = jest.fn((id) => ['home', 'songs', 'projects'].includes(id));
+    const hasRoute = jest.fn((id) =>
+      ['home', 'app-toolkit-api', 'english-with-lidia-api'].includes(id)
+    );
 
     global.getDynamicElement = jest.fn((id) => document.getElementById(id));
     global.initTheme = jest.fn();
@@ -206,22 +213,22 @@ describe('app.js bootstrap integration', () => {
     loadPageContent.mockClear();
     hasRoute.mockClear();
 
-    const songsLinkSpan = document.querySelector('#songsLink span');
-    songsLinkSpan.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }));
+    const toolkitLinkSpan = document.querySelector('#toolkitLink span');
+    toolkitLinkSpan.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }));
     expect(hasRoute).toHaveBeenCalledTimes(1);
-    expect(hasRoute).toHaveBeenCalledWith('songs');
+    expect(hasRoute).toHaveBeenCalledWith('app-toolkit-api');
     expect(loadPageContent).toHaveBeenCalledTimes(1);
-    expect(loadPageContent).toHaveBeenCalledWith('songs');
+    expect(loadPageContent).toHaveBeenCalledWith('app-toolkit-api');
 
     loadPageContent.mockClear();
     hasRoute.mockClear();
 
-    const projectsItem = document.getElementById('projectsItem');
-    projectsItem.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }));
+    const englishItem = document.getElementById('englishItem');
+    englishItem.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }));
     expect(hasRoute).toHaveBeenCalledTimes(1);
-    expect(hasRoute).toHaveBeenCalledWith('projects');
+    expect(hasRoute).toHaveBeenCalledWith('english-with-lidia-api');
     expect(loadPageContent).toHaveBeenCalledTimes(1);
-    expect(loadPageContent).toHaveBeenCalledWith('projects');
+    expect(loadPageContent).toHaveBeenCalledWith('english-with-lidia-api');
 
     loadPageContent.mockClear();
     hasRoute.mockClear();

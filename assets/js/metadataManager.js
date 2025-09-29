@@ -1,5 +1,5 @@
 (function (global) {
-    const DEFAULT_TITLE = "Mihai's Profile";
+    const DEFAULT_TITLE = 'D4rK API Console';
     const DEFAULT_DESCRIPTION = "Explore Mihai-Cristian Condrea's Android developer portfolio featuring Jetpack Compose apps, Material Design systems, and open-source tools.";
     const DEFAULT_KEYWORDS = [
         'Mihai Cristian Condrea',

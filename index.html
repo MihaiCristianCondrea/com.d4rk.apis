@@ -6,53 +6,47 @@
       name="viewport"
       content="width=device-width, initial-scale=1.0, viewport-fit=cover"
     />
-    <title>Mihai's Profile</title>
+    <title>D4rK API Console</title>
     <meta
       name="description"
-      content="Explore Mihai-Cristian Condrea's Android developer portfolio featuring Jetpack Compose apps, Material Design systems, and open-source tools."
+      content="Design and manage the JSON APIs that power D4rK's Android apps with a visual editor built for App Toolkit, English with Lidia, and Android Studio Tutorials."
     />
     <meta
       name="keywords"
-      content="Mihai Cristian Condrea, Android developer portfolio, Jetpack Compose apps, Kotlin UI design, Material You projects"
+      content="D4rK API console, Android API builder, JSON editor, App Toolkit API, English with Lidia API, Android Studio Tutorials API"
     />
-    <meta
-      property="og:title"
-      content="Mihai-Cristian Condrea | Android Developer Portfolio"
-    />
+    <meta property="og:title" content="D4rK API Console" />
     <meta
       property="og:description"
-      content="Explore Mihai-Cristian Condrea's Android developer portfolio featuring Jetpack Compose apps, Material Design systems, and open-source tools."
+      content="Design and manage JSON APIs visually for D4rK's Android applications, including App Toolkit, English with Lidia, and Android Studio Tutorials."
     />
     <meta property="og:type" content="website" />
     <meta
       property="og:image"
-      content="https://mihaicristiancondrea.github.io/profile/assets/images/profile/cv_profile_pic.png"
+      content="https://raw.githubusercontent.com/D4rK7355608/com.d4rk.apis/main/assets/images/placeholder.png"
     />
     <meta
       property="og:image:alt"
-      content="Portrait of Android developer Mihai-Cristian Condrea"
+      content="Illustration of JSON blocks connected to Android app screens"
     />
     <meta
       property="og:url"
-      content="https://mihaicristiancondrea.github.io/profile/"
+      content="https://d4rk7355608.github.io/com.d4rk.apis/"
     />
-    <meta property="og:site_name" content="Mihai's Profile" />
+    <meta property="og:site_name" content="D4rK API Console" />
     <link
       rel="canonical"
-      href="https://mihaicristiancondrea.github.io/profile/"
+      href="https://d4rk7355608.github.io/com.d4rk.apis/"
     />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta
-      name="twitter:title"
-      content="Mihai-Cristian Condrea | Android Developer Portfolio"
-    />
+    <meta name="twitter:title" content="D4rK API Console" />
     <meta
       name="twitter:description"
-      content="Explore Mihai-Cristian Condrea's Android developer portfolio featuring Jetpack Compose apps, Material Design systems, and open-source tools."
+      content="Visual tooling for crafting JSON APIs that power D4rK's Android experiences."
     />
     <meta
       name="twitter:image"
-      content="https://mihaicristiancondrea.github.io/profile/assets/images/profile/cv_profile_pic.png"
+      content="https://raw.githubusercontent.com/D4rK7355608/com.d4rk.apis/main/assets/images/placeholder.png"
     />
     <meta name="twitter:site" content="@MihaiCrstian" />
     <meta name="twitter:creator" content="@MihaiCrstian" />
@@ -127,7 +121,7 @@
         aria-modal="true"
       >
         <div class="drawer-header">
-          <h2>Menu</h2>
+          <h2>Workspace</h2>
           <md-icon-button
             id="closeDrawerButton"
             aria-label="Close menu"
@@ -146,68 +140,6 @@
               >
               <div slot="headline">Home</div>
             </md-list-item>
-            <md-list-item
-              href="https://d4rk7355608.blogspot.com/"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <md-icon slot="start"
-                ><span class="material-symbols-outlined">article</span></md-icon
-              >
-              <div slot="headline">Blogs</div>
-              <md-icon slot="end"
-                ><span class="material-symbols-outlined"
-                  >open_in_new</span
-                ></md-icon
-              >
-            </md-list-item>
-            <md-list-item href="#songs" id="navSongsLink">
-              <md-icon slot="start"
-                ><span class="material-symbols-outlined"
-                  >music_note</span
-                ></md-icon
-              >
-              <div slot="headline">Music</div>
-            </md-list-item>
-            <md-list-item href="#projects" id="navProjectsLink">
-              <md-icon slot="start"
-                ><span class="material-symbols-outlined">work</span></md-icon
-              >
-              <div slot="headline">Projects</div>
-            </md-list-item>
-            <md-divider></md-divider>
-            <md-list-item
-              type="button"
-              id="aboutToggle"
-              aria-controls="aboutContent"
-              aria-expanded="true"
-              class="expanded"
-            >
-              <md-icon slot="start"
-                ><span class="material-symbols-outlined">info</span></md-icon
-              >
-              <div slot="headline">Profile</div>
-              <md-icon slot="end"
-                ><span class="material-symbols-outlined"
-                  >expand_more</span
-                ></md-icon
-              >
-            </md-list-item>
-            <div
-              class="nested-list open"
-              id="aboutContent"
-              role="group"
-              aria-hidden="false"
-            >
-              <md-list>
-                <md-list-item href="#contact" id="navContactLink">
-                  <div slot="headline">Contact</div>
-                </md-list-item>
-                <md-list-item href="#about-me" id="navAboutMeLink">
-                  <div slot="headline">About Me</div>
-                </md-list-item>
-              </md-list>
-            </div>
             <md-divider></md-divider>
             <md-list-item
               type="button"
@@ -217,9 +149,9 @@
               class="expanded"
             >
               <md-icon slot="start"
-                ><span class="material-symbols-outlined">apps</span></md-icon
+                ><span class="material-symbols-outlined">hub</span></md-icon
               >
-              <div slot="headline">Android Apps</div>
+              <div slot="headline">API Workspaces</div>
               <md-icon slot="end"
                 ><span class="material-symbols-outlined"
                   >expand_more</span
@@ -233,65 +165,100 @@
               aria-hidden="false"
             >
               <md-list>
-                <md-list-item href="#ads-help-center" id="navAdsHelpCenterLink">
-                  <div slot="headline">Ads Help Center</div>
+                <md-list-item href="#app-toolkit-api" id="navAppToolkit">
+                  <div slot="headline">App Toolkit</div>
+                  <div slot="supporting-text">Manage Android utilities</div>
                 </md-list-item>
-                <md-list-item href="#privacy-policy-end-user-software">
-                  <div slot="headline">Privacy Policy</div>
+                <md-list-item href="#english-with-lidia-api" id="navEnglish">
+                  <div slot="headline">English with Lidia</div>
+                  <div slot="supporting-text">Build lessons & home feeds</div>
                 </md-list-item>
-                <md-list-item href="#terms-of-service-end-user-software">
-                  <div slot="headline">Terms of Service</div>
-                </md-list-item>
-                <md-list-item href="#legal-notices" id="navLegalNoticesLink">
-                  <div slot="headline">Legal Notices</div>
+                <md-list-item
+                  href="#android-studio-tutorials-api"
+                  id="navAst"
+                >
+                  <div slot="headline">Android Studio Tutorials</div>
+                  <div slot="supporting-text">Compose home & lesson flows</div>
                 </md-list-item>
               </md-list>
             </div>
             <md-divider></md-divider>
+            <md-list-item
+              type="button"
+              id="aboutToggle"
+              aria-controls="aboutContent"
+              aria-expanded="true"
+              class="expanded"
+            >
+              <md-icon slot="start"
+                ><span class="material-symbols-outlined">settings</span></md-icon
+              >
+              <div slot="headline">Settings & Policies</div>
+              <md-icon slot="end"
+                ><span class="material-symbols-outlined"
+                  >expand_more</span
+                ></md-icon
+              >
+            </md-list-item>
+            <div
+              class="nested-list open"
+              id="aboutContent"
+              role="group"
+              aria-hidden="false"
+            >
+              <div class="drawer-section">
+                <p class="drawer-section-title">Theme</p>
+                <div class="theme-button-container">
+                  <md-icon-button
+                    id="lightThemeButton"
+                    aria-label="Light theme"
+                    data-theme="light"
+                  >
+                    <md-icon
+                      ><span class="material-symbols-outlined"
+                        >light_mode</span
+                      ></md-icon
+                    >
+                  </md-icon-button>
+                  <md-icon-button
+                    id="darkThemeButton"
+                    aria-label="Dark theme"
+                    data-theme="dark"
+                  >
+                    <md-icon
+                      ><span class="material-symbols-outlined"
+                        >dark_mode</span
+                      ></md-icon
+                    >
+                  </md-icon-button>
+                  <md-icon-button
+                    id="autoThemeButton"
+                    aria-label="Auto theme"
+                    data-theme="auto"
+                  >
+                    <md-icon
+                      ><span class="material-symbols-outlined"
+                        >brightness_auto</span
+                      ></md-icon
+                    >
+                  </md-icon-button>
+                </div>
+              </div>
+              <md-list>
+                <md-list-item href="#code-of-conduct">
+                  <md-icon slot="start"
+                    ><span class="material-symbols-outlined"
+                      >privacy_tip</span
+                    ></md-icon
+                  >
+                  <div slot="headline">Code of Conduct</div>
+                  <div slot="supporting-text">
+                    Collaboration expectations across workspaces
+                  </div>
+                </md-list-item>
+              </md-list>
+            </div>
           </md-list>
-        </div>
-        <div class="drawer-footer">
-          <div class="theme-toggle-title">Theme</div>
-          <div class="theme-button-container">
-            <md-icon-button
-              id="lightThemeButton"
-              aria-label="Light theme"
-              data-theme="light"
-            >
-              <md-icon
-                ><span class="material-symbols-outlined"
-                  >light_mode</span
-                ></md-icon
-              >
-            </md-icon-button>
-            <md-icon-button
-              id="darkThemeButton"
-              aria-label="Dark theme"
-              data-theme="dark"
-            >
-              <md-icon
-                ><span class="material-symbols-outlined"
-                  >dark_mode</span
-                ></md-icon
-              >
-            </md-icon-button>
-            <md-icon-button
-              id="autoThemeButton"
-              aria-label="Auto theme"
-              data-theme="auto"
-            >
-              <md-icon
-                ><span class="material-symbols-outlined"
-                  >brightness_auto</span
-                ></md-icon
-              >
-            </md-icon-button>
-          </div>
-          <div class="drawer-legal-links text-gray-500/90">
-            <a href="#privacy-policy">Privacy Policy</a>
-            <span>&bull;</span>
-            <a href="#code-of-conduct">Code of Conduct</a>
-          </div>
         </div>
       </md-navigation-drawer>
     </nav>
@@ -307,273 +274,246 @@
       >
         <md-icon><span class="material-symbols-outlined">menu</span></md-icon>
       </md-icon-button>
-      <span slot="headline" id="appBarHeadline">Mihai's Profile</span>
+      <span slot="headline" id="appBarHeadline">D4rK API Console</span>
     </md-top-app-bar>
 
     <div class="content-wrapper" id="pageContentArea" data-drawer-inert-target>
       <div id="mainContentPage" class="page-section active">
-        <md-filled-card class="profile-card">
-          <div class="card-content">
-            <div class="profile-header">
-              <img
-                src="https://avatars.githubusercontent.com/u/61864357?v=4"
-                loading="lazy"
-                alt="Mihai-Cristian Condrea Profile Picture"
-                class="profile-avatar"
-              />
-              <div class="profile-info">
-                <h2>Mihai-Cristian Condrea</h2>
-                <p>Formerly known as D4rK</p>
-              </div>
-            </div>
-            <p class="profile-about">
-              Part-time Android Developer at
-              <a
-                href="https://www.digi.ro/"
-                target="_blank"
-                rel="noopener noreferrer"
-                >Digi România</a
-              >
-              and creator of
-              <a
-                href="https://play.google.com/store/apps/details?id=com.d4rk.cleaner"
-                target="_blank"
-                rel="noopener noreferrer"
-                >Smart Cleaner for Android</a
-              >. Passionate about UI/UX design, animations, and building great
-              mobile experiences using Kotlin and Jetpack Compose.
+        <section class="hero">
+          <div class="hero-copy">
+            <p class="hero-eyebrow">Purpose-built for D4rK apps</p>
+            <h1>Build JSON APIs visually and ship updates faster</h1>
+            <p class="hero-body">
+              Use reusable templates, smart defaults, and interactive previews to
+              craft the App Toolkit, English with Lidia, and Android Studio
+              Tutorials APIs without memorizing schemas.
             </p>
-            <h3 class="section-title">Skills & Technologies</h3>
-            <md-chip-set>
-              <md-assist-chip label="Android Dev"></md-assist-chip>
-              <md-assist-chip label="Kotlin"></md-assist-chip>
-              <md-assist-chip label="Jetpack Compose"></md-assist-chip>
-              <md-assist-chip label="MVVM"></md-assist-chip>
-              <md-assist-chip label="Koin"></md-assist-chip>
-              <md-assist-chip label="UI/UX Design"></md-assist-chip>
-              <md-assist-chip label="Material Design"></md-assist-chip>
-            </md-chip-set>
-          </div>
-        </md-filled-card>
-
-        <md-filled-card class="achievement-card">
-          <div class="achievement-body">
-            <div class="achievement-icon" aria-hidden="true">
-              <span class="material-symbols-outlined">military_tech</span>
+            <div class="hero-actions">
+              <a href="#app-toolkit-api">
+                <md-filled-button>
+                  <md-icon slot="icon"
+                    ><span class="material-symbols-outlined"
+                      >rocket_launch</span
+                    ></md-icon
+                  >
+                  Start with App Toolkit
+                </md-filled-button>
+              </a>
+              <a href="#english-with-lidia-api">
+                <md-tonal-button>
+                  Explore lesson tooling
+                  <md-icon slot="icon"
+                    ><span class="material-symbols-outlined"
+                      >menu_book</span
+                    ></md-icon
+                  >
+                </md-tonal-button>
+              </a>
             </div>
-            <div class="achievement-content">
-              <h3>GitHub Committers Ranking</h3>
-              <p class="achievement-rank" id="committers-rank">—</p>
-              <p
-                class="achievement-status"
-                id="committers-status"
-                role="status"
-                aria-live="polite"
-              >
-                Checking latest ranking...
+          </div>
+          <div class="hero-visual" aria-hidden="true">
+            <dotlottie-player
+              autoplay
+              loop
+              mode="normal"
+              src="https://lottie.host/f1077af0-6736-4c2b-a824-6c1512c6f0f4/3mOPp9h33h.json"
+            ></dotlottie-player>
+          </div>
+        </section>
+
+        <section class="home-section">
+          <div class="section-header">
+            <h2>Pick your API workspace</h2>
+            <p>
+              Each workspace reflects the structure and constraints documented in
+              the production JSON files so you can safely prototype or edit.
+            </p>
+          </div>
+          <div class="workspace-grid">
+            <md-elevated-card class="workspace-card">
+              <div class="workspace-card-header">
+                <div class="workspace-icon">
+                  <span class="material-symbols-outlined">build</span>
+                </div>
+                <h3>App Toolkit</h3>
+              </div>
+              <p>
+                Curate tool listings, screenshots, and metadata that power the
+                App Toolkit catalog in both debug and release channels.
               </p>
-              <p class="achievement-updated" id="committers-updated">
-                Last updated: —
+              <ul>
+                <li>Generate app collections with drag-to-add entries</li>
+                <li>Bulk import existing JSON for review</li>
+                <li>Export formatted payloads instantly</li>
+              </ul>
+              <a class="workspace-action" href="#app-toolkit-api">
+                <md-outlined-button trailing-icon>
+                  Open workspace
+                  <md-icon slot="icon"
+                    ><span class="material-symbols-outlined"
+                      >arrow_forward</span
+                    ></md-icon
+                  >
+                </md-outlined-button>
+              </a>
+            </md-elevated-card>
+            <md-elevated-card class="workspace-card">
+              <div class="workspace-card-header">
+                <div class="workspace-icon">
+                  <span class="material-symbols-outlined">lightbulb</span>
+                </div>
+                <h3>English with Lidia</h3>
+              </div>
+              <p>
+                Design home feeds and lesson flows with multimedia content,
+                audio tracks, and ads aligned with the published documentation.
+              </p>
+              <ul>
+                <li>Switch between Home and Lesson API builders</li>
+                <li>Attach audio, images, and copy in context</li>
+                <li>Preview generated JSON before exporting</li>
+              </ul>
+              <a class="workspace-action" href="#english-with-lidia-api">
+                <md-outlined-button trailing-icon>
+                  Open workspace
+                  <md-icon slot="icon"
+                    ><span class="material-symbols-outlined"
+                      >arrow_forward</span
+                    ></md-icon
+                  >
+                </md-outlined-button>
+              </a>
+            </md-elevated-card>
+            <md-elevated-card class="workspace-card">
+              <div class="workspace-card-header">
+                <div class="workspace-icon">
+                  <span class="material-symbols-outlined">school</span>
+                </div>
+                <h3>Android Studio Tutorials</h3>
+              </div>
+              <p>
+                Assemble Compose-first lesson journeys with code samples,
+                banners, ads, and metadata tailored for the tutorials app.
+              </p>
+              <ul>
+                <li>Define home feed cards with smart defaults</li>
+                <li>Craft lesson narratives block-by-block</li>
+                <li>Document deep links and tags consistently</li>
+              </ul>
+              <a
+                class="workspace-action"
+                href="#android-studio-tutorials-api"
+              >
+                <md-outlined-button trailing-icon>
+                  Open workspace
+                  <md-icon slot="icon"
+                    ><span class="material-symbols-outlined"
+                      >arrow_forward</span
+                    ></md-icon
+                  >
+                </md-outlined-button>
+              </a>
+            </md-elevated-card>
+          </div>
+        </section>
+
+        <section class="home-section">
+          <div class="section-header">
+            <h2>Three steps to ship an update</h2>
+          </div>
+          <div class="steps-grid">
+            <div class="step-card">
+              <span class="step-number">1</span>
+              <h3>Choose a preset</h3>
+              <p>
+                Start from blank templates or import an existing JSON payload to
+                continue where you left off.
+              </p>
+            </div>
+            <div class="step-card">
+              <span class="step-number">2</span>
+              <h3>Edit visually</h3>
+              <p>
+                Add lessons, content blocks, ads, and multimedia assets with
+                contextual helpers that validate required properties.
+              </p>
+            </div>
+            <div class="step-card">
+              <span class="step-number">3</span>
+              <h3>Export & commit</h3>
+              <p>
+                Copy the prettified JSON or download it as a file, then drop it
+                into the appropriate debug or release folder.
               </p>
             </div>
           </div>
-          <div class="achievement-actions">
+        </section>
+
+        <section class="home-section">
+          <div class="section-header">
+            <h2>Reference documentation</h2>
+            <p>
+              Keep the official API specs close while you work. The external
+              links below open in a new tab.
+            </p>
+          </div>
+          <div class="docs-grid">
             <a
-              href="https://committers.top/romania"
+              class="docs-card"
+              href="https://github.com/D4rK7355608/com.d4rk.apis/tree/main/App%20Toolkit"
               target="_blank"
               rel="noopener noreferrer"
             >
-              <md-text-button>
-                <md-icon slot="icon">open_in_new</md-icon>
-                View ranking
-              </md-text-button>
-            </a>
-          </div>
-        </md-filled-card>
-
-        <md-divider class="profile-section-divider"></md-divider>
-
-        <div class="profile-card-actions">
-          <a
-            href="https://play.google.com/store/apps/dev?id=5390214922640123642"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <md-outlined-button>
-              <md-icon slot="icon"><i class="fab fa-google-play"></i></md-icon>
-              My Apps on Google Play
-            </md-outlined-button>
-          </a>
-          <a
-            href="https://g.dev/Mihai-Cristian-Condrea"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <md-outlined-button>
-              <md-icon slot="icon"
-                ><span class="material-symbols-outlined"
-                  >code_blocks</span
-                ></md-icon
+              <div class="docs-icon">
+                <span class="material-symbols-outlined">widgets</span>
+              </div>
+              <div>
+                <h3>App Toolkit JSON schema</h3>
+                <p>Understand how catalog entries are structured.</p>
+              </div>
+              <span class="material-symbols-outlined" aria-hidden="true"
+                >open_in_new</span
               >
-              Google Developer Profile
-            </md-outlined-button>
-          </a>
-        </div>
-
-        <div class="podcast-embed">
-          <h2 class="page-section-title">By Design Podcast</h2>
-          <iframe
-            src="https://open.spotify.com/embed/show/1kfFn7caL2U2wlhaD9IMIa?utm_source=generator"
-            width="100%"
-            height="152"
-            frameborder="0"
-            allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-            loading="lazy"
-          ></iframe>
-        </div>
-
-        <h2 class="page-section-title">Latest news</h2>
-        <div class="news-section">
-          <div class="news-grid" id="newsGrid">
-            <div id="news-status">
-              <md-circular-progress indeterminate></md-circular-progress>
-              <span>Loading latest posts...</span>
-            </div>
-          </div>
-          <div class="view-all-posts-container">
+            </a>
             <a
-              href="https://d4rk7355608.blogspot.com/"
+              class="docs-card"
+              href="https://github.com/D4rK7355608/com.d4rk.apis/tree/main/English%20with%20Lidia"
               target="_blank"
               rel="noopener noreferrer"
             >
-              <md-outlined-button trailing-icon>
-                View All Posts
-                <md-icon slot="icon" aria-hidden="true"
-                  ><span class="material-symbols-outlined"
-                    >arrow_forward</span
-                  ></md-icon
-                >
-              </md-outlined-button>
-            </a>
-          </div>
-        </div>
-
-        <h2 class="page-section-title">Contribute</h2>
-        <md-elevated-card class="contribute-card">
-          <h3>Do you like my projects?</h3>
-          <p>
-            Your support helps me dedicate more time to developing and
-            maintaining open-source apps and libraries. You can show your
-            appreciation by opening a short ad link, every visit makes a
-            difference. Thank you for supporting independent development.
-          </p>
-
-          <div class="contribute-actions">
-            <a
-              href="https://direct-link.net/548212/agOqI73556081341"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <md-filled-button>
-                <md-icon slot="icon" class="material-symbols-outlined"
-                  >volunteer_activism</md-icon
-                >
-                Open Short Ad
-              </md-filled-button>
-            </a>
-          </div>
-        </md-elevated-card>
-
-        <div class="social-icons">
-          <a
-            href="https://github.com/MihaiCristianCondrea"
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="GitHub Profile"
-            title="GitHub"
-          >
-            <md-icon-button>
-              <md-icon><i class="fab fa-github"></i></md-icon>
-            </md-icon-button>
-          </a>
-          <a
-            href="https://www.instagram.com/d4rk7355608/"
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="Instagram Profile"
-            title="Instagram"
-          >
-            <md-icon-button>
-              <md-icon><i class="fab fa-instagram"></i></md-icon>
-            </md-icon-button>
-          </a>
-          <a
-            href="https://www.youtube.com/@D4rK7355608"
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="YouTube Channel"
-            title="YouTube"
-          >
-            <md-icon-button>
-              <md-icon><i class="fab fa-youtube"></i></md-icon>
-            </md-icon-button>
-          </a>
-          <a
-            href="https://www.pinterest.com/d4rk7355608/"
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="Pinterest Profile"
-            title="Pinterest"
-          >
-            <md-icon-button>
-              <md-icon><i class="fab fa-pinterest"></i></md-icon>
-            </md-icon-button>
-          </a>
-          <a
-            href="mailto:contact.mihaicristiancondrea@gmail.com"
-            aria-label="Send Email"
-            title="Email"
-          >
-            <md-icon-button>
-              <md-icon
-                ><span class="material-symbols-outlined">email</span></md-icon
+              <div class="docs-icon">
+                <span class="material-symbols-outlined">translate</span>
+              </div>
+              <div>
+                <h3>English with Lidia docs</h3>
+                <p>Review lesson conventions, ads, and audio usage.</p>
+              </div>
+              <span class="material-symbols-outlined" aria-hidden="true"
+                >open_in_new</span
               >
-            </md-icon-button>
-          </a>
-          <a
-            href="https://www.linkedin.com/in/mihai-cristian-condrea/"
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="LinkedIn Profile"
-            title="LinkedIn"
-          >
-            <md-icon-button>
-              <md-icon><i class="fab fa-linkedin-in"></i></md-icon>
-            </md-icon-button>
-          </a>
-          <a
-            href="https://x.com/MihaiCrstian"
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="X Profile"
-            title="X"
-          >
-            <md-icon-button>
-              <md-icon><i class="fab fa-x-twitter"></i></md-icon>
-            </md-icon-button>
-          </a>
-          <a
-            href="https://www.facebook.com/d4rk7355608"
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="Facebook Profile"
-            title="Facebook"
-          >
-            <md-icon-button>
-              <md-icon><i class="fab fa-facebook-f"></i></md-icon>
-            </md-icon-button>
-          </a>
-        </div>
+            </a>
+            <a
+              class="docs-card"
+              href="https://github.com/D4rK7355608/com.d4rk.apis/tree/main/Android%20Studio%20Tutorials/docs"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <div class="docs-icon">
+                <span class="material-symbols-outlined">article</span>
+              </div>
+              <div>
+                <h3>Android Studio Tutorials docs</h3>
+                <p>
+                  Access the home and lesson API specifications maintained for
+                  the tutorials app.
+                </p>
+              </div>
+              <span class="material-symbols-outlined" aria-hidden="true"
+                >open_in_new</span
+              >
+            </a>
+          </div>
+        </section>
       </div>
     </div>
 
@@ -584,15 +524,11 @@
     <script src="assets/js/utils.js" defer></script>
     <script src="assets/js/theme.js" defer></script>
     <script src="assets/js/navigationDrawer.js" defer></script>
-    <script src="assets/js/bloggerApi.js" defer></script>
-    <script
-      src="https://cdn.jsdelivr.net/npm/dompurify@3.0.2/dist/purify.min.js"
-      defer
-    ></script>
-    <script src="assets/js/resume.js" defer></script>
-    <script src="assets/js/contact.js" defer></script>
-    <script src="assets/js/songs.js" defer></script>
-    <script src="assets/js/projects.js" defer></script>
+    <script src="assets/js/apis/common.js" defer></script>
+    <script src="assets/js/apis/appToolkit.js" defer></script>
+    <script src="assets/js/apis/englishWithLidia.js" defer></script>
+    <script src="assets/js/apis/androidStudioTutorials.js" defer></script>
+    <script src="assets/js/apis/pagers.js" defer></script>
     <script src="assets/js/router/routes.js" defer></script>
     <script src="assets/js/router/animation.js" defer></script>
     <script src="assets/js/animations.js" defer></script>
@@ -600,7 +536,6 @@
     <script src="assets/js/metadataManager.js" defer></script>
     <script src="assets/js/router/history.js" defer></script>
     <script src="assets/js/router.js" defer></script>
-    <script src="assets/js/committers.js" defer></script>
     <script src="assets/js/app.js" defer></script>
   </body>
 </html>

@@ -84,47 +84,23 @@ function buildRouterOptions() {
         };
     }
 
-    if (typeof fetchBlogPosts === 'function' || typeof fetchCommittersRanking === 'function') {
-        options.onHomeLoad = () => {
-            if (typeof fetchBlogPosts === 'function') {
-                const newsGrid = document.getElementById('newsGrid');
-                if (newsGrid) {
-                    fetchBlogPosts();
-                }
-            }
-
-            if (typeof fetchCommittersRanking === 'function') {
-                const rankingCardPresent = document.getElementById('committers-rank')
-                    || document.getElementById('committers-status')
-                    || document.querySelector('.achievement-card');
-                if (rankingCardPresent) {
-                    fetchCommittersRanking();
-                }
-            }
-        };
-    }
-
     const pageHandlers = {};
 
-    if (typeof loadSongs === 'function') {
-        pageHandlers.songs = () => {
-            const songsGrid = document.getElementById('songsGrid');
-            if (songsGrid) {
-                loadSongs();
-            }
-        };
+    if (typeof initAppToolkitWorkspace === 'function') {
+        pageHandlers['app-toolkit-api'] = initAppToolkitWorkspace;
     }
 
-    if (typeof initProjectsPage === 'function') {
-        pageHandlers.projects = initProjectsPage;
+    if (typeof initEnglishWorkspace === 'function') {
+        pageHandlers['english-with-lidia-api'] = initEnglishWorkspace;
     }
 
-    if (typeof initResumePage === 'function') {
-        pageHandlers.resume = initResumePage;
+    if (typeof initAndroidTutorialsWorkspace === 'function') {
+        pageHandlers['android-studio-tutorials-api'] = initAndroidTutorialsWorkspace;
     }
 
-    if (typeof initContactPage === 'function') {
-        pageHandlers.contact = initContactPage;
+    if (typeof initPagerControls === 'function') {
+        pageHandlers['english-with-lidia-api'] = chainHandlers(pageHandlers['english-with-lidia-api'], () => initPagerControls('englishPager'));
+        pageHandlers['android-studio-tutorials-api'] = chainHandlers(pageHandlers['android-studio-tutorials-api'], () => initPagerControls('androidPager'));
     }
 
     if (Object.keys(pageHandlers).length > 0) {
@@ -132,6 +108,19 @@ function buildRouterOptions() {
     }
 
     return options;
+}
+
+function chainHandlers(existingHandler, nextHandler) {
+    if (typeof existingHandler !== 'function') {
+        return nextHandler;
+    }
+    return () => {
+        try {
+            existingHandler();
+        } finally {
+            nextHandler();
+        }
+    };
 }
 
 function setupRouteLinkInterception() {
