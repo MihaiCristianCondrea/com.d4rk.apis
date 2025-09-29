@@ -1,5 +1,5 @@
 (function (global) {
-    const DEFAULT_ROUTE_TITLE = "Mihai's Profile";
+    const DEFAULT_ROUTE_TITLE = 'D4rK API Console';
     const DEFAULT_METADATA_DESCRIPTION = 'Explore Mihai-Cristian Condrea\'s Android developer portfolio featuring Jetpack Compose apps, Material Design systems, and open-source tools.';
     const DEFAULT_METADATA_KEYWORDS = [
         'Mihai Cristian Condrea',
@@ -234,328 +234,120 @@
         return Object.values(PAGE_ROUTES).map(route => cloneRoute(route));
     }
 
-    function runHomeOnLoad() {
-        if (
-            typeof fetchBlogPosts === 'function' &&
-            typeof document !== 'undefined' &&
-            document.getElementById('newsGrid')
-        ) {
-            fetchBlogPosts();
-        }
-    }
-
-    function runSongsOnLoad() {
-        if (
-            typeof loadSongs === 'function' &&
-            typeof document !== 'undefined' &&
-            document.getElementById('songsGrid')
-        ) {
-            loadSongs();
-        }
-    }
-
-    function runProjectsOnLoad() {
-        if (typeof initProjectsPage === 'function') {
-            initProjectsPage();
-        }
-    }
-
-    function runResumeOnLoad() {
-        if (typeof initResumePage === 'function') {
-            initResumePage();
-        }
-    }
-
     const defaultRoutes = [
         {
             id: 'home',
-            title: DEFAULT_ROUTE_TITLE,
-            onLoad: runHomeOnLoad,
+            title: 'D4rK API Console',
             metadata: {
-                description: 'Explore Mihai-Cristian Condrea\'s Android developer portfolio featuring Jetpack Compose apps, Material Design systems, and open-source tools.',
+                description: 'Design and manage the JSON APIs that power App Toolkit, English with Lidia, and Android Studio Tutorials using a visual builder.',
                 keywords: [
-                    'Mihai Cristian Condrea',
-                    'Android developer portfolio',
-                    'Jetpack Compose apps',
-                    'Kotlin UI design',
-                    'Material You projects'
+                    'D4rK API console',
+                    'Android API builder',
+                    'App Toolkit JSON',
+                    'English with Lidia API',
+                    'Android Studio Tutorials API'
                 ],
                 canonicalSlug: '/',
                 openGraph: {
-                    title: 'Mihai-Cristian Condrea | Android Developer Portfolio',
-                    description: 'Explore Mihai-Cristian Condrea\'s Android developer portfolio featuring Jetpack Compose apps, Material Design systems, and open-source tools.',
+                    title: 'D4rK API Console',
+                    description: 'Visual tooling for crafting the JSON APIs behind D4rK\'s Android applications.',
                     type: 'website'
                 },
                 twitter: {
-                    title: 'Mihai-Cristian Condrea | Android Developer Portfolio',
-                    description: 'Explore Mihai-Cristian Condrea\'s Android developer portfolio featuring Jetpack Compose apps, Material Design systems, and open-source tools.'
+                    title: 'D4rK API Console',
+                    description: 'Visual tooling for crafting the JSON APIs behind D4rK\'s Android applications.'
                 }
             }
         },
         {
-            id: 'privacy-policy',
-            path: 'pages/drawer/more/privacy-policy.html',
-            title: 'Privacy Policy',
+            id: 'app-toolkit-api',
+            path: 'pages/apis/app-toolkit.html',
+            title: 'App Toolkit API',
             metadata: {
-                description: 'Review the website privacy policy for Mihai-Cristian Condrea\'s personal site covering analytics, local storage preferences, and data protection practices.',
+                description: 'Curate App Toolkit catalog entries with visual tools for managing app metadata, screenshots, and package information.',
                 keywords: [
-                    'Mihai Cristian Condrea privacy policy',
-                    'website data protection',
-                    'analytics disclosure',
-                    'local storage preferences'
+                    'App Toolkit API builder',
+                    'Android catalog JSON',
+                    'app screenshots metadata'
                 ],
-                canonicalSlug: 'privacy-policy',
+                canonicalSlug: 'app-toolkit-api',
                 openGraph: {
-                    title: 'Website Privacy Policy | Mihai-Cristian Condrea',
-                    description: 'Review the website privacy policy for Mihai-Cristian Condrea\'s personal site covering analytics, local storage preferences, and data protection practices.',
-                    type: 'article'
-                },
-                twitter: {
-                    title: 'Website Privacy Policy | Mihai-Cristian Condrea',
-                    description: 'Review the website privacy policy for Mihai-Cristian Condrea\'s personal site covering analytics, local storage preferences, and data protection practices.'
-                }
-            }
-        },
-        {
-            id: 'songs',
-            path: 'pages/drawer/songs.html',
-            title: 'My Music',
-            onLoad: runSongsOnLoad,
-            metadata: {
-                description: 'Listen to Mihai-Cristian Condrea\'s original tracks and playlists, including ambient production, electronic experiments, and featured collaborations.',
-                keywords: [
-                    'Mihai Cristian Condrea music',
-                    'D4rK Rekords tracks',
-                    'ambient electronic producer',
-                    'indie Android developer musician'
-                ],
-                canonicalSlug: 'songs',
-                openGraph: {
-                    title: 'My Music | Mihai-Cristian Condrea',
-                    description: 'Listen to Mihai-Cristian Condrea\'s original tracks and playlists, including ambient production, electronic experiments, and featured collaborations.',
-                    type: 'music.playlist'
-                },
-                twitter: {
-                    title: 'My Music | Mihai-Cristian Condrea',
-                    description: 'Listen to Mihai-Cristian Condrea\'s original tracks and playlists, including ambient production, electronic experiments, and featured collaborations.'
-                }
-            }
-        },
-        {
-            id: 'projects',
-            path: 'pages/drawer/projects.html',
-            title: 'Projects',
-            onLoad: runProjectsOnLoad,
-            metadata: {
-                description: 'Discover Mihai-Cristian Condrea\'s Android and web projects featuring Jetpack Compose demos, Material You UI patterns, and open-source utilities.',
-                keywords: [
-                    'Jetpack Compose portfolio',
-                    'Android app showcase',
-                    'Material You case studies',
-                    'Mihai Cristian Condrea projects'
-                ],
-                canonicalSlug: 'projects',
-                openGraph: {
-                    title: 'Projects | Mihai-Cristian Condrea',
-                    description: 'Discover Mihai-Cristian Condrea\'s Android and web projects featuring Jetpack Compose demos, Material You UI patterns, and open-source utilities.',
+                    title: 'App Toolkit API workspace',
+                    description: 'Curate App Toolkit catalog entries with visual tools for managing app metadata, screenshots, and package information.',
                     type: 'website'
                 },
                 twitter: {
-                    title: 'Projects | Mihai-Cristian Condrea',
-                    description: 'Discover Mihai-Cristian Condrea\'s Android and web projects featuring Jetpack Compose demos, Material You UI patterns, and open-source utilities.'
+                    title: 'App Toolkit API workspace',
+                    description: 'Curate App Toolkit catalog entries with visual tools for managing app metadata, screenshots, and package information.'
                 }
             }
         },
         {
-            id: 'contact',
-            path: 'pages/drawer/contact.html',
-            title: 'Contact',
+            id: 'english-with-lidia-api',
+            path: 'pages/apis/english-with-lidia.html',
+            title: 'English with Lidia API',
             metadata: {
-                description: 'Contact Mihai-Cristian Condrea to discuss Android development collaborations, UI design engagements, or support for open-source apps.',
+                description: 'Build lesson feeds and multimedia content blocks for the English with Lidia Android app.',
                 keywords: [
-                    'contact Mihai Cristian Condrea',
-                    'hire Android developer Romania',
-                    'Jetpack Compose collaboration',
-                    'open source app support'
+                    'English with Lidia API',
+                    'lesson JSON builder',
+                    'multimedia lesson editor'
                 ],
-                canonicalSlug: 'contact',
+                canonicalSlug: 'english-with-lidia-api',
                 openGraph: {
-                    title: 'Contact Mihai | Android Developer',
-                    description: 'Contact Mihai-Cristian Condrea to discuss Android development collaborations, UI design engagements, or support for open-source apps.',
+                    title: 'English with Lidia API workspace',
+                    description: 'Build lesson feeds and multimedia content blocks for the English with Lidia Android app.',
                     type: 'website'
                 },
                 twitter: {
-                    title: 'Contact Mihai | Android Developer',
-                    description: 'Contact Mihai-Cristian Condrea to discuss Android development collaborations, UI design engagements, or support for open-source apps.'
+                    title: 'English with Lidia API workspace',
+                    description: 'Build lesson feeds and multimedia content blocks for the English with Lidia Android app.'
                 }
             }
         },
         {
-            id: 'about-me',
-            path: 'pages/drawer/about-me.html',
-            title: 'About Me',
+            id: 'android-studio-tutorials-api',
+            path: 'pages/apis/android-studio-tutorials.html',
+            title: 'Android Studio Tutorials API',
             metadata: {
-                description: 'Learn about Mihai-Cristian Condrea, a Bucharest-based Android developer crafting Jetpack Compose apps, Material Design systems, and community tutorials.',
+                description: 'Design home feed cards and Compose-ready lesson content for Android Studio Tutorials.',
                 keywords: [
-                    'Mihai Cristian Condrea biography',
-                    'Bucharest Android developer',
-                    'Jetpack Compose expert',
-                    'Material Design UI engineer'
+                    'Android Studio Tutorials API',
+                    'Compose lesson JSON',
+                    'Android tutorial builder'
                 ],
-                canonicalSlug: 'about-me',
+                canonicalSlug: 'android-studio-tutorials-api',
                 openGraph: {
-                    title: 'About Mihai-Cristian Condrea',
-                    description: 'Learn about Mihai-Cristian Condrea, a Bucharest-based Android developer crafting Jetpack Compose apps, Material Design systems, and community tutorials.',
-                    type: 'profile'
+                    title: 'Android Studio Tutorials API workspace',
+                    description: 'Design home feed cards and Compose-ready lesson content for Android Studio Tutorials.',
+                    type: 'website'
                 },
                 twitter: {
-                    title: 'About Mihai-Cristian Condrea',
-                    description: 'Learn about Mihai-Cristian Condrea, a Bucharest-based Android developer crafting Jetpack Compose apps, Material Design systems, and community tutorials.'
-                }
-            }
-        },
-        {
-            id: 'ads-help-center',
-            path: 'pages/drawer/more/apps/ads-help-center.html',
-            title: 'Ads Help Center',
-            metadata: {
-                description: 'Understand how Mihai-Cristian Condrea integrates advertising across Android apps, including consent flows, personalization controls, and GDPR compliance.',
-                keywords: [
-                    'Mihai Cristian Condrea ads help',
-                    'Android app advertising transparency',
-                    'Consent mode v2 guidance',
-                    'GDPR compliant mobile ads'
-                ],
-                canonicalSlug: 'ads-help-center',
-                openGraph: {
-                    title: 'Advertising Transparency | Mihai-Cristian Condrea',
-                    description: 'Understand how Mihai-Cristian Condrea integrates advertising across Android apps, including consent flows, personalization controls, and GDPR compliance.',
-                    type: 'article'
-                },
-                twitter: {
-                    title: 'Advertising Transparency | Mihai-Cristian Condrea',
-                    description: 'Understand how Mihai-Cristian Condrea integrates advertising across Android apps, including consent flows, personalization controls, and GDPR compliance.'
-                }
-            }
-        },
-        {
-            id: 'legal-notices',
-            path: 'pages/drawer/more/apps/legal-notices.html',
-            title: 'Legal Notices',
-            metadata: {
-                description: 'Review software licenses and third-party acknowledgments for Mihai-Cristian Condrea\'s Android and web applications.',
-                keywords: [
-                    'Mihai Cristian Condrea legal notices',
-                    'third party licenses Android apps',
-                    'open source acknowledgments',
-                    'software attribution list'
-                ],
-                canonicalSlug: 'legal-notices',
-                openGraph: {
-                    title: 'Legal Notices | Mihai-Cristian Condrea',
-                    description: 'Review software licenses and third-party acknowledgments for Mihai-Cristian Condrea\'s Android and web applications.',
-                    type: 'article'
-                },
-                twitter: {
-                    title: 'Legal Notices | Mihai-Cristian Condrea',
-                    description: 'Review software licenses and third-party acknowledgments for Mihai-Cristian Condrea\'s Android and web applications.'
+                    title: 'Android Studio Tutorials API workspace',
+                    description: 'Design home feed cards and Compose-ready lesson content for Android Studio Tutorials.'
                 }
             }
         },
         {
             id: 'code-of-conduct',
-            path: 'pages/drawer/more/code-of-conduct.html',
+            path: 'pages/settings/code-of-conduct.html',
             title: 'Code of Conduct',
             metadata: {
-                description: 'Read the community code of conduct guiding respectful collaboration across Mihai-Cristian Condrea\'s projects and communication channels.',
+                description: 'Understand the collaboration guidelines that keep the D4rK API Console productive and respectful.',
                 keywords: [
-                    'Mihai Cristian Condrea code of conduct',
-                    'open source community guidelines',
-                    'inclusive collaboration standards',
-                    'developer communication policy'
+                    'D4rK API Console code of conduct',
+                    'collaboration guidelines',
+                    'API workspace policy'
                 ],
                 canonicalSlug: 'code-of-conduct',
                 openGraph: {
-                    title: 'Code of Conduct | Mihai-Cristian Condrea',
-                    description: 'Read the community code of conduct guiding respectful collaboration across Mihai-Cristian Condrea\'s projects and communication channels.',
+                    title: 'Code of Conduct | D4rK API Console',
+                    description: 'Understand the collaboration guidelines that keep the D4rK API Console productive and respectful.',
                     type: 'article'
                 },
                 twitter: {
-                    title: 'Code of Conduct | Mihai-Cristian Condrea',
-                    description: 'Read the community code of conduct guiding respectful collaboration across Mihai-Cristian Condrea\'s projects and communication channels.'
-                }
-            }
-        },
-        {
-            id: 'privacy-policy-end-user-software',
-            path: 'pages/drawer/more/apps/privacy-policy-apps.html',
-            title: 'Privacy Policy – End-User Software',
-            metadata: {
-                description: 'Review the privacy policy for Mihai-Cristian Condrea\'s Android applications covering analytics, consent mode, advertising IDs, and crash reporting.',
-                keywords: [
-                    'Android app privacy policy',
-                    'Mihai Cristian Condrea software privacy',
-                    'Firebase analytics consent',
-                    'AdMob data usage disclosure'
-                ],
-                canonicalSlug: 'privacy-policy-end-user-software',
-                openGraph: {
-                    title: 'Android App Privacy Policy | Mihai-Cristian Condrea',
-                    description: 'Review the privacy policy for Mihai-Cristian Condrea\'s Android applications covering analytics, consent mode, advertising IDs, and crash reporting.',
-                    type: 'article'
-                },
-                twitter: {
-                    title: 'Android App Privacy Policy | Mihai-Cristian Condrea',
-                    description: 'Review the privacy policy for Mihai-Cristian Condrea\'s Android applications covering analytics, consent mode, advertising IDs, and crash reporting.'
-                }
-            }
-        },
-        {
-            id: 'terms-of-service-end-user-software',
-            path: 'pages/drawer/more/apps/terms-of-service-apps.html',
-            title: 'Terms of Service – End-User Software',
-            metadata: {
-                description: 'Understand the terms of service governing Mihai-Cristian Condrea\'s Android apps, including licensing, in-app purchases, and user responsibilities.',
-                keywords: [
-                    'Android app terms of service',
-                    'Mihai Cristian Condrea app license',
-                    'in-app purchase policy',
-                    'user responsibilities mobile apps'
-                ],
-                canonicalSlug: 'terms-of-service-end-user-software',
-                openGraph: {
-                    title: 'Android App Terms of Service | Mihai-Cristian Condrea',
-                    description: 'Understand the terms of service governing Mihai-Cristian Condrea\'s Android apps, including licensing, in-app purchases, and user responsibilities.',
-                    type: 'article'
-                },
-                twitter: {
-                    title: 'Android App Terms of Service | Mihai-Cristian Condrea',
-                    description: 'Understand the terms of service governing Mihai-Cristian Condrea\'s Android apps, including licensing, in-app purchases, and user responsibilities.'
-                }
-            }
-        },
-        {
-            id: 'resume',
-            path: 'pages/resume/resume.html',
-            title: "Mihai's Resume",
-            onLoad: runResumeOnLoad,
-            metadata: {
-                description: 'Use Mihai-Cristian Condrea\'s interactive resume builder to assemble, preview, and download a polished CV template for Android developers.',
-                keywords: [
-                    'Android developer resume builder',
-                    'Mihai Cristian Condrea CV template',
-                    'Jetpack Compose resume generator',
-                    'download professional resume PDF'
-                ],
-                canonicalSlug: 'resume',
-                openGraph: {
-                    title: 'Resume Builder | Mihai-Cristian Condrea',
-                    description: 'Use Mihai-Cristian Condrea\'s interactive resume builder to assemble, preview, and download a polished CV template for Android developers.',
-                    type: 'website'
-                },
-                twitter: {
-                    title: 'Resume Builder | Mihai-Cristian Condrea',
-                    description: 'Use Mihai-Cristian Condrea\'s interactive resume builder to assemble, preview, and download a polished CV template for Android developers.'
+                    title: 'Code of Conduct | D4rK API Console',
+                    description: 'Understand the collaboration guidelines that keep the D4rK API Console productive and respectful.'
                 }
             }
         }

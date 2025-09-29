@@ -1,0 +1,95 @@
+<div id="appToolkitPage" class="page-section active">
+  <header class="page-header">
+    <h1>App Toolkit API workspace</h1>
+    <p>
+      Configure the JSON payload that powers the App Toolkit catalog. The
+      builder mirrors the production schema so you can manage listings for both
+      debug and release channels with confidence.
+    </p>
+  </header>
+
+  <md-filled-card class="guidance-card">
+    <div class="card-body">
+      <h2>Before you start</h2>
+      <ul>
+        <li>
+          Each app entry must include <strong>name</strong>,
+          <strong>packageName</strong>, <strong>category</strong>, and an
+          <strong>iconLogo</strong> URL.
+        </li>
+        <li>
+          Screenshots appear in the same order they are added. Provide at least
+          three URLs for release builds.
+        </li>
+        <li>
+          When you are done, export the JSON and replace the existing file in
+          <code>App Toolkit/[debug|release]/en/home/api_android_apps.json</code>.
+        </li>
+      </ul>
+    </div>
+  </md-filled-card>
+
+  <section
+    class="api-builder"
+    id="appToolkitBuilder"
+    data-builder-type="app-toolkit"
+  >
+    <div class="builder-toolbar">
+      <md-filled-button id="appToolkitAddApp">
+        <md-icon slot="icon"
+          ><span class="material-symbols-outlined">add</span></md-icon
+        >
+        Add app
+      </md-filled-button>
+      <md-outlined-button id="appToolkitImportButton">
+        <md-icon slot="icon"
+          ><span class="material-symbols-outlined">upload</span></md-icon
+        >
+        Import JSON
+      </md-outlined-button>
+      <input
+        type="file"
+        id="appToolkitImportInput"
+        accept="application/json"
+        hidden
+      />
+      <md-text-button id="appToolkitResetButton">
+        <md-icon slot="icon"
+          ><span class="material-symbols-outlined">refresh</span></md-icon
+        >
+        Clear workspace
+      </md-text-button>
+    </div>
+
+    <div class="builder-layout">
+      <div class="builder-forms" id="appToolkitEntries" aria-live="polite"></div>
+      <aside class="builder-preview" aria-label="JSON preview">
+        <div class="preview-header">
+          <h2>Preview &amp; export</h2>
+          <p>Changes update automatically as you edit entries.</p>
+        </div>
+        <textarea
+          id="appToolkitPreview"
+          class="preview-textarea"
+          readonly
+          spellcheck="false"
+          aria-label="App Toolkit JSON preview"
+        ></textarea>
+        <div class="preview-actions">
+          <md-filled-tonal-button id="appToolkitCopyButton">
+            <md-icon slot="icon"
+              ><span class="material-symbols-outlined">content_copy</span></md-icon
+            >
+            Copy JSON
+          </md-filled-tonal-button>
+          <md-outlined-button id="appToolkitDownloadButton" trailing-icon>
+            Download
+            <md-icon slot="icon"
+              ><span class="material-symbols-outlined">download</span></md-icon
+            >
+          </md-outlined-button>
+        </div>
+      </aside>
+    </div>
+  </section>
+</div>

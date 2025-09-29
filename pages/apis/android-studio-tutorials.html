@@ -1,0 +1,236 @@
+<div id="androidTutorialsWorkspace" class="page-section active">
+  <header class="page-header">
+    <h1>Android Studio Tutorials API workspace</h1>
+    <p>
+      Create home feed lessons and deep lesson content for the Android Studio
+      Tutorials app. The builder keeps ad placements, tags, and content types in
+      sync with the documented JSON contracts.
+    </p>
+  </header>
+
+  <div class="pager" id="androidPager" data-pager>
+    <div class="pager-tabs" role="tablist">
+      <button
+        type="button"
+        class="pager-tab active"
+        data-page="home"
+        role="tab"
+        aria-selected="true"
+      >
+        Home API
+      </button>
+      <button
+        type="button"
+        class="pager-tab"
+        data-page="lesson"
+        role="tab"
+        aria-selected="false"
+      >
+        Lesson API
+      </button>
+    </div>
+    <div class="pager-pages">
+      <section class="pager-page active" data-page="home" role="tabpanel">
+        <md-filled-card class="guidance-card">
+          <div class="card-body">
+            <h2>Home feed cards</h2>
+            <ul>
+              <li>
+                Lesson cards use <strong>lesson_type</strong> values like
+                <code>full_banner</code> or <code>square_image</code> and require
+                title, description, and deep link.
+              </li>
+              <li>
+                Ads and promotional slots are represented by
+                <strong>lesson_id</strong> constants such as
+                <code>ad_view_banner_large</code>.
+              </li>
+            </ul>
+          </div>
+        </md-filled-card>
+
+        <section
+          class="api-builder"
+          id="androidHomeBuilder"
+          data-builder-type="android-home"
+        >
+          <div class="builder-toolbar">
+            <md-filled-button id="androidHomeAddCard">
+              <md-icon slot="icon"
+                ><span class="material-symbols-outlined">add</span></md-icon
+              >
+              Add card
+            </md-filled-button>
+            <md-outlined-button id="androidHomeImportButton">
+              <md-icon slot="icon"
+                ><span class="material-symbols-outlined">upload</span></md-icon
+              >
+              Import JSON
+            </md-outlined-button>
+            <input
+              type="file"
+              id="androidHomeImportInput"
+              accept="application/json"
+              hidden
+            />
+            <md-text-button id="androidHomeResetButton">
+              <md-icon slot="icon"
+                ><span class="material-symbols-outlined">refresh</span></md-icon
+              >
+              Clear cards
+            </md-text-button>
+          </div>
+
+          <div class="builder-layout">
+            <div
+              class="builder-forms"
+              id="androidHomeEntries"
+              aria-live="polite"
+            ></div>
+            <aside class="builder-preview" aria-label="JSON preview">
+              <div class="preview-header">
+                <h2>Preview &amp; export</h2>
+                <p>Validate your payload before updating the repo.</p>
+              </div>
+              <textarea
+                id="androidHomePreview"
+                class="preview-textarea"
+                readonly
+                spellcheck="false"
+                aria-label="Android Studio Tutorials home JSON preview"
+              ></textarea>
+              <div class="preview-actions">
+                <md-filled-tonal-button id="androidHomeCopyButton">
+                  <md-icon slot="icon"
+                    ><span class="material-symbols-outlined"
+                      >content_copy</span
+                    ></md-icon
+                  >
+                  Copy JSON
+                </md-filled-tonal-button>
+                <md-outlined-button id="androidHomeDownloadButton" trailing-icon>
+                  Download
+                  <md-icon slot="icon"
+                    ><span class="material-symbols-outlined"
+                      >download</span
+                    ></md-icon
+                  >
+                </md-outlined-button>
+              </div>
+            </aside>
+          </div>
+        </section>
+      </section>
+
+      <section class="pager-page" data-page="lesson" role="tabpanel">
+        <md-filled-card class="guidance-card">
+          <div class="card-body">
+            <h2>Lesson content blocks</h2>
+            <ul>
+              <li>
+                Add headers, text, code snippets, ads, and imagery to build a
+                linear learning experience.
+              </li>
+              <li>
+                Code blocks support Kotlin, Java, and XML languages; remember to
+                paste escaped HTML when needed.
+              </li>
+            </ul>
+          </div>
+        </md-filled-card>
+
+        <section
+          class="api-builder"
+          id="androidLessonBuilder"
+          data-builder-type="android-lesson"
+        >
+          <div class="builder-toolbar">
+            <md-outlined-text-field
+              id="androidLessonTitle"
+              label="Lesson title"
+              placeholder="Displaying transient messages with Snackbars"
+              supporting-text="Shown in the lesson header"
+              class="lesson-title-field"
+            ></md-outlined-text-field>
+            <div class="toolbar-actions">
+              <md-filled-button id="androidLessonAddBlock">
+                <md-icon slot="icon"
+                  ><span class="material-symbols-outlined">add</span></md-icon
+                >
+                Add block
+              </md-filled-button>
+              <md-outlined-button id="androidLessonImportButton">
+                <md-icon slot="icon"
+                  ><span class="material-symbols-outlined">upload</span></md-icon
+                >
+                Import JSON
+              </md-outlined-button>
+              <input
+                type="file"
+                id="androidLessonImportInput"
+                accept="application/json"
+                hidden
+              />
+              <md-text-button id="androidLessonResetButton">
+                <md-icon slot="icon"
+                  ><span class="material-symbols-outlined"
+                    >refresh</span
+                  ></md-icon
+                >
+                Clear blocks
+              </md-text-button>
+            </div>
+          </div>
+
+          <div class="builder-layout">
+            <div class="builder-forms">
+              <div
+                class="builder-field-collection"
+                id="androidLessonMetadata"
+              ></div>
+              <div
+                class="builder-field-collection"
+                id="androidLessonBlocks"
+                aria-live="polite"
+              ></div>
+            </div>
+            <aside class="builder-preview" aria-label="JSON preview">
+              <div class="preview-header">
+                <h2>Preview &amp; export</h2>
+                <p>Preview updates before committing the JSON file.</p>
+              </div>
+              <textarea
+                id="androidLessonPreview"
+                class="preview-textarea"
+                readonly
+                spellcheck="false"
+                aria-label="Android Studio Tutorials lesson JSON preview"
+              ></textarea>
+              <div class="preview-actions">
+                <md-filled-tonal-button id="androidLessonCopyButton">
+                  <md-icon slot="icon"
+                    ><span class="material-symbols-outlined"
+                      >content_copy</span
+                    ></md-icon
+                  >
+                  Copy JSON
+                </md-filled-tonal-button>
+                <md-outlined-button
+                  id="androidLessonDownloadButton"
+                  trailing-icon
+                >
+                  Download
+                  <md-icon slot="icon"
+                    ><span class="material-symbols-outlined"
+                      >download</span
+                    ></md-icon
+                  >
+                </md-outlined-button>
+              </div>
+            </aside>
+          </div>
+        </section>
+      </section>
+    </div>
+  </div>
+</div>

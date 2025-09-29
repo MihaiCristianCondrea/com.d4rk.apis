@@ -173,7 +173,7 @@ describe('loadPageContent behavior', () => {
 
     window.RouterContentLoader = {
       fetchPageMarkup,
-      DEFAULT_PAGE_TITLE: "Mihai's Profile"
+      DEFAULT_PAGE_TITLE: 'D4rK API Console'
     };
 
     const updateTitle = jest.fn();
@@ -588,10 +588,10 @@ describe('RouterContentLoader.fetchPageMarkup', () => {
 
     expect(fetchSpy).not.toHaveBeenCalled();
     expect(result.status).toBe('success');
-    expect(result.title).toBe("Mihai's Profile");
+    expect(result.title).toBe('D4rK API Console');
     expect(result.html).toBe(initialHomeHTML);
-    expect(typeof result.onReady).toBe('function');
-    expect(result.sourceTitle).toBe("Mihai's Profile");
+    expect(result.onReady).toBeNull();
+    expect(result.sourceTitle).toBe('D4rK API Console');
   });
 
   test('returns empty content for non-home routes without a path', async () => {
