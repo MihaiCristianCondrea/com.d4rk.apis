@@ -117,6 +117,90 @@
       </div>
     </md-filled-card>
 
+    <md-filled-card class="builder-remote-card" id="appToolkitGithubCard">
+      <div class="card-body">
+        <div class="builder-remote-header">
+          <div>
+            <h2>Publish to GitHub</h2>
+            <p>
+              Use the GitHub Contents API to update the catalog once the JSON
+              preview is valid. Tokens are used only for this request and never
+              stored.
+            </p>
+          </div>
+        </div>
+        <div class="builder-github-fields">
+          <label class="api-field" for="appToolkitGithubToken">
+            <span class="api-field-label">Personal access token</span>
+            <input
+              id="appToolkitGithubToken"
+              class="api-input"
+              type="password"
+              autocomplete="off"
+              spellcheck="false"
+              placeholder="ghp_..."
+              aria-describedby="appToolkitGithubTokenHelp"
+            />
+            <span class="api-field-helper" id="appToolkitGithubTokenHelp"
+              >Requires the <code>repo</code> scope.</span
+            >
+          </label>
+          <label class="api-field" for="appToolkitGithubRepo">
+            <span class="api-field-label">Repository (owner/name)</span>
+            <input
+              id="appToolkitGithubRepo"
+              class="api-input"
+              type="text"
+              value="MihaiCristianCondrea/com.d4rk.apis"
+              spellcheck="false"
+            />
+          </label>
+          <label class="api-field" for="appToolkitGithubBranch">
+            <span class="api-field-label">Branch</span>
+            <input
+              id="appToolkitGithubBranch"
+              class="api-input"
+              type="text"
+              value="main"
+              spellcheck="false"
+            />
+          </label>
+          <label class="api-field" for="appToolkitGithubMessage">
+            <span class="api-field-label">Commit message</span>
+            <input
+              id="appToolkitGithubMessage"
+              class="api-input"
+              type="text"
+              value="chore(app-toolkit): update catalog"
+              spellcheck="false"
+            />
+          </label>
+          <label class="api-field" for="appToolkitGithubChannel">
+            <span class="api-field-label">Target channel</span>
+            <select id="appToolkitGithubChannel" class="api-select">
+              <option value="debug">Debug</option>
+              <option value="release">Release</option>
+              <option value="both">Debug &amp; Release</option>
+            </select>
+          </label>
+        </div>
+        <div class="builder-github-actions">
+          <md-filled-button id="appToolkitGithubSubmit">
+            <md-icon slot="icon"
+              ><span class="material-symbols-outlined">cloud_upload</span></md-icon
+            >
+            Publish JSON
+          </md-filled-button>
+          <div
+            class="preview-validation"
+            id="appToolkitGithubStatus"
+            role="status"
+            aria-live="polite"
+          ></div>
+        </div>
+      </div>
+    </md-filled-card>
+
     <div class="builder-layout">
       <div class="builder-forms" id="appToolkitEntries" aria-live="polite"></div>
       <aside class="builder-preview" aria-label="JSON preview">

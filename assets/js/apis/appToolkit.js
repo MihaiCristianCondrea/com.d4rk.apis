@@ -6,6 +6,10 @@
     }
 
     const DEFAULT_FILENAME = 'api_android_apps.json';
+    const GITHUB_CHANNEL_PATHS = {
+        debug: 'App Toolkit/debug/en/home/api_android_apps.json',
+        release: 'App Toolkit/release/en/home/api_android_apps.json'
+    };
 
     function initAppToolkitWorkspace() {
         const builderRoot = document.getElementById('appToolkitBuilder');
@@ -27,10 +31,18 @@
         const presetButtons = Array.from(
             document.querySelectorAll('[data-app-toolkit-preset]')
         );
+        const githubTokenInput = document.getElementById('appToolkitGithubToken');
+        const githubRepoInput = document.getElementById('appToolkitGithubRepo');
+        const githubBranchInput = document.getElementById('appToolkitGithubBranch');
+        const githubMessageInput = document.getElementById('appToolkitGithubMessage');
+        const githubChannelSelect = document.getElementById('appToolkitGithubChannel');
+        const githubSubmitButton = document.getElementById('appToolkitGithubSubmit');
+        const githubStatus = document.getElementById('appToolkitGithubStatus');
 
         const state = {
             apps: [createEmptyApp()]
         };
+        let lastPreviewState = { success: false, payload: null };
 
         function createEmptyApp() {
             return {
@@ -44,7 +56,7 @@
         }
 
         function updatePreview() {
-            utils.renderJsonPreview({
+            const result = utils.renderJsonPreview({
                 previewArea,
                 statusElement: validationStatus,
                 data: state.apps,
@@ -66,6 +78,8 @@
                         : `Valid JSON · ${count} app entries`;
                 }
             });
+            lastPreviewState = result && typeof result === 'object' ? result : { success: false };
+            clearGithubStatus();
         }
 
         function sanitizeAppEntry(app) {
@@ -295,10 +309,10 @@
             }, 1500);
         }
 
-        function setLoadingState(button, isLoading) {
+        function setLoadingState(button, isLoading, loadingLabel = 'Fetching…') {
             if (!button) return;
             const LOADING_LABEL =
-                '<span class="material-symbols-outlined">hourglass_empty</span><span>Fetching…</span>';
+                `<span class="material-symbols-outlined">hourglass_empty</span><span>${loadingLabel}</span>`;
             if (isLoading) {
                 if (!button.dataset.originalLabel) {
                     button.dataset.originalLabel = button.innerHTML;
@@ -363,6 +377,221 @@
             }
         }
 
+        function clearGithubStatus() {
+            if (!githubStatus) {
+                return;
+            }
+            githubStatus.dataset.status = '';
+            githubStatus.innerHTML = '';
+        }
+
+        function setGithubStatus({ status = 'success', message = '' }) {
+            if (!githubStatus) {
+                return;
+            }
+            utils.setValidationStatus(githubStatus, { status, message });
+        }
+
+        function parseRepository(value) {
+            const trimmed = utils.trimString(value || '');
+            const segments = trimmed.split('/').filter(Boolean);
+            if (segments.length !== 2) {
+                throw new Error('Repository must be provided as owner/name.');
+            }
+            return { owner: segments[0], repo: segments[1] };
+        }
+
+        function getChannelLabel(channel) {
+            return channel === 'debug' ? 'Debug' : 'Release';
+        }
+
+        function encodeGithubPath(path) {
+            return path
+                .split('/')
+                .map((segment) => encodeURIComponent(segment))
+                .join('/');
+        }
+
+        function encodeContentToBase64(text) {
+            const string = typeof text === 'string' ? text : String(text ?? '');
+            if (typeof TextEncoder !== 'undefined') {
+                const encoder = new TextEncoder();
+                const bytes = encoder.encode(string);
+                let binary = '';
+                bytes.forEach((byte) => {
+                    binary += String.fromCharCode(byte);
+                });
+                return btoa(binary);
+            }
+            if (typeof btoa !== 'undefined') {
+                return btoa(unescape(encodeURIComponent(string)));
+            }
+            throw new Error('Base64 encoding is not supported in this environment.');
+        }
+
+        async function readGithubError(response) {
+            let details = {};
+            try {
+                details = await response.json();
+            } catch (error) {
+                // ignore parsing errors, fall back to status text
+            }
+            const message =
+                details?.message || `GitHub request failed: ${response.status} ${response.statusText}`;
+            if (Array.isArray(details?.errors) && details.errors.length) {
+                const reasons = details.errors
+                    .map((entry) => entry?.message || entry?.code)
+                    .filter(Boolean)
+                    .join(', ');
+                if (reasons) {
+                    return `${message} (${reasons})`;
+                }
+            }
+            return message;
+        }
+
+        async function publishToGithub() {
+            if (!githubSubmitButton) {
+                return;
+            }
+
+            const token = utils.trimString(githubTokenInput ? githubTokenInput.value : '');
+            if (!token) {
+                setGithubStatus({ status: 'error', message: 'Provide a GitHub personal access token.' });
+                alert('Provide a GitHub personal access token before publishing.');
+                return;
+            }
+
+            if (!validationStatus || validationStatus.dataset.status !== 'success' || !lastPreviewState.success) {
+                setGithubStatus({ status: 'error', message: 'Resolve JSON validation issues before publishing.' });
+                alert('Resolve JSON validation issues shown in the preview before publishing.');
+                return;
+            }
+
+            if (!previewArea || !previewArea.value.trim()) {
+                setGithubStatus({ status: 'error', message: 'No JSON payload available to publish.' });
+                alert('There is no JSON payload to publish.');
+                return;
+            }
+
+            let repository;
+            try {
+                repository = parseRepository(githubRepoInput ? githubRepoInput.value : '');
+            } catch (error) {
+                setGithubStatus({ status: 'error', message: error.message });
+                alert(error.message);
+                return;
+            }
+
+            const branch = utils.trimString(githubBranchInput ? githubBranchInput.value : '') || 'main';
+            const commitMessageBase =
+                utils.trimString(githubMessageInput ? githubMessageInput.value : '') ||
+                'chore(app-toolkit): update catalog';
+            const channelSelection = githubChannelSelect ? githubChannelSelect.value : 'debug';
+            const channels =
+                channelSelection === 'both'
+                    ? ['debug', 'release']
+                    : channelSelection === 'release'
+                        ? ['release']
+                        : ['debug'];
+            const jsonText = previewArea.value;
+            const encodedContent = encodeContentToBase64(jsonText);
+
+            setLoadingState(githubSubmitButton, true, 'Publishing…');
+
+            try {
+                const headers = {
+                    Accept: 'application/vnd.github+json',
+                    Authorization: `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                    'X-GitHub-Api-Version': '2022-11-28'
+                };
+
+                const results = [];
+                for (const channel of channels) {
+                    const channelLabel = getChannelLabel(channel);
+                    setGithubStatus({
+                        status: 'warning',
+                        message: `Uploading ${channelLabel} JSON to ${repository.owner}/${repository.repo}…`
+                    });
+
+                    const path = GITHUB_CHANNEL_PATHS[channel];
+                    const encodedPath = encodeGithubPath(path);
+                    const contentsUrl = `https://api.github.com/repos/${repository.owner}/${repository.repo}/contents/${encodedPath}`;
+                    let currentSha;
+
+                    const getResponse = await fetch(`${contentsUrl}?ref=${encodeURIComponent(branch)}`, {
+                        headers,
+                        cache: 'no-store'
+                    });
+
+                    if (getResponse.ok) {
+                        const payload = await getResponse.json();
+                        currentSha = payload?.sha;
+                    } else if (getResponse.status !== 404) {
+                        const message = await readGithubError(getResponse);
+                        throw new Error(message);
+                    }
+
+                    const commitMessage =
+                        channels.length > 1
+                            ? `${commitMessageBase} · ${channelLabel}`
+                            : commitMessageBase;
+
+                    const putBody = {
+                        message: commitMessage,
+                        content: encodedContent,
+                        branch
+                    };
+                    if (currentSha) {
+                        putBody.sha = currentSha;
+                    }
+
+                    const putResponse = await fetch(contentsUrl, {
+                        method: 'PUT',
+                        headers,
+                        body: JSON.stringify(putBody)
+                    });
+
+                    if (!putResponse.ok) {
+                        const message = await readGithubError(putResponse);
+                        throw new Error(message);
+                    }
+
+                    const putResult = await putResponse.json();
+                    results.push({
+                        channel: channelLabel,
+                        sha: putResult?.commit?.sha
+                    });
+                }
+
+                const summary = results
+                    .map((entry) =>
+                        entry.sha
+                            ? `${entry.channel} (#${String(entry.sha).substring(0, 7)})`
+                            : entry.channel
+                    )
+                    .join(', ');
+                setGithubStatus({
+                    status: 'success',
+                    message: `Published ${summary} to ${repository.owner}/${repository.repo}@${branch}.`
+                });
+                flashButton(
+                    githubSubmitButton,
+                    '<span class="material-symbols-outlined">check</span><span>Published</span>'
+                );
+            } catch (error) {
+                console.error('AppToolkit: Failed to publish via GitHub API.', error);
+                setGithubStatus({
+                    status: 'error',
+                    message: error.message || 'GitHub publish request failed.'
+                });
+                alert(error.message || 'GitHub publish request failed.');
+            } finally {
+                setLoadingState(githubSubmitButton, false);
+            }
+        }
+
         if (addButton) {
             addButton.addEventListener('click', () => {
                 state.apps.push(createEmptyApp());
@@ -417,6 +646,12 @@
                         fetchRemoteJson(presetUrl, { fromPreset: true });
                     }
                 });
+            });
+        }
+
+        if (githubSubmitButton) {
+            githubSubmitButton.addEventListener('click', () => {
+                publishToGithub();
             });
         }
 
