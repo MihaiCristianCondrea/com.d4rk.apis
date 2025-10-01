@@ -131,6 +131,17 @@
             needsScreenshotsCount: 0,
             missingRequiredCount: 0
         };
+        const supportsFileSystemAccess =
+            typeof window !== 'undefined' && typeof window.showOpenFilePicker === 'function';
+        const githubTokenHandleStore = createFileHandleStore({
+            dbName: 'AppToolkitGithubToken',
+            storeName: 'fileHandles',
+            key: 'tokenFile'
+        });
+        let githubTokenFileHandle = null;
+        let githubTokenHandleLoaded = false;
+        let githubTokenFallbackFile = null;
+
         if (typeof sessionStorage !== 'undefined') {
             try {
                 sessionNotesStorage = sessionStorage;
@@ -1398,38 +1409,354 @@
             return lines[0];
         }
 
-        function handleGithubTokenFileSelection(file) {
-            if (!file) {
+        function createFileHandleStore({ dbName, storeName, key }) {
+            if (typeof indexedDB === 'undefined') {
+                return {
+                    async set() {
+                        // IndexedDB is unavailable; persist in-memory only.
+                    },
+                    async clear() {
+                        // IndexedDB is unavailable; nothing to clear.
+                    },
+                    async get() {
+                        return null;
+                    }
+                };
+            }
+
+            function openDb() {
+                return new Promise((resolve, reject) => {
+                    const request = indexedDB.open(dbName, 1);
+                    request.addEventListener('upgradeneeded', () => {
+                        const db = request.result;
+                        if (!db.objectStoreNames.contains(storeName)) {
+                            db.createObjectStore(storeName);
+                        }
+                    });
+                    request.addEventListener('success', () => {
+                        resolve(request.result);
+                    });
+                    request.addEventListener('error', () => {
+                        reject(request.error);
+                    });
+                });
+            }
+
+            async function runTransaction(mode, executor) {
+                const db = await openDb();
+                return new Promise((resolve, reject) => {
+                    const tx = db.transaction(storeName, mode);
+                    const store = tx.objectStore(storeName);
+                    let settled = false;
+
+                    const safeResolve = (value) => {
+                        if (!settled) {
+                            settled = true;
+                            resolve(value);
+                        }
+                    };
+
+                    const safeReject = (error) => {
+                        if (!settled) {
+                            settled = true;
+                            reject(error);
+                        }
+                    };
+
+                    tx.addEventListener('complete', () => {
+                        db.close();
+                        safeResolve(undefined);
+                    });
+                    tx.addEventListener('abort', () => {
+                        const error = tx.error || new Error('Transaction aborted.');
+                        db.close();
+                        safeReject(error);
+                    });
+                    tx.addEventListener('error', () => {
+                        // handled via abort
+                    });
+                    executor(store, safeResolve, safeReject);
+                });
+            }
+
+            return {
+                async get() {
+                    try {
+                        const db = await openDb();
+                        return await new Promise((resolve, reject) => {
+                            const tx = db.transaction(storeName, 'readonly');
+                            const store = tx.objectStore(storeName);
+                            const request = store.get(key);
+                            request.addEventListener('success', () => {
+                                resolve(request.result || null);
+                            });
+                            request.addEventListener('error', () => {
+                                reject(request.error);
+                            });
+                            tx.addEventListener('complete', () => {
+                                db.close();
+                            });
+                            tx.addEventListener('abort', () => {
+                                const error = tx.error || request.error || new Error('Transaction aborted.');
+                                db.close();
+                                reject(error);
+                            });
+                        });
+                    } catch (error) {
+                        console.warn('AppToolkit: Unable to read stored GitHub token file handle.', error);
+                        return null;
+                    }
+                },
+                async set(value) {
+                    try {
+                        await runTransaction('readwrite', (store, resolve, reject) => {
+                            const request = store.put(value, key);
+                            request.addEventListener('success', () => {
+                                resolve();
+                            });
+                            request.addEventListener('error', () => {
+                                reject(request.error);
+                            });
+                        });
+                    } catch (error) {
+                        console.warn('AppToolkit: Unable to store GitHub token file handle.', error);
+                    }
+                },
+                async clear() {
+                    try {
+                        await runTransaction('readwrite', (store, resolve, reject) => {
+                            const request = store.delete(key);
+                            request.addEventListener('success', () => {
+                                resolve();
+                            });
+                            request.addEventListener('error', () => {
+                                reject(request.error);
+                            });
+                        });
+                    } catch (error) {
+                        console.warn('AppToolkit: Unable to clear stored GitHub token file handle.', error);
+                    }
+                }
+            };
+        }
+
+        async function persistGithubTokenFileHandle(handle) {
+            if (!supportsFileSystemAccess || !handle) {
                 return;
             }
-            const reader = new FileReader();
-            reader.addEventListener('load', () => {
+            githubTokenFileHandle = handle;
+            githubTokenHandleLoaded = true;
+            await githubTokenHandleStore.set(handle);
+        }
+
+        async function clearPersistedGithubTokenFileHandle() {
+            if (supportsFileSystemAccess) {
+                await githubTokenHandleStore.clear();
+            }
+            githubTokenFileHandle = null;
+            githubTokenHandleLoaded = false;
+        }
+
+        async function loadPersistedGithubTokenFileHandle() {
+            if (!supportsFileSystemAccess) {
+                return null;
+            }
+            if (githubTokenFileHandle) {
+                return githubTokenFileHandle;
+            }
+            if (githubTokenHandleLoaded) {
+                return null;
+            }
+            githubTokenHandleLoaded = true;
+            const handle = await githubTokenHandleStore.get();
+            if (handle) {
+                githubTokenFileHandle = handle;
+                return handle;
+            }
+            return null;
+        }
+
+        async function ensureFileHandlePermission(handle, mode = 'read') {
+            if (!handle) {
+                return 'denied';
+            }
+            const options = { mode };
+            if (typeof handle.queryPermission === 'function') {
                 try {
-                    const text = typeof reader.result === 'string' ? reader.result : '';
-                    const token = validateGithubToken(extractGithubTokenFromText(text));
-                    if (githubTokenInput) {
-                        githubTokenInput.value = token;
+                    const status = await handle.queryPermission(options);
+                    if (status === 'granted' || status === 'denied') {
+                        return status;
                     }
-                    setGithubStatus({
-                        status: 'success',
-                        message: `Loaded token from ${file.name}.`
-                    });
                 } catch (error) {
+                    // ignore and attempt to request permission below
+                }
+            }
+            if (typeof handle.requestPermission === 'function') {
+                try {
+                    return await handle.requestPermission(options);
+                } catch (error) {
+                    return 'denied';
+                }
+            }
+            return 'denied';
+        }
+
+        async function tryReuseStoredGithubTokenHandle() {
+            let handle = githubTokenFileHandle;
+            if (!handle) {
+                handle = await loadPersistedGithubTokenFileHandle();
+            }
+            if (!handle) {
+                return false;
+            }
+            const permission = await ensureFileHandlePermission(handle, 'read');
+            if (permission !== 'granted') {
+                if (permission === 'denied') {
+                    await clearPersistedGithubTokenFileHandle();
                     setGithubStatus({
                         status: 'error',
-                        message: error.message || 'Unable to read GitHub token from file.'
+                        message: 'Access to the saved token file was denied. Pick the file again.'
                     });
-                    alert(error.message || 'Unable to read GitHub token from file.');
                 }
-            });
-            reader.addEventListener('error', () => {
+                return false;
+            }
+            try {
+                const file = await handle.getFile();
+                const success = await handleGithubTokenFileSelection(file, { handle });
+                if (!success) {
+                    await clearPersistedGithubTokenFileHandle();
+                    return false;
+                }
+                return true;
+            } catch (error) {
+                console.warn('AppToolkit: Unable to reuse stored GitHub token file.', error);
+                await clearPersistedGithubTokenFileHandle();
                 setGithubStatus({
                     status: 'error',
-                    message: `Unable to read ${file.name}.`
+                    message: 'Unable to read the saved token file. Choose it again.'
                 });
-                alert(`Unable to read ${file.name}.`);
-            });
-            reader.readAsText(file);
+                return false;
+            }
+        }
+
+        async function tryReuseFallbackGithubTokenFile() {
+            if (!githubTokenFallbackFile) {
+                return false;
+            }
+            const success = await handleGithubTokenFileSelection(githubTokenFallbackFile);
+            if (!success) {
+                githubTokenFallbackFile = null;
+                return false;
+            }
+            return true;
+        }
+
+        function shouldForceGithubTokenFilePicker(event) {
+            if (!event) {
+                return false;
+            }
+            return Boolean(event.metaKey || event.ctrlKey || event.shiftKey || event.altKey);
+        }
+
+        async function pickGithubTokenFileWithFsAccess() {
+            if (!supportsFileSystemAccess) {
+                return false;
+            }
+            let handles;
+            try {
+                handles = await window.showOpenFilePicker({
+                    multiple: false,
+                    excludeAcceptAllOption: false,
+                    types: [
+                        {
+                            description: 'Token files',
+                            accept: {
+                                'text/plain': ['.txt', '.text', '.token'],
+                                'application/json': ['.json']
+                            }
+                        }
+                    ]
+                });
+            } catch (error) {
+                if (error?.name === 'AbortError') {
+                    return true;
+                }
+                console.warn('AppToolkit: Unable to open GitHub token file picker.', error);
+                setGithubStatus({
+                    status: 'error',
+                    message: 'Unable to open the file picker. Select the token file manually.'
+                });
+                return false;
+            }
+            const handle = Array.isArray(handles) ? handles[0] : null;
+            if (!handle) {
+                return false;
+            }
+            const permission = await ensureFileHandlePermission(handle, 'read');
+            if (permission !== 'granted') {
+                if (permission === 'denied') {
+                    await clearPersistedGithubTokenFileHandle();
+                }
+                setGithubStatus({
+                    status: 'error',
+                    message: 'Allow read access to the selected token file to continue.'
+                });
+                return false;
+            }
+            try {
+                const file = await handle.getFile();
+                const success = await handleGithubTokenFileSelection(file, { handle });
+                if (!success) {
+                    await clearPersistedGithubTokenFileHandle();
+                }
+            } catch (error) {
+                console.warn('AppToolkit: Unable to read selected GitHub token file.', error);
+                setGithubStatus({
+                    status: 'error',
+                    message: 'Unable to read the selected token file.'
+                });
+                await clearPersistedGithubTokenFileHandle();
+                return false;
+            }
+            return true;
+        }
+
+        async function handleGithubTokenFileSelection(file, { handle = null } = {}) {
+            if (!file) {
+                return false;
+            }
+            try {
+                const text = await file.text();
+                const token = validateGithubToken(extractGithubTokenFromText(text));
+                if (githubTokenInput) {
+                    githubTokenInput.value = token;
+                }
+                githubTokenFallbackFile = file;
+                if (handle && supportsFileSystemAccess) {
+                    await persistGithubTokenFileHandle(handle);
+                }
+                const reuseHint =
+                    supportsFileSystemAccess || githubTokenFallbackFile
+                        ? ' Click the button again to reuse this file or hold Shift to pick a different one.'
+                        : '';
+                setGithubStatus({
+                    status: 'success',
+                    message: `Loaded token from ${file.name}.${reuseHint}`
+                });
+                return true;
+            } catch (error) {
+                githubTokenFallbackFile = null;
+                if (handle && supportsFileSystemAccess) {
+                    await clearPersistedGithubTokenFileHandle();
+                }
+                const message = error?.message || 'Unable to read GitHub token from file.';
+                setGithubStatus({
+                    status: 'error',
+                    message
+                });
+                alert(message);
+                return false;
+            }
         }
 
         function parseRepository(value) {
@@ -1697,16 +2024,38 @@
         }
 
         if (githubTokenFileButton && githubTokenFileInput) {
-            githubTokenFileButton.addEventListener('click', () => {
+            githubTokenFileButton.addEventListener('click', async (event) => {
                 clearGithubStatus();
+                const forcePicker = shouldForceGithubTokenFilePicker(event);
+                if (!forcePicker) {
+                    if (supportsFileSystemAccess) {
+                        const reused = await tryReuseStoredGithubTokenHandle();
+                        if (reused) {
+                            return;
+                        }
+                    } else {
+                        const reusedFallback = await tryReuseFallbackGithubTokenFile();
+                        if (reusedFallback) {
+                            return;
+                        }
+                    }
+                }
+
+                if (supportsFileSystemAccess) {
+                    const handled = await pickGithubTokenFileWithFsAccess();
+                    if (handled) {
+                        return;
+                    }
+                }
+
                 githubTokenFileInput.value = '';
                 githubTokenFileInput.click();
             });
-            githubTokenFileInput.addEventListener('change', () => {
+            githubTokenFileInput.addEventListener('change', async () => {
                 const file = githubTokenFileInput.files && githubTokenFileInput.files[0];
                 if (file) {
                     clearGithubStatus();
-                    handleGithubTokenFileSelection(file);
+                    await handleGithubTokenFileSelection(file);
                 }
             });
         }
