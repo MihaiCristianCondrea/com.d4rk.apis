@@ -129,6 +129,27 @@
             </p>
           </div>
         </div>
+        <div class="builder-github-note" role="note">
+          <p>
+            <strong>Create a personal access token</strong> from
+            <em>GitHub → Settings → Developer settings → Personal access tokens</em>.
+            Choose a fine-grained token when possible and limit it to the
+            repository you are publishing.
+          </p>
+          <ul>
+            <li>
+              Fine-grained tokens: enable
+              <strong>Repository permissions → Contents: Read &amp; write</strong>
+              (Metadata is added automatically).
+            </li>
+            <li>
+              Classic tokens: select only
+              <code>public_repo</code> for public catalogs or
+              <code>repo</code> for private catalogs.
+            </li>
+            <li>Copy the token once and keep it outside of source control.</li>
+          </ul>
+        </div>
         <div class="builder-github-fields">
           <label class="api-field" for="appToolkitGithubToken">
             <span class="api-field-label">Personal access token</span>
@@ -142,8 +163,10 @@
               aria-describedby="appToolkitGithubTokenHelp"
             />
             <span class="api-field-helper" id="appToolkitGithubTokenHelp"
-              >Requires the <code>repo</code> scope. Paste the token or load it
-              from a text file.</span
+              >Use
+              <strong>Contents: Read &amp; write</strong> on fine-grained tokens or
+              the minimal <code>public_repo</code>/<code>repo</code> scope on
+              classic tokens. Paste the token or load it from a text file.</span
             >
           </label>
           <div class="api-field-actions">
