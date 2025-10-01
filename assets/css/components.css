@@ -474,6 +474,29 @@ md-filled-tonal-button md-icon[slot='icon'] {
   gap: 1.25rem;
 }
 
+.builder-github-note {
+  display: grid;
+  gap: 0.5rem;
+  padding: 0.85rem 1rem;
+  border-radius: 12px;
+  border: 1px solid var(--app-border-color);
+  background-color: var(--md-sys-color-surface-container-high);
+  color: var(--app-secondary-text-color);
+  font-size: 0.85rem;
+  line-height: 1.55;
+}
+
+.builder-github-note ul {
+  margin: 0;
+  padding-inline-start: 1.1rem;
+  display: grid;
+  gap: 0.35rem;
+}
+
+.builder-github-note li {
+  margin: 0;
+}
+
 .builder-remote-header h2 {
   margin: 0 0 0.25rem 0;
   font-size: 1.1rem;
@@ -491,7 +514,7 @@ md-filled-tonal-button md-icon[slot='icon'] {
   display: grid;
   grid-template-columns: minmax(240px, 1fr) auto;
   gap: 0.75rem;
-  align-items: end;
+  align-items: center;
 }
 
 .builder-remote-controls md-outlined-text-field {
