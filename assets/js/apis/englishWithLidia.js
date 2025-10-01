@@ -47,6 +47,7 @@
 
         const entriesContainer = document.getElementById('englishHomeEntries');
         const previewArea = document.getElementById('englishHomePreview');
+        const validationStatus = document.getElementById('englishHomeValidation');
         const addButton = document.getElementById('englishHomeAddCard');
         const resetButton = document.getElementById('englishHomeResetButton');
         const copyButton = document.getElementById('englishHomeCopyButton');
@@ -214,14 +215,19 @@
                 const json = utils.parseJson(text);
                 const cards = Array.isArray(json?.data) ? json.data : Array.isArray(json) ? json : [];
                 if (!cards.length) {
+                    utils.setValidationStatus(validationStatus, {
+                        status: 'error',
+                        message: 'No cards found in the imported JSON.'
+                    });
                     throw new Error('No cards found in the imported JSON.');
                 }
+                const toStringValue = (value) => (value === undefined || value === null ? '' : String(value));
                 state.cards = cards.map((raw) => ({
-                    lesson_id: raw.lesson_id ? String(raw.lesson_id) : '',
-                    lesson_type: raw.lesson_type || '',
-                    lesson_title: raw.lesson_title || '',
-                    lesson_thumbnail_image_url: raw.lesson_thumbnail_image_url || '',
-                    lesson_deep_link_path: raw.lesson_deep_link_path || '',
+                    lesson_id: utils.trimString(toStringValue(raw.lesson_id)),
+                    lesson_type: utils.trimString(toStringValue(raw.lesson_type)),
+                    lesson_title: utils.trimString(toStringValue(raw.lesson_title)),
+                    lesson_thumbnail_image_url: utils.trimString(toStringValue(raw.lesson_thumbnail_image_url)),
+                    lesson_deep_link_path: utils.trimString(toStringValue(raw.lesson_deep_link_path)),
                     customFields: Object.entries(raw)
                         .filter(([key]) => ![
                             'lesson_id',
@@ -230,35 +236,69 @@
                             'lesson_thumbnail_image_url',
                             'lesson_deep_link_path'
                         ].includes(key))
-                        .map(([key, value]) => ({ key, value: stringifyValue(value) }))
+                        .map(([key, value]) => ({
+                            key: utils.trimString(key),
+                            value: stringifyValue(value)
+                        }))
                 }));
                 render();
             } catch (error) {
                 console.error('EnglishWithLidia(Home):', error);
+                utils.setValidationStatus(validationStatus, {
+                    status: 'error',
+                    message: error.message || 'Unable to import JSON.'
+                });
                 alert(error.message || 'Unable to import JSON.');
             }
         }
 
+        function sanitizeHomeCard(card) {
+            const payload = {};
+            const lessonId = utils.trimString(card.lesson_id ?? '');
+            if (lessonId) payload.lesson_id = lessonId;
+            const lessonType = utils.trimString(card.lesson_type ?? '');
+            if (lessonType) payload.lesson_type = lessonType;
+            const lessonTitle = utils.trimString(card.lesson_title ?? '');
+            if (lessonTitle) payload.lesson_title = lessonTitle;
+            const thumb = utils.trimString(card.lesson_thumbnail_image_url ?? '');
+            if (thumb) payload.lesson_thumbnail_image_url = thumb;
+            const deepLink = utils.trimString(card.lesson_deep_link_path ?? '');
+            if (deepLink) payload.lesson_deep_link_path = deepLink;
+            card.customFields
+                .map((field) => ({ key: utils.trimString(field.key), value: field.value }))
+                .filter((field) => field.key)
+                .forEach((field) => {
+                    const parsed = parseMaybeNumber(field.value);
+                    if (parsed !== '') {
+                        payload[field.key] = parsed;
+                    }
+                });
+            return payload;
+        }
+
         function updatePreview() {
-            const cards = state.cards
-                .map((card) => {
-                    const payload = {};
-                    if (card.lesson_id) payload.lesson_id = card.lesson_id;
-                    if (card.lesson_type) payload.lesson_type = card.lesson_type;
-                    if (card.lesson_title) payload.lesson_title = card.lesson_title;
-                    if (card.lesson_thumbnail_image_url) payload.lesson_thumbnail_image_url = card.lesson_thumbnail_image_url;
-                    if (card.lesson_deep_link_path) payload.lesson_deep_link_path = card.lesson_deep_link_path;
-                    card.customFields
-                        .filter((field) => field.key)
-                        .forEach((field) => {
-                            payload[field.key] = parseMaybeNumber(field.value);
-                        });
+            utils.renderJsonPreview({
+                previewArea,
+                statusElement: validationStatus,
+                data: state.cards,
+                buildPayload: (cards) => ({ data: cards }),
+                autoFix: (payload) => {
+                    const cards = Array.isArray(payload?.data) ? payload.data : [];
+                    payload.data = cards
+                        .map((card) => sanitizeHomeCard(card))
+                        .filter((card) => Object.keys(card).length > 0);
                     return payload;
-                })
-                .filter((card) => Object.keys(card).length > 0);
-            if (previewArea) {
-                previewArea.value = utils.formatJson({ data: cards });
-            }
+                },
+                successMessage: (payload) => {
+                    const count = Array.isArray(payload?.data) ? payload.data.length : 0;
+                    if (!count) {
+                        return 'Valid JSON · No cards yet';
+                    }
+                    return count === 1
+                        ? 'Valid JSON · 1 home card'
+                        : `Valid JSON · ${count} home cards`;
+                }
+            });
         }
 
         attachCommonHandlers({
@@ -296,6 +336,7 @@
         const metadataContainer = document.getElementById('englishLessonMetadata');
         const blocksContainer = document.getElementById('englishLessonBlocks');
         const previewArea = document.getElementById('englishLessonPreview');
+        const validationStatus = document.getElementById('englishLessonValidation');
         const titleField = document.getElementById('englishLessonTitle');
         const addBlockButton = document.getElementById('englishLessonAddBlock');
         const resetButton = document.getElementById('englishLessonResetButton');
@@ -495,21 +536,32 @@
                 const json = utils.parseJson(text);
                 const lessonArray = Array.isArray(json?.data) ? json.data : [];
                 if (!lessonArray.length) {
+                    utils.setValidationStatus(validationStatus, {
+                        status: 'error',
+                        message: 'No lessons found in JSON.'
+                    });
                     throw new Error('No lessons found in JSON.');
                 }
                 const lesson = lessonArray[0];
-                state.title = lesson.lesson_title || '';
+                state.title = utils.trimString(lesson.lesson_title || '');
                 if (titleField) {
                     titleField.value = state.title;
                 }
                 state.metadata = Object.entries(lesson)
                     .filter(([key]) => !['lesson_title', 'lesson_content'].includes(key))
-                    .map(([key, value]) => ({ key, value: stringifyValue(value) }));
+                    .map(([key, value]) => ({
+                        key: utils.trimString(key),
+                        value: stringifyValue(value)
+                    }));
                 const content = Array.isArray(lesson.lesson_content) ? lesson.lesson_content : [];
                 state.blocks = content.map((entry, index) => mapBlockFromJson(entry, index));
                 render();
             } catch (error) {
                 console.error('EnglishWithLidia(Lesson):', error);
+                utils.setValidationStatus(validationStatus, {
+                    status: 'error',
+                    message: error.message || 'Unable to import lesson JSON.'
+                });
                 alert(error.message || 'Unable to import lesson JSON.');
             }
         }
@@ -529,20 +581,30 @@
                 if (allowed.has(key)) {
                     block.props[key] = stringifyValue(value);
                 } else {
-                    block.customFields.push({ key, value: stringifyValue(value) });
+                    block.customFields.push({
+                        key: utils.trimString(key),
+                        value: stringifyValue(value)
+                    });
                 }
             });
             return block;
         }
 
-        function updatePreview() {
+        function composeLessonPayload() {
             const lesson = {};
-            if (state.title) {
-                lesson.lesson_title = state.title;
+            const title = utils.trimString(state.title ?? '');
+            if (title) {
+                lesson.lesson_title = title;
             }
-            state.metadata.filter((field) => field.key).forEach((field) => {
-                lesson[field.key] = parseMaybeNumber(field.value);
-            });
+            state.metadata
+                .map((field) => ({ key: utils.trimString(field.key), value: field.value }))
+                .filter((field) => field.key)
+                .forEach((field) => {
+                    const parsed = parseMaybeNumber(field.value);
+                    if (parsed !== '') {
+                        lesson[field.key] = parsed;
+                    }
+                });
             const content = state.blocks
                 .map((block) => buildBlockPayload(block))
                 .filter((payload) => Object.keys(payload).length > 0);
@@ -550,15 +612,40 @@
                 lesson.lesson_content = content;
             }
             const finalData = Object.keys(lesson).length ? [lesson] : [];
-            if (previewArea) {
-                previewArea.value = utils.formatJson({ data: finalData });
-            }
+            return { data: finalData };
+        }
+
+        function updatePreview() {
+            utils.renderJsonPreview({
+                previewArea,
+                statusElement: validationStatus,
+                data: null,
+                buildPayload: composeLessonPayload,
+                successMessage: (payload) => {
+                    const lessons = Array.isArray(payload?.data) ? payload.data : [];
+                    const firstLesson = lessons[0];
+                    if (!firstLesson || Object.keys(firstLesson).length === 0) {
+                        return 'Valid JSON · No lesson data yet';
+                    }
+                    const blocks = Array.isArray(firstLesson.lesson_content)
+                        ? firstLesson.lesson_content.length
+                        : 0;
+                    if (!blocks) {
+                        return 'Valid JSON · Lesson metadata only';
+                    }
+                    return blocks === 1
+                        ? 'Valid JSON · 1 content block'
+                        : `Valid JSON · ${blocks} content blocks`;
+                }
+            });
         }
 
         function buildBlockPayload(block) {
             const payload = {};
-            if (block.content_id) payload.content_id = block.content_id;
-            if (block.content_type) payload.content_type = block.content_type;
+            const contentId = utils.trimString(block.content_id ?? '');
+            if (contentId) payload.content_id = contentId;
+            const contentType = utils.trimString(block.content_type ?? '');
+            if (contentType) payload.content_type = contentType;
             const definitions = ENGLISH_BLOCK_FIELDS[block.content_type] || [];
             definitions.forEach((definition) => {
                 const value = block.props[definition.key];
@@ -571,13 +658,20 @@
                         payload[definition.key] = parsed;
                     }
                 } else {
-                    payload[definition.key] = value;
+                    const trimmed = utils.trimString(value);
+                    if (trimmed) {
+                        payload[definition.key] = trimmed;
+                    }
                 }
             });
             block.customFields
+                .map((field) => ({ key: utils.trimString(field.key), value: field.value }))
                 .filter((field) => field.key)
                 .forEach((field) => {
-                    payload[field.key] = parseMaybeNumber(field.value);
+                    const parsed = parseMaybeNumber(field.value);
+                    if (parsed !== '') {
+                        payload[field.key] = parsed;
+                    }
                 });
             return payload;
         }

@@ -19,6 +19,7 @@
         const copyButton = document.getElementById('appToolkitCopyButton');
         const downloadButton = document.getElementById('appToolkitDownloadButton');
         const previewArea = document.getElementById('appToolkitPreview');
+        const validationStatus = document.getElementById('appToolkitValidation');
         const importButton = document.getElementById('appToolkitImportButton');
         const importInput = document.getElementById('appToolkitImportInput');
         const fetchInput = document.getElementById('appToolkitFetchInput');
@@ -43,24 +44,53 @@
         }
 
         function updatePreview() {
-            const sanitizedApps = state.apps
-                .map((app) => normalizeApp(app))
-                .filter((app) => Object.keys(app).length > 0);
-            const data = { data: { apps: sanitizedApps } };
-            if (previewArea) {
-                previewArea.value = utils.formatJson(data);
-            }
+            utils.renderJsonPreview({
+                previewArea,
+                statusElement: validationStatus,
+                data: state.apps,
+                buildPayload: (apps) => ({ data: { apps } }),
+                autoFix: (payload) => {
+                    const apps = Array.isArray(payload?.data?.apps) ? payload.data.apps : [];
+                    payload.data.apps = apps
+                        .map((app) => sanitizeAppEntry(app))
+                        .filter((app) => Object.keys(app).length > 0);
+                    return payload;
+                },
+                successMessage: (payload) => {
+                    const count = payload?.data?.apps?.length || 0;
+                    if (!count) {
+                        return 'Valid JSON · No apps yet';
+                    }
+                    return count === 1
+                        ? 'Valid JSON · 1 app entry'
+                        : `Valid JSON · ${count} app entries`;
+                }
+            });
         }
 
-        function normalizeApp(app) {
+        function sanitizeAppEntry(app) {
+            const trimmed = (value) =>
+                utils.trimString(
+                    typeof value === 'string' ? value : value == null ? '' : String(value)
+                );
             const output = {};
-            if (app.name) output.name = app.name;
-            if (app.packageName) output.packageName = app.packageName;
-            if (app.category) output.category = app.category;
-            if (app.description) output.description = app.description;
-            if (app.iconLogo) output.iconLogo = app.iconLogo;
-            const screenshots = app.screenshots.filter((url) => url && url.trim());
-            if (screenshots.length) output.screenshots = screenshots;
+            const name = trimmed(app.name);
+            if (name) output.name = name;
+            const packageName = trimmed(app.packageName);
+            if (packageName) output.packageName = packageName;
+            const category = trimmed(app.category);
+            if (category) output.category = category;
+            const description = trimmed(app.description);
+            if (description) output.description = description;
+            const iconLogo = trimmed(app.iconLogo);
+            if (iconLogo) output.iconLogo = iconLogo;
+            const screenshots = utils
+                .normalizeArray(app.screenshots)
+                .map((url) => trimmed(url))
+                .filter(Boolean);
+            if (screenshots.length) {
+                output.screenshots = Array.from(new Set(screenshots));
+            }
             return output;
         }
 
@@ -206,22 +236,34 @@
                 const json = utils.parseJson(text);
                 const appsData = extractAppsArray(json);
                 if (!appsData.length) {
+                    utils.setValidationStatus(validationStatus, {
+                        status: 'error',
+                        message: 'No apps found in the imported JSON.'
+                    });
                     alert('No apps found in the imported JSON.');
                     return;
                 }
                 state.apps = appsData.map((raw) => ({
-                    name: raw.name || '',
-                    packageName: raw.packageName || '',
-                    category: raw.category || '',
-                    description: raw.description || '',
-                    iconLogo: raw.iconLogo || '',
-                    screenshots: utils.normalizeArray(raw.screenshots).length
-                        ? [...raw.screenshots]
-                        : ['']
+                    name: utils.trimString(raw.name || ''),
+                    packageName: utils.trimString(raw.packageName || ''),
+                    category: utils.trimString(raw.category || ''),
+                    description: utils.trimString(raw.description || ''),
+                    iconLogo: utils.trimString(raw.iconLogo || ''),
+                    screenshots: (() => {
+                        const sanitized = utils
+                            .normalizeArray(raw.screenshots)
+                            .map((value) => utils.trimString(String(value ?? '')))
+                            .filter(Boolean);
+                        return sanitized.length ? sanitized : [''];
+                    })()
                 }));
                 render();
             } catch (error) {
                 console.error('AppToolkit: Failed to import JSON.', error);
+                utils.setValidationStatus(validationStatus, {
+                    status: 'error',
+                    message: error.message || 'Unable to import JSON file.'
+                });
                 alert(error.message || 'Unable to import JSON file.');
             }
         }
@@ -276,6 +318,10 @@
             const targetUrl =
                 urlSource || (fetchInput ? fetchInput.value.trim() : '');
             if (!targetUrl) {
+                utils.setValidationStatus(validationStatus, {
+                    status: 'error',
+                    message: 'Enter a JSON URL to fetch.'
+                });
                 alert('Enter a JSON URL to fetch.');
                 return;
             }
@@ -309,6 +355,10 @@
                 if (fetchButton) {
                     setLoadingState(fetchButton, false);
                 }
+                utils.setValidationStatus(validationStatus, {
+                    status: 'error',
+                    message: error.message || 'Unable to fetch remote JSON.'
+                });
                 alert(error.message || 'Unable to fetch remote JSON.');
             }
         }

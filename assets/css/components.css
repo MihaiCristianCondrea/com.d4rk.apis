@@ -556,6 +556,32 @@ md-tonal-button md-icon[slot='icon'] {
   resize: vertical;
 }
 
+.preview-validation {
+  min-height: 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.85rem;
+  color: var(--app-secondary-text-color);
+}
+
+.preview-validation[data-status='success'] {
+  color: var(--md-sys-color-primary);
+}
+
+.preview-validation[data-status='error'] {
+  color: var(--md-sys-color-error);
+}
+
+.preview-validation[data-status='warning'] {
+  color: var(--md-sys-color-on-surface-variant);
+}
+
+.preview-validation .material-symbols-outlined {
+  font-size: 1rem;
+  line-height: 1;
+}
+
 .preview-actions {
   display: flex;
   flex-wrap: wrap;
