@@ -319,7 +319,8 @@ md-list-item[type='button'].expanded md-icon[slot='end'] {
 }
 
 md-filled-button,
-md-tonal-button {
+md-tonal-button,
+md-filled-tonal-button {
   gap: 0.5rem;
   --_leading-space: 20px;
   --_trailing-space: 20px;
@@ -344,7 +345,7 @@ md-outlined-button {
   );
 }
 
-:is(md-filled-button, md-tonal-button, md-outlined-button)[has-icon] {
+:is(md-filled-button, md-tonal-button, md-filled-tonal-button, md-outlined-button)[has-icon] {
   padding-inline-start: var(--app-button-icon-inline-padding);
   padding-inline-end: var(--app-button-icon-inline-padding);
 }
@@ -370,7 +371,8 @@ md-text-button[has-icon] {
 }
 
 md-filled-button md-icon[slot='icon'],
-md-tonal-button md-icon[slot='icon'] {
+md-tonal-button md-icon[slot='icon'],
+md-filled-tonal-button md-icon[slot='icon'] {
   margin-inline-end: 0;
   display: inline-flex;
   align-items: center;
