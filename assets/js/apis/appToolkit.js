@@ -10,6 +10,7 @@
         debug: 'App Toolkit/debug/en/home/api_android_apps.json',
         release: 'App Toolkit/release/en/home/api_android_apps.json'
     };
+    const MIN_GITHUB_TOKEN_LENGTH = 20;
 
     function initAppToolkitWorkspace() {
         const builderRoot = document.getElementById('appToolkitBuilder');
@@ -32,6 +33,8 @@
             document.querySelectorAll('[data-app-toolkit-preset]')
         );
         const githubTokenInput = document.getElementById('appToolkitGithubToken');
+        const githubTokenFileInput = document.getElementById('appToolkitGithubTokenFile');
+        const githubTokenFileButton = document.getElementById('appToolkitGithubTokenFileButton');
         const githubRepoInput = document.getElementById('appToolkitGithubRepo');
         const githubBranchInput = document.getElementById('appToolkitGithubBranch');
         const githubMessageInput = document.getElementById('appToolkitGithubMessage');
@@ -392,6 +395,66 @@
             utils.setValidationStatus(githubStatus, { status, message });
         }
 
+        function validateGithubToken(value) {
+            const token = utils.trimString(value || '');
+            if (!token) {
+                throw new Error('Provide a GitHub personal access token.');
+            }
+            if (/\s/.test(token)) {
+                throw new Error('Token cannot contain spaces or line breaks.');
+            }
+            if (token.length < MIN_GITHUB_TOKEN_LENGTH) {
+                throw new Error('Token format not recognized. Provide a valid GitHub personal access token.');
+            }
+            return token;
+        }
+
+        function extractGithubTokenFromText(text) {
+            const content = typeof text === 'string' ? text : '';
+            const lines = content
+                .split(/\r?\n/)
+                .map((line) => utils.trimString(line))
+                .filter(Boolean);
+            if (!lines.length) {
+                throw new Error('The selected file does not contain a personal access token.');
+            }
+            return lines[0];
+        }
+
+        function handleGithubTokenFileSelection(file) {
+            if (!file) {
+                return;
+            }
+            const reader = new FileReader();
+            reader.addEventListener('load', () => {
+                try {
+                    const text = typeof reader.result === 'string' ? reader.result : '';
+                    const token = validateGithubToken(extractGithubTokenFromText(text));
+                    if (githubTokenInput) {
+                        githubTokenInput.value = token;
+                    }
+                    setGithubStatus({
+                        status: 'success',
+                        message: `Loaded token from ${file.name}.`
+                    });
+                } catch (error) {
+                    setGithubStatus({
+                        status: 'error',
+                        message: error.message || 'Unable to read GitHub token from file.'
+                    });
+                    alert(error.message || 'Unable to read GitHub token from file.');
+                }
+            });
+            reader.addEventListener('error', () => {
+                setGithubStatus({
+                    status: 'error',
+                    message: `Unable to read ${file.name}.`
+                });
+                alert(`Unable to read ${file.name}.`);
+            });
+            reader.readAsText(file);
+        }
+
         function parseRepository(value) {
             const trimmed = utils.trimString(value || '');
             const segments = trimmed.split('/').filter(Boolean);
@@ -455,10 +518,12 @@
                 return;
             }
 
-            const token = utils.trimString(githubTokenInput ? githubTokenInput.value : '');
-            if (!token) {
-                setGithubStatus({ status: 'error', message: 'Provide a GitHub personal access token.' });
-                alert('Provide a GitHub personal access token before publishing.');
+            let token;
+            try {
+                token = validateGithubToken(githubTokenInput ? githubTokenInput.value : '');
+            } catch (error) {
+                setGithubStatus({ status: 'error', message: error.message });
+                alert(error.message);
                 return;
             }
 
@@ -646,6 +711,21 @@
                         fetchRemoteJson(presetUrl, { fromPreset: true });
                     }
                 });
+            });
+        }
+
+        if (githubTokenFileButton && githubTokenFileInput) {
+            githubTokenFileButton.addEventListener('click', () => {
+                clearGithubStatus();
+                githubTokenFileInput.value = '';
+                githubTokenFileInput.click();
+            });
+            githubTokenFileInput.addEventListener('change', () => {
+                const file = githubTokenFileInput.files && githubTokenFileInput.files[0];
+                if (file) {
+                    clearGithubStatus();
+                    handleGithubTokenFileSelection(file);
+                }
             });
         }
 
