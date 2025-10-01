@@ -161,46 +161,41 @@
           <span class="toolbar-status-label">Workspace pulse</span>
           <span class="toolbar-status-value" id="appToolkitToolbarPulse">Awaiting input</span>
         </div>
-        <div class="toolbar-pills" role="group" aria-label="Channel focus">
-          <span class="toolbar-label">Channel focus</span>
-          <button
-            type="button"
-            class="toolbar-pill active"
-            data-app-toolkit-channel="both"
-          >
-            Dual
-          </button>
-          <button
-            type="button"
-            class="toolbar-pill"
-            data-app-toolkit-channel="debug"
-          >
-            Debug
-          </button>
-          <button
-            type="button"
-            class="toolbar-pill"
-            data-app-toolkit-channel="release"
-          >
-            Release
-          </button>
+        <div class="toolbar-filters" aria-label="Workspace filters">
+          <span class="toolbar-label">Focus filters</span>
+          <md-filter-chip-set id="appToolkitFilterChips" aria-label="Filter apps needing attention">
+            <md-filter-chip value="pending-release" data-app-toolkit-filter="pendingReleaseReady">
+              Pending release-ready
+            </md-filter-chip>
+            <md-filter-chip value="needs-screenshots" data-app-toolkit-filter="needsScreenshots">
+              Needs screenshots
+            </md-filter-chip>
+          </md-filter-chip-set>
         </div>
-        <div class="toolbar-pills" role="group" aria-label="Layout density">
+        <div class="toolbar-segment" aria-label="Channel focus">
+          <span class="toolbar-label">Channel focus</span>
+          <md-segmented-button-set id="appToolkitChannelSegments" aria-label="Channel focus">
+            <md-segmented-button value="both" data-app-toolkit-channel="both" selected>
+              Dual
+            </md-segmented-button>
+            <md-segmented-button value="debug" data-app-toolkit-channel="debug">
+              Debug
+            </md-segmented-button>
+            <md-segmented-button value="release" data-app-toolkit-channel="release">
+              Release
+            </md-segmented-button>
+          </md-segmented-button-set>
+        </div>
+        <div class="toolbar-segment" aria-label="Layout density">
           <span class="toolbar-label">Layout</span>
-          <button
-            type="button"
-            class="toolbar-pill active"
-            data-app-toolkit-mode="flow"
-          >
-            Flow
-          </button>
-          <button
-            type="button"
-            class="toolbar-pill"
-            data-app-toolkit-mode="compact"
-          >
-            Compact
-          </button>
+          <md-segmented-button-set id="appToolkitLayoutSegments" aria-label="Layout density">
+            <md-segmented-button value="flow" data-app-toolkit-mode="flow" selected>
+              Flow
+            </md-segmented-button>
+            <md-segmented-button value="compact" data-app-toolkit-mode="compact">
+              Compact
+            </md-segmented-button>
+          </md-segmented-button-set>
         </div>
       </div>
     </div>
@@ -290,94 +285,16 @@
             <li>Copy the token once and keep it outside of source control.</li>
           </ul>
         </div>
-        <div class="builder-github-fields">
-          <label class="api-field" for="appToolkitGithubToken">
-            <span class="api-field-label">Personal access token</span>
-            <input
-              id="appToolkitGithubToken"
-              class="api-input"
-              type="password"
-              autocomplete="off"
-              spellcheck="false"
-              placeholder="ghp_..."
-              aria-describedby="appToolkitGithubTokenHelp"
-            />
-            <span class="api-field-helper" id="appToolkitGithubTokenHelp"
-              >Use
-              <strong>Contents: Read &amp; write</strong> on fine-grained tokens or
-              the minimal <code>public_repo</code>/<code>repo</code> scope on
-              classic tokens. Paste the token or load it from a text file.</span
-            >
-          </label>
-          <div class="api-field-actions">
-            <input
-              type="file"
-              id="appToolkitGithubTokenFile"
-              accept="text/plain,.txt,.token"
-              hidden
-            />
-            <md-outlined-button
-              type="button"
-              id="appToolkitGithubTokenFileButton"
-            >
-              <md-icon slot="icon"
-                ><span class="material-symbols-outlined">description</span></md-icon
-              >
-              Load token from file
-            </md-outlined-button>
-          </div>
-          <label class="api-field" for="appToolkitGithubRepo">
-            <span class="api-field-label">Repository (owner/name)</span>
-            <input
-              id="appToolkitGithubRepo"
-              class="api-input"
-              type="text"
-              value="MihaiCristianCondrea/com.d4rk.apis"
-              spellcheck="false"
-            />
-          </label>
-          <label class="api-field" for="appToolkitGithubBranch">
-            <span class="api-field-label">Branch</span>
-            <input
-              id="appToolkitGithubBranch"
-              class="api-input"
-              type="text"
-              value="main"
-              spellcheck="false"
-            />
-          </label>
-          <label class="api-field" for="appToolkitGithubMessage">
-            <span class="api-field-label">Commit message</span>
-            <input
-              id="appToolkitGithubMessage"
-              class="api-input"
-              type="text"
-              value="chore(app-toolkit): update catalog"
-              spellcheck="false"
-            />
-          </label>
-          <label class="api-field" for="appToolkitGithubChannel">
-            <span class="api-field-label">Target channel</span>
-            <select id="appToolkitGithubChannel" class="api-select">
-              <option value="debug">Debug</option>
-              <option value="release">Release</option>
-              <option value="both">Debug &amp; Release</option>
-            </select>
-          </label>
-        </div>
-        <div class="builder-github-actions">
-          <md-filled-button id="appToolkitGithubSubmit">
+        <div class="builder-github-launch">
+          <md-filled-button id="appToolkitGithubWizardButton">
             <md-icon slot="icon"
-              ><span class="material-symbols-outlined">cloud_upload</span></md-icon
+              ><span class="material-symbols-outlined">rocket_launch</span></md-icon
             >
-            Publish JSON
+            Open publish wizard
           </md-filled-button>
-          <div
-            class="preview-validation"
-            id="appToolkitGithubStatus"
-            role="status"
-            aria-live="polite"
-          ></div>
+          <p class="builder-github-helper">
+            Validate the preview first, then follow the guided steps to publish.
+          </p>
         </div>
       </div>
     </md-filled-card>
@@ -417,6 +334,139 @@
           </md-outlined-button>
         </div>
       </aside>
+      <md-side-sheet
+        id="appToolkitDiffSheet"
+        class="builder-diff-sheet"
+        aria-label="Workspace diff"
+      >
+        <div slot="headline">Workspace diff</div>
+        <div slot="supporting-text">
+          Compare the current workspace against the last exported payload.
+        </div>
+        <div slot="content" class="diff-sheet-content">
+          <pre id="appToolkitDiffContent" aria-live="polite"></pre>
+        </div>
+      </md-side-sheet>
     </div>
   </section>
+
+  <md-dialog id="appToolkitScreenshotDialog" class="screenshot-dialog">
+    <div slot="headline" id="appToolkitScreenshotDialogHeadline">Screenshot preview</div>
+    <div slot="content" class="screenshot-dialog-content">
+      <img id="appToolkitScreenshotDialogImage" alt="Selected screenshot preview" />
+      <p id="appToolkitScreenshotDialogCaption" class="screenshot-dialog-caption"></p>
+    </div>
+    <div slot="actions">
+      <md-text-button dialog-action="close">Close</md-text-button>
+      <md-text-button id="appToolkitScreenshotDialogOpen" target="_blank">
+        Open in new tab
+      </md-text-button>
+    </div>
+  </md-dialog>
+
+  <md-dialog id="appToolkitFocusDialog" class="focus-dialog">
+    <div slot="headline">Focus session</div>
+    <div slot="content" class="focus-dialog-content">
+      <div class="focus-dialog-timer" id="appToolkitFocusTimer" aria-live="polite">25:00</div>
+      <div class="focus-dialog-controls">
+        <md-filled-tonal-button id="appToolkitFocusStart">Start</md-filled-tonal-button>
+        <md-filled-tonal-button id="appToolkitFocusPause">Pause</md-filled-tonal-button>
+        <md-text-button id="appToolkitFocusReset">Reset</md-text-button>
+      </div>
+      <div class="focus-dialog-checklist">
+        <h3>Pending checklist</h3>
+        <md-list id="appToolkitFocusChecklist" class="focus-checklist"></md-list>
+      </div>
+      <md-filled-text-field
+        id="appToolkitFocusNotes"
+        label="Session notes"
+        supporting-text="Notes are saved locally for this browser session."
+        rows="4"
+        multiline
+      ></md-filled-text-field>
+    </div>
+    <div slot="actions">
+      <md-text-button dialog-action="close">Close</md-text-button>
+      <md-filled-button id="appToolkitFocusSave">Save note</md-filled-button>
+    </div>
+  </md-dialog>
+
+  <md-dialog id="appToolkitGithubDialog" class="github-dialog">
+    <div slot="headline">Publish to GitHub</div>
+    <div slot="content" class="github-dialog-content">
+      <md-steppers id="appToolkitGithubStepper" value="authenticate">
+        <md-step value="authenticate" label="Authenticate">
+          <div class="github-step" data-step="authenticate">
+            <md-filled-text-field
+              id="appToolkitGithubToken"
+              label="Personal access token"
+              type="password"
+              autocomplete="off"
+              spellcheck="false"
+              supporting-text="Tokens require Contents: Read &amp; write access."
+            ></md-filled-text-field>
+            <div class="github-step-actions">
+              <input
+                type="file"
+                id="appToolkitGithubTokenFile"
+                accept="text/plain,.txt,.token"
+                hidden
+              />
+              <md-outlined-button id="appToolkitGithubTokenFileButton">
+                <md-icon slot="icon"
+                  ><span class="material-symbols-outlined">description</span></md-icon
+                >
+                Load token from file
+              </md-outlined-button>
+            </div>
+          </div>
+        </md-step>
+        <md-step value="target" label="Target">
+          <div class="github-step" data-step="target">
+            <md-filled-text-field
+              id="appToolkitGithubRepo"
+              label="Repository (owner/name)"
+              value="MihaiCristianCondrea/com.d4rk.apis"
+              supporting-text="Use owner/name format."
+              spellcheck="false"
+            ></md-filled-text-field>
+            <md-filled-text-field
+              id="appToolkitGithubBranch"
+              label="Branch"
+              value="main"
+              spellcheck="false"
+            ></md-filled-text-field>
+            <md-filled-text-field
+              id="appToolkitGithubMessage"
+              label="Commit message"
+              value="chore(app-toolkit): update catalog"
+              spellcheck="false"
+            ></md-filled-text-field>
+            <md-outlined-select
+              id="appToolkitGithubChannel"
+              label="Target channel"
+              value="debug"
+            >
+              <md-select-option value="debug">Debug</md-select-option>
+              <md-select-option value="release">Release</md-select-option>
+              <md-select-option value="both">Debug &amp; Release</md-select-option>
+            </md-outlined-select>
+          </div>
+        </md-step>
+        <md-step value="review" label="Review">
+          <div class="github-step" data-step="review">
+            <p class="github-review-copy">
+              Confirm the diff in the side sheet and publish when ready.
+            </p>
+            <div class="github-status" id="appToolkitGithubStatus" role="status" aria-live="polite"></div>
+          </div>
+        </md-step>
+      </md-steppers>
+    </div>
+    <div slot="actions" class="github-dialog-actions">
+      <md-text-button dialog-action="close">Cancel</md-text-button>
+      <md-text-button id="appToolkitGithubBack">Back</md-text-button>
+      <md-filled-button id="appToolkitGithubNext">Next</md-filled-button>
+    </div>
+  </md-dialog>
 </div>
