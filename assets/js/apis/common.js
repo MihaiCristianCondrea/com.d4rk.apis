@@ -49,17 +49,32 @@
     }
 
     function parseJson(input) {
-        if (!input) {
+        if (input === undefined || input === null) {
             throw new Error('JSON input is empty.');
         }
         if (typeof input === 'object') {
             return input;
         }
+        const text = String(input).trim();
+        if (!text) {
+            throw new Error('JSON input is empty.');
+        }
+        const sanitized = text.replace(/^\uFEFF/, '');
         try {
-            return JSON.parse(input);
+            return JSON.parse(sanitized);
         } catch (error) {
+            console.error('ApiBuilderUtils: Invalid JSON provided.', error);
             throw new Error('Invalid JSON format.');
         }
+    }
+
+    function prettifyJsonString(input) {
+        const parsed = parseJson(input);
+        const formatted = formatJson(parsed);
+        if (!formatted) {
+            throw new Error('Unable to format JSON string.');
+        }
+        return formatted;
     }
 
     async function copyToClipboard(text) {
@@ -247,11 +262,122 @@
         return [value];
     }
 
+    function trimString(value) {
+        return typeof value === 'string' ? value.trim() : '';
+    }
+
+    function cloneJson(value) {
+        if (value === null || typeof value !== 'object') {
+            return value;
+        }
+        if (typeof structuredClone === 'function') {
+            try {
+                return structuredClone(value);
+            } catch (error) {
+                console.warn('ApiBuilderUtils: structuredClone failed, falling back to JSON clone.', error);
+            }
+        }
+        try {
+            return JSON.parse(JSON.stringify(value));
+        } catch (error) {
+            console.error('ApiBuilderUtils: Failed to clone JSON value.', error);
+            return value;
+        }
+    }
+
+    function setValidationStatus(element, { status = 'success', message = '' } = {}) {
+        if (!element) {
+            return;
+        }
+        element.dataset.status = status;
+        element.innerHTML = '';
+        if (!message) {
+            return;
+        }
+        const icon =
+            status === 'success'
+                ? 'check_circle'
+                : status === 'warning'
+                    ? 'info'
+                    : 'error';
+        element.appendChild(
+            createElement('span', {
+                classNames: ['material-symbols-outlined'],
+                text: icon
+            })
+        );
+        element.appendChild(createElement('span', { text: message }));
+    }
+
+    function renderJsonPreview({
+        previewArea,
+        statusElement,
+        data,
+        buildPayload,
+        autoFix,
+        validator,
+        successMessage = 'Valid JSON',
+        errorMessage = 'Invalid JSON output.'
+    }) {
+        if (!previewArea) {
+            return { success: false };
+        }
+        const previousValue = previewArea.value;
+        try {
+            let payload = buildPayload ? buildPayload(data) : data;
+            if (payload && typeof payload === 'object') {
+                payload = cloneJson(payload);
+            }
+            if (autoFix) {
+                const result = autoFix(payload);
+                if (result !== undefined) {
+                    payload = result;
+                }
+            }
+            if (validator) {
+                const result = validator(payload);
+                if (result !== undefined) {
+                    payload = result;
+                }
+            }
+            let formatted;
+            try {
+                formatted = JSON.stringify(payload ?? {}, null, 2);
+            } catch (error) {
+                console.error('ApiBuilderUtils: Failed to format JSON preview.', error);
+                throw new Error('Unable to format JSON preview.');
+            }
+            previewArea.value = formatted;
+            if (statusElement) {
+                const message =
+                    typeof successMessage === 'function'
+                        ? successMessage(payload)
+                        : successMessage;
+                setValidationStatus(statusElement, {
+                    status: 'success',
+                    message: message || 'Valid JSON'
+                });
+            }
+            return { success: true, payload };
+        } catch (error) {
+            console.error('ApiBuilderUtils: Unable to update JSON preview.', error);
+            if (statusElement) {
+                setValidationStatus(statusElement, {
+                    status: 'error',
+                    message: error.message || errorMessage
+                });
+            }
+            previewArea.value = previousValue;
+            return { success: false, error };
+        }
+    }
+
     global.ApiBuilderUtils = {
         createElement,
         clearElement,
         formatJson,
         parseJson,
+        prettifyJsonString,
         copyToClipboard,
         downloadJson,
         readFileAsText,
@@ -261,6 +387,10 @@
         createInlineButton,
         attachFilePicker,
         parseNumber,
-        normalizeArray
+        normalizeArray,
+        trimString,
+        cloneJson,
+        setValidationStatus,
+        renderJsonPreview
     };
 })(typeof window !== 'undefined' ? window : globalThis);
