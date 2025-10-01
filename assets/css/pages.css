@@ -97,6 +97,196 @@
   gap: 1.5rem;
 }
 
+.workspace-dashboard {
+  display: grid;
+  gap: 1.75rem;
+  margin-bottom: 2.5rem;
+}
+
+.workspace-insight-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.25rem;
+}
+
+.insight-card {
+  --md-elevated-card-container-color: var(--md-sys-color-surface-container);
+  padding: 1.25rem 1.5rem;
+  border-radius: 20px;
+  display: grid;
+  gap: 0.65rem;
+}
+
+.insight-card-header {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  color: var(--app-secondary-text-color);
+  font-size: 0.9rem;
+}
+
+.insight-icon {
+  background: rgba(88, 101, 242, 0.18);
+  border-radius: 12px;
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  color: var(--md-sys-color-primary);
+  font-size: 1.4rem;
+}
+
+.insight-label {
+  font-weight: 500;
+}
+
+.insight-value {
+  margin: 0;
+  font-size: clamp(1.6rem, 3vw + 1rem, 2.6rem);
+  font-weight: 600;
+  color: var(--app-text-color);
+}
+
+.insight-helper {
+  margin: 0;
+  color: var(--app-secondary-text-color);
+  font-size: 0.9rem;
+}
+
+.workspace-secondary-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.25rem;
+}
+
+.workspace-plan,
+.workspace-release {
+  --md-filled-card-container-color: var(--md-sys-color-surface-container-high);
+  border-radius: 24px;
+}
+
+.workspace-plan .card-body,
+.workspace-release .card-body {
+  display: grid;
+  gap: 1.25rem;
+}
+
+.plan-header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.plan-header h2 {
+  margin: 0;
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: var(--app-text-color);
+}
+
+.plan-updated {
+  font-size: 0.85rem;
+  color: var(--app-secondary-text-color);
+}
+
+.plan-list {
+  margin: 0;
+  padding-left: 1.2rem;
+  display: grid;
+  gap: 0.75rem;
+}
+
+.plan-step-title {
+  font-weight: 550;
+  color: var(--app-text-color);
+}
+
+.plan-step-meta {
+  display: block;
+  font-size: 0.85rem;
+  color: var(--app-secondary-text-color);
+}
+
+.plan-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+#appToolkitNotesButton .note-indicator {
+  display: none;
+  margin-left: 0.4rem;
+  font-size: 0.75rem;
+  color: var(--md-sys-color-primary);
+}
+
+#appToolkitNotesButton[data-note-state='saved'] .note-indicator {
+  display: inline;
+}
+
+.release-header h2 {
+  margin: 0;
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: var(--app-text-color);
+}
+
+.release-header p {
+  margin: 0;
+  color: var(--app-secondary-text-color);
+  font-size: 0.95rem;
+}
+
+.release-progress {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.release-progress-track {
+  width: 100%;
+  height: 12px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, rgba(88, 101, 242, 0.18), rgba(24, 176, 116, 0.18));
+  position: relative;
+  overflow: hidden;
+}
+
+.release-progress-bar {
+  position: absolute;
+  inset: 0;
+  width: 0%;
+  background: linear-gradient(90deg, var(--md-sys-color-primary), rgba(24, 176, 116, 0.9));
+  border-radius: inherit;
+  transition: width 220ms ease;
+}
+
+.release-progress-legend {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--app-secondary-text-color);
+}
+
+.release-tips {
+  margin: 0;
+  padding-left: 1.1rem;
+  display: grid;
+  gap: 0.5rem;
+  color: var(--app-secondary-text-color);
+  font-size: 0.9rem;
+}
+
+@media (max-width: 900px) {
+  .workspace-dashboard {
+    gap: 1.5rem;
+  }
+  .workspace-secondary-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 .workspace-card {
   --md-elevated-card-container-color: var(--md-sys-color-surface-container);
   padding: 1.5rem;
