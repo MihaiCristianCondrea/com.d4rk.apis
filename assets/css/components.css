@@ -322,12 +322,24 @@ md-filled-button,
 md-tonal-button,
 md-filled-tonal-button {
   gap: 0.5rem;
-  --_leading-space: 20px;
-  --_trailing-space: 20px;
-  --_with-leading-icon-leading-space: 16px;
-  --_with-leading-icon-trailing-space: 20px;
-  --_with-trailing-icon-leading-space: 20px;
-  --_with-trailing-icon-trailing-space: 16px;
+}
+
+md-filled-button {
+  --md-filled-button-leading-space: 20px;
+  --md-filled-button-trailing-space: 20px;
+  --md-filled-button-with-leading-icon-leading-space: 16px;
+  --md-filled-button-with-leading-icon-trailing-space: 20px;
+  --md-filled-button-with-trailing-icon-leading-space: 20px;
+  --md-filled-button-with-trailing-icon-trailing-space: 16px;
+}
+
+md-filled-tonal-button {
+  --md-filled-tonal-button-leading-space: 20px;
+  --md-filled-tonal-button-trailing-space: 20px;
+  --md-filled-tonal-button-with-leading-icon-leading-space: 16px;
+  --md-filled-tonal-button-with-leading-icon-trailing-space: 20px;
+  --md-filled-tonal-button-with-trailing-icon-leading-space: 20px;
+  --md-filled-tonal-button-with-trailing-icon-trailing-space: 16px;
 }
 
 md-outlined-button {
