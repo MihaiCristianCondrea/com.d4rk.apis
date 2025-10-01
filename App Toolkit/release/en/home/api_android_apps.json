@@ -8,8 +8,6 @@
         "description": "Delve into Android development through hands-on lessons and real-world projects. This app guides you step by step in mastering Android Studio, from UI layouts to app logic, helping you build functional apps with confidence. Ideal for beginners and intermediates alike, it stays updated with the latest Android tooling and best practices.",
         "iconLogo": "https://raw.githubusercontent.com/D4rK7355608/com.d4rk.androidtutorials/refs/heads/master/app/src/main/play/listings/en-US/graphics/ic_launcher-playstore.png",
         "screenshots": [
-          "https://raw.githubusercontent.com/D4rK7355608/com.d4rk.androidtutorials/refs/heads/master/app/src/main/play/listings/en-US/graphics/ic_launcher-playstore.png",
-          "https://raw.githubusercontent.com/D4rK7355608/com.d4rk.androidtutorials/refs/heads/master/app/src/main/play/listings/en-US/graphics/ic_launcher-playstore.png",
           "https://raw.githubusercontent.com/D4rK7355608/com.d4rk.androidtutorials/refs/heads/master/app/src/main/play/listings/en-US/graphics/ic_launcher-playstore.png"
         ]
       },
@@ -22,7 +20,7 @@
         "screenshots": [
           "https://play-lh.googleusercontent.com/yQKr9Klh7I2nWH9bb6BybjFU6kICI_tYIrW1m9GSqbzYKxRC_Q6srrJNAyKBJHpMzlY=w526-h296-rw",
           "https://play-lh.googleusercontent.com/CpAFfEucOlhVgX0ZQCP0Gh8LZ-0jQNIAYXrQU6vvqa5KOgJKhfR4CS7x_7_gUSn_Rlo=w526-h296-rw",
-          "https://play-lh.googleusercontent.com/AbfbwJ69tl2jrP57ei5SzSzATu1qwzhfPNGPj9oqqIStbF44BT56QvfQPXTmjUhmvhY=w526-h296-rwg",
+          "https://play-lh.googleusercontent.com/AbfbwJ69tl2jrP57ei5SzSzATu1qwzhfPNGPj9oqqIStbF44BT56QvfQPXTmjUhmvhY=w2560-h1440-rw",
           "https://play-lh.googleusercontent.com/sTZJ1gyGaq2seX5Lq7Hq2RSvZcP0kPA7ndmgQRgwwSQ_nJA-puALa7OubGxJsIl5GVg=w526-h296-rw"
         ]
       },
@@ -47,8 +45,6 @@
         "description": "An English learning app centered around Lidia’s teaching method. It offers lessons, exercises, and practical tools to build vocabulary, grammar, speaking, and comprehension skills, ideal for learners at beginner to intermediate levels. Thoughtfully structured to guide you from basics toward fluency.",
         "iconLogo": "https://raw.githubusercontent.com/D4rK7355608/com.d4rk.englishwithlidia.plus/refs/heads/master/app/src/main/play/listings/en-US/graphics/ic_launcher-playstore.png",
         "screenshots": [
-          "https://raw.githubusercontent.com/D4rK7355608/com.d4rk.androidtutorials/refs/heads/master/app/src/main/play/listings/en-US/graphics/ic_launcher-playstore.png",
-          "https://raw.githubusercontent.com/D4rK7355608/com.d4rk.androidtutorials/refs/heads/master/app/src/main/play/listings/en-US/graphics/ic_launcher-playstore.png",
           "https://raw.githubusercontent.com/D4rK7355608/com.d4rk.androidtutorials/refs/heads/master/app/src/main/play/listings/en-US/graphics/ic_launcher-playstore.png"
         ]
       },
@@ -72,8 +68,6 @@
         "description": "Music Sleep Timer Plus lets you schedule playback pauses so your music winds down gracefully. Useful for listening while falling asleep, it supports adjustable timers, fade-out effects, and works with most music apps. Let your music help you drift off without playing all night.",
         "iconLogo": "https://raw.githubusercontent.com/D4rK7355608/com.d4rk.musicsleeptimer.plus/refs/heads/master/app/src/main/play/listings/en-US/graphics/ic_launcher-playstore.png",
         "screenshots": [
-          "https://raw.githubusercontent.com/D4rK7355608/com.d4rk.androidtutorials/refs/heads/master/app/src/main/play/listings/en-US/graphics/ic_launcher-playstore.png",
-          "https://raw.githubusercontent.com/D4rK7355608/com.d4rk.androidtutorials/refs/heads/master/app/src/main/play/listings/en-US/graphics/ic_launcher-playstore.png",
           "https://raw.githubusercontent.com/D4rK7355608/com.d4rk.androidtutorials/refs/heads/master/app/src/main/play/listings/en-US/graphics/ic_launcher-playstore.png"
         ]
       },
@@ -84,8 +78,6 @@
         "description": "Net Probe is a network diagnostic utility for Android. Use it to test your connection, trace routes, ping servers, and monitor latency. Whether you’re debugging connectivity on mobile, Wi-Fi, or cellular, it helps you see where network issues might lie.",
         "iconLogo": "https://raw.githubusercontent.com/D4rK7355608/com.d4rk.netprobe/refs/heads/main/app/src/main/play/listings/en-US/graphics/ic_launcher-playstore.png",
         "screenshots": [
-          "https://raw.githubusercontent.com/D4rK7355608/com.d4rk.androidtutorials/refs/heads/master/app/src/main/play/listings/en-US/graphics/ic_launcher-playstore.png",
-          "https://raw.githubusercontent.com/D4rK7355608/com.d4rk.androidtutorials/refs/heads/master/app/src/main/play/listings/en-US/graphics/ic_launcher-playstore.png",
           "https://raw.githubusercontent.com/D4rK7355608/com.d4rk.androidtutorials/refs/heads/master/app/src/main/play/listings/en-US/graphics/ic_launcher-playstore.png"
         ]
       },
@@ -96,8 +88,6 @@
         "description": "Scan QR codes and barcodes quickly and securely with QR & Bar Code Scanner Plus. It supports all common formats, works offline, saves scan history, and gives you links, product info, or embedded data. Lightweight and efficient, ideal for daily use.",
         "iconLogo": "https://raw.githubusercontent.com/D4rK7355608/com.d4rk.qrcodescanner.plus/refs/heads/master/app/src/main/play/listings/en-US/graphics/ic_launcher-playstore.png",
         "screenshots": [
-          "https://raw.githubusercontent.com/D4rK7355608/com.d4rk.androidtutorials/refs/heads/master/app/src/main/play/listings/en-US/graphics/ic_launcher-playstore.png",
-          "https://raw.githubusercontent.com/D4rK7355608/com.d4rk.androidtutorials/refs/heads/master/app/src/main/play/listings/en-US/graphics/ic_launcher-playstore.png",
           "https://raw.githubusercontent.com/D4rK7355608/com.d4rk.androidtutorials/refs/heads/master/app/src/main/play/listings/en-US/graphics/ic_launcher-playstore.png"
         ]
       },
@@ -121,8 +111,6 @@
         "description": "Weddix is your tool for planning and managing events like weddings, parties, meetings, you name it. Create event tasks, track guest lists, manage schedules, send invitations, and monitor logistics all in one place. Built to reduce stress while organizing special moments.",
         "iconLogo": "https://play-lh.googleusercontent.com/WXjYIEVCm14Ngbg8buU4L-_uxH74Oxr3WCKswvMS_8NsAYI7dA5mBYC3pJzT4hSQWUc=w240-h480-rw",
         "screenshots": [
-          "https://raw.githubusercontent.com/D4rK7355608/com.d4rk.androidtutorials/refs/heads/master/app/src/main/play/listings/en-US/graphics/ic_launcher-playstore.png",
-          "https://raw.githubusercontent.com/D4rK7355608/com.d4rk.androidtutorials/refs/heads/master/app/src/main/play/listings/en-US/graphics/ic_launcher-playstore.png",
           "https://raw.githubusercontent.com/D4rK7355608/com.d4rk.androidtutorials/refs/heads/master/app/src/main/play/listings/en-US/graphics/ic_launcher-playstore.png"
         ]
       }
