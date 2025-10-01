@@ -50,6 +50,20 @@ optgroup {
   display: block;
 }
 
+.app-footer {
+  margin-top: auto;
+  padding: 1.5rem 1rem;
+  padding-bottom: calc(1.5rem + var(--safe-area-max-inset-bottom));
+  padding-inline-start: calc(1rem + var(--safe-area-inset-left));
+  padding-inline-end: calc(1rem + var(--safe-area-inset-right));
+  color: var(--app-footer-text-color);
+  font-size: 0.875rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
 .page-section-title {
   font-size: 1.75rem;
   font-weight: 500;
