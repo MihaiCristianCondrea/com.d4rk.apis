@@ -41,11 +41,40 @@
         const githubChannelSelect = document.getElementById('appToolkitGithubChannel');
         const githubSubmitButton = document.getElementById('appToolkitGithubSubmit');
         const githubStatus = document.getElementById('appToolkitGithubStatus');
+        const trackedCountEl = document.getElementById('appToolkitTrackedCount');
+        const releaseReadyCountEl = document.getElementById('appToolkitReleaseReadyCount');
+        const screenshotAverageEl = document.getElementById('appToolkitScreenshotAverage');
+        const reviewCountEl = document.getElementById('appToolkitReviewCount');
+        const workspacePulseEl = document.getElementById('appToolkitWorkspacePulse');
+        const toolbarPulseEl = document.getElementById('appToolkitToolbarPulse');
+        const releaseProgressEl = document.getElementById('appToolkitReleaseProgress');
+        const lastEditedEl = document.getElementById('appToolkitLastEdited');
+        const channelButtons = Array.from(
+            document.querySelectorAll('[data-app-toolkit-channel]')
+        );
+        const modeButtons = Array.from(document.querySelectorAll('[data-app-toolkit-mode]'));
+        const focusButton = document.getElementById('appToolkitFocusButton');
+        const notesButton = document.getElementById('appToolkitNotesButton');
+        let sessionNotesStorage = null;
+        const SESSION_NOTE_KEY = 'appToolkitWorkspaceNote';
 
         const state = {
             apps: [createEmptyApp()]
         };
         let lastPreviewState = { success: false, payload: null };
+        let lastTouchedAt = null;
+        let relativeTimer = null;
+        if (typeof sessionStorage !== 'undefined') {
+            try {
+                sessionNotesStorage = sessionStorage;
+                const probeKey = `${SESSION_NOTE_KEY}__probe`;
+                sessionNotesStorage.setItem(probeKey, '1');
+                sessionNotesStorage.removeItem(probeKey);
+            } catch (error) {
+                sessionNotesStorage = null;
+                console.warn('AppToolkit: Session storage unavailable for workspace notes.', error);
+            }
+        }
 
         function createEmptyApp() {
             return {
@@ -82,6 +111,8 @@
                 }
             });
             lastPreviewState = result && typeof result === 'object' ? result : { success: false };
+            const metrics = updateWorkspaceMetrics();
+            updateToolbarPulse(metrics);
             clearGithubStatus();
         }
 
@@ -111,6 +142,208 @@
             return output;
         }
 
+        function getSanitizedApps() {
+            return state.apps
+                .map((app) => sanitizeAppEntry(app))
+                .filter((app) => Object.keys(app).length > 0);
+        }
+
+        function formatAverage(value) {
+            if (!value) {
+                return '0';
+            }
+            const rounded = Math.round(value * 10) / 10;
+            return Number.isInteger(rounded) ? String(rounded) : rounded.toFixed(1);
+        }
+
+        function updateWorkspaceMetrics() {
+            const sanitizedApps = getSanitizedApps();
+            const total = sanitizedApps.length;
+            const releaseReady = sanitizedApps.filter((app) => {
+                const hasRequired = ['name', 'packageName', 'category', 'iconLogo'].every(
+                    (field) => Boolean(app[field])
+                );
+                const screenshotCount = Array.isArray(app.screenshots) ? app.screenshots.length : 0;
+                return hasRequired && screenshotCount >= 3;
+            }).length;
+            const screenshotTotal = sanitizedApps.reduce(
+                (count, app) => count + (Array.isArray(app.screenshots) ? app.screenshots.length : 0),
+                0
+            );
+            const averageScreenshots = total ? screenshotTotal / total : 0;
+            const pending = Math.max(total - releaseReady, 0);
+
+            if (trackedCountEl) {
+                trackedCountEl.textContent = String(total);
+            }
+            if (releaseReadyCountEl) {
+                releaseReadyCountEl.textContent = String(releaseReady);
+            }
+            if (screenshotAverageEl) {
+                screenshotAverageEl.textContent = formatAverage(averageScreenshots);
+            }
+            if (reviewCountEl) {
+                if (!total) {
+                    reviewCountEl.textContent = '0 entries queued';
+                } else if (pending === 0) {
+                    reviewCountEl.textContent = 'All entries are release ready';
+                } else {
+                    reviewCountEl.textContent = `${pending} ${pending === 1 ? 'entry' : 'entries'} queued`;
+                }
+            }
+            if (releaseProgressEl) {
+                const ratio = total ? Math.min(releaseReady / total, 1) : 0;
+                releaseProgressEl.style.width = `${Math.round(ratio * 100)}%`;
+                releaseProgressEl.dataset.value = ratio.toFixed(2);
+            }
+            if (workspacePulseEl) {
+                let message;
+                if (!total) {
+                    message = 'Review entries to unlock insights.';
+                } else if (pending === 0) {
+                    message = 'Everything is production ready. Ship when you are ready.';
+                } else {
+                    message = `${releaseReady}/${total} ready · ${pending} ${pending === 1 ? 'entry' : 'entries'} to refine.`;
+                }
+                workspacePulseEl.textContent = message;
+            }
+            return { total, releaseReady, pending };
+        }
+
+        function extractStatusMessage(element) {
+            if (!element) {
+                return '';
+            }
+            const messageSpan = element.querySelector('span:last-child');
+            if (messageSpan && messageSpan.textContent) {
+                return messageSpan.textContent.trim();
+            }
+            return element.textContent ? element.textContent.trim() : '';
+        }
+
+        function updateToolbarPulse(metrics) {
+            if (!toolbarPulseEl) {
+                return;
+            }
+            const snapshot = metrics || updateWorkspaceMetrics();
+            const status = validationStatus ? validationStatus.dataset.status : '';
+            const statusMessage = extractStatusMessage(validationStatus);
+            if (status === 'success' && statusMessage) {
+                toolbarPulseEl.textContent = statusMessage;
+                return;
+            }
+            if (status === 'error' && statusMessage) {
+                toolbarPulseEl.textContent = statusMessage;
+                return;
+            }
+            if (status === 'warning' && statusMessage) {
+                toolbarPulseEl.textContent = statusMessage;
+                return;
+            }
+            if (snapshot.total) {
+                toolbarPulseEl.textContent = snapshot.pending
+                    ? `${snapshot.pending} ${snapshot.pending === 1 ? 'entry needs' : 'entries need'} attention`
+                    : 'Ready to publish';
+            } else {
+                toolbarPulseEl.textContent = 'Awaiting input';
+            }
+        }
+
+        function updateLastEditedDisplay() {
+            if (!lastEditedEl) {
+                return;
+            }
+            if (!lastTouchedAt) {
+                lastEditedEl.textContent = 'awaiting changes';
+                lastEditedEl.removeAttribute('title');
+                return;
+            }
+            const diff = Date.now() - lastTouchedAt;
+            let label = 'moments ago';
+            if (diff >= 86400000) {
+                const days = Math.round(diff / 86400000);
+                label = `${days} day${days === 1 ? '' : 's'} ago`;
+            } else if (diff >= 3600000) {
+                const hours = Math.round(diff / 3600000);
+                label = `${hours} hr${hours === 1 ? '' : 's'} ago`;
+            } else if (diff >= 60000) {
+                const minutes = Math.round(diff / 60000);
+                label = `${minutes} min${minutes === 1 ? '' : 's'} ago`;
+            }
+            lastEditedEl.textContent = label;
+            lastEditedEl.title = new Date(lastTouchedAt).toLocaleString();
+        }
+
+        function startRelativeTimer() {
+            if (relativeTimer || typeof window === 'undefined') {
+                return;
+            }
+            relativeTimer = window.setInterval(() => {
+                if (!builderRoot || !document.body.contains(builderRoot)) {
+                    window.clearInterval(relativeTimer);
+                    relativeTimer = null;
+                    return;
+                }
+                updateLastEditedDisplay();
+            }, 45000);
+        }
+
+        function touchWorkspace() {
+            lastTouchedAt = Date.now();
+            updateLastEditedDisplay();
+            startRelativeTimer();
+        }
+
+        function setLayoutMode(mode) {
+            if (!builderRoot) {
+                return;
+            }
+            const target = mode === 'compact' ? 'compact' : 'flow';
+            builderRoot.dataset.layout = target;
+            modeButtons.forEach((button) => {
+                button.classList.toggle('active', button.dataset.appToolkitMode === target);
+            });
+        }
+
+        function setChannelFocus(channel) {
+            if (!builderRoot) {
+                return;
+            }
+            const allowed = ['debug', 'release', 'both'];
+            const target = allowed.includes(channel) ? channel : 'both';
+            builderRoot.dataset.channel = target;
+            channelButtons.forEach((button) => {
+                button.classList.toggle('active', button.dataset.appToolkitChannel === target);
+            });
+        }
+
+        function setPreviewStatus(options) {
+            utils.setValidationStatus(validationStatus, options);
+            updateToolbarPulse();
+        }
+
+        function loadSavedNote() {
+            if (!notesButton || !sessionNotesStorage) {
+                return;
+            }
+            const saved = sessionNotesStorage.getItem(SESSION_NOTE_KEY) || '';
+            notesButton.dataset.noteState = saved ? 'saved' : 'empty';
+            if (saved) {
+                notesButton.setAttribute('aria-label', 'Edit session note');
+                notesButton.setAttribute('title', saved);
+            } else {
+                notesButton.setAttribute('aria-label', 'Capture session note');
+                notesButton.removeAttribute('title');
+            }
+        }
+
+        setLayoutMode(builderRoot && builderRoot.dataset ? builderRoot.dataset.layout : 'flow');
+        setChannelFocus(
+            builderRoot && builderRoot.dataset ? builderRoot.dataset.channel : 'both'
+        );
+        updateLastEditedDisplay();
+        loadSavedNote();
+
         function render() {
             if (!entriesContainer) return;
             utils.clearElement(entriesContainer);
@@ -138,6 +371,7 @@
                     } else {
                         state.apps.splice(index, 1);
                     }
+                    touchWorkspace();
                     render();
                 }
             });
@@ -150,6 +384,7 @@
                 value: app.name,
                 onInput: (value) => {
                     state.apps[index].name = value;
+                    touchWorkspace();
                     updatePreview();
                 }
             });
@@ -161,6 +396,7 @@
                 placeholder: 'com.example.app',
                 onInput: (value) => {
                     state.apps[index].packageName = value;
+                    touchWorkspace();
                     updatePreview();
                 }
             });
@@ -171,6 +407,7 @@
                 value: app.category,
                 onInput: (value) => {
                     state.apps[index].category = value;
+                    touchWorkspace();
                     updatePreview();
                 }
             });
@@ -182,6 +419,7 @@
                 rows: 3,
                 onInput: (value) => {
                     state.apps[index].description = value;
+                    touchWorkspace();
                     updatePreview();
                 }
             });
@@ -193,6 +431,7 @@
                 placeholder: 'https://example.com/icon.png',
                 onInput: (value) => {
                     state.apps[index].iconLogo = value;
+                    touchWorkspace();
                     updatePreview();
                 }
             });
@@ -209,6 +448,7 @@
                 icon: 'add',
                 onClick: () => {
                     state.apps[index].screenshots.push('');
+                    touchWorkspace();
                     render();
                 }
             });
@@ -228,6 +468,7 @@
                 placeholder: 'https://example.com/screenshot.png',
                 onInput: (text) => {
                     state.apps[appIndex].screenshots[screenshotIndex] = text;
+                    touchWorkspace();
                     updatePreview();
                 }
             });
@@ -241,6 +482,7 @@
                     if (!state.apps[appIndex].screenshots.length) {
                         state.apps[appIndex].screenshots.push('');
                     }
+                    touchWorkspace();
                     render();
                 }
             });
@@ -253,7 +495,7 @@
                 const json = utils.parseJson(text);
                 const appsData = extractAppsArray(json);
                 if (!appsData.length) {
-                    utils.setValidationStatus(validationStatus, {
+                    setPreviewStatus({
                         status: 'error',
                         message: 'No apps found in the imported JSON.'
                     });
@@ -274,10 +516,11 @@
                         return sanitized.length ? sanitized : [''];
                     })()
                 }));
+                touchWorkspace();
                 render();
             } catch (error) {
                 console.error('AppToolkit: Failed to import JSON.', error);
-                utils.setValidationStatus(validationStatus, {
+                setPreviewStatus({
                     status: 'error',
                     message: error.message || 'Unable to import JSON file.'
                 });
@@ -335,7 +578,7 @@
             const targetUrl =
                 urlSource || (fetchInput ? fetchInput.value.trim() : '');
             if (!targetUrl) {
-                utils.setValidationStatus(validationStatus, {
+                setPreviewStatus({
                     status: 'error',
                     message: 'Enter a JSON URL to fetch.'
                 });
@@ -372,7 +615,7 @@
                 if (fetchButton) {
                     setLoadingState(fetchButton, false);
                 }
-                utils.setValidationStatus(validationStatus, {
+                setPreviewStatus({
                     status: 'error',
                     message: error.message || 'Unable to fetch remote JSON.'
                 });
@@ -660,6 +903,7 @@
         if (addButton) {
             addButton.addEventListener('click', () => {
                 state.apps.push(createEmptyApp());
+                touchWorkspace();
                 render();
             });
         }
@@ -667,6 +911,7 @@
         if (resetButton) {
             resetButton.addEventListener('click', () => {
                 state.apps = [createEmptyApp()];
+                touchWorkspace();
                 render();
             });
         }
@@ -732,6 +977,78 @@
         if (githubSubmitButton) {
             githubSubmitButton.addEventListener('click', () => {
                 publishToGithub();
+            });
+        }
+
+        if (channelButtons.length) {
+            channelButtons.forEach((button) => {
+                button.addEventListener('click', () => {
+                    const targetChannel = button.dataset.appToolkitChannel;
+                    setChannelFocus(targetChannel);
+                    if (toolbarPulseEl) {
+                        const label = button.textContent ? button.textContent.trim() : targetChannel;
+                        toolbarPulseEl.textContent = `Channel focus · ${label}`;
+                    }
+                });
+            });
+        }
+
+        if (modeButtons.length) {
+            modeButtons.forEach((button) => {
+                button.addEventListener('click', () => {
+                    const targetMode = button.dataset.appToolkitMode;
+                    setLayoutMode(targetMode);
+                    if (toolbarPulseEl) {
+                        toolbarPulseEl.textContent =
+                            targetMode === 'compact'
+                                ? 'Compact view · Focus on one listing at a time'
+                                : 'Flow view · Side-by-side with preview';
+                    }
+                });
+            });
+        }
+
+        if (focusButton) {
+            focusButton.addEventListener('click', () => {
+                const current = builderRoot && builderRoot.dataset.layout === 'compact';
+                const next = current ? 'flow' : 'compact';
+                setLayoutMode(next);
+                if (toolbarPulseEl) {
+                    toolbarPulseEl.textContent =
+                        next === 'compact'
+                            ? 'Focus mode enabled · Compact layout'
+                            : 'Flow layout restored';
+                }
+            });
+        }
+
+        if (notesButton) {
+            notesButton.addEventListener('click', () => {
+                if (!sessionNotesStorage) {
+                    alert('Session notes are unavailable in this environment.');
+                    return;
+                }
+                const existing = sessionNotesStorage.getItem(SESSION_NOTE_KEY) || '';
+                const note = typeof window !== 'undefined'
+                    ? window.prompt('Capture a quick note for this workspace:', existing)
+                    : existing;
+                if (note === null || note === undefined) {
+                    return;
+                }
+                const trimmed = note.trim();
+                if (trimmed) {
+                    sessionNotesStorage.setItem(SESSION_NOTE_KEY, trimmed);
+                    loadSavedNote();
+                    if (toolbarPulseEl) {
+                        toolbarPulseEl.textContent = 'Note saved for this session.';
+                    }
+                } else {
+                    sessionNotesStorage.removeItem(SESSION_NOTE_KEY);
+                    loadSavedNote();
+                    if (toolbarPulseEl) {
+                        toolbarPulseEl.textContent = 'Session note cleared.';
+                    }
+                }
             });
         }
 
