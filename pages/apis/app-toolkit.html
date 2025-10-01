@@ -142,9 +142,27 @@
               aria-describedby="appToolkitGithubTokenHelp"
             />
             <span class="api-field-helper" id="appToolkitGithubTokenHelp"
-              >Requires the <code>repo</code> scope.</span
+              >Requires the <code>repo</code> scope. Paste the token or load it
+              from a text file.</span
             >
           </label>
+          <div class="api-field-actions">
+            <input
+              type="file"
+              id="appToolkitGithubTokenFile"
+              accept="text/plain,.txt,.token"
+              hidden
+            />
+            <md-outlined-button
+              type="button"
+              id="appToolkitGithubTokenFileButton"
+            >
+              <md-icon slot="icon"
+                ><span class="material-symbols-outlined">description</span></md-icon
+              >
+              Load token from file
+            </md-outlined-button>
+          </div>
           <label class="api-field" for="appToolkitGithubRepo">
             <span class="api-field-label">Repository (owner/name)</span>
             <input

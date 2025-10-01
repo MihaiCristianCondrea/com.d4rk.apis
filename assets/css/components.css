@@ -686,6 +686,13 @@ md-filled-tonal-button md-icon[slot='icon'] {
   gap: 0.4rem;
 }
 
+.api-field-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
 .api-field-label {
   font-size: 0.85rem;
   font-weight: 600;
