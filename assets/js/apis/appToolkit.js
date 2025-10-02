@@ -45,6 +45,7 @@
         'Video Players & Editors',
         'Weather'
     ];
+    const PACKAGE_NAME_PATTERN = /^[a-z][a-z0-9_]*(\.[a-z][a-z0-9_]*)+$/i;
 
     function initAppToolkitWorkspace() {
         const builderRoot = document.getElementById('appToolkitBuilder');
@@ -114,6 +115,7 @@
             apps: [createEmptyApp()]
         };
         let lastPreviewState = { success: false, payload: null };
+        let lastExportEvaluation = { valid: false, reasons: [] };
         let lastTouchedAt = null;
         let relativeTimer = null;
         let remoteBaselinePayload = null;
@@ -169,6 +171,200 @@
             };
         }
 
+        function ensureValidation(appIndex) {
+            const app = state.apps[appIndex];
+            if (!app) {
+                return { icon: { status: 'idle', width: 0, height: 0, override: false }, screenshots: [] };
+            }
+            if (!app._validation) {
+                app._validation = {
+                    icon: { status: 'idle', width: 0, height: 0, override: false },
+                    screenshots: []
+                };
+            } else {
+                if (!app._validation.icon) {
+                    app._validation.icon = { status: 'idle', width: 0, height: 0, override: false };
+                } else {
+                    app._validation.icon.override = Boolean(app._validation.icon.override);
+                }
+                if (!Array.isArray(app._validation.screenshots)) {
+                    app._validation.screenshots = [];
+                }
+            }
+            return app._validation;
+        }
+
+        function setScreenshotMeta(appIndex, screenshotIndex, meta) {
+            const validation = ensureValidation(appIndex);
+            validation.screenshots[screenshotIndex] = meta;
+        }
+
+        function removeScreenshotMeta(appIndex, screenshotIndex) {
+            const validation = ensureValidation(appIndex);
+            if (validation.screenshots.length > screenshotIndex) {
+                validation.screenshots.splice(screenshotIndex, 1);
+            }
+        }
+
+        function moveScreenshotMeta(appIndex, from, to) {
+            const validation = ensureValidation(appIndex);
+            const list = validation.screenshots;
+            if (!Array.isArray(list) || from === to || from < 0 || from >= list.length) {
+                return;
+            }
+            let targetIndex = to;
+            if (targetIndex < 0) targetIndex = 0;
+            if (targetIndex > list.length) targetIndex = list.length;
+            const [moved] = list.splice(from, 1);
+            if (targetIndex > from) {
+                targetIndex -= 1;
+            }
+            list.splice(targetIndex, 0, moved);
+        }
+
+        function getScreenshotMeta(appIndex, screenshotIndex) {
+            const validation = ensureValidation(appIndex);
+            return validation.screenshots[screenshotIndex] || null;
+        }
+
+        function getFilledScreenshotCount(appIndex) {
+            const screenshots = state.apps[appIndex]?.screenshots || [];
+            return screenshots.reduce((count, value) => (utils.trimString(value) ? count + 1 : count), 0);
+        }
+
+        function appendScreenshots(appIndex, values) {
+            const app = state.apps[appIndex];
+            if (!app || !Array.isArray(app.screenshots)) {
+                return [];
+            }
+            const additions = values
+                .map((value) => utils.trimString(value))
+                .filter(Boolean);
+            if (!additions.length) {
+                return [];
+            }
+            const validation = ensureValidation(appIndex);
+            additions.forEach((entry) => {
+                app.screenshots.push(entry);
+                validation.screenshots.push(null);
+            });
+            return additions;
+        }
+
+        async function appendScreenshotsFromFiles(appIndex, files) {
+            if (!files || !files.length) {
+                return [];
+            }
+            const urls = [];
+            for (const file of files) {
+                if (!file || (file.type && !file.type.startsWith('image/'))) {
+                    continue;
+                }
+                try {
+                    const dataUrl = await readFileAsDataUrl(file);
+                    if (dataUrl) {
+                        urls.push(dataUrl);
+                    }
+                } catch (error) {
+                    console.warn('AppToolkit: Unable to read dropped image file.', error);
+                }
+            }
+            return appendScreenshots(appIndex, urls);
+        }
+
+        function appendScreenshotsFromText(appIndex, text) {
+            if (!text) {
+                return [];
+            }
+            const urls = String(text)
+                .split(/\s+/)
+                .map((segment) => segment.trim())
+                .filter(Boolean);
+            return appendScreenshots(appIndex, urls);
+        }
+
+        function readFileAsDataUrl(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = () => reject(new Error('Failed to read file.'));
+                reader.readAsDataURL(file);
+            });
+        }
+
+        function formatAspectRatio(width, height) {
+            const w = Number(width);
+            const h = Number(height);
+            if (!w || !h) {
+                return '';
+            }
+            const gcd = (a, b) => {
+                return b === 0 ? a : gcd(b, a % b);
+            };
+            const divisor = gcd(Math.round(w), Math.round(h)) || 1;
+            const ratioW = Math.round(w / divisor);
+            const ratioH = Math.round(h / divisor);
+            return `${ratioW}:${ratioH}`;
+        }
+
+        function evaluateExportState() {
+            const sanitizedEntries = getSanitizedApps({ includeMeta: true });
+            const reasons = [];
+            if (!sanitizedEntries.length) {
+                reasons.push('Add at least one app before exporting.');
+            }
+            sanitizedEntries.forEach((entry) => {
+                const label =
+                    entry.sanitized?.name ||
+                    entry.sanitized?.packageName ||
+                    `App ${entry.index + 1}`;
+                const packageName = entry.sanitized?.packageName || '';
+                if (!packageName || !PACKAGE_NAME_PATTERN.test(packageName)) {
+                    reasons.push(`${label}: package name must follow reverse-domain format.`);
+                }
+                const iconUrl = entry.sanitized?.iconLogo || '';
+                if (!iconUrl || !/^https:\/\//i.test(iconUrl)) {
+                    reasons.push(`${label}: icon must use an https:// URL.`);
+                }
+                const iconValidation = ensureValidation(entry.index).icon;
+                if (iconValidation.status === 'error') {
+                    reasons.push(`${label}: icon could not be loaded.`);
+                } else if (iconValidation.status === 'warning' && !iconValidation.override) {
+                    reasons.push(`${label}: icon must be at least 512×512 or override the warning.`);
+                }
+                if ((entry.sanitized?.screenshots?.length || 0) < 3) {
+                    reasons.push(`${label}: add at least three screenshots.`);
+                }
+            });
+            return { valid: reasons.length === 0, reasons };
+        }
+
+        function updateExportControls() {
+            lastExportEvaluation = evaluateExportState();
+            const { valid, reasons } = lastExportEvaluation;
+            const message = reasons[0] || 'Resolve validation issues before exporting.';
+            if (copyButton) {
+                copyButton.disabled = !valid;
+                copyButton.title = valid ? 'Copy JSON' : message;
+            }
+            if (downloadButton) {
+                downloadButton.disabled = !valid;
+                downloadButton.title = valid ? 'Download JSON' : message;
+            }
+            if (validationStatus) {
+                const previous = validationStatus.querySelector('.export-guard');
+                if (previous) {
+                    previous.remove();
+                }
+                if (!valid && reasons.length) {
+                    const guard = document.createElement('span');
+                    guard.className = 'export-guard';
+                    guard.textContent = reasons[0];
+                    validationStatus.appendChild(guard);
+                }
+            }
+        }
+
         function updatePreview() {
             const result = utils.renderJsonPreview({
                 previewArea,
@@ -196,6 +392,7 @@
             const metrics = updateWorkspaceMetrics();
             updateToolbarPulse(metrics);
             clearGithubStatus();
+            updateExportControls();
         }
 
         function sanitizeAppEntry(app) {
@@ -450,86 +647,97 @@
             if (!diffContent) {
                 return;
             }
-            if (!remoteBaselinePayload) {
-                diffContent.textContent = 'Load a baseline JSON file to compare changes.';
+            const setEmptyState = (message) => {
+                diffContent.innerHTML = '';
+                diffContent.classList.add('diff-view--empty');
+                diffContent.textContent = message;
                 if (diffSheet) {
                     diffSheet.open = false;
+                    diffSheet.classList.add('is-empty');
                 }
+            };
+
+            diffContent.classList.remove('diff-view--empty');
+            diffContent.innerHTML = '';
+
+            if (!remoteBaselinePayload) {
+                setEmptyState('Load a baseline JSON file to compare changes.');
                 return;
             }
-            let shouldOpen = true;
+
             if (!lastPreviewState.success || !lastPreviewState.payload) {
-                diffContent.textContent = 'Resolve preview errors to view the diff.';
-            } else {
-                const baselineApps =
-                    extractAppsArray(remoteBaselinePayload?.data || remoteBaselinePayload) || [];
-                const currentApps =
-                    extractAppsArray(lastPreviewState.payload?.data || lastPreviewState.payload) || [];
-                const normalize = (app) => sanitizeAppEntry(app);
-                const baseline = baselineApps.map(normalize);
-                const current = currentApps.map(normalize);
-                const keyFor = (app, index) =>
-                    utils.trimString(app.packageName) || utils.trimString(app.name) || `index-${index}`;
-                const baselineMap = new Map();
-                baseline.forEach((app, index) => {
-                    baselineMap.set(keyFor(app, index), app);
-                });
-                const currentMap = new Map();
-                current.forEach((app, index) => {
-                    currentMap.set(keyFor(app, index), app);
-                });
-                const added = [];
-                const removed = [];
-                const changed = [];
-                currentMap.forEach((value, key) => {
-                    if (!baselineMap.has(key)) {
-                        added.push(value);
-                    } else {
-                        const previous = baselineMap.get(key);
-                        if (JSON.stringify(previous) !== JSON.stringify(value)) {
-                            changed.push({ previous, current: value });
-                        }
-                    }
-                });
-                baselineMap.forEach((value, key) => {
-                    if (!currentMap.has(key)) {
-                        removed.push(value);
-                    }
-                });
-                if (!added.length && !removed.length && !changed.length) {
-                    diffContent.textContent = 'No differences detected since the last import.';
-                } else {
-                    const formatApp = (app) => app.name || app.packageName || 'Untitled app';
-                    const lines = [];
-                    if (added.length) {
-                        lines.push('Added:');
-                        added.forEach((app) => {
-                            lines.push(`  + ${formatApp(app)}`);
-                        });
-                    }
-                    if (removed.length) {
-                        lines.push('Removed:');
-                        removed.forEach((app) => {
-                            lines.push(`  - ${formatApp(app)}`);
-                        });
-                    }
-                    if (changed.length) {
-                        lines.push('Updated:');
-                        changed.forEach(({ previous, current: updated }) => {
-                            const diffFields = Object.keys({ ...previous, ...updated }).filter(
-                                (field) => JSON.stringify(previous[field]) !== JSON.stringify(updated[field])
-                            );
-                            lines.push(
-                                `  ~ ${formatApp(updated)} (${diffFields.join(', ') || 'content changes'})`
-                            );
-                        });
-                    }
-                    diffContent.textContent = lines.join('\n');
-                }
+                setEmptyState('Resolve preview errors to view the diff.');
+                return;
             }
+
+            const diffLib = typeof jsondiffpatch !== 'undefined' ? jsondiffpatch : null;
+            if (!diffLib || typeof diffLib.create !== 'function' || !diffLib.formatters?.html) {
+                setEmptyState('Diff viewer unavailable. Ensure jsondiffpatch is loaded.');
+                return;
+            }
+
+            const baselineApps =
+                extractAppsArray(remoteBaselinePayload?.data || remoteBaselinePayload) || [];
+            const currentApps =
+                extractAppsArray(lastPreviewState.payload?.data || lastPreviewState.payload) || [];
+
+            const normalizeList = (apps) =>
+                apps
+                    .map((app, index) => ({
+                        key:
+                            utils.trimString(app.packageName) ||
+                            utils.trimString(app.name) ||
+                            `index-${index}`,
+                        data: sanitizeAppEntry(app)
+                    }))
+                    .filter((entry) => Object.keys(entry.data).length)
+                    .sort((a, b) => a.key.localeCompare(b.key))
+                    .map((entry) => entry.data);
+
+            const baseline = normalizeList(baselineApps);
+            const current = normalizeList(currentApps);
+
+            const differ = diffLib.create({ arrays: { detectMove: false }, textDiff: { minLength: 120 } });
+            const delta = differ.diff(baseline, current);
+
+            if (!delta || (typeof delta === 'object' && !Object.keys(delta).length)) {
+                setEmptyState('No differences detected since the last import.');
+                return;
+            }
+
+            diffContent.classList.remove('diff-view--empty');
             if (diffSheet) {
-                diffSheet.open = shouldOpen;
+                diffSheet.classList.remove('is-empty');
+                diffSheet.open = true;
             }
+
+            const body = document.createElement('div');
+            body.className = 'diff-view__body';
+
+            const baselineColumn = document.createElement('div');
+            baselineColumn.className = 'diff-view__column diff-view__column--baseline';
+            const baselineHeader = document.createElement('h4');
+            baselineHeader.textContent = 'Baseline';
+            baselineColumn.appendChild(baselineHeader);
+            const cloneDelta = () => JSON.parse(JSON.stringify(delta));
+            baselineColumn.insertAdjacentHTML(
+                'beforeend',
+                diffLib.formatters.html.format(cloneDelta(), baseline)
+            );
+
+            const currentColumn = document.createElement('div');
+            currentColumn.className = 'diff-view__column diff-view__column--current';
+            const currentHeader = document.createElement('h4');
+            currentHeader.textContent = 'Workspace';
+            currentColumn.appendChild(currentHeader);
+            currentColumn.insertAdjacentHTML(
+                'beforeend',
+                diffLib.formatters.html.format(cloneDelta(), baseline)
+            );
+
+            body.appendChild(baselineColumn);
+            body.appendChild(currentColumn);
+            diffContent.appendChild(body);
         }
 
         function applyCardFilters() {
@@ -966,8 +1174,6 @@
                 id: packageHelperId,
                 text: 'Use reverse-domain package IDs (e.g., com.vendor.app).'
             });
-            const packagePattern = /^[a-z][a-z0-9_]*(\.[a-z0-9_]+)+$/i;
-
             const validatePackageField = (value) => {
                 const trimmed = utils.trimString(value);
                 if (!trimmed) {
@@ -978,7 +1184,7 @@
                     packageField.error = false;
                     return;
                 }
-                if (!packagePattern.test(trimmed)) {
+                if (!PACKAGE_NAME_PATTERN.test(trimmed)) {
                     packageHelper.setState(
                         'error',
                         'Enter a reverse-domain package name like com.vendor.app.'
@@ -1056,22 +1262,53 @@
                 media: true
             });
             let iconValidationRequest = 0;
+            const iconOverrideToggle = document.createElement('md-checkbox');
+            iconOverrideToggle.classList.add('builder-icon-override');
+            iconOverrideToggle.label = 'Override size warning';
+            iconOverrideToggle.hidden = true;
+            const iconValidationState = ensureValidation(index).icon;
+            iconOverrideToggle.checked = Boolean(iconValidationState.override);
+            iconOverrideToggle.addEventListener('change', () => {
+                const validation = ensureValidation(index).icon;
+                validation.override = iconOverrideToggle.checked;
+                iconField.error = validation.status === 'warning' && !validation.override;
+                updateExportControls();
+            });
+            iconHelper.element.appendChild(iconOverrideToggle);
 
             const validateIconField = (value) => {
                 const trimmed = utils.trimString(value);
                 const requestId = ++iconValidationRequest;
+                const validation = ensureValidation(index).icon;
                 if (!trimmed) {
                     iconHelper.setState('info', 'Provide an HTTPS icon URL (512×512 recommended).');
                     iconField.error = false;
+                    validation.status = 'idle';
+                    validation.width = 0;
+                    validation.height = 0;
+                    validation.override = false;
+                    iconOverrideToggle.hidden = true;
+                    iconOverrideToggle.checked = false;
+                    updateExportControls();
                     return;
                 }
                 if (!/^https:\/\//i.test(trimmed)) {
                     iconHelper.setState('error', 'Icon URL must start with https://');
                     iconField.error = true;
+                    validation.status = 'error';
+                    validation.width = 0;
+                    validation.height = 0;
+                    validation.override = false;
+                    iconOverrideToggle.hidden = true;
+                    iconOverrideToggle.checked = false;
+                    updateExportControls();
                     return;
                 }
                 iconHelper.setState('loading', 'Checking icon…');
                 iconField.error = false;
+                validation.status = 'loading';
+                iconOverrideToggle.hidden = true;
+                iconOverrideToggle.checked = Boolean(validation.override);
                 const probe = new Image();
                 probe.decoding = 'async';
                 probe.referrerPolicy = 'no-referrer';
@@ -1087,14 +1324,28 @@
                             { previewSrc: trimmed }
                         );
                         iconField.error = false;
+                        validation.status = 'success';
+                        validation.width = naturalWidth;
+                        validation.height = naturalHeight;
+                        validation.override = false;
+                        iconOverrideToggle.hidden = true;
+                        iconOverrideToggle.checked = false;
                     } else {
+                        validation.status = 'warning';
+                        validation.width = naturalWidth;
+                        validation.height = naturalHeight;
+                        const currentOverride = Boolean(validation.override);
+                        iconOverrideToggle.hidden = false;
+                        iconOverrideToggle.checked = currentOverride;
                         iconHelper.setState(
-                            'error',
-                            'Icon must be at least 512×512 pixels.',
+                            'warning',
+                            `Icon is ${naturalWidth}×${naturalHeight}. Enable the override to proceed.`,
                             { previewSrc: trimmed }
                         );
-                        iconField.error = true;
+                        iconField.error = !currentOverride;
+                        validation.override = currentOverride;
                     }
+                    updateExportControls();
                 };
                 probe.onerror = () => {
                     if (requestId !== iconValidationRequest) {
@@ -1102,6 +1353,13 @@
                     }
                     iconHelper.setState('error', 'Unable to load icon preview.');
                     iconField.error = true;
+                    validation.status = 'error';
+                    validation.width = 0;
+                    validation.height = 0;
+                    validation.override = false;
+                    iconOverrideToggle.hidden = true;
+                    iconOverrideToggle.checked = false;
+                    updateExportControls();
                 };
                 probe.src = trimmed;
             };
@@ -1124,13 +1382,23 @@
             const screenshotsSection = utils.createElement('div', {
                 classNames: ['builder-subsection', 'builder-screenshots']
             });
-            screenshotsSection.appendChild(utils.createElement('h4', { text: 'Screenshots' }));
-            const screenshotsList = document.createElement('md-list');
+            const screenshotHeader = utils.createElement('div', {
+                classNames: ['builder-subsection-header']
+            });
+            screenshotHeader.appendChild(utils.createElement('h4', { text: 'Screenshots' }));
+            const screenshotCountChip = utils.createElement('span', {
+                classNames: ['builder-hint-chip'],
+                text: ''
+            });
+            screenshotHeader.appendChild(screenshotCountChip);
+            screenshotsSection.appendChild(screenshotHeader);
+
+            const screenshotsList = document.createElement('div');
             screenshotsList.classList.add('screenshot-list');
             screenshotsList.dataset.appIndex = String(index);
 
             const handleDragStart = (event) => {
-                const item = event.target.closest('md-list-item[data-screenshot-index]');
+                const item = event.target.closest('.screenshot-item[data-screenshot-index]');
                 if (!item) {
                     return;
                 }
@@ -1144,22 +1412,26 @@
             };
 
             const handleDragEnd = (event) => {
-                const item = event.target.closest('md-list-item[data-screenshot-index]');
+                const item = event.target.closest('.screenshot-item[data-screenshot-index]');
                 if (item) {
                     item.classList.remove('dragging');
                 }
                 draggingScreenshot = null;
-                screenshotsList.querySelectorAll('.drag-over').forEach((el) => el.classList.remove('drag-over'));
+                screenshotsList
+                    .querySelectorAll('.drag-over')
+                    .forEach((el) => el.classList.remove('drag-over'));
             };
 
             const handleDragOver = (event) => {
                 if (!draggingScreenshot || draggingScreenshot.appIndex !== index) {
                     return;
                 }
-                const item = event.target.closest('md-list-item[data-screenshot-index]');
+                const item = event.target.closest('.screenshot-item[data-screenshot-index]');
                 event.preventDefault();
                 if (item) {
-                    screenshotsList.querySelectorAll('.drag-over').forEach((el) => el.classList.remove('drag-over'));
+                    screenshotsList
+                        .querySelectorAll('.drag-over')
+                        .forEach((el) => el.classList.remove('drag-over'));
                     item.classList.add('drag-over');
                 }
             };
@@ -1169,8 +1441,10 @@
                     return;
                 }
                 event.preventDefault();
-                const item = event.target.closest('md-list-item[data-screenshot-index]');
-                let targetIndex = item ? Number(item.dataset.screenshotIndex) : state.apps[index].screenshots.length - 1;
+                const item = event.target.closest('.screenshot-item[data-screenshot-index]');
+                let targetIndex = item
+                    ? Number(item.dataset.screenshotIndex)
+                    : state.apps[index].screenshots.length - 1;
                 if (item) {
                     const rect = item.getBoundingClientRect();
                     const offset = event.clientY - rect.top;
@@ -1189,23 +1463,142 @@
             screenshotsList.addEventListener('drop', handleDrop);
 
             app.screenshots.forEach((url, screenshotIndex) => {
-                screenshotsList.appendChild(createScreenshotField(index, screenshotIndex, url));
+                screenshotsList.appendChild(
+                    createScreenshotField(index, screenshotIndex, url, {
+                        onChange: () => updateScreenshotsState()
+                    })
+                );
             });
 
-            const addScreenshotButton = document.createElement('md-text-button');
-            const addIcon = document.createElement('md-icon');
-            addIcon.setAttribute('slot', 'icon');
-            addIcon.innerHTML = '<span class="material-symbols-outlined">add</span>';
-            addScreenshotButton.appendChild(addIcon);
-            addScreenshotButton.appendChild(document.createTextNode('Add screenshot'));
-            addScreenshotButton.addEventListener('click', () => {
-                state.apps[index].screenshots.push('');
-                touchWorkspace();
-                render();
+            const dropZone = document.createElement('div');
+            dropZone.className = 'screenshot-dropzone';
+            dropZone.tabIndex = 0;
+            dropZone.innerHTML =
+                '<strong>Drop images or paste links</strong>' +
+                '<span>Drag files, paste URLs, or use the upload button below.</span>' +
+                '<span class="shortcut">Tip: <kbd>Ctrl</kbd> + <kbd>V</kbd> to add from clipboard.</span>';
+
+            const screenshotActions = document.createElement('div');
+            screenshotActions.classList.add('screenshot-actions');
+
+            const fileInput = document.createElement('input');
+            fileInput.type = 'file';
+            fileInput.accept = 'image/*';
+            fileInput.multiple = true;
+            fileInput.hidden = true;
+
+            const uploadButton = document.createElement('md-filled-tonal-button');
+            const uploadIcon = document.createElement('md-icon');
+            uploadIcon.setAttribute('slot', 'icon');
+            uploadIcon.innerHTML = '<span class="material-symbols-outlined">cloud_upload</span>';
+            uploadButton.appendChild(uploadIcon);
+            uploadButton.appendChild(document.createTextNode('Upload images'));
+            uploadButton.addEventListener('click', () => {
+                fileInput.click();
+            });
+
+            fileInput.addEventListener('change', async () => {
+                const files = fileInput.files;
+                let added = 0;
+                if (files && files.length) {
+                    added += (await appendScreenshotsFromFiles(index, files)).length;
+                }
+                fileInput.value = '';
+                if (added) {
+                    touchWorkspace();
+                    render();
+                }
+            });
+
+            const urlField = document.createElement('md-filled-text-field');
+            urlField.setAttribute('label', 'Screenshot URL');
+            urlField.setAttribute('placeholder', 'https://example.com/screenshot.png');
+            urlField.setAttribute('inputmode', 'url');
+            const addUrlButton = document.createElement('md-text-button');
+            addUrlButton.textContent = 'Add URL';
+
+            const commitUrl = () => {
+                const additions = appendScreenshots(index, [urlField.value]);
+                if (additions.length) {
+                    urlField.value = '';
+                    touchWorkspace();
+                    render();
+                }
+            };
+
+            addUrlButton.addEventListener('click', () => {
+                commitUrl();
+            });
+            urlField.addEventListener('keydown', (event) => {
+                if (event.key === 'Enter') {
+                    event.preventDefault();
+                    commitUrl();
+                }
+            });
+
+            screenshotActions.appendChild(uploadButton);
+            screenshotActions.appendChild(urlField);
+            screenshotActions.appendChild(addUrlButton);
+            screenshotActions.appendChild(fileInput);
+
+            const handleDropZone = async (event) => {
+                event.preventDefault();
+                dropZone.dataset.state = '';
+                let added = 0;
+                const files = event.dataTransfer?.files;
+                if (files && files.length) {
+                    added += (await appendScreenshotsFromFiles(index, files)).length;
+                }
+                const textData =
+                    event.dataTransfer?.getData('text/uri-list') ||
+                    event.dataTransfer?.getData('text/plain');
+                if (textData) {
+                    added += appendScreenshotsFromText(index, textData).length;
+                }
+                if (added) {
+                    touchWorkspace();
+                    render();
+                }
+            };
+
+            dropZone.addEventListener('dragover', (event) => {
+                event.preventDefault();
+                dropZone.dataset.state = 'active';
+            });
+            dropZone.addEventListener('dragleave', () => {
+                dropZone.dataset.state = '';
+            });
+            dropZone.addEventListener('drop', handleDropZone);
+            dropZone.addEventListener('paste', (event) => {
+                const text = event.clipboardData?.getData('text');
+                if (text) {
+                    event.preventDefault();
+                    const added = appendScreenshotsFromText(index, text).length;
+                    if (added) {
+                        touchWorkspace();
+                        render();
+                    }
+                }
             });
 
             screenshotsSection.appendChild(screenshotsList);
-            screenshotsSection.appendChild(addScreenshotButton);
+            screenshotsSection.appendChild(dropZone);
+            screenshotsSection.appendChild(screenshotActions);
+
+            const updateScreenshotsState = () => {
+                const count = getFilledScreenshotCount(index);
+                if (count >= 3) {
+                    screenshotsSection.dataset.countState = 'ready';
+                    screenshotCountChip.dataset.state = 'complete';
+                    screenshotCountChip.textContent = `${count} screenshots ready`;
+                } else {
+                    screenshotsSection.dataset.countState = 'needs';
+                    screenshotCountChip.dataset.state = 'warning';
+                    screenshotCountChip.textContent = `${count}/3 screenshots added`;
+                }
+            };
+
+            updateScreenshotsState();
             fields.appendChild(screenshotsSection);
             card.appendChild(fields);
             return card;
@@ -1231,25 +1624,58 @@
                 targetIndex -= 1;
             }
             list.splice(targetIndex, 0, moved);
+            moveScreenshotMeta(appIndex, from, targetIndex);
             touchWorkspace();
             render();
         }
 
-        function createScreenshotField(appIndex, screenshotIndex, value) {
-            const item = document.createElement('md-list-item');
+        function createScreenshotField(appIndex, screenshotIndex, value, { onChange } = {}) {
+            const item = document.createElement('div');
             item.classList.add('screenshot-item');
             item.dataset.appIndex = String(appIndex);
             item.dataset.screenshotIndex = String(screenshotIndex);
-            item.setAttribute('draggable', 'true');
+            item.draggable = true;
 
-            const startContainer = document.createElement('div');
-            startContainer.setAttribute('slot', 'start');
-            startContainer.classList.add('screenshot-start');
+            const actionsRow = document.createElement('div');
+            actionsRow.classList.add('screenshot-item-actions');
 
             const dragHandle = document.createElement('md-icon-button');
             dragHandle.classList.add('screenshot-drag-handle');
             dragHandle.innerHTML = '<span class="material-symbols-outlined">drag_indicator</span>';
-            startContainer.appendChild(dragHandle);
+            actionsRow.appendChild(dragHandle);
+
+            const actionsEnd = document.createElement('div');
+            actionsEnd.classList.add('screenshot-item-actions-end');
+
+            const openButton = document.createElement('md-icon-button');
+            openButton.setAttribute('aria-label', 'Preview screenshot');
+            openButton.innerHTML = '<span class="material-symbols-outlined">visibility</span>';
+            openButton.addEventListener('click', (event) => {
+                event.stopPropagation();
+                openScreenshotDialog(state.apps[appIndex].screenshots[screenshotIndex], {
+                    title: `Screenshot ${screenshotIndex + 1}`,
+                    packageName: state.apps[appIndex].packageName || state.apps[appIndex].name || ''
+                });
+            });
+            actionsEnd.appendChild(openButton);
+
+            const removeButton = document.createElement('md-icon-button');
+            removeButton.setAttribute('aria-label', 'Remove screenshot');
+            removeButton.innerHTML = '<span class="material-symbols-outlined">delete</span>';
+            removeButton.addEventListener('click', (event) => {
+                event.stopPropagation();
+                state.apps[appIndex].screenshots.splice(screenshotIndex, 1);
+                removeScreenshotMeta(appIndex, screenshotIndex);
+                if (!state.apps[appIndex].screenshots.length) {
+                    state.apps[appIndex].screenshots.push('');
+                }
+                touchWorkspace();
+                render();
+            });
+            actionsEnd.appendChild(removeButton);
+
+            actionsRow.appendChild(actionsEnd);
+            item.appendChild(actionsRow);
 
             const thumbnailWrapper = document.createElement('div');
             thumbnailWrapper.classList.add('screenshot-thumbnail');
@@ -1258,11 +1684,11 @@
             thumbnail.decoding = 'async';
             thumbnail.referrerPolicy = 'no-referrer';
             thumbnailWrapper.appendChild(thumbnail);
-            startContainer.appendChild(thumbnailWrapper);
-            item.appendChild(startContainer);
+            item.appendChild(thumbnailWrapper);
 
-            const headlineContainer = document.createElement('div');
-            headlineContainer.setAttribute('slot', 'headline');
+            const infoContainer = document.createElement('div');
+            infoContainer.classList.add('screenshot-info');
+
             const textField = document.createElement('md-filled-text-field');
             textField.setAttribute('label', `Screenshot ${screenshotIndex + 1}`);
             textField.setAttribute('placeholder', 'https://example.com/screenshot.png');
@@ -1273,43 +1699,36 @@
                 updateThumbnail(nextValue);
                 touchWorkspace();
                 updatePreview();
-            });
-            headlineContainer.appendChild(textField);
-            item.appendChild(headlineContainer);
-
-            const openButton = document.createElement('md-icon-button');
-            openButton.setAttribute('slot', 'end');
-            openButton.setAttribute('aria-label', 'Preview screenshot');
-            openButton.innerHTML = '<span class="material-symbols-outlined">visibility</span>';
-            openButton.addEventListener('click', (event) => {
-                event.stopPropagation();
-                openScreenshotDialog(state.apps[appIndex].screenshots[screenshotIndex], {
-                    title: `Screenshot ${screenshotIndex + 1}`,
-                    packageName: state.apps[appIndex].packageName || state.apps[appIndex].name || ''
-                });
-            });
-            item.appendChild(openButton);
-
-            const removeButton = document.createElement('md-icon-button');
-            removeButton.setAttribute('slot', 'end');
-            removeButton.setAttribute('aria-label', 'Remove screenshot');
-            removeButton.innerHTML = '<span class="material-symbols-outlined">delete</span>';
-            removeButton.addEventListener('click', (event) => {
-                event.stopPropagation();
-                state.apps[appIndex].screenshots.splice(screenshotIndex, 1);
-                if (!state.apps[appIndex].screenshots.length) {
-                    state.apps[appIndex].screenshots.push('');
+                if (typeof onChange === 'function') {
+                    onChange();
                 }
-                touchWorkspace();
-                render();
             });
-            item.appendChild(removeButton);
+            infoContainer.appendChild(textField);
+
+            const metaInfo = document.createElement('div');
+            metaInfo.classList.add('screenshot-meta');
+            infoContainer.appendChild(metaInfo);
+
+            item.appendChild(infoContainer);
+
+            const applyMetaInfo = (meta) => {
+                if (meta && meta.width && meta.height) {
+                    const ratioText = meta.ratio ? ` · ${meta.ratio}` : '';
+                    metaInfo.dataset.state = meta.state || 'info';
+                    metaInfo.textContent = `${meta.width}×${meta.height}${ratioText}`;
+                } else {
+                    metaInfo.dataset.state = 'info';
+                    metaInfo.textContent = 'Drop an image or paste a URL to preview size.';
+                }
+            };
 
             const updateThumbnail = (url) => {
                 const trimmed = utils.trimString(url);
                 if (!trimmed) {
                     thumbnail.removeAttribute('src');
                     thumbnailWrapper.dataset.state = 'empty';
+                    setScreenshotMeta(appIndex, screenshotIndex, null);
+                    applyMetaInfo(null);
                     return;
                 }
                 thumbnailWrapper.dataset.state = 'loading';
@@ -1318,9 +1737,18 @@
 
             thumbnail.addEventListener('load', () => {
                 thumbnailWrapper.dataset.state = 'ready';
+                const width = thumbnail.naturalWidth;
+                const height = thumbnail.naturalHeight;
+                const ratio = formatAspectRatio(width, height);
+                const meta = { width, height, ratio };
+                setScreenshotMeta(appIndex, screenshotIndex, meta);
+                applyMetaInfo(meta);
             });
             thumbnail.addEventListener('error', () => {
                 thumbnailWrapper.dataset.state = 'error';
+                setScreenshotMeta(appIndex, screenshotIndex, null);
+                metaInfo.dataset.state = 'error';
+                metaInfo.textContent = 'Preview unavailable — check the link.';
             });
 
             item.addEventListener('dblclick', () => {
@@ -1329,6 +1757,13 @@
                     packageName: state.apps[appIndex].packageName || state.apps[appIndex].name || ''
                 });
             });
+
+            const existingMeta = getScreenshotMeta(appIndex, screenshotIndex);
+            if (existingMeta) {
+                applyMetaInfo(existingMeta);
+            } else {
+                applyMetaInfo(null);
+            }
 
             updateThumbnail(value);
             return item;

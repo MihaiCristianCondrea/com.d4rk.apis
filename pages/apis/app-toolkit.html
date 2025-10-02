@@ -344,7 +344,12 @@
           Compare the current workspace against the last exported payload.
         </div>
         <div slot="content" class="diff-sheet-content">
-          <pre id="appToolkitDiffContent" aria-live="polite"></pre>
+          <div
+            id="appToolkitDiffContent"
+            class="diff-view diff-view--empty"
+            role="status"
+            aria-live="polite"
+          ></div>
         </div>
       </md-side-sheet>
     </div>
