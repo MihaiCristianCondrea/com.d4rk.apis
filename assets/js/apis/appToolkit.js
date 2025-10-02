@@ -450,80 +450,86 @@
             if (!diffContent) {
                 return;
             }
-            if (diffSheet) {
-                diffSheet.open = true;
-            }
             if (!remoteBaselinePayload) {
                 diffContent.textContent = 'Load a baseline JSON file to compare changes.';
+                if (diffSheet) {
+                    diffSheet.open = false;
+                }
                 return;
             }
+            let shouldOpen = true;
             if (!lastPreviewState.success || !lastPreviewState.payload) {
                 diffContent.textContent = 'Resolve preview errors to view the diff.';
-                return;
-            }
-            const baselineApps = extractAppsArray(remoteBaselinePayload?.data || remoteBaselinePayload) || [];
-            const currentApps = extractAppsArray(lastPreviewState.payload?.data || lastPreviewState.payload) || [];
-            const normalize = (app) => sanitizeAppEntry(app);
-            const baseline = baselineApps.map(normalize);
-            const current = currentApps.map(normalize);
-            const keyFor = (app, index) =>
-                utils.trimString(app.packageName) || utils.trimString(app.name) || `index-${index}`;
-            const baselineMap = new Map();
-            baseline.forEach((app, index) => {
-                baselineMap.set(keyFor(app, index), app);
-            });
-            const currentMap = new Map();
-            current.forEach((app, index) => {
-                currentMap.set(keyFor(app, index), app);
-            });
-            const added = [];
-            const removed = [];
-            const changed = [];
-            currentMap.forEach((value, key) => {
-                if (!baselineMap.has(key)) {
-                    added.push(value);
-                } else {
-                    const previous = baselineMap.get(key);
-                    if (JSON.stringify(previous) !== JSON.stringify(value)) {
-                        changed.push({ previous, current: value });
+            } else {
+                const baselineApps =
+                    extractAppsArray(remoteBaselinePayload?.data || remoteBaselinePayload) || [];
+                const currentApps =
+                    extractAppsArray(lastPreviewState.payload?.data || lastPreviewState.payload) || [];
+                const normalize = (app) => sanitizeAppEntry(app);
+                const baseline = baselineApps.map(normalize);
+                const current = currentApps.map(normalize);
+                const keyFor = (app, index) =>
+                    utils.trimString(app.packageName) || utils.trimString(app.name) || `index-${index}`;
+                const baselineMap = new Map();
+                baseline.forEach((app, index) => {
+                    baselineMap.set(keyFor(app, index), app);
+                });
+                const currentMap = new Map();
+                current.forEach((app, index) => {
+                    currentMap.set(keyFor(app, index), app);
+                });
+                const added = [];
+                const removed = [];
+                const changed = [];
+                currentMap.forEach((value, key) => {
+                    if (!baselineMap.has(key)) {
+                        added.push(value);
+                    } else {
+                        const previous = baselineMap.get(key);
+                        if (JSON.stringify(previous) !== JSON.stringify(value)) {
+                            changed.push({ previous, current: value });
+                        }
                     }
+                });
+                baselineMap.forEach((value, key) => {
+                    if (!currentMap.has(key)) {
+                        removed.push(value);
+                    }
+                });
+                if (!added.length && !removed.length && !changed.length) {
+                    diffContent.textContent = 'No differences detected since the last import.';
+                } else {
+                    const formatApp = (app) => app.name || app.packageName || 'Untitled app';
+                    const lines = [];
+                    if (added.length) {
+                        lines.push('Added:');
+                        added.forEach((app) => {
+                            lines.push(`  + ${formatApp(app)}`);
+                        });
+                    }
+                    if (removed.length) {
+                        lines.push('Removed:');
+                        removed.forEach((app) => {
+                            lines.push(`  - ${formatApp(app)}`);
+                        });
+                    }
+                    if (changed.length) {
+                        lines.push('Updated:');
+                        changed.forEach(({ previous, current: updated }) => {
+                            const diffFields = Object.keys({ ...previous, ...updated }).filter(
+                                (field) => JSON.stringify(previous[field]) !== JSON.stringify(updated[field])
+                            );
+                            lines.push(
+                                `  ~ ${formatApp(updated)} (${diffFields.join(', ') || 'content changes'})`
+                            );
+                        });
+                    }
+                    diffContent.textContent = lines.join('\n');
                 }
-            });
-            baselineMap.forEach((value, key) => {
-                if (!currentMap.has(key)) {
-                    removed.push(value);
-                }
-            });
-            if (!added.length && !removed.length && !changed.length) {
-                diffContent.textContent = 'No differences detected since the last import.';
-                return;
             }
-            const formatApp = (app) => app.name || app.packageName || 'Untitled app';
-            const lines = [];
-            if (added.length) {
-                lines.push('Added:');
-                added.forEach((app) => {
-                    lines.push(`  + ${formatApp(app)}`);
-                });
+            if (diffSheet) {
+                diffSheet.open = shouldOpen;
             }
-            if (removed.length) {
-                lines.push('Removed:');
-                removed.forEach((app) => {
-                    lines.push(`  - ${formatApp(app)}`);
-                });
-            }
-            if (changed.length) {
-                lines.push('Updated:');
-                changed.forEach(({ previous, current: updated }) => {
-                    const diffFields = Object.keys({ ...previous, ...updated }).filter(
-                        (field) => JSON.stringify(previous[field]) !== JSON.stringify(updated[field])
-                    );
-                    lines.push(
-                        `  ~ ${formatApp(updated)} (${diffFields.join(', ') || 'content changes'})`
-                    );
-                });
-            }
-            diffContent.textContent = lines.join('\n');
         }
 
         function applyCardFilters() {
@@ -838,13 +844,82 @@
                 classNames: ['builder-card-fields', 'builder-card-grid']
             });
 
-            const createFieldGroup = (element, { assistChips } = {}) => {
+            const createFieldGroup = (element, { assistChips, helper } = {}) => {
                 const wrapper = utils.createElement('div', { classNames: 'builder-field-group' });
                 wrapper.appendChild(element);
                 if (assistChips) {
                     wrapper.appendChild(assistChips);
                 }
+                if (helper) {
+                    wrapper.appendChild(helper);
+                }
                 fields.appendChild(wrapper);
+            };
+
+            const createFieldHelper = ({ id, text, media = false }) => {
+                const helper = document.createElement('div');
+                helper.className = media
+                    ? 'builder-field-helper builder-field-helper--media'
+                    : 'builder-field-helper';
+                helper.dataset.state = 'info';
+                helper.setAttribute('aria-live', 'polite');
+                if (id) {
+                    helper.id = id;
+                }
+
+                let previewContainer = null;
+                let previewImage = null;
+                if (media) {
+                    previewContainer = document.createElement('div');
+                    previewContainer.className = 'builder-field-helper-preview';
+                    previewContainer.dataset.state = 'empty';
+                    previewContainer.setAttribute('aria-hidden', 'true');
+                    previewImage = document.createElement('img');
+                    previewImage.alt = '';
+                    previewImage.decoding = 'async';
+                    previewImage.referrerPolicy = 'no-referrer';
+                    previewImage.width = 64;
+                    previewImage.height = 64;
+                    previewContainer.appendChild(previewImage);
+                    helper.appendChild(previewContainer);
+                }
+
+                const messageEl = document.createElement('span');
+                messageEl.className = 'builder-field-helper-text';
+                messageEl.textContent = text;
+                helper.appendChild(messageEl);
+
+                const setState = (state, message, { previewSrc } = {}) => {
+                    helper.dataset.state = state;
+                    if (typeof message === 'string') {
+                        messageEl.textContent = message;
+                    }
+                    if (previewContainer && previewImage) {
+                        if (state === 'loading') {
+                            previewContainer.dataset.state = 'loading';
+                            previewImage.removeAttribute('src');
+                        } else if (state === 'error') {
+                            previewContainer.dataset.state = 'error';
+                            if (previewSrc) {
+                                previewImage.src = previewSrc;
+                            } else {
+                                previewImage.removeAttribute('src');
+                            }
+                        } else if (previewSrc) {
+                            previewContainer.dataset.state = 'ready';
+                            previewImage.src = previewSrc;
+                        } else {
+                            previewContainer.dataset.state = 'empty';
+                            previewImage.removeAttribute('src');
+                        }
+                    }
+                };
+
+                const reset = () => {
+                    setState('info', text);
+                };
+
+                return { element: helper, setState, reset };
             };
 
             const buildFilledTextField = ({
@@ -886,17 +961,33 @@
             });
             createFieldGroup(nameField);
 
-            const packageChipSet = document.createElement('md-assist-chip-set');
-            packageChipSet.classList.add('builder-hint-chip-set');
-            const packageChip = document.createElement('md-assist-chip');
-            packageChip.textContent = 'Use reverse-domain IDs (e.g., com.example.app)';
-            packageChip.classList.add('builder-hint-chip');
-            packageChipSet.appendChild(packageChip);
+            const packageHelperId = `app-package-helper-${index}`;
+            const packageHelper = createFieldHelper({
+                id: packageHelperId,
+                text: 'Use reverse-domain package IDs (e.g., com.vendor.app).'
+            });
+            const packagePattern = /^[a-z][a-z0-9_]*(\.[a-z0-9_]+)+$/i;
 
-            const updatePackageChip = (value) => {
+            const validatePackageField = (value) => {
                 const trimmed = utils.trimString(value);
-                const pattern = /^[a-zA-Z][a-zA-Z0-9_]*(\.[a-zA-Z0-9_]+)+$/;
-                packageChip.dataset.state = trimmed && pattern.test(trimmed) ? 'complete' : 'warning';
+                if (!trimmed) {
+                    packageHelper.setState(
+                        'info',
+                        'Package name is required when exporting to release channels.'
+                    );
+                    packageField.error = false;
+                    return;
+                }
+                if (!packagePattern.test(trimmed)) {
+                    packageHelper.setState(
+                        'error',
+                        'Enter a reverse-domain package name like com.vendor.app.'
+                    );
+                    packageField.error = true;
+                    return;
+                }
+                packageHelper.setState('success', 'Looks good — reverse-domain pattern detected.');
+                packageField.error = false;
             };
 
             const packageField = buildFilledTextField({
@@ -907,11 +998,12 @@
                     state.apps[index].packageName = value;
                     touchWorkspace();
                     updatePreview();
-                    updatePackageChip(value);
+                    validatePackageField(value);
                 }
             });
-            updatePackageChip(app.packageName);
-            createFieldGroup(packageField, { assistChips: packageChipSet });
+            packageField.setAttribute('aria-describedby', packageHelperId);
+            validatePackageField(app.packageName);
+            createFieldGroup(packageField, { helper: packageHelper.element });
 
             const categorySelect = document.createElement('md-outlined-select');
             categorySelect.setAttribute('label', 'Category');
@@ -957,16 +1049,61 @@
             });
             createFieldGroup(descriptionField);
 
-            const iconChipSet = document.createElement('md-assist-chip-set');
-            iconChipSet.classList.add('builder-hint-chip-set');
-            const iconChip = document.createElement('md-assist-chip');
-            iconChip.textContent = 'Use HTTPS image URLs (512×512 recommended)';
-            iconChip.classList.add('builder-hint-chip');
-            iconChipSet.appendChild(iconChip);
+            const iconHelperId = `app-icon-helper-${index}`;
+            const iconHelper = createFieldHelper({
+                id: iconHelperId,
+                text: 'Provide an HTTPS icon URL (512×512 recommended).',
+                media: true
+            });
+            let iconValidationRequest = 0;
 
-            const updateIconChip = (value) => {
+            const validateIconField = (value) => {
                 const trimmed = utils.trimString(value);
-                iconChip.dataset.state = trimmed && /^https:\/\//i.test(trimmed) ? 'complete' : 'warning';
+                const requestId = ++iconValidationRequest;
+                if (!trimmed) {
+                    iconHelper.setState('info', 'Provide an HTTPS icon URL (512×512 recommended).');
+                    iconField.error = false;
+                    return;
+                }
+                if (!/^https:\/\//i.test(trimmed)) {
+                    iconHelper.setState('error', 'Icon URL must start with https://');
+                    iconField.error = true;
+                    return;
+                }
+                iconHelper.setState('loading', 'Checking icon…');
+                iconField.error = false;
+                const probe = new Image();
+                probe.decoding = 'async';
+                probe.referrerPolicy = 'no-referrer';
+                probe.onload = () => {
+                    if (requestId !== iconValidationRequest) {
+                        return;
+                    }
+                    const { naturalWidth, naturalHeight } = probe;
+                    if (naturalWidth >= 512 && naturalHeight >= 512) {
+                        iconHelper.setState(
+                            'success',
+                            `Ready · ${naturalWidth}×${naturalHeight} pixels`,
+                            { previewSrc: trimmed }
+                        );
+                        iconField.error = false;
+                    } else {
+                        iconHelper.setState(
+                            'error',
+                            'Icon must be at least 512×512 pixels.',
+                            { previewSrc: trimmed }
+                        );
+                        iconField.error = true;
+                    }
+                };
+                probe.onerror = () => {
+                    if (requestId !== iconValidationRequest) {
+                        return;
+                    }
+                    iconHelper.setState('error', 'Unable to load icon preview.');
+                    iconField.error = true;
+                };
+                probe.src = trimmed;
             };
 
             const iconField = buildFilledTextField({
@@ -977,11 +1114,12 @@
                     state.apps[index].iconLogo = value;
                     touchWorkspace();
                     updatePreview();
-                    updateIconChip(value);
+                    validateIconField(value);
                 }
             });
-            updateIconChip(app.iconLogo);
-            createFieldGroup(iconField, { assistChips: iconChipSet });
+            iconField.setAttribute('aria-describedby', iconHelperId);
+            validateIconField(app.iconLogo);
+            createFieldGroup(iconField, { helper: iconHelper.element });
 
             const screenshotsSection = utils.createElement('div', {
                 classNames: ['builder-subsection', 'builder-screenshots']
