@@ -108,6 +108,23 @@
         const focusNotesField = document.getElementById('appToolkitFocusNotes');
         const diffSheet = document.getElementById('appToolkitDiffSheet');
         const diffContent = document.getElementById('appToolkitDiffContent');
+        const dialogsToWire = [screenshotDialog, focusDialog, githubDialog];
+        dialogsToWire.forEach((dialog) => {
+            if (!dialog || dialog.dataset.dialogCloseInit === 'true') {
+                return;
+            }
+            const closeButtons = dialog.querySelectorAll('[dialog-action="close"]');
+            closeButtons.forEach((button) => {
+                button.addEventListener('click', () => {
+                    if (typeof dialog.close === 'function') {
+                        dialog.close();
+                    } else {
+                        dialog.open = false;
+                    }
+                });
+            });
+            dialog.dataset.dialogCloseInit = 'true';
+        });
         let sessionNotesStorage = null;
         const SESSION_NOTE_KEY = 'appToolkitWorkspaceNote';
 
