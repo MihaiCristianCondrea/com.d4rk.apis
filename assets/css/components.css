@@ -631,6 +631,11 @@ md-filled-tonal-button md-icon[slot='icon'] {
   width: 100%;
 }
 
+.builder-remote-controls md-filled-tonal-button {
+  justify-self: center;
+  align-self: center;
+}
+
 .builder-remote-presets {
   display: flex;
   flex-wrap: wrap;
