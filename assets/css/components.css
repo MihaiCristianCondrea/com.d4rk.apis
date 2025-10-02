@@ -880,6 +880,14 @@ md-filled-tonal-button md-icon[slot='icon'] {
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
 }
 
+.builder-card-grid md-filled-text-field,
+.builder-card-grid md-outlined-select,
+.builder-card-grid md-assist-chip-set,
+.builder-card-grid .builder-subsection {
+  width: 100%;
+  box-sizing: border-box;
+}
+
 .builder-field-group {
   display: grid;
   gap: 0.5rem;
