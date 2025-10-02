@@ -13,6 +13,13 @@ function initContactPage() {
     openButton.addEventListener('click', () => {
         contactDialog.open = true;
     });
+
+    const closeButtons = contactDialog.querySelectorAll('[dialog-action="close"]');
+    closeButtons.forEach((button) => {
+        button.addEventListener('click', () => {
+            contactDialog.close();
+        });
+    });
     openButton.dataset.dialogInit = 'true';
 
     return true;

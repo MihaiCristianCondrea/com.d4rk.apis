@@ -355,7 +355,10 @@
     </div>
   </section>
 
-  <md-dialog id="appToolkitScreenshotDialog" class="screenshot-dialog">
+  <md-dialog
+    id="appToolkitScreenshotDialog"
+    class="app-dialog screenshot-dialog"
+  >
     <div slot="headline" id="appToolkitScreenshotDialogHeadline">Screenshot preview</div>
     <div slot="content" class="screenshot-dialog-content">
       <img id="appToolkitScreenshotDialogImage" alt="Selected screenshot preview" />
@@ -369,7 +372,7 @@
     </div>
   </md-dialog>
 
-  <md-dialog id="appToolkitFocusDialog" class="focus-dialog">
+  <md-dialog id="appToolkitFocusDialog" class="app-dialog focus-dialog">
     <div slot="headline">Focus session</div>
     <div slot="content" class="focus-dialog-content">
       <div class="focus-dialog-timer" id="appToolkitFocusTimer" aria-live="polite">25:00</div>
@@ -396,7 +399,7 @@
     </div>
   </md-dialog>
 
-  <md-dialog id="appToolkitGithubDialog" class="github-dialog">
+  <md-dialog id="appToolkitGithubDialog" class="app-dialog github-dialog">
     <div slot="headline">Publish to GitHub</div>
     <div slot="content" class="github-dialog-content">
       <md-steppers id="appToolkitGithubStepper" value="authenticate">
