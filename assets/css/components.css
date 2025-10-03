@@ -26,6 +26,21 @@
   display: none;
 }
 
+.app-dialog::part(dialog) {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  padding: 0;
+  pointer-events: none;
+}
+
+.app-dialog[open]::part(dialog) {
+  pointer-events: auto;
+}
+
 .app-dialog::part(scrim) {
   background-color: rgba(15, 23, 42, 0.6);
   backdrop-filter: blur(8px);
@@ -38,7 +53,7 @@
   min-width: min(90vw, 320px);
   max-height: min(90vh, 720px);
   padding: clamp(1.25rem, 3vw, 2.25rem);
-  margin: 0;
+  margin: auto;
   overflow: auto;
   border-radius: 28px;
   box-shadow: 0 32px 80px rgba(15, 23, 42, 0.28);
