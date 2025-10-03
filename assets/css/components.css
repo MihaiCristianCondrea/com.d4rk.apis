@@ -2,11 +2,24 @@
 .app-dialog {
   position: fixed;
   inset: 0;
-  display: flex;
+  display: grid;
+  place-items: center;
   align-items: center;
+  align-content: center;
+  justify-items: center;
   justify-content: center;
-  padding: clamp(1rem, 3vw, 2rem);
+  min-height: 100vh;
+  min-height: 100dvh;
+  padding: clamp(1rem, 4vw, 2.5rem);
   z-index: 1500;
+  overflow: auto;
+  overscroll-behavior: contain;
+  pointer-events: none;
+  scrollbar-gutter: stable both-edges;
+}
+
+.app-dialog[open] {
+  pointer-events: auto;
 }
 
 .app-dialog:not([open]) {
@@ -14,12 +27,8 @@
 }
 
 .app-dialog::part(scrim) {
-  background-color: color-mix(
-    in srgb,
-    var(--md-sys-color-scrim) 48%,
-    transparent
-  );
-  backdrop-filter: blur(4px);
+  background-color: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(8px);
 }
 
 .app-dialog::part(container) {
@@ -27,10 +36,34 @@
   width: min(90vw, 600px);
   max-width: min(90vw, 600px);
   min-width: min(90vw, 320px);
-  max-height: min(90vh, 680px);
-  padding: clamp(1.25rem, 3vw, 2rem);
+  max-height: min(90vh, 720px);
+  padding: clamp(1.25rem, 3vw, 2.25rem);
   margin: 0;
   overflow: auto;
+  border-radius: 28px;
+  box-shadow: 0 32px 80px rgba(15, 23, 42, 0.28);
+  background-color: var(
+    --app-dialog-bg-color,
+    var(--md-sys-color-surface-container-low)
+  );
+}
+
+body[data-dialog-open='true'] {
+  overflow: hidden;
+}
+
+@media (max-width: 480px) {
+  .app-dialog {
+    padding: clamp(0.75rem, 4vw, 1.5rem);
+  }
+
+  .app-dialog::part(container) {
+    width: min(94vw, 560px);
+    max-width: min(94vw, 560px);
+    min-width: min(94vw, 280px);
+    padding: clamp(1rem, 5vw, 1.75rem);
+    max-height: min(94vh, 660px);
+  }
 }
 
 .app-dialog [slot='headline'] {
