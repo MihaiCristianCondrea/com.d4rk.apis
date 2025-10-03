@@ -656,7 +656,7 @@ md-filled-tonal-button md-icon[slot='icon'] {
   display: grid;
   grid-template-columns: minmax(240px, 1fr) auto;
   gap: 0.75rem;
-  align-items: center;
+  align-items: stretch;
 }
 
 .builder-remote-controls md-outlined-text-field {
@@ -664,8 +664,15 @@ md-filled-tonal-button md-icon[slot='icon'] {
 }
 
 .builder-remote-controls md-filled-tonal-button {
-  justify-self: center;
-  align-self: center;
+  justify-self: start;
+  align-self: stretch;
+  --md-filled-tonal-button-container-height: 56px;
+  --md-filled-tonal-button-container-shape: 18px;
+}
+
+.builder-remote-controls md-filled-tonal-button::part(button) {
+  height: 100%;
+  min-height: 100%;
 }
 
 .builder-remote-presets {
@@ -978,10 +985,52 @@ md-filled-tonal-button md-icon[slot='icon'] {
   box-sizing: border-box;
 }
 
+.builder-card-fields.builder-card-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.builder-card-fields.builder-card-list .builder-field-group {
+  width: 100%;
+}
+
+.builder-card-fields.builder-card-list .builder-field-group--list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0 0 1.25rem;
+  border-bottom: 1px solid color-mix(in srgb, var(--md-sys-color-outline-variant) 55%, transparent);
+}
+
+.builder-card-fields.builder-card-list .builder-field-group--list:last-of-type {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.builder-field-group--screenshots {
+  gap: 0.75rem;
+}
+
 .builder-field-group {
   display: grid;
   gap: 0.5rem;
   align-items: start;
+  width: 100%;
+}
+
+.builder-field-group > :where(
+    md-filled-text-field,
+    md-outlined-text-field,
+    md-outlined-select,
+    md-filled-select,
+    md-assist-chip-set
+  ) {
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .builder-hint-chip-set {
@@ -1497,6 +1546,15 @@ md-filled-tonal-button md-icon[slot='icon'] {
 .preview-actions md-outlined-button {
   --md-filled-tonal-button-container-shape: 999px;
   --md-outlined-button-container-shape: 999px;
+}
+
+md-filled-button::part(button),
+md-filled-tonal-button::part(button),
+md-outlined-button::part(button),
+md-text-button::part(button) {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .focus-dialog {

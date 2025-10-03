@@ -1072,12 +1072,16 @@
             header.appendChild(removeButton);
             card.appendChild(header);
 
-            const fields = utils.createElement('div', {
-                classNames: ['builder-card-fields', 'builder-card-grid']
+            const fields = utils.createElement('ul', {
+                classNames: ['builder-card-fields', 'builder-card-list']
             });
+            fields.setAttribute('role', 'list');
 
             const createFieldGroup = (element, { assistChips, helper } = {}) => {
-                const wrapper = utils.createElement('div', { classNames: 'builder-field-group' });
+                const wrapper = utils.createElement('li', {
+                    classNames: ['builder-field-group', 'builder-field-group--list']
+                });
+                wrapper.setAttribute('role', 'listitem');
                 wrapper.appendChild(element);
                 if (assistChips) {
                     wrapper.appendChild(assistChips);
@@ -1623,7 +1627,16 @@
             };
 
             updateScreenshotsState();
-            fields.appendChild(screenshotsSection);
+            const screenshotGroup = utils.createElement('li', {
+                classNames: [
+                    'builder-field-group',
+                    'builder-field-group--list',
+                    'builder-field-group--screenshots'
+                ]
+            });
+            screenshotGroup.setAttribute('role', 'listitem');
+            screenshotGroup.appendChild(screenshotsSection);
+            fields.appendChild(screenshotGroup);
             card.appendChild(fields);
             return card;
         }
