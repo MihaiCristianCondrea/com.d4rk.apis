@@ -1,17 +1,36 @@
 /* --- Dialogs --- */
 .app-dialog {
+  position: fixed;
+  inset: 0;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: clamp(1rem, 3vw, 2rem);
+  z-index: 1500;
+}
+
+.app-dialog:not([open]) {
+  display: none;
+}
+
+.app-dialog::part(scrim) {
+  background-color: color-mix(
+    in srgb,
+    var(--md-sys-color-scrim) 48%,
+    transparent
+  );
+  backdrop-filter: blur(4px);
 }
 
 .app-dialog::part(container) {
   box-sizing: border-box;
-  max-width: min(92vw, 720px);
-  min-width: min(92vw, 320px);
+  width: min(90vw, 600px);
+  max-width: min(90vw, 600px);
+  min-width: min(90vw, 320px);
+  max-height: min(90vh, 680px);
   padding: clamp(1.25rem, 3vw, 2rem);
   margin: 0;
+  overflow: auto;
 }
 
 .app-dialog [slot='headline'] {
@@ -711,7 +730,6 @@ md-filled-tonal-button md-icon[slot='icon'] {
 
 .github-dialog {
   --md-dialog-container-shape: 28px;
-  max-width: 720px;
 }
 
 .github-dialog-content {
@@ -1559,7 +1577,6 @@ md-text-button::part(button) {
 
 .focus-dialog {
   --md-dialog-container-shape: 28px;
-  max-width: 640px;
 }
 
 .focus-dialog-content {
