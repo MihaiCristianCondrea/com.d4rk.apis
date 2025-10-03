@@ -106,8 +106,54 @@
         }
     }
 
+    function applyDialogLayout(dialog) {
+        if (!dialog) {
+            return;
+        }
+
+        const applyStyles = () => {
+            const root = dialog.shadowRoot;
+            if (!root) {
+                return;
+            }
+
+            const nativeDialog = root.querySelector('dialog');
+            if (nativeDialog) {
+                nativeDialog.style.position = 'fixed';
+                nativeDialog.style.inset = '0';
+                nativeDialog.style.margin = '0';
+                nativeDialog.style.display = 'flex';
+                nativeDialog.style.alignItems = 'center';
+                nativeDialog.style.justifyContent = 'center';
+            }
+
+            const scrim = root.querySelector('.scrim');
+            if (scrim) {
+                scrim.style.position = 'fixed';
+                scrim.style.inset = '0';
+            }
+        };
+
+        try {
+            const maybePromise = dialog.updateComplete;
+            if (maybePromise && typeof maybePromise.then === 'function') {
+                maybePromise.then(applyStyles).catch(() => applyStyles());
+                return;
+            }
+        } catch (error) {
+            // Ignore errors accessing updateComplete and fall back to async styling.
+        }
+
+        if (typeof global.requestAnimationFrame === 'function') {
+            global.requestAnimationFrame(applyStyles);
+        } else {
+            setTimeout(applyStyles, 0);
+        }
+    }
+
     function handleOpened(event) {
         const dialog = event.currentTarget;
+        applyDialogLayout(dialog);
         openDialogs.add(dialog);
         updateBodyState();
         focusInitialElement(dialog);
@@ -142,6 +188,7 @@
             dialog.noFocusTrap = false;
         }
 
+        applyDialogLayout(dialog);
         dialog.addEventListener('opened', handleOpened);
         dialog.addEventListener('closed', handleClosed);
         dialog.addEventListener('keydown', handleKeydown);
