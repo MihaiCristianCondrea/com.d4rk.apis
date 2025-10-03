@@ -91,10 +91,17 @@
   max-width: 65ch;
 }
 
-.workspace-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+.workspace-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
   gap: 1.5rem;
+  margin: 0;
+  padding: 0;
+}
+
+.workspace-list-item {
+  display: contents;
 }
 
 .workspace-dashboard {
