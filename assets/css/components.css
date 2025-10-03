@@ -597,7 +597,8 @@ md-filled-tonal-button md-icon[slot='icon'] {
 }
 
 @media (max-width: 1200px) {
-  .builder-columns {
+  .builder-columns,
+  .builder-columns--with-diff {
     grid-template-columns: minmax(0, 1.6fr) minmax(280px, 1fr);
   }
   .builder-diff-sheet {
@@ -738,17 +739,22 @@ md-filled-tonal-button md-icon[slot='icon'] {
 }
 
 .builder-columns {
+  grid-template-columns: minmax(0, 2.25fr) minmax(0, 1.35fr);
+}
+
+.builder-columns--with-diff {
   grid-template-columns: minmax(0, 2.25fr) minmax(0, 1.35fr) minmax(0, 1.1fr);
 }
 
 @media (max-width: 1440px) {
-  .builder-columns {
+  .builder-columns--with-diff {
     grid-template-columns: minmax(0, 2fr) minmax(0, 1.25fr) minmax(0, 1fr);
   }
 }
 
 @media (max-width: 1024px) {
-  .builder-columns {
+  .builder-columns,
+  .builder-columns--with-diff {
     grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
   }
   .builder-diff-sheet {
@@ -757,7 +763,8 @@ md-filled-tonal-button md-icon[slot='icon'] {
 }
 
 @media (max-width: 768px) {
-  .builder-columns {
+  .builder-columns,
+  .builder-columns--with-diff {
     grid-template-columns: 1fr;
   }
 }

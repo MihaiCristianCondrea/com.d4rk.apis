@@ -54,6 +54,7 @@
         }
 
         const entriesContainer = document.getElementById('appToolkitEntries');
+        const builderLayout = builderRoot.querySelector('.builder-layout');
         const addButton = document.getElementById('appToolkitAddApp');
         const resetButton = document.getElementById('appToolkitResetButton');
         const copyButton = document.getElementById('appToolkitCopyButton');
@@ -668,6 +669,9 @@
                 diffContent.innerHTML = '';
                 diffContent.classList.add('diff-view--empty');
                 diffContent.textContent = message;
+                if (builderLayout) {
+                    builderLayout.classList.remove('builder-columns--with-diff');
+                }
                 if (diffSheet) {
                     diffSheet.open = false;
                     diffSheet.classList.add('is-empty');
@@ -723,6 +727,9 @@
             }
 
             diffContent.classList.remove('diff-view--empty');
+            if (builderLayout) {
+                builderLayout.classList.add('builder-columns--with-diff');
+            }
             if (diffSheet) {
                 diffSheet.classList.remove('is-empty');
                 diffSheet.open = true;
