@@ -26,21 +26,6 @@
   display: none;
 }
 
-.app-dialog::part(dialog) {
-  position: fixed;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0;
-  padding: 0;
-  pointer-events: none;
-}
-
-.app-dialog[open]::part(dialog) {
-  pointer-events: auto;
-}
-
 .app-dialog::part(scrim) {
   background-color: rgba(15, 23, 42, 0.6);
   backdrop-filter: blur(8px);
