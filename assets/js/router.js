@@ -242,6 +242,14 @@ async function loadPageContent(pageId, updateHistory = true) {
 
         pageContentArea.innerHTML = typeof loadResult.html === 'string' ? loadResult.html : createGenericErrorHtml();
 
+        if (typeof AppDialogs !== 'undefined' && AppDialogs && typeof AppDialogs.init === 'function') {
+            try {
+                AppDialogs.init(pageContentArea);
+            } catch (error) {
+                console.error('Router: Failed to initialize dialogs for new content:', error);
+            }
+        }
+
         const handledByInjectedHandlers = runInjectedPageHandlers(normalizedPageId);
         if (!handledByInjectedHandlers && typeof loadResult.onReady === 'function') {
             callCallback(loadResult.onReady, 'page ready hook', normalizedPageId);

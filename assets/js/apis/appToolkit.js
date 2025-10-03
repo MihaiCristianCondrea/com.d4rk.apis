@@ -869,6 +869,9 @@
             updateFocusTimerDisplay();
             updateFocusControls();
             loadSavedNote();
+            if (typeof AppDialogs !== 'undefined' && AppDialogs && typeof AppDialogs.rememberTrigger === 'function') {
+                AppDialogs.rememberTrigger(focusDialog, document.activeElement);
+            }
             focusDialog.open = true;
             if (autoStart) {
                 resetFocusTimer();
@@ -1838,6 +1841,9 @@
                     screenshotDialogOpenButton.onclick = null;
                 }
             }
+            if (typeof AppDialogs !== 'undefined' && AppDialogs && typeof AppDialogs.rememberTrigger === 'function') {
+                AppDialogs.rememberTrigger(screenshotDialog, document.activeElement);
+            }
             screenshotDialog.open = true;
         }
 
@@ -2674,6 +2680,9 @@
             githubWizardButton.addEventListener('click', () => {
                 clearGithubStatus();
                 setGithubStep(0);
+                if (typeof AppDialogs !== 'undefined' && AppDialogs && typeof AppDialogs.rememberTrigger === 'function') {
+                    AppDialogs.rememberTrigger(githubDialog, document.activeElement);
+                }
                 githubDialog.open = true;
             });
         }

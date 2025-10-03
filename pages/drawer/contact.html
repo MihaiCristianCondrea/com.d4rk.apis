@@ -93,11 +93,9 @@
     </p>
   </div>
   <div slot="actions">
-    <md-text-button dialog-action="close">Close</md-text-button>
-    <md-text-button
-      ><a href="mailto:contact.mihaicristiancondrea@gmail.com"
-        >Email</a
-      ></md-text-button
-    >
+    <md-text-button dialog-action="close" data-dialog-initial-focus>
+      Close
+    </md-text-button>
+    <md-filled-button id="contactEmailAction">Email</md-filled-button>
   </div>
 </md-dialog>
