@@ -20,76 +20,6 @@
 
     const openDialogs = new Set();
 
-    const DIALOG_STYLE_MARKER = 'data-app-dialog-style';
-    const DIALOG_STYLE_CONTENT = `:host {
-  pointer-events: none;
-}
-
-:host([open]) {
-  pointer-events: auto;
-}
-
-:host dialog {
-  position: fixed;
-  inset: 0;
-  margin: 0;
-  padding: clamp(1rem, 4vw, 2.5rem);
-  box-sizing: border-box;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 100vh;
-  min-height: 100dvh;
-  width: 100vw;
-  max-width: 100vw;
-  background: transparent;
-}
-
-:host dialog[open] {
-  display: flex;
-}
-
-:host .scrim {
-  position: fixed;
-  inset: 0;
-  background-color: rgba(15, 23, 42, 0.6);
-  backdrop-filter: blur(8px);
-  pointer-events: none;
-}
-
-:host .container {
-  box-sizing: border-box;
-  width: min(90vw, 600px);
-  max-width: min(90vw, 600px);
-  min-width: min(90vw, 320px);
-  max-height: min(90vh, 720px);
-  padding: clamp(1.25rem, 3vw, 2.25rem);
-  margin: auto;
-  border-radius: 28px;
-  box-shadow: 0 32px 80px rgba(15, 23, 42, 0.28);
-  background-color: var(--app-dialog-bg-color, var(--md-sys-color-surface-container-low));
-  overflow: auto;
-  scrollbar-gutter: stable both-edges;
-}
-
-:host .scroller {
-  overscroll-behavior: contain;
-}
-
-@media (max-width: 480px) {
-  :host dialog {
-    padding: clamp(0.75rem, 4vw, 1.5rem);
-  }
-
-  :host .container {
-    width: min(94vw, 560px);
-    max-width: min(94vw, 560px);
-    min-width: min(94vw, 280px);
-    max-height: min(94vh, 660px);
-    padding: clamp(1rem, 5vw, 1.75rem);
-  }
-}`;
-
     function isElementVisible(element) {
         if (!element) {
             return false;
@@ -176,6 +106,19 @@
         }
     }
 
+    function setInlineStyles(target, styles) {
+        if (!target || !styles) {
+            return;
+        }
+        Object.entries(styles).forEach(([property, value]) => {
+            if (value === null || value === undefined) {
+                target.style.removeProperty(property);
+            } else {
+                target.style.setProperty(property, value);
+            }
+        });
+    }
+
     function applyDialogLayout(dialog) {
         if (!dialog) {
             return;
@@ -187,12 +130,59 @@
                 return;
             }
 
-            if (!root.querySelector(`style[${DIALOG_STYLE_MARKER}]`)) {
-                const style = document.createElement('style');
-                style.setAttribute(DIALOG_STYLE_MARKER, '');
-                style.textContent = DIALOG_STYLE_CONTENT;
-                root.append(style);
-            }
+            const nativeDialog = root.querySelector('dialog');
+            const scrim = root.querySelector('.scrim');
+            const container = root.querySelector('.container');
+            const scroller = root.querySelector('.scroller');
+
+            setInlineStyles(nativeDialog, {
+                position: 'fixed',
+                inset: '0',
+                margin: '0',
+                padding: 'clamp(0.75rem, 4vw, 2.5rem)',
+                'box-sizing': 'border-box',
+                display: 'flex',
+                'flex-direction': 'column',
+                'align-items': 'center',
+                'justify-content': 'center',
+                width: '100vw',
+                'max-width': '100vw',
+                height: 'max(100vh, 100dvh)',
+                'min-height': 'max(100vh, 100dvh)',
+                'max-height': 'max(100vh, 100dvh)',
+                background: 'transparent',
+                'pointer-events': 'auto',
+            });
+
+            setInlineStyles(scrim, {
+                position: 'fixed',
+                inset: '0',
+                background: 'rgba(15, 23, 42, 0.6)',
+                'backdrop-filter': 'blur(8px)',
+                'pointer-events': 'none',
+            });
+
+            setInlineStyles(container, {
+                'box-sizing': 'border-box',
+                display: 'flex',
+                'flex-direction': 'column',
+                width: 'min(90vw, 600px)',
+                'max-width': 'min(90vw, 600px)',
+                'min-width': 'min(90vw, 320px)',
+                'max-height': 'min(90vh, 720px)',
+                padding: 'clamp(1rem, 3vw, 2.25rem)',
+                margin: '0',
+                'border-radius': '28px',
+                'box-shadow': '0 32px 80px rgba(15, 23, 42, 0.28)',
+                'background-color': 'var(--app-dialog-bg-color, var(--md-sys-color-surface-container-low))',
+                overflow: 'auto',
+                'pointer-events': 'auto',
+                'scrollbar-gutter': 'stable both-edges',
+            });
+
+            setInlineStyles(scroller, {
+                'overscroll-behavior': 'contain',
+            });
         };
 
         try {
