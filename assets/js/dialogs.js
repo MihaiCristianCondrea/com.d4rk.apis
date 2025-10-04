@@ -135,13 +135,17 @@
             const container = root.querySelector('.container');
             const scroller = root.querySelector('.scroller');
 
+            const isOpen =
+                (typeof dialog.open === 'boolean' && dialog.open) ||
+                dialog.hasAttribute('open');
+
             setInlineStyles(nativeDialog, {
                 position: 'fixed',
                 inset: '0',
                 margin: '0',
                 padding: 'clamp(0.75rem, 4vw, 2.5rem)',
                 'box-sizing': 'border-box',
-                display: 'flex',
+                display: isOpen ? 'flex' : null,
                 'flex-direction': 'column',
                 'align-items': 'center',
                 'justify-content': 'center',
@@ -151,7 +155,7 @@
                 'min-height': 'max(100vh, 100dvh)',
                 'max-height': 'max(100vh, 100dvh)',
                 background: 'transparent',
-                'pointer-events': 'auto',
+                'pointer-events': isOpen ? 'auto' : null,
             });
 
             setInlineStyles(scrim, {
@@ -159,7 +163,7 @@
                 inset: '0',
                 background: 'rgba(15, 23, 42, 0.6)',
                 'backdrop-filter': 'blur(8px)',
-                'pointer-events': 'none',
+                'pointer-events': isOpen ? 'auto' : null,
             });
 
             setInlineStyles(container, {
@@ -212,6 +216,7 @@
 
     function handleClosed(event) {
         const dialog = event.currentTarget;
+        applyDialogLayout(dialog);
         openDialogs.delete(dialog);
         updateBodyState();
         restoreTriggerFocus(dialog);
