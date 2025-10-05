@@ -336,6 +336,7 @@ md-list-item[type='button'].expanded md-icon[slot='end'] {
 :root {
   --app-button-icon-inline-padding: 16px;
   --app-text-button-icon-inline-padding: 12px;
+  --app-text-button-inline-padding: 16px;
 }
 
 md-filled-button,
@@ -1543,6 +1544,16 @@ md-text-button::part(button) {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  padding-inline-start: var(--app-text-button-inline-padding);
+  padding-inline-end: var(--app-text-button-inline-padding);
+}
+
+.screenshot-actions md-text-button {
+  align-self: stretch;
+}
+
+.screenshot-actions md-text-button::part(button) {
+  height: 100%;
 }
 
 .focus-dialog {
