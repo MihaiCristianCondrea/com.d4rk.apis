@@ -255,7 +255,7 @@
                         status: 'error',
                         message: 'No cards found in JSON.'
                     });
-                    throw new Error('No cards found in JSON.');
+                    throw new Error('No cards found in JSON.'); /*FIXME: 'throw' of exception caught locally*/
                 }
                 const toStringValue = (value) => (value === undefined || value === null ? '' : String(value));
                 state.cards = cards.map((raw) => ({
@@ -599,7 +599,7 @@
                         status: 'error',
                         message: 'No lessons found.'
                     });
-                    throw new Error('No lessons found.');
+                    throw new Error('No lessons found.');/* FIXME 'throw' of exception caught locally*/
                 }
                 const lesson = lessons[0];
                 state.title = utils.trimString(lesson.lesson_title || '');

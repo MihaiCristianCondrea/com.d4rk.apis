@@ -3,4 +3,4 @@
 @source "../../pages/**/*.{html,js}";
 @source "../../assets/js/**/*.js";
 
-@import 'tailwindcss';
+@import 'tailwindcss'; /*FIXME: Cannot resolve file 'tailwindcss' Misplaced @import*/

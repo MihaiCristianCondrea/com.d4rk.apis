@@ -231,7 +231,7 @@
   color: #333;
   margin-bottom: 16px;
   padding-bottom: 8px;
-  border-bottom: 1.5px solid var(--app-border-color);
+  border-bottom: 2px solid var(--app-border-color);
   text-transform: uppercase;
   letter-spacing: 1px;
   font-weight: 700;

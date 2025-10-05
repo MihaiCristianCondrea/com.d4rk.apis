@@ -261,7 +261,7 @@
 .release-progress-bar {
   position: absolute;
   inset: 0;
-  width: 0%;
+  width: 0;
   background: linear-gradient(90deg, var(--md-sys-color-primary), rgba(24, 176, 116, 0.9));
   border-radius: inherit;
   transition: width 220ms ease;

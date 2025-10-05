@@ -152,7 +152,7 @@
             missingRequiredCount: 0
         };
         const supportsFileSystemAccess =
-            typeof window !== 'undefined' && typeof window.showOpenFilePicker === 'function';
+            typeof window !== 'undefined' && typeof window.showOpenFilePicker === 'function'; /*FIXME: Unresolved variable showOpenFilePicker */
         const githubTokenHandleStore = createFileHandleStore({
             dbName: 'AppToolkitGithubToken',
             storeName: 'fileHandles',
@@ -492,7 +492,7 @@
 
         function updateWorkspaceMetrics() {
             const sanitizedMetaEntries = getSanitizedApps({ includeMeta: true });
-            const sanitizedApps = sanitizedMetaEntries.map((entry) => entry.sanitized);
+            sanitizedMetaEntries.map((entry) => entry.sanitized);
             const total = sanitizedMetaEntries.length;
             const releaseReady = sanitizedMetaEntries.filter((entry) => entry.releaseReady).length;
             const screenshotTotal = sanitizedMetaEntries.reduce(
@@ -691,8 +691,8 @@
                 return;
             }
 
-            const diffLib = typeof jsondiffpatch !== 'undefined' ? jsondiffpatch : null;
-            if (!diffLib || typeof diffLib.create !== 'function' || !diffLib.formatters?.html) {
+            const diffLib = typeof jsondiffpatch !== 'undefined' ? jsondiffpatch : null; /*FIXME: Unresolved variable or type jsondiffpatch */
+            if (!diffLib || typeof diffLib.create !== 'function' || !diffLib.formatters?.html) { /*FIXME: Unresolved variable formatters */
                 setEmptyState('Diff viewer unavailable. Ensure jsondiffpatch is loaded.');
                 return;
             }
@@ -719,7 +719,7 @@
             const current = normalizeList(currentApps);
 
             const differ = diffLib.create({ arrays: { detectMove: false }, textDiff: { minLength: 120 } });
-            const delta = differ.diff(baseline, current);
+            const delta = differ.diff(baseline, current); /*FIXME: Unresolved function or method diff() */
 
             if (!delta || (typeof delta === 'object' && !Object.keys(delta).length)) {
                 setEmptyState('No differences detected since the last import.');
@@ -746,7 +746,7 @@
             const cloneDelta = () => JSON.parse(JSON.stringify(delta));
             baselineColumn.insertAdjacentHTML(
                 'beforeend',
-                diffLib.formatters.html.format(cloneDelta(), baseline)
+                diffLib.formatters.html.format(cloneDelta(), baseline) /*FIXME: Unresolved variable formatters */
             );
 
             const currentColumn = document.createElement('div');
@@ -756,7 +756,7 @@
             currentColumn.appendChild(currentHeader);
             currentColumn.insertAdjacentHTML(
                 'beforeend',
-                diffLib.formatters.html.format(cloneDelta(), baseline)
+                diffLib.formatters.html.format(cloneDelta(), baseline) /*FIXME: Unresolved variable formatters */
             );
 
             body.appendChild(baselineColumn);
@@ -789,7 +789,7 @@
                 return;
             }
             activeFilters.clear();
-            const chips = filterChipSet.querySelectorAll('md-filter-chip');
+            const chips = filterChipSet.querySelectorAll('md-filter-chip'); /*FIXME: Selector matches unknown element md-filter-chip*/
             chips.forEach((chip) => {
                 if (chip.hasAttribute('selected')) {
                     const key = chip.dataset.appToolkitFilter;
@@ -965,7 +965,7 @@
                 return;
             }
             segmented.value = value;
-            segmented.querySelectorAll('md-segmented-button').forEach((button) => {
+            segmented.querySelectorAll('md-segmented-button').forEach((button) => { /*FIXME: Selector matches unknown element md-segmented-button */
                 const buttonValue =
                     button.getAttribute('value') ||
                     button.dataset.appToolkitMode ||
@@ -1055,7 +1055,7 @@
             card.dataset.pendingReleaseReady = meta.cohorts.pendingReleaseReady ? 'true' : 'false';
             card.dataset.needsScreenshots = meta.cohorts.needsScreenshots ? 'true' : 'false';
 
-            const header = utils.createElement('div', { classNames: 'builder-card-header' });
+            const header = utils.createElement('div', { classNames: 'builder-card-header' }); /*FIXME: Argument type { classNames: string } is not assignable to parameter type { classNames?: [], attrs?: {}, text?: string }  Type string is not assignable to type []    Type string is not assignable to type any[]      Type string is not assignable to type Array<any> */
             header.appendChild(utils.createElement('h3', { text: `App ${index + 1}` }));
             const removeButton = utils.createInlineButton({
                 label: 'Remove',
@@ -1960,7 +1960,7 @@
             try {
                 const response = await fetch(targetUrl, { cache: 'no-store' });
                 if (!response.ok) {
-                    throw new Error(
+                    throw new Error( /*FIXME: 'throw' of exception caught locally */
                         `Request failed: ${response.status} ${response.statusText}`
                     );
                 }
@@ -2203,9 +2203,9 @@
                 return 'denied';
             }
             const options = { mode };
-            if (typeof handle.queryPermission === 'function') {
+            if (typeof handle.queryPermission === 'function') { /*FIXME: Unresolved variable queryPermission */
                 try {
-                    const status = await handle.queryPermission(options);
+                    const status = await handle.queryPermission(options); /*FIXME: Unresolved function or method queryPermission() */
                     if (status === 'granted' || status === 'denied') {
                         return status;
                     }
@@ -2215,7 +2215,7 @@
             }
             if (typeof handle.requestPermission === 'function') {
                 try {
-                    return await handle.requestPermission(options);
+                    return await handle.requestPermission(options); /*FIXME: Argument type { mode: string } is not assignable to parameter type NotificationPermissionCallback | undefined  Assigned type doesn't contain call signatures */
                 } catch (error) {
                     return 'denied';
                 }
@@ -2286,7 +2286,7 @@
             }
             let handles;
             try {
-                handles = await window.showOpenFilePicker({
+                handles = await window.showOpenFilePicker({ /*FIXME: Unresolved function or method showOpenFilePicker() */
                     multiple: false,
                     excludeAcceptAllOption: false,
                     types: [
@@ -2520,7 +2520,7 @@
                         currentSha = payload?.sha;
                     } else if (getResponse.status !== 404) {
                         const message = await readGithubError(getResponse);
-                        throw new Error(message);
+                        throw new Error(message); /*FIXME: 'throw' of exception caught locally */
                     }
 
                     const commitMessage =
@@ -2545,7 +2545,7 @@
 
                     if (!putResponse.ok) {
                         const message = await readGithubError(putResponse);
-                        throw new Error(message);
+                        throw new Error(message); /*FIXME: 'throw' of exception caught locally */
                     }
 
                     const putResult = await putResponse.json();
@@ -2621,7 +2621,7 @@
 
         if (fetchButton) {
             fetchButton.addEventListener('click', () => {
-                fetchRemoteJson();
+                fetchRemoteJson(); /*FIXME: Invalid number of arguments, expected 1..2 */
             });
         }
 

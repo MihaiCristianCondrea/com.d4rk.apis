@@ -4,7 +4,7 @@
     function createElement(tag, { classNames = [], attrs = {}, text = '' } = {}) {
         const el = document.createElement(tag);
         if (typeof classNames === 'string') {
-            el.className = classNames;
+            el.className = classNames; /*FIXME: Assigned expression type any[] is not assignable to type string */
         } else if (Array.isArray(classNames) && classNames.length) {
             el.className = classNames.join(' ');
         }
@@ -345,7 +345,7 @@
                 formatted = JSON.stringify(payload ?? {}, null, 2);
             } catch (error) {
                 console.error('ApiBuilderUtils: Failed to format JSON preview.', error);
-                throw new Error('Unable to format JSON preview.');
+                throw new Error('Unable to format JSON preview.'); /*FIXME: 'throw' of exception caught locally */
             }
             previewArea.value = formatted;
             if (statusElement) {
