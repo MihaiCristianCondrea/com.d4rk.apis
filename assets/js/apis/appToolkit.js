@@ -1545,8 +1545,13 @@
             urlField.setAttribute('label', 'Screenshot URL');
             urlField.setAttribute('placeholder', 'https://example.com/screenshot.png');
             urlField.setAttribute('inputmode', 'url');
-            const addUrlButton = document.createElement('md-text-button');
-            addUrlButton.textContent = 'Add URL';
+            const addUrlButton = document.createElement('md-filled-button');
+            const addUrlIcon = document.createElement('md-icon');
+            addUrlIcon.setAttribute('slot', 'icon');
+            addUrlIcon.innerHTML =
+                '<span class="material-symbols-outlined">add_link</span>';
+            addUrlButton.appendChild(addUrlIcon);
+            addUrlButton.appendChild(document.createTextNode('Add URL'));
 
             const commitUrl = () => {
                 const additions = appendScreenshots(index, [urlField.value]);

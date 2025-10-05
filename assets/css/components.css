@@ -14,6 +14,8 @@ body[data-dialog-open='true'] {
 .app-dialog [slot='actions'] {
   display: flex;
   justify-content: flex-end;
+  align-items: center;
+  flex-wrap: wrap;
   gap: 0.75rem;
   margin-top: 1.5rem;
 }
@@ -334,73 +336,90 @@ md-list-item[type='button'].expanded md-icon[slot='end'] {
 
 /* --- Buttons --- */
 :root {
-  --app-button-icon-inline-padding: 16px;
-  --app-text-button-icon-inline-padding: 12px;
-  --app-text-button-inline-padding: 16px;
+  --app-button-inline-padding: 16px;
+  --app-button-icon-leading-padding: 12px;
+  --app-button-icon-trailing-padding: 16px;
+  --app-button-min-height: 40px;
+  --app-button-icon-gap: 0.5rem;
+  --app-text-button-inline-padding: var(--app-button-inline-padding);
 }
 
 md-filled-button,
 md-tonal-button,
 md-filled-tonal-button {
-  gap: 0.5rem;
+  gap: var(--app-button-icon-gap);
 }
 
 md-filled-button {
-  --md-filled-button-leading-space: 20px;
-  --md-filled-button-trailing-space: 20px;
-  --md-filled-button-with-leading-icon-leading-space: 16px;
-  --md-filled-button-with-leading-icon-trailing-space: 20px;
-  --md-filled-button-with-trailing-icon-leading-space: 20px;
-  --md-filled-button-with-trailing-icon-trailing-space: 16px;
+  --md-filled-button-container-height: var(--app-button-min-height);
+  --md-filled-button-leading-space: var(--app-button-inline-padding);
+  --md-filled-button-trailing-space: var(--app-button-inline-padding);
+  --md-filled-button-with-leading-icon-leading-space: var(
+    --app-button-icon-leading-padding
+  );
+  --md-filled-button-with-leading-icon-trailing-space: var(
+    --app-button-icon-trailing-padding
+  );
+  --md-filled-button-with-trailing-icon-leading-space: var(
+    --app-button-icon-trailing-padding
+  );
+  --md-filled-button-with-trailing-icon-trailing-space: var(
+    --app-button-icon-leading-padding
+  );
 }
 
 md-filled-tonal-button {
-  --md-filled-tonal-button-leading-space: 20px;
-  --md-filled-tonal-button-trailing-space: 20px;
-  --md-filled-tonal-button-with-leading-icon-leading-space: 16px;
-  --md-filled-tonal-button-with-leading-icon-trailing-space: 20px;
-  --md-filled-tonal-button-with-trailing-icon-leading-space: 20px;
-  --md-filled-tonal-button-with-trailing-icon-trailing-space: 16px;
+  --md-filled-tonal-button-container-height: var(--app-button-min-height);
+  --md-filled-tonal-button-leading-space: var(--app-button-inline-padding);
+  --md-filled-tonal-button-trailing-space: var(--app-button-inline-padding);
+  --md-filled-tonal-button-with-leading-icon-leading-space: var(
+    --app-button-icon-leading-padding
+  );
+  --md-filled-tonal-button-with-leading-icon-trailing-space: var(
+    --app-button-icon-trailing-padding
+  );
+  --md-filled-tonal-button-with-trailing-icon-leading-space: var(
+    --app-button-icon-trailing-padding
+  );
+  --md-filled-tonal-button-with-trailing-icon-trailing-space: var(
+    --app-button-icon-leading-padding
+  );
 }
 
 md-outlined-button {
+  --md-outlined-button-container-height: var(--app-button-min-height);
+  --md-outlined-button-leading-space: var(--app-button-inline-padding);
+  --md-outlined-button-trailing-space: var(--app-button-inline-padding);
   --md-outlined-button-with-leading-icon-leading-space: var(
-    --app-button-icon-inline-padding
+    --app-button-icon-leading-padding
   );
   --md-outlined-button-with-leading-icon-trailing-space: var(
-    --app-button-icon-inline-padding
+    --app-button-icon-trailing-padding
   );
   --md-outlined-button-with-trailing-icon-leading-space: var(
-    --app-button-icon-inline-padding
+    --app-button-icon-trailing-padding
   );
   --md-outlined-button-with-trailing-icon-trailing-space: var(
-    --app-button-icon-inline-padding
+    --app-button-icon-leading-padding
   );
-}
-
-:is(md-filled-button, md-tonal-button, md-filled-tonal-button, md-outlined-button)[has-icon] {
-  padding-inline-start: var(--app-button-icon-inline-padding);
-  padding-inline-end: var(--app-button-icon-inline-padding);
 }
 
 md-text-button {
+  --md-text-button-container-height: var(--app-button-min-height);
+  --md-text-button-leading-space: var(--app-text-button-inline-padding);
+  --md-text-button-trailing-space: var(--app-text-button-inline-padding);
   --md-text-button-with-leading-icon-leading-space: var(
-    --app-text-button-icon-inline-padding
+    --app-button-icon-leading-padding
   );
   --md-text-button-with-leading-icon-trailing-space: var(
-    --app-text-button-icon-inline-padding
+    --app-button-icon-trailing-padding
   );
   --md-text-button-with-trailing-icon-leading-space: var(
-    --app-text-button-icon-inline-padding
+    --app-button-icon-trailing-padding
   );
   --md-text-button-with-trailing-icon-trailing-space: var(
-    --app-text-button-icon-inline-padding
+    --app-button-icon-leading-padding
   );
-}
-
-md-text-button[has-icon] {
-  padding-inline-start: var(--app-text-button-icon-inline-padding);
-  padding-inline-end: var(--app-text-button-icon-inline-padding);
 }
 
 md-filled-button md-icon[slot='icon'],
@@ -1173,6 +1192,8 @@ md-filled-tonal-button md-icon[slot='icon'] {
 
 .screenshot-actions md-filled-text-field {
   min-width: min(320px, 100%);
+  --md-filled-text-field-container-height: 40px;
+  --md-filled-text-field-input-text-line-height: 1;
 }
 
 .screenshot-list {
@@ -1544,16 +1565,18 @@ md-text-button::part(button) {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding-inline-start: var(--app-text-button-inline-padding);
-  padding-inline-end: var(--app-text-button-inline-padding);
+  gap: var(--app-button-icon-gap);
+  min-height: var(--app-button-min-height);
+  line-height: 1;
 }
 
-.screenshot-actions md-text-button {
+.screenshot-actions :is(md-filled-button, md-text-button) {
   align-self: stretch;
 }
 
-.screenshot-actions md-text-button::part(button) {
+.screenshot-actions :is(md-filled-button, md-text-button)::part(button) {
   height: 100%;
+  min-height: 100%;
 }
 
 .focus-dialog {
