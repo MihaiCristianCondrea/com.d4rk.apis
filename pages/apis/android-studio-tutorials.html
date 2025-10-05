@@ -55,13 +55,13 @@
           data-builder-type="android-home"
         >
           <div class="builder-toolbar">
-            <md-filled-button id="androidHomeAddCard">
+            <md-filled-button id="androidHomeAddCard" has-icon>
               <md-icon slot="icon"
                 ><span class="material-symbols-outlined">add</span></md-icon
               >
               Add card
             </md-filled-button>
-            <md-outlined-button id="androidHomeImportButton">
+            <md-outlined-button id="androidHomeImportButton" has-icon>
               <md-icon slot="icon"
                 ><span class="material-symbols-outlined">upload</span></md-icon
               >
@@ -73,7 +73,7 @@
               accept="application/json"
               hidden
             />
-            <md-text-button id="androidHomeResetButton">
+            <md-text-button id="androidHomeResetButton" has-icon>
               <md-icon slot="icon"
                 ><span class="material-symbols-outlined">refresh</span></md-icon
               >
@@ -106,7 +106,7 @@
                 aria-live="polite"
               ></div>
               <div class="preview-actions">
-                <md-filled-tonal-button id="androidHomeCopyButton">
+                <md-filled-tonal-button id="androidHomeCopyButton" has-icon>
                   <md-icon slot="icon"
                     ><span class="material-symbols-outlined"
                       >content_copy</span
@@ -114,7 +114,11 @@
                   >
                   Copy JSON
                 </md-filled-tonal-button>
-                <md-outlined-button id="androidHomeDownloadButton" trailing-icon>
+                <md-outlined-button
+                  id="androidHomeDownloadButton"
+                  has-icon
+                  trailing-icon
+                >
                   Download
                   <md-icon slot="icon"
                     ><span class="material-symbols-outlined"
@@ -159,13 +163,13 @@
               class="lesson-title-field"
             ></md-outlined-text-field>
             <div class="toolbar-actions">
-              <md-filled-button id="androidLessonAddBlock">
+              <md-filled-button id="androidLessonAddBlock" has-icon>
                 <md-icon slot="icon"
                   ><span class="material-symbols-outlined">add</span></md-icon
                 >
                 Add block
               </md-filled-button>
-              <md-outlined-button id="androidLessonImportButton">
+              <md-outlined-button id="androidLessonImportButton" has-icon>
                 <md-icon slot="icon"
                   ><span class="material-symbols-outlined">upload</span></md-icon
                 >
@@ -177,7 +181,7 @@
                 accept="application/json"
                 hidden
               />
-              <md-text-button id="androidLessonResetButton">
+              <md-text-button id="androidLessonResetButton" has-icon>
                 <md-icon slot="icon"
                   ><span class="material-symbols-outlined"
                     >refresh</span
@@ -219,7 +223,7 @@
                 aria-live="polite"
               ></div>
               <div class="preview-actions">
-                <md-filled-tonal-button id="androidLessonCopyButton">
+                <md-filled-tonal-button id="androidLessonCopyButton" has-icon>
                   <md-icon slot="icon"
                     ><span class="material-symbols-outlined"
                       >content_copy</span
@@ -229,6 +233,7 @@
                 </md-filled-tonal-button>
                 <md-outlined-button
                   id="androidLessonDownloadButton"
+                  has-icon
                   trailing-icon
                 >
                   Download
