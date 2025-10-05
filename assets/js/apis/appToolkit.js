@@ -384,7 +384,7 @@
         }
 
         function updatePreview() {
-            const result = utils.renderJsonPreview({
+            const result = utils.renderJsonPreview({ /*FIXME: Argument type {    previewArea: HTMLElement,    statusElement: HTMLElement,    data: [{        name: string,        packageName: string,        category: string,        description: string,        iconLogo: string,        screenshots: [string]    }],    buildPayload: function(any): {        data: {            apps: any        }    },    autoFix: function(any): any,    successMessage: function(any): (string | string | string)} is not assignable to parameter type {    previewArea: any,    statusElement: any,    data: any,    buildPayload: any,    autoFix: any,    validator: any,    successMessage?: string,    errorMessage?: string}  Type function(any): (string | string | string) is not assignable to type string */
                 previewArea,
                 statusElement: validationStatus,
                 data: state.apps,
@@ -1057,7 +1057,7 @@
 
             const header = utils.createElement('div', { classNames: 'builder-card-header' }); /*FIXME: Argument type { classNames: string } is not assignable to parameter type { classNames?: [], attrs?: {}, text?: string }  Type string is not assignable to type []    Type string is not assignable to type any[]      Type string is not assignable to type Array<any> */
             header.appendChild(utils.createElement('h3', { text: `App ${index + 1}` }));
-            const removeButton = utils.createInlineButton({
+            const removeButton = utils.createInlineButton({ /*FIXME: Argument type {    label: string,    icon: string,    variant: string,    title: string,    onClick: function(): void} is not assignable to parameter type {    label: any,    icon?: null,    onClick?: function(),    variant?: string,    title?: string}  Type string is not assignable to type null */
                 label: 'Remove',
                 icon: 'delete',
                 variant: 'danger',
@@ -1189,7 +1189,7 @@
                 return field;
             };
 
-            const nameField = buildFilledTextField({
+            const nameField = buildFilledTextField({ /*FIXME: Argument type {    label: string,    value: any,    onInput: function(any): void} is not assignable to parameter type {    label: any,    value?: string,    placeholder?: string,    rows?: number,    multiline?: boolean,    type?: string,    onInput?: function()}  Type function(any): void is not assignable to type function() */
                 label: 'App name',
                 value: app.name,
                 onInput: (value) => {
@@ -1227,7 +1227,7 @@
                 packageField.error = false;
             };
 
-            const packageField = buildFilledTextField({
+            const packageField = buildFilledTextField({ /*FIXME: Argument type {    label: string,    value: string | any,    placeholder: string,    onInput: function(any): void} is not assignable to parameter type {    label: any,    value?: string,    placeholder?: string,    rows?: number,    multiline?: boolean,    type?: string,    onInput?: function()}  Type function(any): void is not assignable to type function() */
                 label: 'Package name',
                 value: app.packageName,
                 placeholder: 'com.example.app',
@@ -1273,7 +1273,7 @@
             });
             createFieldGroup(categorySelect);
 
-            const descriptionField = buildFilledTextField({
+            const descriptionField = buildFilledTextField({ /*FIXME: Argument type {    label: string,    value: any,    multiline: boolean,    rows: number,    onInput: function(any): void} is not assignable to parameter type {    label: any,    value?: string,    placeholder?: string,    rows?: number,    multiline?: boolean,    type?: string,    onInput?: function()}  Type function(any): void is not assignable to type function() */
                 label: 'Description',
                 value: app.description,
                 multiline: true,
@@ -1395,7 +1395,7 @@
                 probe.src = trimmed;
             };
 
-            const iconField = buildFilledTextField({
+            const iconField = buildFilledTextField({ /*FIXME: Argument type {    label: string,    value: string | any,    placeholder: string,    onInput: function(any): void} is not assignable to parameter type {    label: any,    value?: string,    placeholder?: string,    rows?: number,    multiline?: boolean,    type?: string,    onInput?: function()}  Type function(any): void is not assignable to type function() */
                 label: 'Icon URL',
                 value: app.iconLogo,
                 placeholder: 'https://example.com/icon.png',
@@ -2413,7 +2413,7 @@
                 return btoa(binary);
             }
             if (typeof btoa !== 'undefined') {
-                return btoa(unescape(encodeURIComponent(string)));
+                return btoa(unescape(encodeURIComponent(string))); /*FIXME: Deprecated symbol used, consult docs for better alternative */
             }
             throw new Error('Base64 encoding is not supported in this environment.');
         }
@@ -2621,7 +2621,7 @@
 
         if (fetchButton) {
             fetchButton.addEventListener('click', () => {
-                fetchRemoteJson(); /*FIXME: Invalid number of arguments, expected 1..2 */
+                fetchRemoteJson(); /*FIXME: Promise returned from fetchRemoteJson is ignored && Invalid number of arguments, expected 1..2*/
             });
         }
 
@@ -2629,7 +2629,7 @@
             fetchInput.addEventListener('keydown', (event) => {
                 if (event.key === 'Enter') {
                     event.preventDefault();
-                    fetchRemoteJson();
+                    fetchRemoteJson(); /*FIXME: Promise returned from fetchRemoteJson is ignored && Invalid number of arguments, expected 1..2*/
                 }
             });
         }

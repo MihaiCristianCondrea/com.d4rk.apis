@@ -36,7 +36,6 @@ function createBlogPostCard(post) {
     img.alt = title;
     img.loading = 'lazy';
     img.onerror = function () {
-        this.onerror = null;
         this.src = placeholderImageUrl;
         this.alt = 'Placeholder Image';
     };
@@ -124,7 +123,7 @@ async function fetchBlogPosts() {
     if (!currentApiKey) {
         newsStatusElement.style.display = 'flex';
         newsStatusElement.innerHTML = `<span>Configuration error: API key not available.</span>`;
-        const loader = newsStatusElement.querySelector('md-circular-progress');
+        const loader = newsStatusElement.querySelector('md-circular-progress'); /*FIXME: Selector matches unknown element md-circular-progress */
         if (loader) loader.remove();
         return;
     }
@@ -137,11 +136,11 @@ async function fetchBlogPosts() {
             let errorMsg = `Error fetching blog info: ${blogInfoResponse.status} ${blogInfoResponse.statusText}`;
             if (getNestedValue(errorData, 'error.message')) errorMsg += ` - ${getNestedValue(errorData, 'error.message')}`;
             else if (blogInfoResponse.status === 404) errorMsg += ' - Blog URL not found or incorrect.';
-            throw new Error(errorMsg);
+            throw new Error(errorMsg); /*FIXME: 'throw' of exception caught locally */
         }
         const blogInfo = await blogInfoResponse.json();
         blogId = blogInfo.id;
-        if (!blogId) throw new Error("Could not retrieve Blog ID from URL.");
+        if (!blogId) throw new Error("Could not retrieve Blog ID from URL."); /*FIXME: 'throw' of exception caught locally */
 
         const postsUrl = `https://www.googleapis.com/blogger/v3/blogs/${blogId}/posts?key=${currentApiKey}&maxResults=${currentMaxResults}&fetchImages=true&fetchBodies=true`;
         const postsResponse = await fetch(postsUrl);
@@ -149,7 +148,7 @@ async function fetchBlogPosts() {
             const errorData = await postsResponse.json().catch(() => ({}));
             let errorMsg = `Error fetching posts: ${postsResponse.status} ${postsResponse.statusText}`;
             if (getNestedValue(errorData, 'error.message')) errorMsg += ` - ${getNestedValue(errorData, 'error.message')}`;
-            throw new Error(errorMsg);
+            throw new Error(errorMsg); /*FIXME: 'throw' of exception caught locally */
         }
         const postsData = await postsResponse.json();
 

@@ -1,6 +1,6 @@
+@import "tailwind.css";
+
 @config "../../tailwind.config.js";
 @source "../../index.html";
 @source "../../pages/**/*.{html,js}";
 @source "../../assets/js/**/*.js";
-
-@import 'tailwindcss'; /*FIXME: Cannot resolve file 'tailwindcss' Misplaced @import*/

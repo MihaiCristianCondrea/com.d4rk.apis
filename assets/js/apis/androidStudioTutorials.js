@@ -81,10 +81,10 @@
         }
 
         function createCard(card, index) {
-            const wrapper = utils.createElement('div', { classNames: 'builder-card' });
-            const header = utils.createElement('div', { classNames: 'builder-card-header' });
+            const wrapper = utils.createElement('div', { classNames: 'builder-card' }); /*FIXME: Argument type { classNames: string } is not assignable to parameter type { classNames?: [], attrs?: {}, text?: string }  Type string is not assignable to type []    Type string is not assignable to type any[]      Type string is not assignable to type Array<any> */
+            const header = utils.createElement('div', { classNames: 'builder-card-header' }); /*FIXME: Argument type { classNames: string } is not assignable to parameter type { classNames?: [], attrs?: {}, text?: string }  Type string is not assignable to type []    Type string is not assignable to type any[]      Type string is not assignable to type Array<any> */
             header.appendChild(utils.createElement('h3', { text: `Card ${index + 1}` }));
-            header.appendChild(utils.createInlineButton({
+            header.appendChild(utils.createInlineButton({ /*FIXME: Argument type {    label: string,    icon: string,    variant: string,    onClick: function(): void} is not assignable to parameter type {    label: any,    icon?: null,    onClick?: function(),    variant?: string,    title?: string}  Type string is not assignable to type null */
                 label: 'Remove',
                 icon: 'delete',
                 variant: 'danger',
@@ -99,9 +99,9 @@
             }));
             wrapper.appendChild(header);
 
-            const fields = utils.createElement('div', { classNames: 'builder-card-fields' });
+            const fields = utils.createElement('div', { classNames: 'builder-card-fields' }); /*FIXME: Argument type { classNames: string } is not assignable to parameter type { classNames?: [], attrs?: {}, text?: string }  Type string is not assignable to type []    Type string is not assignable to type any[]      Type string is not assignable to type Array<any> */
             fields.appendChild(
-                utils.createInputField({
+                utils.createInputField({ /*FIXME: Argument type {    label: string,    value: string | any,    onInput: function(any): void} is not assignable to parameter type {    label: any,    value?: string,    type?: string,    placeholder?: string,    onInput?: function(),    helperText?: string}  Type function(any): void is not assignable to type function() */
                     label: 'Lesson ID',
                     value: card.lesson_id,
                     onInput: (value) => {
@@ -111,7 +111,7 @@
                 }).wrapper
             );
             fields.appendChild(
-                utils.createInputField({
+                utils.createInputField({ /*FIXME:Argument type {    label: string,    value: string | any,    helperText: string,    onInput: function(any): void} is not assignable to parameter type {    label: any,    value?: string,    type?: string,    placeholder?: string,    onInput?: function(),    helperText?: string}  Type function(any): void is not assignable to type function() */
                     label: 'Lesson type',
                     value: card.lesson_type,
                     helperText: HOME_TYPE_HINT,
@@ -122,7 +122,7 @@
                 }).wrapper
             );
             fields.appendChild(
-                utils.createInputField({
+                utils.createInputField({ /*FIXME: Argument type {    label: string,    value: string | any,    onInput: function(any): void} is not assignable to parameter type {    label: any,    value?: string,    type?: string,    placeholder?: string,    onInput?: function(),    helperText?: string}  Type function(any): void is not assignable to type function() */
                     label: 'Lesson title',
                     value: card.lesson_title,
                     onInput: (value) => {
@@ -132,7 +132,7 @@
                 }).wrapper
             );
             fields.appendChild(
-                utils.createTextareaField({
+                utils.createTextareaField({ /*FIXME: Argument type {    label: string,    value: string | any,    rows: number,    onInput: function(any): void} is not assignable to parameter type {    label: any,    value?: string,    rows?: number,    placeholder?: string,    onInput?: function(),    helperText?: string}  Type function(any): void is not assignable to type function() */
                     label: 'Description',
                     value: card.lesson_description,
                     rows: 3,
@@ -143,7 +143,7 @@
                 }).wrapper
             );
             fields.appendChild(
-                utils.createInputField({
+                utils.createInputField({ /*FIXME: Argument type {    label: string,    value: string | any,    placeholder: string,    onInput: function(any): void} is not assignable to parameter type {    label: any,    value?: string,    type?: string,    placeholder?: string,    onInput?: function(),    helperText?: string}  Type function(any): void is not assignable to type function() */
                     label: 'Thumbnail URL',
                     value: card.thumbnail_image_url,
                     placeholder: 'https://example.com/banner.webp',
@@ -154,7 +154,7 @@
                 }).wrapper
             );
             fields.appendChild(
-                utils.createInputField({
+                utils.createInputField({ /*FIXME: Argument type {    label: string,    value: string | any,    placeholder: string,    onInput: function(any): void} is not assignable to parameter type {    label: any,    value?: string,    type?: string,    placeholder?: string,    onInput?: function(),    helperText?: string}  Type function(any): void is not assignable to type function() */
                     label: 'Square image URL',
                     value: card.square_image_url,
                     placeholder: 'https://example.com/square.webp',
@@ -165,7 +165,7 @@
                 }).wrapper
             );
             fields.appendChild(
-                utils.createInputField({
+                utils.createInputField({ /*FIXME: Argument type {    label: string,    value: string | any,    placeholder: string,    onInput: function(any): void} is not assignable to parameter type {    label: any,    value?: string,    type?: string,    placeholder?: string,    onInput?: function(),    helperText?: string}  Type function(any): void is not assignable to type function() */
                     label: 'Deep link path',
                     value: card.deep_link_path,
                     placeholder: 'com.d4rk.androidtutorials://lesson/...',
@@ -176,9 +176,9 @@
                 }).wrapper
             );
 
-            const tagsSection = utils.createElement('div', { classNames: 'builder-subsection' });
+            const tagsSection = utils.createElement('div', { classNames: 'builder-subsection' }); /*FIXME: Argument type { classNames: string } is not assignable to parameter type { classNames?: [], attrs?: {}, text?: string }  Type string is not assignable to type []    Type string is not assignable to type any[]      Type string is not assignable to type Array<any> */
             tagsSection.appendChild(utils.createElement('h4', { text: 'Tags' }));
-            const tagsList = utils.createElement('div', { classNames: 'tag-list' });
+            const tagsList = utils.createElement('div', { classNames: 'tag-list' }); /*FIXME: Argument type { classNames: string } is not assignable to parameter type { classNames?: [], attrs?: {}, text?: string }  Type string is not assignable to type []    Type string is not assignable to type any[]      Type string is not assignable to type Array<any> */
             card.lesson_tags.forEach((tag, tagIndex) => {
                 tagsList.appendChild(createTagRow(tag, (value) => {
                     state.cards[index].lesson_tags[tagIndex] = value;
@@ -189,7 +189,7 @@
                 }));
             });
             tagsSection.appendChild(tagsList);
-            tagsSection.appendChild(utils.createInlineButton({
+            tagsSection.appendChild(utils.createInlineButton({ /*FIXME: Argument type {    label: string,    icon: string,    onClick: function(): void} is not assignable to parameter type {    label: any,    icon?: null,    onClick?: function(),    variant?: string,    title?: string}  Type string is not assignable to type null */
                 label: 'Add tag',
                 icon: 'add',
                 onClick: () => {
@@ -199,9 +199,9 @@
             }));
             fields.appendChild(tagsSection);
 
-            const customSection = utils.createElement('div', { classNames: 'builder-subsection' });
+            const customSection = utils.createElement('div', { classNames: 'builder-subsection' }); /*FIXME: Argument type { classNames: string } is not assignable to parameter type { classNames?: [], attrs?: {}, text?: string }  Type string is not assignable to type []    Type string is not assignable to type any[]      Type string is not assignable to type Array<any> */
             customSection.appendChild(utils.createElement('h4', { text: 'Custom fields' }));
-            const customList = utils.createElement('div', { classNames: 'custom-field-list' });
+            const customList = utils.createElement('div', { classNames: 'custom-field-list' }); /*FIXME: Argument type { classNames: string } is not assignable to parameter type { classNames?: [], attrs?: {}, text?: string }  Type string is not assignable to type []    Type string is not assignable to type any[]      Type string is not assignable to type Array<any> */
             card.customFields.forEach((field, fieldIndex) => {
                 customList.appendChild(createCustomFieldRow(field, (key) => {
                     state.cards[index].customFields[fieldIndex].key = key;
@@ -215,7 +215,7 @@
                 }));
             });
             customSection.appendChild(customList);
-            customSection.appendChild(utils.createInlineButton({
+            customSection.appendChild(utils.createInlineButton({ /*FIXME: Argument type {    label: string,    icon: string,    onClick: function(): void} is not assignable to parameter type {    label: any,    icon?: null,    onClick?: function(),    variant?: string,    title?: string}  Type string is not assignable to type null */
                 label: 'Add field',
                 icon: 'add',
                 onClick: () => {
@@ -230,7 +230,7 @@
         }
 
         function createTagRow(value, onChange, onRemove) {
-            const row = utils.createElement('div', { classNames: 'tag-row' });
+            const row = utils.createElement('div', { classNames: 'tag-row' }); /*FIXME: Argument type { classNames: string } is not assignable to parameter type { classNames?: [], attrs?: {}, text?: string }  Type string is not assignable to type []    Type string is not assignable to type any[]      Type string is not assignable to type Array<any> */
             row.appendChild(
                 utils.createInputField({
                     label: 'Tag',
@@ -238,7 +238,7 @@
                     onInput: onChange
                 }).wrapper
             );
-            row.appendChild(utils.createInlineButton({
+            row.appendChild(utils.createInlineButton({ /*FIXME: Argument type { label: string, icon: string, onClick: any } is not assignable to parameter type {    label: any,    icon?: null,    onClick?: function(),    variant?: string,    title?: string}  Type string is not assignable to type null */
                 label: 'Remove',
                 icon: 'close',
                 onClick: onRemove
@@ -265,7 +265,7 @@
                     lesson_description: utils.trimString(toStringValue(raw.lesson_description)),
                     thumbnail_image_url: utils.trimString(toStringValue(raw.thumbnail_image_url)),
                     square_image_url: utils.trimString(toStringValue(raw.square_image_url)),
-                    deep_link_path: utils.trimString(toStringValue(raw.deep_link_path || raw.deep_link)),
+                    deep_link_path: utils.trimString(toStringValue(raw.deep_link_path || raw.deep_link)), /*FIXME: Unresolved variable deep_link */
                     lesson_tags: Array.isArray(raw.lesson_tags)
                         ? raw.lesson_tags.map((tag) => utils.trimString(toStringValue(tag))).filter(Boolean)
                         : [],
@@ -336,7 +336,7 @@
         }
 
         function updatePreview() {
-            utils.renderJsonPreview({
+            utils.renderJsonPreview({ /*FIXME: Argument type {    previewArea: HTMLElement,    statusElement: HTMLElement,    data: [{        lesson_id: string,        lesson_type: string,        lesson_title: string,        lesson_description: string,        thumbnail_image_url: string,        square_image_url: string,        deep_link_path: string,        lesson_tags: [],        customFields: []    }],    buildPayload: function(any): {        data: any    },    autoFix: function(any): any,    successMessage: function(any): (string | string | string)} is not assignable to parameter type {    previewArea: any,    statusElement: any,    data: any,    buildPayload: any,    autoFix: any,    validator: any,    successMessage?: string,    errorMessage?: string}  Type function(any): (string | string | string) is not assignable to type string */
                 previewArea,
                 statusElement: validationStatus,
                 data: state.cards,
@@ -426,9 +426,9 @@
         function renderMetadata() {
             if (!metadataContainer) return;
             utils.clearElement(metadataContainer);
-            const header = utils.createElement('div', { classNames: 'builder-subsection-header' });
+            const header = utils.createElement('div', { classNames: 'builder-subsection-header' }); /*FIXME: Argument type { classNames: string } is not assignable to parameter type { classNames?: [], attrs?: {}, text?: string }  Type string is not assignable to type []    Type string is not assignable to type any[]      Type string is not assignable to type Array<any> */
             header.appendChild(utils.createElement('h4', { text: 'Lesson metadata' }));
-            header.appendChild(utils.createInlineButton({
+            header.appendChild(utils.createInlineButton({ /*FIXME: Argument type {    label: string,    icon: string,    onClick: function(): void} is not assignable to parameter type {    label: any,    icon?: null,    onClick?: function(),    variant?: string,    title?: string}  Type string is not assignable to type null */
                 label: 'Add field',
                 icon: 'add',
                 onClick: () => {
@@ -438,7 +438,7 @@
                 }
             }));
             metadataContainer.appendChild(header);
-            const list = utils.createElement('div', { classNames: 'custom-field-list' });
+            const list = utils.createElement('div', { classNames: 'custom-field-list' }); /*FIXME: Argument type { classNames: string } is not assignable to parameter type { classNames?: [], attrs?: {}, text?: string }  Type string is not assignable to type []    Type string is not assignable to type any[]      Type string is not assignable to type Array<any> */
             state.metadata.forEach((field, index) => {
                 list.appendChild(createCustomFieldRow(field, (key) => {
                     state.metadata[index].key = key;
@@ -476,9 +476,9 @@
         }
 
         function createBlockCard(block, index) {
-            const card = utils.createElement('div', { classNames: 'builder-card' });
-            const header = utils.createElement('div', { classNames: 'builder-card-header' });
-            header.appendChild(utils.createElement('h3', { text: `Block ${index + 1}` }));
+            const card = utils.createElement('div', { classNames: 'builder-card' }); /*FIXME: Argument type { classNames: string } is not assignable to parameter type { classNames?: [], attrs?: {}, text?: string }  Type string is not assignable to type []    Type string is not assignable to type any[]      Type string is not assignable to type Array<any> */
+            const header = utils.createElement('div', { classNames: 'builder-card-header' }); /*FIXME: Argument type { classNames: string } is not assignable to parameter type { classNames?: [], attrs?: {}, text?: string }  Type string is not assignable to type []    Type string is not assignable to type any[]      Type string is not assignable to type Array<any> */
+            header.appendChild(utils.createElement('h3', { text: `Block ${index + 1}` })); /*FIXME: Argument type {    label: string,    icon: string,    variant: string,    onClick: function(): void} is not assignable to parameter type {    label: any,    icon?: null,    onClick?: function(),    variant?: string,    title?: string}  Type string is not assignable to type null */
             header.appendChild(utils.createInlineButton({
                 label: 'Remove',
                 icon: 'delete',
@@ -495,9 +495,9 @@
             }));
             card.appendChild(header);
 
-            const fields = utils.createElement('div', { classNames: 'builder-card-fields' });
+            const fields = utils.createElement('div', { classNames: 'builder-card-fields' }); /*FIXME: Argument type { classNames: string } is not assignable to parameter type { classNames?: [], attrs?: {}, text?: string }  Type string is not assignable to type []    Type string is not assignable to type any[]      Type string is not assignable to type Array<any> */
             fields.appendChild(
-                utils.createInputField({
+                utils.createInputField({ /*FIXME: Argument type {    label: string,    value: any,    onInput: function(any): void} is not assignable to parameter type {    label: any,    value?: string,    type?: string,    placeholder?: string,    onInput?: function(),    helperText?: string}  Type function(any): void is not assignable to type function() */
                     label: 'Content ID',
                     value: block.content_id,
                     onInput: (value) => {
@@ -507,7 +507,7 @@
                 }).wrapper
             );
             fields.appendChild(
-                utils.createInputField({
+                utils.createInputField({ /*FIXME: Argument type {    label: string,    value: string | any,    helperText: string,    onInput: function(any): void} is not assignable to parameter type {    label: any,    value?: string,    type?: string,    placeholder?: string,    onInput?: function(),    helperText?: string}  Type function(any): void is not assignable to type function() */
                     label: 'Content type',
                     value: block.content_type,
                     helperText: BLOCK_TYPE_HINT,
@@ -524,7 +524,7 @@
             definitions.forEach((definition) => {
                 if (definition.type === 'textarea') {
                     fields.appendChild(
-                        utils.createTextareaField({
+                        utils.createTextareaField({ /*FIXME: Argument type {    label: any,    value,    helperText,    onInput: function(any): void} is not assignable to parameter type {    label: any,    value?: string,    rows?: number,    placeholder?: string,    onInput?: function(),    helperText?: string}  Type function(any): void is not assignable to type function() */
                             label: definition.label,
                             value: block.props[definition.key] || '',
                             helperText: definition.helperText || '',
@@ -536,7 +536,7 @@
                     );
                 } else {
                     fields.appendChild(
-                        utils.createInputField({
+                        utils.createInputField({ /*FIXME: Argument type {    label: any,    value,    type: string | string,    helperText,    onInput: function(any): void} is not assignable to parameter type {    label: any,    value?: string,    type?: string,    placeholder?: string,    onInput?: function(),    helperText?: string}  Type function(any): void is not assignable to type function() */
                             label: definition.label,
                             value: block.props[definition.key] || '',
                             type: definition.type === 'number' ? 'number' : 'text',

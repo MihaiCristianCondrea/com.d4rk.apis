@@ -378,7 +378,7 @@
 
     defaultRoutes.forEach(registerRoute);
 
-    const routesApi = {
+    global.RouterRoutes = {
         registerRoute,
         getRoute,
         hasRoute,
@@ -386,8 +386,6 @@
         normalizeRouteId,
         PAGE_ROUTES
     };
-
-    global.RouterRoutes = routesApi;
     if (typeof global.registerRoute === 'undefined') {
         global.registerRoute = registerRoute;
     }

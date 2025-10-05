@@ -13,9 +13,9 @@
                 return;
             }
             if (key === 'dataset' && value && typeof value === 'object') {
-                Object.entries(value).forEach(([dataKey, dataValue]) => {
+                Object.entries(value).forEach(([dataKey, dataValue]) => { /*FIXME: Argument type unknown is not assignable to parameter type { [p: string]: unknown } | ArrayLike<unknown>  Type unknown is not assignable to type ArrayLike<unknown> */
                     if (dataValue !== undefined && dataValue !== null) {
-                        el.dataset[dataKey] = dataValue;
+                        el.dataset[dataKey] = dataValue; /*FIXME: Assigned expression type unknown is not assignable to type string */
                     }
                 });
                 return;

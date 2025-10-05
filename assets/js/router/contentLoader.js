@@ -45,7 +45,7 @@
         try {
             const response = await fetch(routeConfig.path);
             if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status} for ${routeConfig.path}`);
+                throw new Error(`HTTP error! status: ${response.status} for ${routeConfig.path}`); /*FIXME: 'throw' of exception caught locally */
             }
             const html = await response.text();
             return {

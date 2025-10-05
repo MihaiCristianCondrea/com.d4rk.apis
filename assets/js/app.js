@@ -42,7 +42,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Handle Initial Page Load & Browser History ---
     const initialPageIdFromHash = window.location.hash || '#home';
-    loadPageContent(initialPageIdFromHash, false);
+    loadPageContent(initialPageIdFromHash, false); /*FIXME: Promise returned from loadPageContent is ignored */
 
     window.addEventListener('popstate', (event) => {
         let pageId = '#home';
@@ -51,7 +51,7 @@ document.addEventListener('DOMContentLoaded', () => {
         } else if (window.location.hash) {
             pageId = window.location.hash;
         }
-        loadPageContent(pageId, false);
+        loadPageContent(pageId, false); /*FIXME: Promise returned from loadPageContent is ignored */
     });
 
     // --- App Bar Scroll Behavior ---
@@ -172,7 +172,7 @@ function setupRouteLinkInterception() {
         }
 
         event.preventDefault();
-        loadPageContent(normalizedId);
+        loadPageContent(normalizedId); /*FIXME: Promise returned from loadPageContent is ignored */
     }, true);
 
     routeLinkHandlerRegistered = true;
