@@ -1545,11 +1545,12 @@
             urlField.setAttribute('label', 'Screenshot URL');
             urlField.setAttribute('placeholder', 'https://example.com/screenshot.png');
             urlField.setAttribute('inputmode', 'url');
-            const addUrlButton = document.createElement('md-filled-button');
+            const addUrlButton = document.createElement('md-filled-tonal-button');
             const addUrlIcon = document.createElement('md-icon');
             addUrlIcon.setAttribute('slot', 'icon');
             addUrlIcon.innerHTML =
                 '<span class="material-symbols-outlined">add_link</span>';
+            addUrlButton.setAttribute('has-icon', '');
             addUrlButton.appendChild(addUrlIcon);
             addUrlButton.appendChild(document.createTextNode('Add URL'));
 

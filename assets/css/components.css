@@ -11,6 +11,7 @@ body[data-dialog-open='true'] {
   margin: 0;
 }
 
+/* Do not globalize button internals. Material components manage padding/height; only align containers here. */
 .app-dialog [slot='actions'] {
   display: flex;
   justify-content: flex-end;
@@ -332,103 +333,6 @@ md-list-item[type='button'] md-icon[slot='end'] {
 
 md-list-item[type='button'].expanded md-icon[slot='end'] {
   transform: rotate(180deg);
-}
-
-/* --- Buttons --- */
-:root {
-  --app-button-inline-padding: 16px;
-  --app-button-icon-leading-padding: 12px;
-  --app-button-icon-trailing-padding: 16px;
-  --app-button-min-height: 40px;
-  --app-button-icon-gap: 0.5rem;
-  --app-text-button-inline-padding: var(--app-button-inline-padding);
-}
-
-md-filled-button,
-md-tonal-button,
-md-filled-tonal-button {
-  gap: var(--app-button-icon-gap);
-}
-
-md-filled-button {
-  --md-filled-button-container-height: var(--app-button-min-height);
-  --md-filled-button-leading-space: var(--app-button-inline-padding);
-  --md-filled-button-trailing-space: var(--app-button-inline-padding);
-  --md-filled-button-with-leading-icon-leading-space: var(
-    --app-button-icon-leading-padding
-  );
-  --md-filled-button-with-leading-icon-trailing-space: var(
-    --app-button-icon-trailing-padding
-  );
-  --md-filled-button-with-trailing-icon-leading-space: var(
-    --app-button-icon-trailing-padding
-  );
-  --md-filled-button-with-trailing-icon-trailing-space: var(
-    --app-button-icon-leading-padding
-  );
-}
-
-md-filled-tonal-button {
-  --md-filled-tonal-button-container-height: var(--app-button-min-height);
-  --md-filled-tonal-button-leading-space: var(--app-button-inline-padding);
-  --md-filled-tonal-button-trailing-space: var(--app-button-inline-padding);
-  --md-filled-tonal-button-with-leading-icon-leading-space: var(
-    --app-button-icon-leading-padding
-  );
-  --md-filled-tonal-button-with-leading-icon-trailing-space: var(
-    --app-button-icon-trailing-padding
-  );
-  --md-filled-tonal-button-with-trailing-icon-leading-space: var(
-    --app-button-icon-trailing-padding
-  );
-  --md-filled-tonal-button-with-trailing-icon-trailing-space: var(
-    --app-button-icon-leading-padding
-  );
-}
-
-md-outlined-button {
-  --md-outlined-button-container-height: var(--app-button-min-height);
-  --md-outlined-button-leading-space: var(--app-button-inline-padding);
-  --md-outlined-button-trailing-space: var(--app-button-inline-padding);
-  --md-outlined-button-with-leading-icon-leading-space: var(
-    --app-button-icon-leading-padding
-  );
-  --md-outlined-button-with-leading-icon-trailing-space: var(
-    --app-button-icon-trailing-padding
-  );
-  --md-outlined-button-with-trailing-icon-leading-space: var(
-    --app-button-icon-trailing-padding
-  );
-  --md-outlined-button-with-trailing-icon-trailing-space: var(
-    --app-button-icon-leading-padding
-  );
-}
-
-md-text-button {
-  --md-text-button-container-height: var(--app-button-min-height);
-  --md-text-button-leading-space: var(--app-text-button-inline-padding);
-  --md-text-button-trailing-space: var(--app-text-button-inline-padding);
-  --md-text-button-with-leading-icon-leading-space: var(
-    --app-button-icon-leading-padding
-  );
-  --md-text-button-with-leading-icon-trailing-space: var(
-    --app-button-icon-trailing-padding
-  );
-  --md-text-button-with-trailing-icon-leading-space: var(
-    --app-button-icon-trailing-padding
-  );
-  --md-text-button-with-trailing-icon-trailing-space: var(
-    --app-button-icon-leading-padding
-  );
-}
-
-md-filled-button md-icon[slot='icon'],
-md-tonal-button md-icon[slot='icon'],
-md-filled-tonal-button md-icon[slot='icon'] {
-  margin-inline-end: 0;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
 }
 
 /* --- Page Loading Overlay --- */
@@ -1183,6 +1087,7 @@ md-filled-tonal-button md-icon[slot='icon'] {
   align-self: start;
 }
 
+/* Do not globalize button internals. Material components manage padding/height; only align containers here. */
 .screenshot-actions {
   display: flex;
   flex-wrap: wrap;
@@ -1192,8 +1097,10 @@ md-filled-tonal-button md-icon[slot='icon'] {
 
 .screenshot-actions md-filled-text-field {
   min-width: min(320px, 100%);
-  --md-filled-text-field-container-height: 40px;
-  --md-filled-text-field-input-text-line-height: 1;
+  --md-filled-text-field-container-height: var(
+    --md-filled-button-container-height,
+    40px
+  );
 }
 
 .screenshot-list {
@@ -1556,27 +1463,6 @@ md-filled-tonal-button md-icon[slot='icon'] {
 .preview-actions md-outlined-button {
   --md-filled-tonal-button-container-shape: 999px;
   --md-outlined-button-container-shape: 999px;
-}
-
-md-filled-button::part(button),
-md-filled-tonal-button::part(button),
-md-outlined-button::part(button),
-md-text-button::part(button) {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: var(--app-button-icon-gap);
-  min-height: var(--app-button-min-height);
-  line-height: 1;
-}
-
-.screenshot-actions :is(md-filled-button, md-text-button) {
-  align-self: stretch;
-}
-
-.screenshot-actions :is(md-filled-button, md-text-button)::part(button) {
-  height: 100%;
-  min-height: 100%;
 }
 
 .focus-dialog {
