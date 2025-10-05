@@ -58,13 +58,13 @@
             </li>
           </ol>
           <div class="plan-actions">
-            <md-filled-tonal-button id="appToolkitFocusButton">
+            <md-filled-tonal-button id="appToolkitFocusButton" has-icon>
               <md-icon slot="icon"
                 ><span class="material-symbols-outlined">timelapse</span></md-icon
               >
               Start focus session
             </md-filled-tonal-button>
-            <md-text-button id="appToolkitNotesButton">
+            <md-text-button id="appToolkitNotesButton" has-icon>
               <md-icon slot="icon"
                 ><span class="material-symbols-outlined">edit_note</span></md-icon
               >
@@ -131,13 +131,13 @@
   >
     <div class="builder-toolbar">
       <div class="builder-toolbar-actions">
-        <md-filled-button id="appToolkitAddApp">
+        <md-filled-button id="appToolkitAddApp" has-icon>
           <md-icon slot="icon"
             ><span class="material-symbols-outlined">add</span></md-icon
           >
           Add app
         </md-filled-button>
-        <md-outlined-button id="appToolkitImportButton">
+        <md-outlined-button id="appToolkitImportButton" has-icon>
           <md-icon slot="icon"
             ><span class="material-symbols-outlined">upload</span></md-icon
           >
@@ -149,7 +149,7 @@
           accept="application/json"
           hidden
         />
-        <md-text-button id="appToolkitResetButton">
+        <md-text-button id="appToolkitResetButton" has-icon>
           <md-icon slot="icon"
             ><span class="material-symbols-outlined">refresh</span></md-icon
           >
@@ -221,7 +221,7 @@
               ><span class="material-symbols-outlined">link</span></md-icon
             >
           </md-outlined-text-field>
-          <md-filled-tonal-button id="appToolkitFetchButton">
+          <md-filled-tonal-button id="appToolkitFetchButton" has-icon>
             <md-icon slot="icon"
               ><span class="material-symbols-outlined">cloud_download</span></md-icon
             >
@@ -231,6 +231,7 @@
         <div class="builder-remote-presets" aria-label="Quick fetch shortcuts">
           <span class="builder-remote-presets-label">Quick links</span>
           <md-text-button
+            has-icon
             data-app-toolkit-preset="https://raw.githubusercontent.com/MihaiCristianCondrea/com.d4rk.apis/refs/heads/main/App%20Toolkit/debug/en/home/api_android_apps.json"
             id="appToolkitDebugPreset"
           >
@@ -240,6 +241,7 @@
             Debug · EN
           </md-text-button>
           <md-text-button
+            has-icon
             data-app-toolkit-preset="https://raw.githubusercontent.com/MihaiCristianCondrea/com.d4rk.apis/refs/heads/main/App%20Toolkit/release/en/home/api_android_apps.json"
             id="appToolkitReleasePreset"
           >
@@ -286,7 +288,7 @@
           </ul>
         </div>
         <div class="builder-github-launch">
-          <md-filled-button id="appToolkitGithubWizardButton">
+          <md-filled-button id="appToolkitGithubWizardButton" has-icon>
             <md-icon slot="icon"
               ><span class="material-symbols-outlined">rocket_launch</span></md-icon
             >
@@ -320,13 +322,17 @@
           aria-live="polite"
         ></div>
         <div class="preview-actions">
-          <md-filled-tonal-button id="appToolkitCopyButton">
+          <md-filled-tonal-button id="appToolkitCopyButton" has-icon>
             <md-icon slot="icon"
               ><span class="material-symbols-outlined">content_copy</span></md-icon
             >
             Copy JSON
           </md-filled-tonal-button>
-          <md-outlined-button id="appToolkitDownloadButton" trailing-icon>
+          <md-outlined-button
+            id="appToolkitDownloadButton"
+            has-icon
+            trailing-icon
+          >
             Download
             <md-icon slot="icon"
               ><span class="material-symbols-outlined">download</span></md-icon
@@ -424,7 +430,7 @@
                 accept="text/plain,.txt,.token"
                 hidden
               />
-              <md-outlined-button id="appToolkitGithubTokenFileButton">
+              <md-outlined-button id="appToolkitGithubTokenFileButton" has-icon>
                 <md-icon slot="icon"
                   ><span class="material-symbols-outlined">description</span></md-icon
                 >

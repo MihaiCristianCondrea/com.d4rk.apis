@@ -55,13 +55,13 @@
           data-builder-type="english-home"
         >
           <div class="builder-toolbar">
-            <md-filled-button id="englishHomeAddCard">
+            <md-filled-button id="englishHomeAddCard" has-icon>
               <md-icon slot="icon"
                 ><span class="material-symbols-outlined">add</span></md-icon
               >
               Add card
             </md-filled-button>
-            <md-outlined-button id="englishHomeImportButton">
+            <md-outlined-button id="englishHomeImportButton" has-icon>
               <md-icon slot="icon"
                 ><span class="material-symbols-outlined">upload</span></md-icon
               >
@@ -73,7 +73,7 @@
               accept="application/json"
               hidden
             />
-            <md-text-button id="englishHomeResetButton">
+            <md-text-button id="englishHomeResetButton" has-icon>
               <md-icon slot="icon"
                 ><span class="material-symbols-outlined">refresh</span></md-icon
               >
@@ -106,7 +106,7 @@
                 aria-live="polite"
               ></div>
               <div class="preview-actions">
-                <md-filled-tonal-button id="englishHomeCopyButton">
+                <md-filled-tonal-button id="englishHomeCopyButton" has-icon>
                   <md-icon slot="icon"
                     ><span class="material-symbols-outlined"
                       >content_copy</span
@@ -114,7 +114,11 @@
                   >
                   Copy JSON
                 </md-filled-tonal-button>
-                <md-outlined-button id="englishHomeDownloadButton" trailing-icon>
+                <md-outlined-button
+                  id="englishHomeDownloadButton"
+                  has-icon
+                  trailing-icon
+                >
                   Download
                   <md-icon slot="icon"
                     ><span class="material-symbols-outlined"
@@ -160,13 +164,13 @@
               class="lesson-title-field"
             ></md-outlined-text-field>
             <div class="toolbar-actions">
-              <md-filled-button id="englishLessonAddBlock">
+              <md-filled-button id="englishLessonAddBlock" has-icon>
                 <md-icon slot="icon"
                   ><span class="material-symbols-outlined">add</span></md-icon
                 >
                 Add block
               </md-filled-button>
-              <md-outlined-button id="englishLessonImportButton">
+              <md-outlined-button id="englishLessonImportButton" has-icon>
                 <md-icon slot="icon"
                   ><span class="material-symbols-outlined">upload</span></md-icon
                 >
@@ -178,7 +182,7 @@
                 accept="application/json"
                 hidden
               />
-              <md-text-button id="englishLessonResetButton">
+              <md-text-button id="englishLessonResetButton" has-icon>
                 <md-icon slot="icon"
                   ><span class="material-symbols-outlined"
                     >refresh</span
@@ -220,7 +224,7 @@
                 aria-live="polite"
               ></div>
               <div class="preview-actions">
-                <md-filled-tonal-button id="englishLessonCopyButton">
+                <md-filled-tonal-button id="englishLessonCopyButton" has-icon>
                   <md-icon slot="icon"
                     ><span class="material-symbols-outlined"
                       >content_copy</span
@@ -230,6 +234,7 @@
                 </md-filled-tonal-button>
                 <md-outlined-button
                   id="englishLessonDownloadButton"
+                  has-icon
                   trailing-icon
                 >
                   Download
