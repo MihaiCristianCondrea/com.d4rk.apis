@@ -5,9 +5,1022 @@
         return;
     }
 
+    function cacheWorkspaceElements() {
+        workspace.elements = workspace.elements || {};
+        const elements = workspace.elements;
+        elements.trackedCount = document.getElementById('englishHomeCardCount');
+        elements.releaseReadyCount = document.getElementById('englishReleaseReadyCount');
+        elements.blockAverage = document.getElementById('englishLessonBlockAverage');
+        elements.reviewCount = document.getElementById('englishReviewCount');
+        elements.lastEdited = document.getElementById('englishLastEdited');
+        elements.workspacePulse = document.getElementById('englishWorkspacePulse');
+        elements.releaseProgress = document.getElementById('englishReleaseProgress');
+        elements.homeToolbarPulse = document.getElementById('englishHomeToolbarPulse');
+        elements.lessonToolbarPulse = document.getElementById('englishLessonToolbarPulse');
+        elements.focusButton = document.getElementById('englishFocusButton');
+        elements.notesButton = document.getElementById('englishNotesButton');
+        elements.focusDialog = document.getElementById('englishFocusDialog');
+        elements.focusTimer = document.getElementById('englishFocusTimer');
+        elements.focusStart = document.getElementById('englishFocusStart');
+        elements.focusPause = document.getElementById('englishFocusPause');
+        elements.focusReset = document.getElementById('englishFocusReset');
+        elements.focusSave = document.getElementById('englishFocusSave');
+        elements.focusChecklist = document.getElementById('englishFocusChecklist');
+        elements.focusNotesField = document.getElementById('englishFocusNotes');
+        elements.fetchInput = document.getElementById('englishFetchInput');
+        elements.fetchButton = document.getElementById('englishFetchButton');
+        elements.fetchTargetSet = document.getElementById('englishFetchTarget');
+        elements.fetchPresetButtons = Array.from(
+            document.querySelectorAll('[data-english-fetch-preset]')
+        );
+        elements.diffSheet = document.getElementById('englishDiffSheet');
+        elements.diffContent = document.getElementById('englishDiffContent');
+        elements.githubWizardButton = document.getElementById('englishGithubWizardButton');
+        elements.githubDialog = document.getElementById('englishGithubDialog');
+        elements.githubStepper = document.getElementById('englishGithubStepper');
+        elements.githubBack = document.getElementById('englishGithubBack');
+        elements.githubNext = document.getElementById('englishGithubNext');
+        elements.githubToken = document.getElementById('englishGithubToken');
+        elements.githubRepo = document.getElementById('englishGithubRepo');
+        elements.githubBranch = document.getElementById('englishGithubBranch');
+        elements.githubMessage = document.getElementById('englishGithubMessage');
+        elements.githubTarget = document.getElementById('englishGithubTarget');
+        elements.githubLessonSlug = document.getElementById('englishGithubLessonSlug');
+        elements.githubStatus = document.getElementById('englishGithubStatus');
+    }
+
+    function wireDialogDismissHandlers() {
+        const { focusDialog, githubDialog } = workspace.elements;
+        [focusDialog, githubDialog].forEach((dialog) => {
+            if (!dialog || dialog.dataset.dialogCloseInit === 'true') {
+                return;
+            }
+            const closeButtons = dialog.querySelectorAll('[dialog-action="close"]');
+            closeButtons.forEach((button) => {
+                button.addEventListener('click', () => {
+                    if (typeof dialog.close === 'function') {
+                        dialog.close();
+                    } else {
+                        dialog.open = false;
+                    }
+                });
+            });
+            dialog.dataset.dialogCloseInit = 'true';
+        });
+    }
+
+    function prepareSessionStorage() {
+        if (workspace.sessionStorageAvailable) {
+            return;
+        }
+        if (typeof sessionStorage === 'undefined') {
+            return;
+        }
+        try {
+            const probeKey = `${FOCUS_STORAGE_KEY}__probe`;
+            sessionStorage.setItem(probeKey, '1');
+            sessionStorage.removeItem(probeKey);
+            workspace.sessionStorageAvailable = true;
+        } catch (error) {
+            workspace.sessionStorageAvailable = false;
+        }
+        if (!workspace.sessionStorageAvailable && workspace.elements.focusSave) {
+            workspace.elements.focusSave.disabled = true;
+        }
+    }
+
+    function restoreFocusNotes() {
+        if (!workspace.sessionStorageAvailable) {
+            return;
+        }
+        try {
+            workspace.focus.notes = sessionStorage.getItem(FOCUS_STORAGE_KEY) || '';
+        } catch (error) {
+            workspace.focus.notes = '';
+        }
+        if (workspace.elements.focusNotesField) {
+            workspace.elements.focusNotesField.value = workspace.focus.notes;
+        }
+        updateNoteIndicator();
+    }
+
+    function updateNoteIndicator() {
+        const { notesButton } = workspace.elements;
+        if (!notesButton) {
+            return;
+        }
+        if (workspace.focus.notes && workspace.focus.notes.trim()) {
+            notesButton.dataset.noteState = 'saved';
+        } else {
+            delete notesButton.dataset.noteState;
+        }
+    }
+
+    function wireFocusControls() {
+        const {
+            focusButton,
+            notesButton,
+            focusDialog,
+            focusStart,
+            focusPause,
+            focusReset,
+            focusSave,
+            focusNotesField
+        } = workspace.elements;
+        if (focusButton && !focusButton.dataset.wired) {
+            focusButton.addEventListener('click', () => openFocusDialog({ autoStart: true }));
+            focusButton.dataset.wired = 'true';
+        }
+        if (notesButton && !notesButton.dataset.wired) {
+            notesButton.addEventListener('click', () => openFocusDialog({ autoStart: false }));
+            notesButton.dataset.wired = 'true';
+        }
+        if (focusStart && !focusStart.dataset.wired) {
+            focusStart.addEventListener('click', () => startFocusTimer());
+            focusStart.dataset.wired = 'true';
+        }
+        if (focusPause && !focusPause.dataset.wired) {
+            focusPause.addEventListener('click', () => pauseFocusTimer());
+            focusPause.dataset.wired = 'true';
+        }
+        if (focusReset && !focusReset.dataset.wired) {
+            focusReset.addEventListener('click', () => resetFocusTimer());
+            focusReset.dataset.wired = 'true';
+        }
+        if (focusSave && !focusSave.dataset.wired) {
+            focusSave.addEventListener('click', () => {
+                const value = focusNotesField ? focusNotesField.value || '' : '';
+                workspace.focus.notes = value;
+                if (workspace.sessionStorageAvailable) {
+                    try {
+                        sessionStorage.setItem(FOCUS_STORAGE_KEY, value);
+                    } catch (error) {
+                        // ignore storage errors
+                    }
+                }
+                updateNoteIndicator();
+                flashButton(
+                    focusSave,
+                    '<span class="material-symbols-outlined">check</span><span>Saved</span>'
+                );
+            });
+            focusSave.dataset.wired = 'true';
+        }
+        if (focusDialog && !focusDialog.dataset.focusInit) {
+            focusDialog.addEventListener('close', () => pauseFocusTimer());
+            focusDialog.dataset.focusInit = 'true';
+        }
+    }
+
+    function openFocusDialog({ autoStart = false } = {}) {
+        const { focusDialog, focusNotesField } = workspace.elements;
+        if (!focusDialog) {
+            return;
+        }
+        focusDialog.open = true;
+        if (focusNotesField) {
+            focusNotesField.value = workspace.focus.notes || '';
+        }
+        if (autoStart) {
+            resetFocusTimer();
+            startFocusTimer();
+        } else {
+            updateFocusTimerDisplay();
+            updateFocusControls();
+        }
+    }
+
+    function startFocusTimer() {
+        if (workspace.focus.interval) {
+            return;
+        }
+        if (workspace.focus.remaining <= 0) {
+            workspace.focus.remaining = FOCUS_SESSION_DURATION;
+        }
+        workspace.focus.interval = setInterval(() => {
+            workspace.focus.remaining -= 1;
+            if (workspace.focus.remaining <= 0) {
+                workspace.focus.remaining = 0;
+                pauseFocusTimer();
+                updateToolbarPulses('focusComplete');
+            }
+            updateFocusTimerDisplay();
+            updateFocusControls();
+        }, 1000);
+        updateFocusTimerDisplay();
+        updateFocusControls();
+    }
+
+    function pauseFocusTimer() {
+        if (workspace.focus.interval) {
+            clearInterval(workspace.focus.interval);
+            workspace.focus.interval = null;
+        }
+        updateFocusControls();
+    }
+
+    function resetFocusTimer() {
+        pauseFocusTimer();
+        workspace.focus.remaining = FOCUS_SESSION_DURATION;
+        updateFocusTimerDisplay();
+        updateFocusControls();
+    }
+
+    function updateFocusTimerDisplay() {
+        const { focusTimer } = workspace.elements;
+        if (!focusTimer) {
+            return;
+        }
+        const remaining = Math.max(workspace.focus.remaining, 0);
+        const minutes = Math.floor(remaining / 60)
+            .toString()
+            .padStart(2, '0');
+        const seconds = (remaining % 60).toString().padStart(2, '0');
+        focusTimer.textContent = `${minutes}:${seconds}`;
+    }
+
+    function updateFocusControls() {
+        const { focusStart, focusPause } = workspace.elements;
+        const running = Boolean(workspace.focus.interval);
+        if (focusStart) {
+            focusStart.disabled = running;
+        }
+        if (focusPause) {
+            focusPause.disabled = !running;
+        }
+    }
+
+    function wireRemoteFetch() {
+        const { fetchButton, fetchPresetButtons, fetchTargetSet } = workspace.elements;
+        if (fetchButton && !fetchButton.dataset.wired) {
+            fetchButton.addEventListener('click', () => {
+                const target = getFetchTarget();
+                const url = workspace.elements.fetchInput?.value || '';
+                fetchRemotePayload(target, url);
+            });
+            fetchButton.dataset.wired = 'true';
+        }
+        if (Array.isArray(fetchPresetButtons)) {
+            fetchPresetButtons.forEach((button) => {
+                if (!button || button.dataset.wired === 'true') {
+                    return;
+                }
+                button.addEventListener('click', () => {
+                    const target = button.dataset.englishFetchTarget || 'home';
+                    const url = button.dataset.englishFetchPreset || '';
+                    if (workspace.elements.fetchTargetSet) {
+                        workspace.elements.fetchTargetSet.value = target;
+                    }
+                    if (workspace.elements.fetchInput) {
+                        workspace.elements.fetchInput.value = url;
+                    }
+                    fetchRemotePayload(target, url);
+                });
+                button.dataset.wired = 'true';
+            });
+        }
+        if (fetchTargetSet && !fetchTargetSet.dataset.wired) {
+            fetchTargetSet.addEventListener('change', () => updateFetchPlaceholder());
+            fetchTargetSet.dataset.wired = 'true';
+            updateFetchPlaceholder();
+        }
+    }
+
+    function getFetchTarget() {
+        const { fetchTargetSet } = workspace.elements;
+        if (!fetchTargetSet || fetchTargetSet.value === undefined || fetchTargetSet.value === null) {
+            return 'home';
+        }
+        return fetchTargetSet.value || 'home';
+    }
+
+    function updateFetchPlaceholder() {
+        const { fetchInput } = workspace.elements;
+        if (!fetchInput) {
+            return;
+        }
+        const target = getFetchTarget();
+        fetchInput.placeholder =
+            target === 'lesson'
+                ? 'https://example.com/english_lesson.json'
+                : 'https://example.com/english_home.json';
+    }
+
+    async function fetchRemotePayload(target, url) {
+        const trimmed = utils.trimString(url || '');
+        const statusElement = target === 'lesson' ? workspace.lessonValidationStatus : workspace.homeValidationStatus;
+        if (!trimmed) {
+            utils.setValidationStatus(statusElement, {
+                status: 'error',
+                message: 'Provide a JSON URL to fetch.'
+            });
+            return;
+        }
+        try {
+            const response = await fetch(trimmed, { cache: 'no-store' });
+            if (!response.ok) {
+                throw new Error(`Request failed: ${response.status}`);
+            }
+            const text = await response.text();
+            const formatted = utils.prettifyJsonString(text);
+            if (target === 'lesson') {
+                workspace.lessonImport?.(text);
+                workspace.baseline.lesson = formatted;
+            } else {
+                workspace.homeImport?.(text);
+                workspace.baseline.home = formatted;
+            }
+            utils.setValidationStatus(statusElement, {
+                status: 'success',
+                message: 'Remote payload loaded successfully.'
+            });
+            const metrics = updateWorkspaceMetrics();
+            updateToolbarPulses();
+            refreshFocusChecklist(metrics);
+            updateDiffSheet();
+        } catch (error) {
+            console.error('EnglishWithLidia: remote fetch failed', error);
+            utils.setValidationStatus(statusElement, {
+                status: 'error',
+                message: error.message || 'Unable to fetch JSON file.'
+            });
+        }
+    }
+
+    function wireGithubWizard() {
+        const { githubWizardButton, githubDialog, githubBack, githubNext, githubTarget } = workspace.elements;
+        if (githubWizardButton && !githubWizardButton.dataset.wired) {
+            githubWizardButton.addEventListener('click', () => {
+                setGithubStep(0);
+                clearGithubStatus();
+                if (githubDialog) {
+                    githubDialog.open = true;
+                }
+                updateDiffSheet();
+            });
+            githubWizardButton.dataset.wired = 'true';
+        }
+        if (githubBack && !githubBack.dataset.wired) {
+            githubBack.addEventListener('click', () => {
+                if (workspace.githubStepIndex > 0) {
+                    setGithubStep(workspace.githubStepIndex - 1);
+                    clearGithubStatus();
+                }
+            });
+            githubBack.dataset.wired = 'true';
+        }
+        if (githubNext && !githubNext.dataset.wired) {
+            githubNext.addEventListener('click', async () => {
+                clearGithubStatus();
+                if (workspace.githubStepIndex === 0) {
+                    try {
+                        validateGithubToken(workspace.elements.githubToken?.value || '');
+                        setGithubStep(1);
+                    } catch (error) {
+                        setGithubStatus({ status: 'error', message: error.message });
+                    }
+                    return;
+                }
+                if (workspace.githubStepIndex === 1) {
+                    try {
+                        ensureGithubTargetReady();
+                        setGithubStep(2);
+                    } catch (error) {
+                        setGithubStatus({ status: 'error', message: error.message });
+                    }
+                    return;
+                }
+                if (workspace.githubStepIndex === 2) {
+                    await publishToGithub();
+                }
+            });
+            githubNext.dataset.wired = 'true';
+        }
+        if (githubTarget && !githubTarget.dataset.wired) {
+            githubTarget.addEventListener('change', () => clearGithubStatus());
+            githubTarget.dataset.wired = 'true';
+        }
+    }
+
+    function ensureGithubTargetReady() {
+        const { githubTarget, githubLessonSlug } = workspace.elements;
+        const targetKey = githubTarget?.value || 'home-debug';
+        const target = GITHUB_TARGETS[targetKey];
+        if (!target) {
+            throw new Error('Select a payload target.');
+        }
+        if (target.previewKey === 'lesson') {
+            const slug = utils.trimString(githubLessonSlug?.value || '');
+            if (!slug) {
+                throw new Error('Provide a lesson slug for lesson targets.');
+            }
+        }
+        const previewResult = target.previewKey === 'home' ? workspace.homeResult : workspace.lessonResult;
+        if (!previewResult.success) {
+            throw new Error('Resolve preview validation issues before publishing.');
+        }
+        updateDiffSheet();
+    }
+
+    function setGithubStep(index) {
+        const steps = ['authenticate', 'target', 'review'];
+        const clamped = Math.max(0, Math.min(index, steps.length - 1));
+        workspace.githubStepIndex = clamped;
+        if (workspace.elements.githubStepper) {
+            workspace.elements.githubStepper.value = steps[clamped];
+        }
+        if (workspace.elements.githubBack) {
+            workspace.elements.githubBack.disabled = clamped === 0;
+        }
+        if (workspace.elements.githubNext) {
+            workspace.elements.githubNext.textContent =
+                clamped === steps.length - 1 ? 'Publish' : 'Next';
+        }
+    }
+
+    function clearGithubStatus() {
+        const { githubStatus } = workspace.elements;
+        if (githubStatus) {
+            githubStatus.innerHTML = '';
+            githubStatus.dataset.status = '';
+        }
+    }
+
+    function setGithubStatus({ status = 'info', message = '' } = {}) {
+        const { githubStatus } = workspace.elements;
+        if (!githubStatus) {
+            return;
+        }
+        utils.setValidationStatus(githubStatus, { status, message });
+    }
+
+    function validateGithubToken(value) {
+        const trimmed = utils.trimString(value || '');
+        if (!trimmed || trimmed.length < MIN_GITHUB_TOKEN_LENGTH) {
+            throw new Error('Token must be at least 20 characters.');
+        }
+        return trimmed;
+    }
+
+    function extractStatusMessage(element) {
+        if (!element) {
+            return '';
+        }
+        const messageSpan = element.querySelector('span:last-child');
+        if (messageSpan && messageSpan.textContent) {
+            return messageSpan.textContent.trim();
+        }
+        return element.textContent ? element.textContent.trim() : '';
+    }
+
+    function handlePreviewResult(target, result) {
+        if (result?.success) {
+            workspace.lastEdited = Date.now();
+        }
+        updateLastEditedLabel();
+        const metrics = updateWorkspaceMetrics();
+        updateToolbarPulses();
+        refreshFocusChecklist(metrics);
+        updateDiffSheet();
+    }
+
+    function updateWorkspaceMetrics() {
+        const metrics = {
+            totalCards: 0,
+            releaseReadyCards: 0,
+            missingRequiredCount: 0,
+            lessonBlocks: 0,
+            lessonReady: false
+        };
+        const cards = workspace.homeState?.cards || [];
+        const sanitize = workspace.homeSanitize;
+        const sanitizedCards = sanitize
+            ? cards
+                  .map((card) => sanitize(card))
+                  .filter((card) => card && Object.keys(card).length > 0)
+            : [];
+        metrics.totalCards = sanitizedCards.length;
+        sanitizedCards.forEach((card) => {
+            const hasRequired = card.lesson_id && card.lesson_type && card.lesson_title;
+            if (hasRequired) {
+                metrics.releaseReadyCards += 1;
+            } else {
+                metrics.missingRequiredCount += 1;
+            }
+        });
+        const composeLesson = workspace.lessonCompose;
+        let lessonPayload = null;
+        if (typeof composeLesson === 'function') {
+            try {
+                lessonPayload = composeLesson();
+            } catch (error) {
+                lessonPayload = null;
+            }
+        }
+        const lessons = Array.isArray(lessonPayload?.data) ? lessonPayload.data : [];
+        const lesson = lessons[0] || {};
+        const blocks = Array.isArray(lesson.lesson_content) ? lesson.lesson_content : [];
+        metrics.lessonBlocks = blocks.length;
+        metrics.lessonReady = Boolean(lesson.lesson_title && blocks.length);
+        workspace.lastMetrics = metrics;
+
+        const {
+            trackedCount,
+            releaseReadyCount,
+            blockAverage,
+            reviewCount,
+            workspacePulse,
+            releaseProgress
+        } = workspace.elements;
+        if (trackedCount) {
+            trackedCount.textContent = String(metrics.totalCards);
+        }
+        if (releaseReadyCount) {
+            releaseReadyCount.textContent = String(metrics.releaseReadyCards);
+        }
+        if (blockAverage) {
+            blockAverage.textContent = String(metrics.lessonBlocks);
+        }
+        if (reviewCount) {
+            if (!metrics.totalCards && !metrics.lessonBlocks) {
+                reviewCount.textContent = '0 cards needing attention';
+            } else if (metrics.missingRequiredCount === 0 && metrics.lessonReady) {
+                reviewCount.textContent = 'All payloads look ready';
+            } else {
+                const parts = [];
+                if (metrics.missingRequiredCount) {
+                    parts.push(
+                        `${metrics.missingRequiredCount} home ${
+                            metrics.missingRequiredCount === 1 ? 'card' : 'cards'
+                        }`
+                    );
+                }
+                if (!metrics.lessonReady) {
+                    parts.push('lesson setup');
+                }
+                reviewCount.textContent = `${parts.join(' · ')} pending`;
+            }
+        }
+        if (workspacePulse) {
+            let message;
+            if (!metrics.totalCards && !metrics.lessonBlocks) {
+                message = 'Review entries to unlock insights.';
+            } else if (metrics.missingRequiredCount === 0 && metrics.lessonReady) {
+                message = 'Everything is production ready. Ship when you are ready.';
+            } else {
+                const homePart = metrics.totalCards
+                    ? `${metrics.releaseReadyCards}/${metrics.totalCards} home ready`
+                    : 'No home cards yet';
+                const lessonPart = metrics.lessonReady
+                    ? 'Lesson ready'
+                    : 'Lesson needs title & blocks';
+                message = `${homePart} · ${lessonPart}`;
+            }
+            workspacePulse.textContent = message;
+        }
+        if (releaseProgress) {
+            const homeRatio = metrics.totalCards ? metrics.releaseReadyCards / metrics.totalCards : 0;
+            const lessonRatio = metrics.lessonReady ? 1 : 0;
+            const overall = (homeRatio + lessonRatio) / 2;
+            releaseProgress.style.width = `${Math.round(overall * 100)}%`;
+            releaseProgress.dataset.value = overall.toFixed(2);
+        }
+        return metrics;
+    }
+
+    function updateToolbarPulses(reason) {
+        updateHomeToolbarPulse(reason);
+        updateLessonToolbarPulse(reason);
+    }
+
+    function updateHomeToolbarPulse(reason) {
+        const element = workspace.elements.homeToolbarPulse;
+        if (!element) {
+            return;
+        }
+        if (reason === 'focusComplete') {
+            element.textContent = 'Focus session complete.';
+            return;
+        }
+        const statusElement = workspace.homeValidationStatus;
+        const status = statusElement?.dataset.status;
+        const statusMessage = extractStatusMessage(statusElement);
+        if (status && statusMessage) {
+            element.textContent = statusMessage;
+            return;
+        }
+        const metrics = workspace.lastMetrics || { totalCards: 0, missingRequiredCount: 0 };
+        if (!metrics.totalCards) {
+            element.textContent = 'Awaiting input';
+            return;
+        }
+        if (metrics.missingRequiredCount) {
+            element.textContent = `${metrics.missingRequiredCount} ${
+                metrics.missingRequiredCount === 1 ? 'card needs metadata' : 'cards need metadata'
+            }`;
+        } else {
+            element.textContent = 'Ready to publish';
+        }
+    }
+
+    function updateLessonToolbarPulse(reason) {
+        const element = workspace.elements.lessonToolbarPulse;
+        if (!element) {
+            return;
+        }
+        if (reason === 'focusComplete') {
+            element.textContent = 'Focus session complete.';
+            return;
+        }
+        const statusElement = workspace.lessonValidationStatus;
+        const status = statusElement?.dataset.status;
+        const statusMessage = extractStatusMessage(statusElement);
+        if (status && statusMessage) {
+            element.textContent = statusMessage;
+            return;
+        }
+        const metrics = workspace.lastMetrics || { lessonBlocks: 0, lessonReady: false };
+        if (!metrics.lessonBlocks) {
+            element.textContent = 'Add lesson blocks to begin';
+        } else if (!metrics.lessonReady) {
+            element.textContent = 'Complete lesson title and content';
+        } else {
+            element.textContent = 'Lesson ready to publish';
+        }
+    }
+
+    function refreshFocusChecklist(metrics = workspace.lastMetrics || {}) {
+        const { focusChecklist } = workspace.elements;
+        if (!focusChecklist) {
+            return;
+        }
+        focusChecklist.innerHTML = '';
+        const previewReadyHome = workspace.homeValidationStatus?.dataset.status === 'success';
+        const previewReadyLesson = workspace.lessonValidationStatus?.dataset.status === 'success';
+        const items = [
+            {
+                label: 'Build home feed',
+                detail: metrics.totalCards
+                    ? `${metrics.totalCards} ${metrics.totalCards === 1 ? 'card' : 'cards'} tracked`
+                    : 'Add your first home card.',
+                done: metrics.totalCards > 0
+            },
+            {
+                label: 'Complete required metadata',
+                detail: metrics.missingRequiredCount
+                    ? `${metrics.missingRequiredCount} ${
+                          metrics.missingRequiredCount === 1 ? 'card missing fields' : 'cards missing fields'
+                      }`
+                    : 'All required fields captured.',
+                done: metrics.totalCards > 0 && metrics.missingRequiredCount === 0
+            },
+            {
+                label: 'Structure lesson content',
+                detail: metrics.lessonReady
+                    ? `${metrics.lessonBlocks} ${metrics.lessonBlocks === 1 ? 'block' : 'blocks'} configured`
+                    : 'Add a title and content blocks.',
+                done: metrics.lessonReady
+            },
+            {
+                label: 'Validate JSON previews',
+                detail:
+                    previewReadyHome && previewReadyLesson
+                        ? 'Home and lesson previews valid.'
+                        : 'Resolve validation messages before publishing.',
+                done: previewReadyHome && previewReadyLesson
+            }
+        ];
+        items.forEach((item) => {
+            const listItem = document.createElement('md-list-item');
+            listItem.classList.add('focus-checklist-item');
+            const checkbox = document.createElement('md-checkbox');
+            checkbox.setAttribute('slot', 'start');
+            checkbox.checked = item.done;
+            checkbox.disabled = true;
+            listItem.appendChild(checkbox);
+            const headline = document.createElement('div');
+            headline.setAttribute('slot', 'headline');
+            headline.textContent = item.label;
+            listItem.appendChild(headline);
+            if (item.detail) {
+                const supporting = document.createElement('div');
+                supporting.setAttribute('slot', 'supporting-text');
+                supporting.textContent = item.detail;
+                listItem.appendChild(supporting);
+            }
+            focusChecklist.appendChild(listItem);
+        });
+    }
+
+    function updateDiffSheet() {
+        const { diffContent, diffSheet } = workspace.elements;
+        if (!diffContent) {
+            return;
+        }
+        const homeBaseline = workspace.baseline.home;
+        const lessonBaseline = workspace.baseline.lesson;
+        if (!homeBaseline && !lessonBaseline) {
+            diffContent.classList.add('diff-view--empty');
+            diffContent.textContent = 'Load a baseline JSON file to compare changes.';
+            if (diffSheet) {
+                diffSheet.open = false;
+                diffSheet.classList.add('is-empty');
+            }
+            return;
+        }
+        const fragments = [];
+        if (homeBaseline) {
+            fragments.push(
+                renderDiffSection({
+                    label: 'Home API',
+                    baseline: homeBaseline,
+                    current: workspace.homePreview,
+                    ready: workspace.homeResult.success
+                })
+            );
+        }
+        if (lessonBaseline) {
+            fragments.push(
+                renderDiffSection({
+                    label: 'Lesson API',
+                    baseline: lessonBaseline,
+                    current: workspace.lessonPreview,
+                    ready: workspace.lessonResult.success
+                })
+            );
+        }
+        const available = fragments.filter(Boolean);
+        if (!available.length) {
+            diffContent.classList.add('diff-view--empty');
+            diffContent.textContent = 'Resolve preview errors to view the diff.';
+            if (diffSheet) {
+                diffSheet.open = false;
+                diffSheet.classList.add('is-empty');
+            }
+            return;
+        }
+        diffContent.classList.remove('diff-view--empty');
+        diffContent.innerHTML = '';
+        available.forEach((fragment) => diffContent.appendChild(fragment));
+        if (diffSheet) {
+            diffSheet.classList.remove('is-empty');
+            diffSheet.open = true;
+        }
+    }
+
+    function renderDiffSection({ label, baseline, current, ready }) {
+        const section = document.createElement('div');
+        section.className = 'diff-view__group';
+        const heading = document.createElement('h3');
+        heading.className = 'diff-view__title';
+        heading.textContent = label;
+        section.appendChild(heading);
+        if (!ready) {
+            const message = document.createElement('p');
+            message.className = 'diff-view__message';
+            message.textContent = 'Preview not ready.';
+            section.appendChild(message);
+            return section;
+        }
+        if (!current || current === baseline) {
+            const message = document.createElement('p');
+            message.className = 'diff-view__message';
+            message.textContent = 'No differences detected.';
+            section.appendChild(message);
+            return section;
+        }
+        const body = document.createElement('div');
+        body.className = 'diff-view__body';
+        const baselineColumn = document.createElement('div');
+        baselineColumn.className = 'diff-view__column diff-view__column--baseline';
+        const baselineHeading = document.createElement('h4');
+        baselineHeading.textContent = 'Baseline';
+        baselineColumn.appendChild(baselineHeading);
+        const baselinePre = document.createElement('pre');
+        baselinePre.className = 'jsondiffpatch-delta';
+        baselinePre.textContent = baseline;
+        baselineColumn.appendChild(baselinePre);
+        const currentColumn = document.createElement('div');
+        currentColumn.className = 'diff-view__column diff-view__column--current';
+        const currentHeading = document.createElement('h4');
+        currentHeading.textContent = 'Current';
+        currentColumn.appendChild(currentHeading);
+        const currentPre = document.createElement('pre');
+        currentPre.className = 'jsondiffpatch-delta';
+        currentPre.textContent = current;
+        currentColumn.appendChild(currentPre);
+        body.appendChild(baselineColumn);
+        body.appendChild(currentColumn);
+        section.appendChild(body);
+        return section;
+    }
+
+    function updateLastEditedLabel() {
+        const { lastEdited } = workspace.elements;
+        if (!lastEdited) {
+            return;
+        }
+        if (!workspace.lastEdited) {
+            lastEdited.textContent = 'awaiting changes';
+            return;
+        }
+        const now = Date.now();
+        const diff = now - workspace.lastEdited;
+        if (diff < 60_000) {
+            lastEdited.textContent = 'just now';
+            return;
+        }
+        if (diff < 3_600_000) {
+            const minutes = Math.round(diff / 60_000);
+            lastEdited.textContent = `${minutes} minute${minutes === 1 ? '' : 's'} ago`;
+            return;
+        }
+        lastEdited.textContent = new Date(workspace.lastEdited).toLocaleString();
+    }
+
+    function parseRepository(value) {
+        const trimmed = utils.trimString(value || '');
+        const segments = trimmed.split('/').filter(Boolean);
+        if (segments.length !== 2) {
+            throw new Error('Repository must be provided as owner/name.');
+        }
+        return { owner: segments[0], repo: segments[1] };
+    }
+
+    function encodeGithubPath(path) {
+        return path
+            .split('/')
+            .map((segment) => encodeURIComponent(segment))
+            .join('/');
+    }
+
+    function encodeContentToBase64(text) {
+        const string = typeof text === 'string' ? text : String(text ?? '');
+        if (typeof TextEncoder !== 'undefined') {
+            const encoder = new TextEncoder();
+            const bytes = encoder.encode(string);
+            let binary = '';
+            bytes.forEach((byte) => {
+                binary += String.fromCharCode(byte);
+            });
+            return btoa(binary);
+        }
+        if (typeof btoa !== 'undefined') {
+            return btoa(unescape(encodeURIComponent(string)));
+        }
+        throw new Error('Base64 encoding is not supported in this environment.');
+    }
+
+    async function readGithubError(response) {
+        try {
+            const details = await response.json();
+            if (details?.message) {
+                return details.message;
+            }
+        } catch (error) {
+            // ignore parsing errors
+        }
+        return `GitHub request failed: ${response.status} ${response.statusText}`;
+    }
+
+    async function publishToGithub() {
+        const {
+            githubToken,
+            githubRepo,
+            githubBranch,
+            githubMessage,
+            githubTarget,
+            githubLessonSlug
+        } = workspace.elements;
+        try {
+            const token = validateGithubToken(githubToken?.value || '');
+            const repoValue = utils.trimString(githubRepo?.value || '');
+            if (!repoValue) {
+                throw new Error('Provide a repository in owner/name format.');
+            }
+            const branch = utils.trimString(githubBranch?.value || '');
+            if (!branch) {
+                throw new Error('Provide a branch name.');
+            }
+            const message = utils.trimString(githubMessage?.value || '');
+            if (!message) {
+                throw new Error('Provide a commit message.');
+            }
+            const targetKey = githubTarget?.value || 'home-debug';
+            const target = GITHUB_TARGETS[targetKey];
+            if (!target) {
+                throw new Error('Select a payload target.');
+            }
+            const previewKey = target.previewKey;
+            const previewString = previewKey === 'home' ? workspace.homePreview : workspace.lessonPreview;
+            const previewResult = previewKey === 'home' ? workspace.homeResult : workspace.lessonResult;
+            if (!previewResult.success || !previewString) {
+                throw new Error('Resolve preview validation issues before publishing.');
+            }
+            let path = target.path;
+            if (!path && target.prefix) {
+                const slug = utils.trimString(githubLessonSlug?.value || '');
+                if (!slug) {
+                    throw new Error('Provide a lesson slug for lesson targets.');
+                }
+                const normalized = slug
+                    .toLowerCase()
+                    .replace(/\s+/g, '_')
+                    .replace(/[^a-z0-9_\-]/g, '_');
+                path = `${target.prefix}api_get_${normalized}.json`;
+            }
+            if (!path) {
+                throw new Error('Unable to determine repository path.');
+            }
+            setGithubStatus({ status: 'info', message: 'Publishing to GitHub…' });
+            const { owner, repo } = parseRepository(repoValue);
+            const encodedPath = encodeGithubPath(path);
+            const baseUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${encodedPath}`;
+            const headers = {
+                Accept: 'application/vnd.github+json',
+                Authorization: `Bearer ${token}`
+            };
+            let existingSha = null;
+            const getResponse = await fetch(`${baseUrl}?ref=${encodeURIComponent(branch)}`, {
+                headers
+            });
+            if (getResponse.status === 200) {
+                const body = await getResponse.json();
+                existingSha = body.sha;
+            } else if (getResponse.status !== 404) {
+                const messageText = await readGithubError(getResponse);
+                throw new Error(messageText);
+            }
+            const putResponse = await fetch(baseUrl, {
+                method: 'PUT',
+                headers: {
+                    ...headers,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    message,
+                    content: encodeContentToBase64(previewString),
+                    branch,
+                    sha: existingSha || undefined
+                })
+            });
+            if (!putResponse.ok) {
+                const messageText = await readGithubError(putResponse);
+                throw new Error(messageText);
+            }
+            workspace.baseline[previewKey] = previewString;
+            updateDiffSheet();
+            setGithubStatus({ status: 'success', message: 'Published successfully.' });
+        } catch (error) {
+            console.error('EnglishWithLidia: publish failed', error);
+            setGithubStatus({ status: 'error', message: error.message || 'Unable to publish changes.' });
+        }
+    }
+
     const HOME_FILENAME = 'english_home.json';
     const LESSON_FILENAME = 'english_lesson.json';
-    const BLOCK_TYPE_HINT = 'Suggested: content_text, header, image, content_player, content_divider, ad_large_banner, ad_banner';
+    const BLOCK_TYPE_HINT =
+        'Suggested: content_text, header, image, content_player, content_divider, ad_large_banner, ad_banner';
+    const MIN_GITHUB_TOKEN_LENGTH = 20;
+    const FOCUS_SESSION_DURATION = 25 * 60;
+    const FOCUS_STORAGE_KEY = 'englishWorkspaceNote';
+    const GITHUB_TARGETS = {
+        'home-debug': {
+            path: 'English with Lidia/debug/ro/home/api_get_lessons.json',
+            previewKey: 'home'
+        },
+        'home-release': {
+            path: 'English with Lidia/release/ro/home/api_get_lessons.json',
+            previewKey: 'home'
+        },
+        'lesson-debug': {
+            prefix: 'English with Lidia/debug/ro/lessons/',
+            previewKey: 'lesson'
+        },
+        'lesson-release': {
+            prefix: 'English with Lidia/release/ro/lessons/',
+            previewKey: 'lesson'
+        }
+    };
+    const workspace = {
+        initialized: false,
+        elements: {},
+        homeState: null,
+        lessonState: null,
+        homePreview: '',
+        lessonPreview: '',
+        homeResult: { success: false, payload: null },
+        lessonResult: { success: false, payload: null },
+        baseline: { home: '', lesson: '' },
+        lastEdited: null,
+        focus: {
+            remaining: FOCUS_SESSION_DURATION,
+            interval: null,
+            notes: ''
+        },
+        githubStepIndex: 0,
+        sessionStorageAvailable: false
+    };
 
     const ENGLISH_BLOCK_FIELDS = {
         content_text: [
@@ -35,8 +1048,34 @@
     };
 
     function initEnglishWorkspace() {
+        const workspaceRoot = document.getElementById('englishWorkspace');
+        if (!workspaceRoot) {
+            return;
+        }
+        const alreadyInitialized = workspaceRoot.dataset.initialized === 'true';
+
+        cacheWorkspaceElements();
+        wireDialogDismissHandlers();
+        prepareSessionStorage();
+        restoreFocusNotes();
+        wireFocusControls();
+        wireRemoteFetch();
+        wireGithubWizard();
         initHomeBuilder();
         initLessonBuilder();
+        updateWorkspaceMetrics();
+        updateToolbarPulses();
+        updateDiffSheet();
+        updateFocusTimerDisplay();
+        updateFocusControls();
+        workspaceRoot.dataset.initialized = 'true';
+        workspace.initialized = true;
+
+        if (!alreadyInitialized) {
+            setTimeout(() => {
+                updateLastEditedLabel();
+            }, 0);
+        }
     }
 
     function initHomeBuilder() {
@@ -58,6 +1097,9 @@
         const state = {
             cards: [createEmptyCard()]
         };
+        workspace.homeState = state;
+        workspace.homePreviewArea = previewArea;
+        workspace.homeValidationStatus = validationStatus;
 
         function createEmptyCard() {
             return {
@@ -277,7 +1319,7 @@
         }
 
         function updatePreview() {
-            utils.renderJsonPreview({
+            const result = utils.renderJsonPreview({
                 previewArea,
                 statusElement: validationStatus,
                 data: state.cards,
@@ -299,6 +1341,9 @@
                         : `Valid JSON · ${count} home cards`;
                 }
             });
+            workspace.homePreview = previewArea ? previewArea.value : '';
+            workspace.homeResult = result;
+            handlePreviewResult('home', result, validationStatus);
         }
 
         attachCommonHandlers({
@@ -324,6 +1369,8 @@
         });
 
         builderRoot.dataset.initialized = 'true';
+        workspace.homeImport = importJson;
+        workspace.homeSanitize = sanitizeHomeCard;
         render();
     }
 
@@ -350,6 +1397,9 @@
             metadata: [],
             blocks: []
         };
+        workspace.lessonState = state;
+        workspace.lessonPreviewArea = previewArea;
+        workspace.lessonValidationStatus = validationStatus;
 
         if (titleField) {
             titleField.addEventListener('input', (event) => {
@@ -616,7 +1666,7 @@
         }
 
         function updatePreview() {
-            utils.renderJsonPreview({
+            const result = utils.renderJsonPreview({
                 previewArea,
                 statusElement: validationStatus,
                 data: null,
@@ -638,6 +1688,9 @@
                         : `Valid JSON · ${blocks} content blocks`;
                 }
             });
+            workspace.lessonPreview = previewArea ? previewArea.value : '';
+            workspace.lessonResult = result;
+            handlePreviewResult('lesson', result, validationStatus);
         }
 
         function buildBlockPayload(block) {
@@ -703,6 +1756,8 @@
         });
 
         builderRoot.dataset.initialized = 'true';
+        workspace.lessonImport = importJson;
+        workspace.lessonCompose = composeLessonPayload;
         render();
     }
 
