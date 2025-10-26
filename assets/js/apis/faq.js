@@ -8,6 +8,7 @@
     const DEFAULT_FILENAME = 'faq_entries.json';
     const DEFAULT_DATA_URL = 'api/faq/v1/faq_entries.json';
     const ICONS_ENDPOINT = 'https://fonts.google.com/metadata/icons?incomplete=1&icon.set=Material+Symbols';
+    const ICON_PICKER_MAX_RENDER = 400;
 
     function initFaqWorkspace() {
         const builderRoot = document.getElementById('faqBuilder');
@@ -33,6 +34,19 @@
         const refreshIconsButton = document.getElementById('faqRefreshIcons');
         const iconStatus = document.getElementById('faqIconStatus');
         const iconCountEl = document.getElementById('faqIconCount');
+        const iconPickerRoot = document.getElementById('faqIconPicker');
+        const iconPickerBackdrop = document.getElementById('faqIconPickerBackdrop');
+        const iconPickerClose = document.getElementById('faqIconPickerClose');
+        const iconPickerDismiss = document.getElementById('faqIconPickerDismiss');
+        const iconPickerSearch = document.getElementById('faqIconPickerSearch');
+        const iconPickerList = document.getElementById('faqIconPickerList');
+        const iconPickerEmpty = document.getElementById('faqIconPickerEmpty');
+        const iconPickerQuery = document.getElementById('faqIconPickerQuery');
+        const iconPickerLoading = document.getElementById('faqIconPickerLoading');
+        const iconPickerLimit = document.getElementById('faqIconPickerLimit');
+        const iconPickerResultCount = document.getElementById('faqIconPickerResultCount');
+        const iconPickerSelection = document.getElementById('faqIconPickerSelection');
+        const iconPickerClear = document.getElementById('faqIconPickerClear');
         const totalCountEl = document.getElementById('faqTotalCount');
         const featuredCountEl = document.getElementById('faqFeaturedCount');
         const iconCoverageEl = document.getElementById('faqIconCoverage');
@@ -45,6 +59,8 @@
         let lastPreviewState = { success: false, payload: [] };
         let lastEvaluation = { errors: [], warnings: [] };
         let iconsRequested = false;
+        let activeIconContext = null;
+        let previousBodyOverflow = '';
 
         builderRoot.dataset.initialized = 'true';
 
@@ -177,10 +193,15 @@
             const iconField = utils.createInputField({
                 label: 'Icon symbol',
                 value: entry.iconSymbol,
-                helperText: 'Material Symbols name. Type to filter suggestions.',
+                helperText: 'Material Symbols name. Browse or type to filter.',
                 onInput: (value) => {
-                    state.entries[index].iconSymbol = value;
-                    iconPreview.textContent = value ? value : 'help';
+                    const normalized = utils.trimString(value);
+                    state.entries[index].iconSymbol = normalized;
+                    syncIconPreview(normalized);
+                    if (activeIconContext && activeIconContext.index === index) {
+                        updateIconPickerSelection(normalized);
+                        renderIconPickerOptions(iconPickerSearch ? iconPickerSearch.value : '');
+                    }
                     updatePreview();
                 }
             });
@@ -192,7 +213,53 @@
                 classNames: ['material-symbols-outlined', 'faq-icon-preview'],
                 text: entry.iconSymbol || 'help'
             });
-            iconField.wrapper.appendChild(iconPreview);
+            iconPreview.dataset.empty = entry.iconSymbol ? 'false' : 'true';
+            const syncIconPreview = (value) => {
+                const symbol = value ? value : 'help';
+                iconPreview.textContent = symbol;
+                iconPreview.dataset.empty = value ? 'false' : 'true';
+            };
+            const iconButtons = utils.createElement('div', { classNames: 'faq-icon-buttons' });
+            const pickButton = utils.createInlineButton({
+                icon: 'grid_view',
+                label: 'Browse icons',
+                onClick: () =>
+                    openIconPicker({
+                        index,
+                        input: iconField.input,
+                        preview: iconPreview,
+                        trigger: pickButton
+                    })
+            });
+            pickButton.classList.add('faq-icon-button');
+            const clearButton = utils.createInlineButton({
+                icon: 'backspace',
+                label: 'Clear icon',
+                onClick: () => {
+                    state.entries[index].iconSymbol = '';
+                    if (iconField.input) {
+                        iconField.input.value = '';
+                    }
+                    syncIconPreview('');
+                    if (activeIconContext && activeIconContext.index === index) {
+                        updateIconPickerSelection('');
+                        renderIconPickerOptions(iconPickerSearch ? iconPickerSearch.value : '');
+                    }
+                    updatePreview();
+                }
+            });
+            clearButton.classList.add('faq-icon-button');
+            iconButtons.appendChild(pickButton);
+            iconButtons.appendChild(clearButton);
+            const iconMeta = utils.createElement('div', { classNames: 'faq-icon-meta' });
+            iconMeta.appendChild(iconPreview);
+            iconMeta.appendChild(iconButtons);
+            const iconHelper = iconField.wrapper.querySelector('.api-field-helper');
+            if (iconHelper) {
+                iconField.wrapper.insertBefore(iconMeta, iconHelper);
+            } else {
+                iconField.wrapper.appendChild(iconMeta);
+            }
             fields.appendChild(iconField.wrapper);
 
             const categoryField = utils.createInputField({
@@ -233,6 +300,7 @@
             });
             fields.appendChild(homeAnswerField.wrapper);
 
+            let renderAnswerPreview = () => {};
             const answerField = utils.createTextareaField({
                 label: 'Full answer HTML',
                 value: entry.answerHtml,
@@ -241,10 +309,58 @@
                 helperText: 'Provide complete context. HTML is preserved as typed.',
                 onInput: (value) => {
                     state.entries[index].answerHtml = value;
+                    renderAnswerPreview();
                     updatePreview();
                 }
             });
             fields.appendChild(answerField.wrapper);
+
+            const answerPreviewSection = utils.createElement('div', {
+                classNames: 'faq-answer-preview-section'
+            });
+            const answerPreviewHeader = utils.createElement('div', {
+                classNames: 'faq-answer-preview-header'
+            });
+            answerPreviewHeader.appendChild(
+                utils.createElement('span', {
+                    classNames: 'faq-answer-preview-title',
+                    text: 'Live preview'
+                })
+            );
+            const htmlPreview = utils.createElement('div', {
+                classNames: 'faq-answer-preview',
+                attrs: { 'data-empty': 'true' }
+            });
+            renderAnswerPreview = () => {
+                const sanitized = utils.sanitizeHtml(state.entries[index].answerHtml || '');
+                if (sanitized) {
+                    htmlPreview.innerHTML = sanitized;
+                    htmlPreview.dataset.empty = 'false';
+                } else {
+                    htmlPreview.innerHTML = '';
+                    htmlPreview.dataset.empty = 'true';
+                }
+            };
+            const formatButton = utils.createInlineButton({
+                icon: 'format_indent_increase',
+                label: 'Format HTML',
+                onClick: () => {
+                    const formatted = utils.prettifyHtmlFragment(state.entries[index].answerHtml || '');
+                    const nextValue = formatted || utils.trimString(state.entries[index].answerHtml || '');
+                    state.entries[index].answerHtml = nextValue || '';
+                    if (answerField.textarea) {
+                        answerField.textarea.value = state.entries[index].answerHtml;
+                    }
+                    renderAnswerPreview();
+                    updatePreview();
+                }
+            });
+            formatButton.classList.add('faq-html-format-button');
+            answerPreviewHeader.appendChild(formatButton);
+            answerPreviewSection.appendChild(answerPreviewHeader);
+            answerPreviewSection.appendChild(htmlPreview);
+            fields.appendChild(answerPreviewSection);
+            renderAnswerPreview();
 
             wrapper.appendChild(fields);
             return wrapper;
@@ -547,6 +663,7 @@
                     : [];
                 iconNames = names.sort((a, b) => a.localeCompare(b));
                 populateIconOptions();
+                renderIconPickerOptions(iconPickerSearch ? iconPickerSearch.value : '');
                 if (iconCountEl) {
                     iconCountEl.textContent = String(iconNames.length);
                 }
@@ -565,6 +682,166 @@
             iconNames.forEach((name) => {
                 iconList.appendChild(utils.createElement('option', { attrs: { value: name } }));
             });
+        }
+
+        function updateIconPickerSelection(value) {
+            if (iconPickerSelection) {
+                iconPickerSelection.textContent = value ? value : 'None';
+            }
+        }
+
+        function renderIconPickerOptions(query = '') {
+            if (!iconPickerList) {
+                return;
+            }
+            utils.clearElement(iconPickerList);
+            const searchTerm = typeof query === 'string' ? utils.trimString(query) : '';
+            const normalizedQuery = searchTerm.toLowerCase();
+            if (!iconNames.length) {
+                if (iconPickerLoading) {
+                    iconPickerLoading.hidden = false;
+                }
+                if (iconPickerEmpty) {
+                    iconPickerEmpty.hidden = true;
+                }
+                if (iconPickerResultCount) {
+                    iconPickerResultCount.textContent = '0';
+                }
+                if (iconPickerLimit) {
+                    iconPickerLimit.hidden = true;
+                }
+                return;
+            }
+            if (iconPickerLoading) {
+                iconPickerLoading.hidden = true;
+            }
+            let matches = iconNames;
+            if (normalizedQuery) {
+                matches = iconNames.filter((name) => name.toLowerCase().includes(normalizedQuery));
+            }
+            const totalMatches = matches.length;
+            const limited = matches.slice(0, ICON_PICKER_MAX_RENDER);
+            if (iconPickerResultCount) {
+                iconPickerResultCount.textContent =
+                    totalMatches > ICON_PICKER_MAX_RENDER
+                        ? `${ICON_PICKER_MAX_RENDER}+`
+                        : String(totalMatches);
+            }
+            if (iconPickerLimit) {
+                iconPickerLimit.hidden = totalMatches <= ICON_PICKER_MAX_RENDER;
+            }
+            if (iconPickerEmpty) {
+                if (limited.length) {
+                    iconPickerEmpty.hidden = true;
+                } else {
+                    iconPickerEmpty.hidden = false;
+                    if (iconPickerQuery) {
+                        iconPickerQuery.textContent = searchTerm || 'your search';
+                    }
+                }
+            }
+            const selected = activeIconContext?.input
+                ? utils.trimString(activeIconContext.input.value).toLowerCase()
+                : '';
+            limited.forEach((name) => {
+                const button = utils.createElement('button', {
+                    classNames: ['faq-icon-picker__option'],
+                    attrs: {
+                        type: 'button',
+                        role: 'option',
+                        'data-icon-name': name
+                    }
+                });
+                const iconGlyph = utils.createElement('span', {
+                    classNames: ['material-symbols-outlined', 'faq-icon-picker__icon'],
+                    text: name
+                });
+                const label = utils.createElement('span', {
+                    classNames: 'faq-icon-picker__label',
+                    text: name
+                });
+                button.appendChild(iconGlyph);
+                button.appendChild(label);
+                const isSelected = selected === name.toLowerCase();
+                button.setAttribute('aria-selected', isSelected ? 'true' : 'false');
+                if (isSelected) {
+                    button.classList.add('is-selected');
+                }
+                button.addEventListener('click', () => {
+                    applyIconSelection(name);
+                });
+                iconPickerList.appendChild(button);
+            });
+        }
+
+        function openIconPicker(context = null) {
+            if (!iconPickerRoot) {
+                return;
+            }
+            activeIconContext = context;
+            const selectedValue = context?.input ? utils.trimString(context.input.value) : '';
+            updateIconPickerSelection(selectedValue);
+            iconPickerRoot.removeAttribute('hidden');
+            iconPickerRoot.dataset.open = 'true';
+            previousBodyOverflow = document.body.style.overflow;
+            document.body.style.overflow = 'hidden';
+            if (iconPickerSearch) {
+                iconPickerSearch.value = '';
+            }
+            if (!iconNames.length && !iconsRequested) {
+                refreshIcons();
+            }
+            renderIconPickerOptions('');
+            if (iconPickerSearch) {
+                window.setTimeout(() => iconPickerSearch.focus(), 0);
+            }
+            document.addEventListener('keydown', handleIconPickerKeydown);
+        }
+
+        function closeIconPicker() {
+            if (!iconPickerRoot) {
+                return;
+            }
+            iconPickerRoot.dataset.open = 'false';
+            iconPickerRoot.setAttribute('hidden', '');
+            if (iconPickerSearch) {
+                iconPickerSearch.value = '';
+            }
+            document.removeEventListener('keydown', handleIconPickerKeydown);
+            document.body.style.overflow = previousBodyOverflow || '';
+            const trigger = activeIconContext?.trigger;
+            activeIconContext = null;
+            if (trigger && typeof trigger.focus === 'function') {
+                window.setTimeout(() => trigger.focus(), 0);
+            }
+        }
+
+        function handleIconPickerKeydown(event) {
+            if (event.key === 'Escape') {
+                event.preventDefault();
+                closeIconPicker();
+            }
+        }
+
+        function applyIconSelection(name) {
+            if (!activeIconContext) {
+                return;
+            }
+            const normalized = typeof name === 'string' ? utils.trimString(name) : '';
+            const entry = state.entries[activeIconContext.index];
+            if (entry) {
+                entry.iconSymbol = normalized;
+            }
+            if (activeIconContext.input) {
+                activeIconContext.input.value = normalized;
+            }
+            if (activeIconContext.preview) {
+                activeIconContext.preview.textContent = normalized || 'help';
+                activeIconContext.preview.dataset.empty = normalized ? 'false' : 'true';
+            }
+            updateIconPickerSelection(normalized);
+            renderIconPickerOptions(iconPickerSearch ? iconPickerSearch.value : '');
+            updatePreview();
         }
 
         function handleImport(content) {
@@ -636,6 +913,33 @@
             refreshIconsButton.addEventListener('click', () => {
                 iconsRequested = false;
                 refreshIcons();
+            });
+        }
+
+        if (iconPickerBackdrop) {
+            iconPickerBackdrop.addEventListener('click', () => closeIconPicker());
+        }
+
+        if (iconPickerClose) {
+            iconPickerClose.addEventListener('click', () => closeIconPicker());
+        }
+
+        if (iconPickerDismiss) {
+            iconPickerDismiss.addEventListener('click', () => closeIconPicker());
+        }
+
+        if (iconPickerSearch) {
+            iconPickerSearch.addEventListener('input', (event) => {
+                renderIconPickerOptions(event.target.value);
+            });
+        }
+
+        if (iconPickerClear) {
+            iconPickerClear.addEventListener('click', () => {
+                if (!activeIconContext) {
+                    return;
+                }
+                applyIconSelection('');
             });
         }
 

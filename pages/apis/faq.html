@@ -257,4 +257,83 @@
   </section>
 
   <datalist id="faqIconOptions"></datalist>
+  <div
+    id="faqIconPicker"
+    class="faq-icon-picker"
+    role="dialog"
+    aria-modal="true"
+    hidden
+  >
+    <div
+      class="faq-icon-picker__backdrop"
+      id="faqIconPickerBackdrop"
+      aria-hidden="true"
+    ></div>
+    <div class="faq-icon-picker__panel" role="document">
+      <header class="faq-icon-picker__header">
+        <div>
+          <h2>Select a Material icon</h2>
+          <p>
+            Search the Material Symbols catalog and insert the icon name automatically.
+          </p>
+        </div>
+        <button
+          type="button"
+          class="faq-icon-picker__close"
+          id="faqIconPickerClose"
+          aria-label="Close icon picker"
+        >
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </header>
+      <div class="faq-icon-picker__meta">
+        <span>Selected: <strong id="faqIconPickerSelection">None</strong></span>
+        <span>Showing <strong id="faqIconPickerResultCount">0</strong> icons</span>
+      </div>
+      <div class="faq-icon-picker__search">
+        <label class="api-field">
+          <span class="api-field-label">Search icons</span>
+          <input
+            type="search"
+            id="faqIconPickerSearch"
+            class="api-input"
+            placeholder="Search by name…"
+            spellcheck="false"
+            autocomplete="off"
+          />
+        </label>
+      </div>
+      <p class="faq-icon-picker__loading" id="faqIconPickerLoading">
+        Loading Material Symbols…
+      </p>
+      <p class="faq-icon-picker__limit" id="faqIconPickerLimit" hidden>
+        Showing the first 400 results. Continue typing to narrow the list.
+      </p>
+      <p class="faq-icon-picker__empty" id="faqIconPickerEmpty" hidden>
+        No icons match "<span id="faqIconPickerQuery"></span>"
+      </p>
+      <div
+        class="faq-icon-picker__grid"
+        id="faqIconPickerList"
+        role="listbox"
+        aria-label="Material Symbols options"
+      ></div>
+      <div class="faq-icon-picker__footer">
+        <button
+          type="button"
+          class="api-inline-button variant-ghost"
+          id="faqIconPickerClear"
+        >
+          <span class="material-symbols-outlined api-inline-icon">backspace</span>
+          <span>Clear selection</span>
+        </button>
+        <md-filled-tonal-button id="faqIconPickerDismiss" has-icon>
+          <md-icon slot="icon"
+            ><span class="material-symbols-outlined">done</span></md-icon
+          >
+          Done
+        </md-filled-tonal-button>
+      </div>
+    </div>
+  </div>
 </div>

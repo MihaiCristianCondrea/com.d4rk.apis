@@ -77,6 +77,110 @@
         return formatted;
     }
 
+    function sanitizeHtml(input) {
+        if (typeof input !== 'string') {
+            return '';
+        }
+        const template = document.createElement('template');
+        template.innerHTML = input;
+        const disallowedTags = new Set(['script', 'style', 'iframe', 'object', 'embed', 'link', 'meta', 'template']);
+        const walker = document.createTreeWalker(template.content, NodeFilter.SHOW_ELEMENT, null);
+        const toRemove = [];
+        while (walker.nextNode()) {
+            const element = walker.currentNode;
+            const tagName = element.tagName.toLowerCase();
+            if (disallowedTags.has(tagName)) {
+                toRemove.push(element);
+                continue;
+            }
+            Array.from(element.attributes).forEach((attribute) => {
+                const name = attribute.name.toLowerCase();
+                const value = attribute.value || '';
+                if (name.startsWith('on')) {
+                    element.removeAttribute(attribute.name);
+                    return;
+                }
+                if ((name === 'href' || name === 'src' || name === 'srcset') && value.trim()) {
+                    const safePattern = /^(https?:|mailto:|tel:|#)/i;
+                    if (!safePattern.test(value.trim())) {
+                        element.removeAttribute(attribute.name);
+                    }
+                }
+            });
+        }
+        toRemove.forEach((element) => element.remove());
+        return template.innerHTML.trim();
+    }
+
+    function prettifyHtmlFragment(input) {
+        if (typeof input !== 'string') {
+            return '';
+        }
+        const sanitized = sanitizeHtml(input);
+        if (!sanitized) {
+            return '';
+        }
+        const template = document.createElement('template');
+        template.innerHTML = sanitized;
+        const voidElements = new Set([
+            'area',
+            'base',
+            'br',
+            'col',
+            'embed',
+            'hr',
+            'img',
+            'input',
+            'link',
+            'meta',
+            'source',
+            'track',
+            'wbr'
+        ]);
+        const lines = [];
+        const indent = (depth) => '  '.repeat(depth);
+        const serialize = (node, depth) => {
+            if (!node) {
+                return;
+            }
+            if (node.nodeType === Node.TEXT_NODE) {
+                const text = node.textContent;
+                if (!text) {
+                    return;
+                }
+                const trimmed = text.replace(/\s+/g, ' ').trim();
+                if (trimmed) {
+                    lines.push(`${indent(depth)}${trimmed}`);
+                }
+                return;
+            }
+            if (node.nodeType === Node.COMMENT_NODE) {
+                const text = node.textContent ? node.textContent.trim() : '';
+                if (text) {
+                    lines.push(`${indent(depth)}<!-- ${text} -->`);
+                }
+                return;
+            }
+            if (node.nodeType !== Node.ELEMENT_NODE) {
+                return;
+            }
+            const tag = node.tagName.toLowerCase();
+            const attributes = Array.from(node.attributes)
+                .map((attribute) => `${attribute.name}="${attribute.value}"`)
+                .join(' ');
+            const openingTag = attributes ? `<${tag} ${attributes}>` : `<${tag}>`;
+            if (voidElements.has(tag)) {
+                lines.push(`${indent(depth)}${openingTag}`);
+                return;
+            }
+            lines.push(`${indent(depth)}${openingTag}`);
+            Array.from(node.childNodes).forEach((child) => serialize(child, depth + 1));
+            lines.push(`${indent(depth)}</${tag}>`);
+        };
+        Array.from(template.content.childNodes).forEach((child) => serialize(child, 0));
+        return lines.join('\n');
+    }
+
     async function copyToClipboard(text) {
         if (!navigator.clipboard) {
             fallbackCopy(text);
@@ -378,6 +482,8 @@
         formatJson,
         parseJson,
         prettifyJsonString,
+        sanitizeHtml,
+        prettifyHtmlFragment,
         copyToClipboard,
         downloadJson,
         readFileAsText,
