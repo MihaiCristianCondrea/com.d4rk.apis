@@ -1,0 +1,27 @@
+[
+  {
+    "id": "faq-analytics",
+    "question": "Why do you use analytics and ads at all?",
+    "categories": [
+      "general",
+      "privacy_data",
+      "ads_monetization"
+    ],
+    "answerHtml": "\n                <p>\n                  Independent development involves recurring costs: domain renewals, build\n                  tooling, Firebase quotas, music licensing, and a growing fleet of test\n                  devices. Anonymous analytics and respectful advertising make it possible to\n                  keep the apps free while still covering those expenses.\n                </p>\n                <p>\n                  Metrics such as screen load time, crash frequency, and feature usage help\n                  me prioritize fixes and improvements. Ads are placed sparingly and follow\n                  Google’s content policies so they remain as unobtrusive as possible.\n                </p>\n            ",
+    "iconSymbol": "insights",
+    "featured": true,
+    "homeAnswerHtml": "\n                <p>\n                  Building and maintaining apps involves hosting, testing devices,\n                  and tool licenses. Ads and anonymous analytics keep projects\n                  funded while revealing crashes or slowdowns before they affect\n                  everyone.\n                </p>\n                <p>\n                  I keep placements minimal and respectful so the experience stays\n                  focused on utility—not interruptions.\n                </p>\n            "
+  },
+  {
+    "id": "faq-privacy",
+    "question": "Do you collect personal data?",
+    "categories": [
+      "general",
+      "privacy_data"
+    ],
+    "answerHtml": "\n                <p>\n                  I do not personally collect, store, or sell any individual user data. All\n                  analytics and advertising are handled by Google’s SDKs under their\n                  <a href=\"https://policies.google.com/privacy\" target=\"_blank\" rel=\"noopener noreferrer\">Privacy Policy</a>.\n                </p>\n                <p>\n                  The dashboards I see only include aggregated, anonymous information—for\n                  example, how many people opened the app this week or which device model is\n                  crashing after a new release. You can always review the\n                  <a href=\"#privacy-policy\">website privacy policy</a> for the full breakdown\n                  of how data is processed and how you can opt out.\n                </p>\n            ",
+    "iconSymbol": "shield_person",
+    "featured": true,
+    "homeAnswerHtml": "\n                <p>\n                  I don’t sell or personally collect user data. Google’s SDKs handle\n                  analytics and ads according to their privacy policy, while I only\n                  review aggregated trends like active installs or crash types.\n                </p>\n                <p>\n                  Read the full details in my\n                  <a href=\"#privacy-policy\">Privacy Policy</a> for transparency on\n                  data processing.\n                </p>\n            "
+  }
+]

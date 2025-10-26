@@ -1,0 +1,104 @@
+{
+  "schemaVersion": 1,
+  "totalEntries": 7,
+  "categories": [
+    {
+      "code": "general",
+      "label": "General",
+      "group": "General",
+      "path": "general.json",
+      "count": 7
+    },
+    {
+      "code": "distribution_stores",
+      "label": "Distribution & Stores",
+      "group": "General",
+      "path": "distribution_stores.json",
+      "count": 4
+    },
+    {
+      "code": "privacy_data",
+      "label": "Privacy & Data",
+      "group": "General",
+      "path": "privacy_data.json",
+      "count": 2
+    },
+    {
+      "code": "ads_monetization",
+      "label": "Ads & Monetization",
+      "group": "General",
+      "path": "ads_monetization.json",
+      "count": 2
+    },
+    {
+      "code": "design_ux",
+      "label": "Design & UX (Material 3)",
+      "group": "General",
+      "path": "design_ux.json",
+      "count": 0
+    },
+    {
+      "code": "android_studio_tutorials",
+      "label": "Android Studio Tutorials",
+      "group": "📱 Apps / Projects",
+      "path": "android_studio_tutorials.json",
+      "count": 0
+    },
+    {
+      "code": "app_toolkit",
+      "label": "App Toolkit",
+      "group": "📱 Apps / Projects",
+      "path": "app_toolkit.json",
+      "count": 0
+    },
+    {
+      "code": "smart_cleaner",
+      "label": "Smart Cleaner",
+      "group": "📱 Apps / Projects",
+      "path": "smart_cleaner.json",
+      "count": 0
+    },
+    {
+      "code": "english_with_lidia",
+      "label": "English with Lidia",
+      "group": "📱 Apps / Projects",
+      "path": "english_with_lidia.json",
+      "count": 0
+    },
+    {
+      "code": "low_brightness",
+      "label": "Low Brightness",
+      "group": "📱 Apps / Projects",
+      "path": "low_brightness.json",
+      "count": 0
+    },
+    {
+      "code": "weddix",
+      "label": "Weddix",
+      "group": "📱 Apps / Projects",
+      "path": "weddix.json",
+      "count": 0
+    },
+    {
+      "code": "cart_calculator",
+      "label": "Cart Calculator",
+      "group": "📱 Apps / Projects",
+      "path": "cart_calculator.json",
+      "count": 0
+    },
+    {
+      "code": "profile_website",
+      "label": "Profile Website",
+      "group": "📱 Apps / Projects",
+      "path": "profile_website.json",
+      "count": 0
+    },
+    {
+      "code": "apis_website",
+      "label": "API's Website",
+      "group": "📱 Apps / Projects",
+      "path": "apis_website.json",
+      "count": 0
+    }
+  ]
+}

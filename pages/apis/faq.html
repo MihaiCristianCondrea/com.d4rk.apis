@@ -3,8 +3,9 @@
     <h1>FAQ API workspace</h1>
     <p>
       Publish a structured FAQ feed for app and web surfaces. The builder keeps
-      questions, categories, featured flags, and HTML answers aligned with the
-      JSON served from <code>api/faq/v1/faq_entries.json</code>.
+      questions, multi-category assignments, featured flags, and HTML answers
+      aligned with the JSON served from
+      <code>api/faq/v1/index.json</code> and its category datasets.
     </p>
   </header>
 
@@ -54,7 +55,9 @@
             </li>
             <li>
               <span class="plan-step-title">Validate & export</span>
-              <span class="plan-step-meta">Replace <code>faq_entries.json</code> in the repo.</span>
+              <span class="plan-step-meta"
+                >Refresh <code>index.json</code> and category files in the repo.</span
+              >
             </li>
           </ol>
           <div class="plan-actions">
@@ -75,7 +78,10 @@
             <p id="faqWorkspacePulse">Awaiting first entry.</p>
           </div>
           <ul class="release-tips">
-            <li>All questions ship under the <strong>general</strong> category.</li>
+            <li>
+              Assign one or more categories per FAQ. General stays selected
+              unless you remove it.
+            </li>
             <li>Featured answers should include a shorter home answer snippet.</li>
             <li>Icon symbols use Google&apos;s Material Symbols catalog.</li>
           </ul>
@@ -93,8 +99,8 @@
           and <strong>answerHtml</strong>. The builder enforces export readiness.
         </li>
         <li>
-          Keep <strong>category</strong> set to <code>general</code> unless a new
-          FAQ surface requires additional groupings.
+          Use the <strong>Categories</strong> dropdown to tag FAQs across
+          General topics and individual apps as needed.
         </li>
         <li>
           <strong>homeAnswerHtml</strong> should be a condensed summary for cards
@@ -121,7 +127,7 @@
           id="faqFetchInput"
           type="url"
           label="JSON URL"
-          placeholder="https://example.com/faq_entries.json"
+          placeholder="https://example.com/api/faq/v1/index.json"
           supporting-text="Paste a direct link to the current FAQ payload"
           spellcheck="false"
         >
@@ -144,7 +150,7 @@
         <md-text-button
           has-icon
           id="faqPresetButton"
-          data-faq-preset="api/faq/v1/faq_entries.json"
+          data-faq-preset="api/faq/v1/index.json"
         >
           <md-icon slot="icon"
             ><span class="material-symbols-outlined">download</span></md-icon
