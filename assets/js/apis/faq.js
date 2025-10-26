@@ -5,10 +5,44 @@
         return;
     }
 
-    const DEFAULT_FILENAME = 'faq_entries.json';
-    const DEFAULT_DATA_URL = 'api/faq/v1/faq_entries.json';
+    const DEFAULT_FILENAME = 'faq_dataset.json';
+    const DEFAULT_DATA_URL = 'api/faq/v1/index.json';
     const ICONS_ENDPOINT = 'https://fonts.google.com/metadata/icons?incomplete=1&icon.set=Material+Symbols';
     const ICON_PICKER_MAX_RENDER = 400;
+
+    const CATEGORY_GROUPS = [
+        {
+            label: 'General',
+            options: [
+                { value: 'general', label: 'General' },
+                { value: 'distribution_stores', label: 'Distribution & Stores' },
+                { value: 'privacy_data', label: 'Privacy & Data' },
+                { value: 'ads_monetization', label: 'Ads & Monetization' },
+                { value: 'design_ux', label: 'Design & UX (Material 3)' }
+            ]
+        },
+        {
+            label: '\ud83d\udcf1 Apps / Projects',
+            options: [
+                { value: 'android_studio_tutorials', label: 'Android Studio Tutorials' },
+                { value: 'app_toolkit', label: 'App Toolkit' },
+                { value: 'smart_cleaner', label: 'Smart Cleaner' },
+                { value: 'english_with_lidia', label: 'English with Lidia' },
+                { value: 'low_brightness', label: 'Low Brightness' },
+                { value: 'weddix', label: 'Weddix' },
+                { value: 'cart_calculator', label: 'Cart Calculator' },
+                { value: 'profile_website', label: 'Profile Website' },
+                { value: 'apis_website', label: "API's Website" }
+            ]
+        }
+    ];
+
+    const ALL_CATEGORIES = CATEGORY_GROUPS.flatMap((group) =>
+        group.options.map((option) => ({ ...option, group: group.label }))
+    );
+    const CATEGORY_LOOKUP = new Map(ALL_CATEGORIES.map((item) => [item.value, item]));
+    const CATEGORY_ORDER = new Map(ALL_CATEGORIES.map((item, index) => [item.value, index]));
+    const DEFAULT_CATEGORIES = ['general'];
 
     function initFaqWorkspace() {
         const builderRoot = document.getElementById('faqBuilder');
@@ -61,15 +95,57 @@
         let iconsRequested = false;
         let activeIconContext = null;
         let previousBodyOverflow = '';
+        let activeCategoryMenu = null;
 
         builderRoot.dataset.initialized = 'true';
+
+        function sortCategories(values = []) {
+            const seen = new Set();
+            const normalized = [];
+            values.forEach((value) => {
+                const trimmed = utils.trimString(value);
+                if (!trimmed || seen.has(trimmed)) {
+                    return;
+                }
+                if (!CATEGORY_LOOKUP.has(trimmed)) {
+                    return;
+                }
+                seen.add(trimmed);
+                normalized.push(trimmed);
+            });
+            if (!normalized.length) {
+                return [...DEFAULT_CATEGORIES];
+            }
+            return normalized.sort((a, b) => {
+                const orderA = CATEGORY_ORDER.get(a) ?? Number.MAX_SAFE_INTEGER;
+                const orderB = CATEGORY_ORDER.get(b) ?? Number.MAX_SAFE_INTEGER;
+                return orderA - orderB;
+            });
+        }
+
+        function formatCategorySummary(values = []) {
+            const valid = sortCategories(values);
+            const labels = valid
+                .map((value) => CATEGORY_LOOKUP.get(value)?.label || value)
+                .filter(Boolean);
+            if (!labels.length) {
+                return 'Select categories';
+            }
+            if (labels.length === 1) {
+                return labels[0];
+            }
+            if (labels.length === 2) {
+                return `${labels[0]} • ${labels[1]}`;
+            }
+            return `${labels[0]} +${labels.length - 1} more`;
+        }
 
         function createEmptyEntry() {
             return {
                 id: '',
                 question: '',
                 iconSymbol: '',
-                category: 'general',
+                categories: [...DEFAULT_CATEGORIES],
                 featured: false,
                 homeAnswerHtml: '',
                 answerHtml: ''
@@ -81,7 +157,9 @@
                 id: entry.id || '',
                 question: entry.question || '',
                 iconSymbol: entry.iconSymbol || '',
-                category: entry.category || 'general',
+                categories: Array.isArray(entry.categories)
+                    ? [...entry.categories]
+                    : [...DEFAULT_CATEGORIES],
                 featured: Boolean(entry.featured),
                 homeAnswerHtml: typeof entry.homeAnswerHtml === 'string' ? entry.homeAnswerHtml : '',
                 answerHtml: typeof entry.answerHtml === 'string' ? entry.answerHtml : ''
@@ -92,21 +170,105 @@
             if (!raw || typeof raw !== 'object') {
                 return createEmptyEntry();
             }
+            let categories = [];
+            if (Array.isArray(raw.categories)) {
+                categories = raw.categories;
+            } else if (typeof raw.category === 'string') {
+                categories = [raw.category];
+            }
             return {
                 id: typeof raw.id === 'string' ? raw.id : '',
                 question: typeof raw.question === 'string' ? raw.question : '',
                 iconSymbol: typeof raw.iconSymbol === 'string' ? raw.iconSymbol : '',
-                category: utils.trimString(raw.category) || 'general',
+                categories: sortCategories(categories),
                 featured: Boolean(raw.featured),
                 homeAnswerHtml: typeof raw.homeAnswerHtml === 'string' ? raw.homeAnswerHtml : '',
                 answerHtml: typeof raw.answerHtml === 'string' ? raw.answerHtml : ''
             };
         }
 
+        function closeCategoryMenu() {
+            if (!activeCategoryMenu) {
+                return;
+            }
+            const { menu, trigger } = activeCategoryMenu;
+            if (menu) {
+                menu.dataset.open = 'false';
+                menu.setAttribute('hidden', '');
+            }
+            if (trigger) {
+                trigger.setAttribute('aria-expanded', 'false');
+            }
+            document.removeEventListener('click', handleCategoryMenuOutsideClick);
+            document.removeEventListener('keydown', handleCategoryMenuKeydown);
+            activeCategoryMenu = null;
+        }
+
+        function openCategoryMenu(menu, trigger) {
+            if (!menu || !trigger) {
+                return;
+            }
+            if (activeCategoryMenu && activeCategoryMenu.menu !== menu) {
+                closeCategoryMenu();
+            }
+            menu.dataset.open = 'true';
+            menu.removeAttribute('hidden');
+            trigger.setAttribute('aria-expanded', 'true');
+            activeCategoryMenu = { menu, trigger };
+            document.addEventListener('click', handleCategoryMenuOutsideClick);
+            document.addEventListener('keydown', handleCategoryMenuKeydown);
+        }
+
+        function handleCategoryMenuOutsideClick(event) {
+            if (!activeCategoryMenu) {
+                return;
+            }
+            const { menu, trigger } = activeCategoryMenu;
+            const target = event.target;
+            if (!menu || !trigger) {
+                return;
+            }
+            if (menu.contains(target) || trigger === target || trigger.contains(target)) {
+                return;
+            }
+            closeCategoryMenu();
+        }
+
+        function handleCategoryMenuKeydown(event) {
+            if (event.key === 'Escape') {
+                closeCategoryMenu();
+            }
+        }
+
+        function getBaseHref() {
+            if (typeof window !== 'undefined' && window.location && typeof window.location.href === 'string') {
+                return window.location.href;
+            }
+            if (typeof globalThis !== 'undefined' && globalThis.location && typeof globalThis.location.href === 'string') {
+                return globalThis.location.href;
+            }
+            return 'https://example.com/';
+        }
+
+        function deriveBaseUrl(url) {
+            if (!url) {
+                return '';
+            }
+            try {
+                const resolved = new URL(url, getBaseHref());
+                const base = new URL('.', resolved);
+                return base.toString();
+            } catch (error) {
+                console.error('FaqBuilder: Failed to derive base URL.', error);
+                return '';
+            }
+        }
+
         function render() {
             if (!entriesContainer) {
                 return;
             }
+            closeCategoryMenu();
             utils.clearElement(entriesContainer);
             if (!state.entries.length) {
                 state.entries.push(createEmptyEntry());
@@ -262,16 +424,113 @@
             }
             fields.appendChild(iconField.wrapper);
 
-            const categoryField = utils.createInputField({
-                label: 'Category',
-                value: entry.category || 'general',
-                helperText: 'Default is general. Update only if a new section is required.',
-                onInput: (value) => {
-                    state.entries[index].category = value || 'general';
-                    updatePreview();
+            const categoryField = utils.createElement('div', {
+                classNames: ['api-field', 'faq-category-field']
+            });
+            categoryField.appendChild(
+                utils.createElement('span', {
+                    classNames: 'api-field-label',
+                    text: 'Categories'
+                })
+            );
+            const categoryDropdown = utils.createElement('div', {
+                classNames: 'faq-category-dropdown'
+            });
+            const categoryTrigger = utils.createElement('button', {
+                classNames: 'faq-category-trigger',
+                attrs: { type: 'button', 'aria-haspopup': 'true', 'aria-expanded': 'false' }
+            });
+            const categorySummary = utils.createElement('span', {
+                classNames: 'faq-category-trigger__label',
+                text: formatCategorySummary(entry.categories)
+            });
+            const categoryIcon = utils.createElement('span', {
+                classNames: ['material-symbols-outlined', 'faq-category-trigger__icon'],
+                text: 'arrow_drop_down'
+            });
+            categoryTrigger.appendChild(categorySummary);
+            categoryTrigger.appendChild(categoryIcon);
+            const categoryMenu = utils.createElement('div', {
+                classNames: 'faq-category-menu',
+                attrs: { hidden: '' }
+            });
+            categoryMenu.dataset.open = 'false';
+            const checkboxRefs = [];
+            const syncCategorySummary = () => {
+                categorySummary.textContent = formatCategorySummary(state.entries[index].categories || []);
+                checkboxRefs.forEach(({ input, value }) => {
+                    input.checked = Array.isArray(state.entries[index].categories)
+                        ? state.entries[index].categories.includes(value)
+                        : false;
+                });
+            };
+            categoryTrigger.addEventListener('click', () => {
+                if (categoryMenu.dataset.open === 'true') {
+                    closeCategoryMenu();
+                } else {
+                    openCategoryMenu(categoryMenu, categoryTrigger);
                 }
             });
-            fields.appendChild(categoryField.wrapper);
+            CATEGORY_GROUPS.forEach((group) => {
+                const groupBlock = utils.createElement('div', {
+                    classNames: 'faq-category-menu__group'
+                });
+                groupBlock.appendChild(
+                    utils.createElement('p', {
+                        classNames: 'faq-category-menu__group-label',
+                        text: group.label
+                    })
+                );
+                group.options.forEach((option) => {
+                    const optionId = `faq-category-${option.value}-${index}`;
+                    const optionRow = utils.createElement('label', {
+                        classNames: 'faq-category-menu__option',
+                        attrs: { for: optionId }
+                    });
+                    const checkbox = utils.createElement('input', {
+                        classNames: 'faq-category-menu__checkbox',
+                        attrs: { type: 'checkbox', id: optionId, value: option.value }
+                    });
+                    checkbox.checked = Array.isArray(entry.categories)
+                        ? entry.categories.includes(option.value)
+                        : false;
+                    checkbox.addEventListener('change', (event) => {
+                        const selected = Array.isArray(state.entries[index].categories)
+                            ? [...state.entries[index].categories]
+                            : [...DEFAULT_CATEGORIES];
+                        const value = option.value;
+                        const currentIndex = selected.indexOf(value);
+                        if (event.target.checked && currentIndex === -1) {
+                            selected.push(value);
+                        } else if (!event.target.checked && currentIndex !== -1) {
+                            selected.splice(currentIndex, 1);
+                        }
+                        state.entries[index].categories = sortCategories(selected);
+                        syncCategorySummary();
+                        updatePreview();
+                    });
+                    checkboxRefs.push({ input: checkbox, value: option.value });
+                    optionRow.appendChild(checkbox);
+                    optionRow.appendChild(
+                        utils.createElement('span', {
+                            classNames: 'faq-category-menu__option-label',
+                            text: option.label
+                        })
+                    );
+                    groupBlock.appendChild(optionRow);
+                });
+                categoryMenu.appendChild(groupBlock);
+            });
+            categoryDropdown.appendChild(categoryTrigger);
+            categoryDropdown.appendChild(categoryMenu);
+            categoryField.appendChild(categoryDropdown);
+            categoryField.appendChild(
+                utils.createElement('span', {
+                    classNames: 'api-field-helper',
+                    text: 'Select every category that applies. General remains selected by default.'
+                })
+            );
+            fields.appendChild(categoryField);
 
             const featuredField = utils.createSelectField({
                 label: 'Featured on home',
@@ -378,55 +637,247 @@
         }
 
         function buildPayload(entries) {
-            return entries
-                .map((entry) => {
-                    const id = utils.trimString(entry.id);
-                    const question = utils.trimString(entry.question);
-                    const category = utils.trimString(entry.category) || 'general';
-                    const iconSymbol = utils.trimString(entry.iconSymbol);
-                    const featured = Boolean(entry.featured);
-                    const homeAnswer = typeof entry.homeAnswerHtml === 'string' ? entry.homeAnswerHtml : '';
-                    const answer = typeof entry.answerHtml === 'string' ? entry.answerHtml : '';
-                    if (!id || !question || !answer.trim()) {
-                        return null;
+            const normalizedEntries = Array.isArray(entries)
+                ? entries
+                      .map((entry) => normalizeEntry(entry))
+                      .map((entry) => {
+                          const id = utils.trimString(entry.id);
+                          const question = utils.trimString(entry.question);
+                          const answerHtml = typeof entry.answerHtml === 'string' ? entry.answerHtml : '';
+                          if (!id || !question || !answerHtml.trim()) {
+                              return null;
+                          }
+                          const categories = sortCategories(entry.categories || []);
+                          const iconSymbol = utils.trimString(entry.iconSymbol);
+                          const homeAnswer = typeof entry.homeAnswerHtml === 'string' ? entry.homeAnswerHtml : '';
+                          const payloadEntry = {
+                              id,
+                              question,
+                              categories,
+                              answerHtml
+                          };
+                          if (iconSymbol) {
+                              payloadEntry.iconSymbol = iconSymbol;
+                          }
+                          if (entry.featured) {
+                              payloadEntry.featured = true;
+                          }
+                          if (homeAnswer && homeAnswer.trim()) {
+                              payloadEntry.homeAnswerHtml = homeAnswer;
+                          }
+                          return payloadEntry;
+                      })
+                      .filter(Boolean)
+                : [];
+            return {
+                index: buildIndexPayload(normalizedEntries),
+                catalog: buildCatalogPayload(normalizedEntries)
+            };
+        }
+
+        function buildIndexPayload(entries) {
+            const categories = ALL_CATEGORIES.map((category) => {
+                const count = entries.filter((entry) => entry.categories.includes(category.value)).length;
+                return {
+                    code: category.value,
+                    label: category.label,
+                    group: category.group,
+                    path: `${category.value}.json`,
+                    count
+                };
+            });
+            return {
+                schemaVersion: 1,
+                totalEntries: entries.length,
+                categories
+            };
+        }
+
+        function buildCatalogPayload(entries) {
+            const catalog = {};
+            ALL_CATEGORIES.forEach((category) => {
+                catalog[category.value] = [];
+            });
+            entries.forEach((entry) => {
+                const categories = Array.isArray(entry.categories) ? entry.categories : [...DEFAULT_CATEGORIES];
+                const categoryList = sortCategories(categories);
+                categoryList.forEach((code) => {
+                    if (!catalog[code]) {
+                        catalog[code] = [];
                     }
-                    const payload = {
-                        id,
-                        question,
-                        iconSymbol: iconSymbol || undefined,
-                        category,
-                        featured: featured || undefined,
-                        homeAnswerHtml: homeAnswer && homeAnswer.trim() ? homeAnswer : undefined,
-                        answerHtml: answer.trim() ? answer : undefined
+                    const record = {
+                        id: entry.id,
+                        question: entry.question,
+                        categories: [...categoryList],
+                        answerHtml: entry.answerHtml
                     };
-                    if (!payload.iconSymbol) {
-                        delete payload.iconSymbol;
-                    }
-                    if (!payload.featured) {
-                        delete payload.featured;
-                    }
-                    if (!payload.homeAnswerHtml) {
-                        delete payload.homeAnswerHtml;
-                    }
-                    if (!payload.answerHtml) {
-                        return null;
-                    }
-                    return payload;
-                })
-                .filter(Boolean)
-                .map((entry) => {
-                    const cleaned = { id: entry.id, question: entry.question, category: entry.category, answerHtml: entry.answerHtml };
                     if (entry.iconSymbol) {
-                        cleaned.iconSymbol = entry.iconSymbol;
+                        record.iconSymbol = entry.iconSymbol;
                     }
                     if (entry.featured) {
-                        cleaned.featured = true;
+                        record.featured = true;
                     }
                     if (entry.homeAnswerHtml) {
-                        cleaned.homeAnswerHtml = entry.homeAnswerHtml;
+                        record.homeAnswerHtml = entry.homeAnswerHtml;
                     }
-                    return cleaned;
+                    catalog[code].push(record);
                 });
+            });
+            return catalog;
+        }
+
+        function mergeEntryRecords(target, source) {
+            const base = normalizeEntry(target);
+            const incoming = normalizeEntry(source);
+            const merged = { ...base };
+            if (incoming.id) {
+                merged.id = incoming.id;
+            }
+            if (incoming.question) {
+                merged.question = incoming.question;
+            }
+            merged.iconSymbol = incoming.iconSymbol || merged.iconSymbol || '';
+            merged.featured = Boolean(incoming.featured || merged.featured);
+            merged.homeAnswerHtml = incoming.homeAnswerHtml || merged.homeAnswerHtml || '';
+            merged.answerHtml = incoming.answerHtml || merged.answerHtml || '';
+            merged.categories = sortCategories([...(base.categories || []), ...(incoming.categories || [])]);
+            return merged;
+        }
+
+        function mergeEntries(entries) {
+            if (!Array.isArray(entries)) {
+                return [];
+            }
+            const map = new Map();
+            entries.forEach((entry) => {
+                const normalized = normalizeEntry(entry);
+                if (!normalized.id) {
+                    return;
+                }
+                if (map.has(normalized.id)) {
+                    const existing = map.get(normalized.id);
+                    map.set(normalized.id, mergeEntryRecords(existing, normalized));
+                } else {
+                    map.set(normalized.id, normalized);
+                }
+            });
+            return Array.from(map.values());
+        }
+
+        function flattenCatalogPayload(catalog) {
+            const entries = [];
+            if (!catalog || typeof catalog !== 'object') {
+                return entries;
+            }
+            Object.entries(catalog).forEach(([code, list]) => {
+                if (!Array.isArray(list)) {
+                    return;
+                }
+                list.forEach((entry) => {
+                    const normalized = normalizeEntry(entry);
+                    if (!normalized.categories.includes(code)) {
+                        normalized.categories = sortCategories([...normalized.categories, code]);
+                    }
+                    entries.push(normalized);
+                });
+            });
+            return entries;
+        }
+
+        function isIndexPayload(payload) {
+            if (!payload || typeof payload !== 'object') {
+                return false;
+            }
+            if (!Array.isArray(payload.categories)) {
+                return false;
+            }
+            return payload.categories.some((item) => typeof item?.path === 'string' || typeof item?.code === 'string');
+        }
+
+        function extractEntriesFromPayload(payload) {
+            if (Array.isArray(payload)) {
+                return payload;
+            }
+            if (payload && typeof payload === 'object') {
+                if (Array.isArray(payload.entries)) {
+                    return payload.entries;
+                }
+                if (payload.catalog && typeof payload.catalog === 'object') {
+                    return flattenCatalogPayload(payload.catalog);
+                }
+                if (payload.categories && typeof payload.categories === 'object' && !Array.isArray(payload.categories)) {
+                    return flattenCatalogPayload(payload.categories);
+                }
+            }
+            throw new Error('Unsupported FAQ dataset format.');
+        }
+
+        async function loadEntriesFromIndex(payload, sourceUrl) {
+            const categories = Array.isArray(payload?.categories) ? payload.categories : [];
+            if (!categories.length) {
+                return [];
+            }
+            const aggregated = [];
+            const baseUrl = deriveBaseUrl(sourceUrl);
+            for (const category of categories) {
+                const code = typeof category?.code === 'string' ? category.code : '';
+                const path = typeof category?.path === 'string' ? category.path : code ? `${code}.json` : '';
+                if (!path) {
+                    continue;
+                }
+                let resolvedUrl = path;
+                try {
+                    resolvedUrl = baseUrl ? new URL(path, baseUrl).toString() : new URL(path, getBaseHref()).toString();
+                } catch (error) {
+                    resolvedUrl = path;
+                }
+                try {
+                    const response = await fetch(resolvedUrl, { cache: 'no-store' });
+                    if (!response.ok) {
+                        console.warn('FaqBuilder: Failed to fetch FAQ category dataset.', resolvedUrl, response.status);
+                        continue;
+                    }
+                    const text = await response.text();
+                    const parsed = utils.parseJson(text);
+                    const entries = await resolveEntriesFromDataset(parsed, resolvedUrl, { allowIndex: false });
+                    aggregated.push(...entries);
+                } catch (error) {
+                    console.error('FaqBuilder: Failed to load FAQ category dataset.', error);
+                }
+            }
+            return mergeEntries(aggregated);
+        }
+
+        async function resolveEntriesFromDataset(payload, sourceUrl = '', { allowIndex = true } = {}) {
+            if (allowIndex && isIndexPayload(payload)) {
+                if (!sourceUrl) {
+                    throw new Error('A base URL is required to resolve the FAQ index dataset.');
+                }
+                return loadEntriesFromIndex(payload, sourceUrl);
+            }
+            const rawEntries = extractEntriesFromPayload(payload);
+            return mergeEntries(rawEntries);
+        }
+
+        function applyFaqEntries(entries) {
+            const normalized = Array.isArray(entries) ? entries.map((entry) => normalizeEntry(entry)) : [];
+            state.entries = normalized.length ? normalized : [createEmptyEntry()];
+            render();
+        }
+
+        function getExportedEntryCount(payload) {
+            if (Array.isArray(payload)) {
+                return payload.length;
+            }
+            if (payload && typeof payload === 'object') {
+                if (typeof payload.index?.totalEntries === 'number') {
+                    return payload.index.totalEntries;
+                }
+                if (Array.isArray(payload.entries)) {
+                    return payload.entries.length;
+                }
+            }
+            return 0;
         }
 
         function evaluateState(payload) {
@@ -455,7 +906,7 @@
                     errors.push(`FAQ ${index + 1} is missing answer HTML.`);
                 }
             });
-            if (!payload.length) {
+            if (getExportedEntryCount(payload) === 0) {
                 warnings.push('Add at least one complete FAQ entry before exporting.');
             }
             return { errors, warnings };
@@ -474,9 +925,9 @@
             if (result && typeof result === 'object') {
                 lastPreviewState = result;
             } else {
-                lastPreviewState = { success: false, payload: [] };
+                lastPreviewState = { success: false, payload: {} };
             }
-            const payload = lastPreviewState.success ? lastPreviewState.payload || [] : [];
+            const payload = lastPreviewState.success ? lastPreviewState.payload || {} : {};
             lastEvaluation = evaluateState(payload);
             applyValidationState(payload);
             updateMetrics(payload);
@@ -509,27 +960,28 @@
                 updateWorkspacePulse(errors[0]);
                 return;
             }
-            if (!payload.length) {
+            const exportedCount = getExportedEntryCount(payload);
+            if (exportedCount === 0) {
                 utils.setValidationStatus(validationStatus, {
                     status: 'warning',
                     message: 'Valid JSON · Add FAQs to export.'
                 });
                 toolbarStatus.textContent = 'Awaiting entries';
                 toolbarStatus.dataset.state = 'warning';
-                const warningMessage = warnings[0] || 'Start adding entries to generate the FAQ payload.';
+                const warningMessage = warnings[0] || 'Start adding entries to generate the FAQ dataset.';
                 updateWorkspacePulse(warningMessage);
                 return;
             }
-            const message = payload.length === 1
+            const message = exportedCount === 1
                 ? 'Valid JSON · 1 FAQ entry'
-                : `Valid JSON · ${payload.length} FAQ entries`;
+                : `Valid JSON · ${exportedCount} FAQ entries`;
             utils.setValidationStatus(validationStatus, {
                 status: 'success',
                 message
             });
             toolbarStatus.textContent = message;
             toolbarStatus.dataset.state = 'success';
-            updateWorkspacePulse('FAQ payload is ready to export.');
+            updateWorkspacePulse('FAQ dataset is ready to export.');
         }
 
         function updateWorkspacePulse(message) {
@@ -560,9 +1012,10 @@
         }
 
         function updateExportControls() {
-            const payload = lastPreviewState.success ? lastPreviewState.payload || [] : [];
+            const payload = lastPreviewState.success ? lastPreviewState.payload || {} : {};
             const errors = Array.isArray(lastEvaluation.errors) ? lastEvaluation.errors : [];
-            const valid = payload.length > 0 && errors.length === 0;
+            const exportedCount = getExportedEntryCount(payload);
+            const valid = exportedCount > 0 && errors.length === 0;
             const helper = valid ? 'Ready to export' : errors[0] || 'Add complete entries to export.';
             if (copyButton) {
                 copyButton.disabled = !valid;
@@ -603,15 +1056,6 @@
             iconStatus.dataset.status = status;
         }
 
-        function applyFaqData(data) {
-            if (!Array.isArray(data)) {
-                throw new Error('FAQ payload must be an array.');
-            }
-            const normalized = data.map((entry) => normalizeEntry(entry));
-            state.entries = normalized.length ? normalized : [createEmptyEntry()];
-            render();
-        }
-
         async function fetchFromUrl(url, { silent = false } = {}) {
             const trimmed = utils.trimString(url);
             if (!trimmed) {
@@ -630,14 +1074,15 @@
                 }
                 const text = await response.text();
                 const parsed = utils.parseJson(text);
-                applyFaqData(parsed);
+                const entries = await resolveEntriesFromDataset(parsed, response.url || trimmed);
+                applyFaqEntries(entries);
                 if (!silent) {
-                    setFetchStatus('FAQ payload loaded successfully.', 'success');
+                    setFetchStatus('FAQ dataset loaded successfully.', 'success');
                 }
             } catch (error) {
                 console.error('FaqBuilder: Failed to fetch JSON.', error);
                 if (!silent) {
-                    setFetchStatus('Unable to fetch FAQ JSON. Check the URL and try again.', 'error');
+                    setFetchStatus('Unable to fetch FAQ dataset. Check the URL and try again.', 'error');
                 }
             }
         }
@@ -844,14 +1289,19 @@
             updatePreview();
         }
 
-        function handleImport(content) {
+        async function handleImport(content) {
             try {
                 const parsed = utils.parseJson(content);
-                applyFaqData(parsed);
-                setFetchStatus('Imported FAQ payload from file.', 'success');
+                const entries = await resolveEntriesFromDataset(parsed);
+                applyFaqEntries(entries);
+                setFetchStatus('Imported FAQ dataset from file.', 'success');
             } catch (error) {
                 console.error('FaqBuilder: Failed to import JSON file.', error);
-                setFetchStatus('Could not import the selected JSON file.', 'error');
+                const message =
+                    error && typeof error.message === 'string' && error.message.includes('base URL')
+                        ? 'FAQ index files must be fetched from a hosted URL.'
+                        : 'Could not import the selected FAQ dataset.';
+                setFetchStatus(message, 'error');
             }
         }
 
