@@ -10,6 +10,7 @@ const OPTIONAL_GLOBALS = [
   'initProjectsPage',
   'initResumePage',
   'initAppToolkitWorkspace',
+  'initFaqWorkspace',
   'initEnglishWorkspace',
   'initAndroidTutorialsWorkspace',
   'initPagerControls'
@@ -122,6 +123,7 @@ describe('app.js bootstrap integration', () => {
     const hidePageLoadingOverlay = jest.fn();
     const closeDrawer = jest.fn();
     const initAppToolkitWorkspace = jest.fn();
+    const initFaqWorkspace = jest.fn();
     const initEnglishWorkspace = jest.fn();
     const initAndroidTutorialsWorkspace = jest.fn();
     const initPagerControls = jest.fn();
@@ -131,6 +133,7 @@ describe('app.js bootstrap integration', () => {
       hidePageLoadingOverlay,
       closeDrawer,
       initAppToolkitWorkspace,
+      initFaqWorkspace,
       initEnglishWorkspace,
       initAndroidTutorialsWorkspace,
       initPagerControls
@@ -149,6 +152,7 @@ describe('app.js bootstrap integration', () => {
     expect(routerOptions.pageHandlers).toEqual(
       expect.objectContaining({
         'app-toolkit-api': expect.any(Function),
+        'faq-api': expect.any(Function),
         'english-with-lidia-api': expect.any(Function),
         'android-studio-tutorials-api': expect.any(Function)
       })
@@ -165,6 +169,9 @@ describe('app.js bootstrap integration', () => {
 
     routerOptions.pageHandlers['app-toolkit-api']();
     expect(initAppToolkitWorkspace).toHaveBeenCalledTimes(1);
+
+    routerOptions.pageHandlers['faq-api']();
+    expect(initFaqWorkspace).toHaveBeenCalledTimes(1);
 
     routerOptions.pageHandlers['english-with-lidia-api']();
     expect(initEnglishWorkspace).toHaveBeenCalledTimes(1);
@@ -189,7 +196,7 @@ describe('app.js bootstrap integration', () => {
 
     const loadPageContent = jest.fn();
     const hasRoute = jest.fn((id) =>
-      ['home', 'app-toolkit-api', 'english-with-lidia-api'].includes(id)
+      ['home', 'app-toolkit-api', 'faq-api', 'english-with-lidia-api'].includes(id)
     );
 
     global.getDynamicElement = jest.fn((id) => document.getElementById(id));

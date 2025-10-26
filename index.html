@@ -9,16 +9,16 @@
     <title>API Console</title>
     <meta
       name="description"
-      content="Design and manage the JSON APIs that power D4rK's Android apps with a visual editor built for App Toolkit, English with Lidia, and Android Studio Tutorials."
+      content="Design and manage the JSON APIs that power D4rK's Android apps with a visual editor built for App Toolkit, FAQ, English with Lidia, and Android Studio Tutorials."
     />
     <meta
       name="keywords"
-      content="API Console, Android API builder, JSON editor, App Toolkit API, English with Lidia API, Android Studio Tutorials API"
+      content="API Console, Android API builder, JSON editor, App Toolkit API, FAQ API, English with Lidia API, Android Studio Tutorials API"
     />
     <meta property="og:title" content="API Console" />
     <meta
       property="og:description"
-      content="Design and manage JSON APIs visually for D4rK's Android applications, including App Toolkit, English with Lidia, and Android Studio Tutorials."
+      content="Design and manage JSON APIs visually for D4rK's Android applications, including App Toolkit, FAQ, English with Lidia, and Android Studio Tutorials."
     />
     <meta property="og:type" content="website" />
     <meta
@@ -174,6 +174,10 @@
                 <md-list-item href="#app-toolkit-api" id="navAppToolkit">
                   <div slot="headline">App Toolkit</div>
                   <div slot="supporting-text">Manage Android utilities</div>
+                </md-list-item>
+                <md-list-item href="#faq-api" id="navFaq">
+                  <div slot="headline">FAQ API</div>
+                  <div slot="supporting-text">Ship policy & support answers</div>
                 </md-list-item>
                 <md-list-item href="#english-with-lidia-api" id="navEnglish">
                   <div slot="headline">English with Lidia</div>
@@ -369,6 +373,35 @@
               <md-elevated-card class="workspace-card">
                 <div class="workspace-card-header">
                   <div class="workspace-icon">
+                    <span class="material-symbols-outlined">help_center</span>
+                  </div>
+                  <h3>FAQ API</h3>
+                </div>
+                <p>
+                  Coordinate policy answers for websites and Android apps with
+                  Google icon suggestions and featured callouts.
+                </p>
+                <ul>
+                  <li>Manage question IDs, categories, and featured flags</li>
+                  <li>Author rich HTML answers with home-page summaries</li>
+                  <li>Autocomplete Material Symbols straight from Google</li>
+                </ul>
+                <a class="workspace-action" href="#faq-api">
+                  <md-outlined-button trailing-icon>
+                    Open workspace
+                    <md-icon slot="icon"
+                      ><span class="material-symbols-outlined"
+                        >arrow_forward</span
+                      ></md-icon
+                    >
+                  </md-outlined-button>
+                </a>
+              </md-elevated-card>
+            </li>
+            <li class="workspace-list-item">
+              <md-elevated-card class="workspace-card">
+                <div class="workspace-card-header">
+                  <div class="workspace-icon">
                     <span class="material-symbols-outlined">lightbulb</span>
                   </div>
                   <h3>English with Lidia</h3>
@@ -539,6 +572,7 @@
     <script src="assets/js/navigationDrawer.js" defer></script>
     <script src="assets/js/apis/common.js" defer></script>
     <script src="assets/js/apis/appToolkit.js" defer></script>
+    <script src="assets/js/apis/faq.js" defer></script>
     <script src="assets/js/apis/englishWithLidia.js" defer></script>
     <script src="assets/js/apis/androidStudioTutorials.js" defer></script>
     <script src="assets/js/apis/pagers.js" defer></script>

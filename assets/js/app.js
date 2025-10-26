@@ -90,6 +90,10 @@ function buildRouterOptions() {
         pageHandlers['app-toolkit-api'] = initAppToolkitWorkspace;
     }
 
+    if (typeof initFaqWorkspace === 'function') {
+        pageHandlers['faq-api'] = initFaqWorkspace;
+    }
+
     if (typeof initEnglishWorkspace === 'function') {
         pageHandlers['english-with-lidia-api'] = initEnglishWorkspace;
     }
