@@ -239,11 +239,12 @@
             id: 'home',
             title: 'API Console',
             metadata: {
-                description: 'Design and manage the JSON APIs that power App Toolkit, English with Lidia, and Android Studio Tutorials using a visual builder.',
+                description: 'Design and manage the JSON APIs that power App Toolkit, FAQ, English with Lidia, and Android Studio Tutorials using a visual builder.',
                 keywords: [
                     'API Console',
                     'Android API builder',
                     'App Toolkit JSON',
+                    'FAQ API',
                     'English with Lidia API',
                     'Android Studio Tutorials API'
                 ],
@@ -279,6 +280,29 @@
                 twitter: {
                     title: 'App Toolkit API workspace',
                     description: 'Curate App Toolkit catalog entries with visual tools for managing app metadata, screenshots, and package information.'
+                }
+            }
+        },
+        {
+            id: 'faq-api',
+            path: 'pages/apis/faq.html',
+            title: 'FAQ API',
+            metadata: {
+                description: 'Publish structured FAQ answers with featured snippets and Material icon suggestions for web and Android surfaces.',
+                keywords: [
+                    'FAQ API builder',
+                    'Material Symbols autocomplete',
+                    'support answers JSON'
+                ],
+                canonicalSlug: 'faq-api',
+                openGraph: {
+                    title: 'FAQ API workspace',
+                    description: 'Publish structured FAQ answers with featured snippets and Material icon suggestions for web and Android surfaces.',
+                    type: 'website'
+                },
+                twitter: {
+                    title: 'FAQ API workspace',
+                    description: 'Publish structured FAQ answers with featured snippets and Material icon suggestions for web and Android surfaces.'
                 }
             }
         },
