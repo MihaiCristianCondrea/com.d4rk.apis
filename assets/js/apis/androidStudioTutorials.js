@@ -16,19 +16,19 @@
     const FOCUS_STORAGE_KEY = 'androidWorkspaceNote';
     const GITHUB_TARGETS = {
         'home-debug': {
-            path: 'Android Studio Tutorials/debug/en/home/api_get_lessons.json',
+            path: 'api/android_studio_tutorials/v1/debug/en/home/api_get_lessons.json',
             previewKey: 'home'
         },
         'home-release': {
-            path: 'Android Studio Tutorials/release/en/home/api_get_lessons.json',
+            path: 'api/android_studio_tutorials/v1/release/en/home/api_get_lessons.json',
             previewKey: 'home'
         },
         'lesson-debug': {
-            prefix: 'Android Studio Tutorials/debug/en/lessons/',
+            prefix: 'api/android_studio_tutorials/v1/debug/en/lessons/',
             previewKey: 'lesson'
         },
         'lesson-release': {
-            prefix: 'Android Studio Tutorials/release/en/lessons/',
+            prefix: 'api/android_studio_tutorials/v1/release/en/lessons/',
             previewKey: 'lesson'
         }
     };
