@@ -128,6 +128,30 @@
         });
         let sessionNotesStorage = null;
         const SESSION_NOTE_KEY = 'appToolkitWorkspaceNote';
+        const SCREENSHOT_HINT_STORAGE_KEY = 'AppToolkitScreenshotHintSeen';
+        let screenshotHintSeen = false;
+        try {
+            if (typeof window !== 'undefined' && window.localStorage) {
+                screenshotHintSeen =
+                    window.localStorage.getItem(SCREENSHOT_HINT_STORAGE_KEY) === 'true';
+            }
+        } catch (error) {
+            console.warn('AppToolkit: Unable to read screenshot hint preference.', error);
+        }
+
+        const markScreenshotHintSeen = () => {
+            if (screenshotHintSeen) {
+                return;
+            }
+            screenshotHintSeen = true;
+            try {
+                if (typeof window !== 'undefined' && window.localStorage) {
+                    window.localStorage.setItem(SCREENSHOT_HINT_STORAGE_KEY, 'true');
+                }
+            } catch (error) {
+                console.warn('AppToolkit: Unable to persist screenshot hint preference.', error);
+            }
+        };
 
         const state = {
             apps: [createEmptyApp()]
@@ -1413,26 +1437,259 @@
             const screenshotsSection = utils.createElement('div', {
                 classNames: ['builder-subsection', 'builder-screenshots']
             });
+            const screenshotHeaderId = `appToolkitScreenshotsHeader-${index}`;
             const screenshotHeader = utils.createElement('div', {
-                classNames: ['builder-subsection-header']
+                classNames: ['builder-subsection-header'],
+                attrs: { id: screenshotHeaderId }
             });
             screenshotHeader.appendChild(utils.createElement('h4', { text: 'Screenshots' }));
             const screenshotCountChip = utils.createElement('span', {
                 classNames: ['builder-hint-chip'],
                 text: ''
             });
+            const screenshotCountId = `${screenshotHeaderId}-count`;
+            screenshotCountChip.id = screenshotCountId;
             screenshotHeader.appendChild(screenshotCountChip);
             screenshotsSection.appendChild(screenshotHeader);
+
+            const screenshotListId = `appToolkitScreenshotsList-${index}`;
+            const carouselId = `appToolkitScreenshotCarousel-${index}`;
+            const statusId = `${carouselId}-status`;
+            const liveRegionId = `${statusId}-live`;
 
             const screenshotsList = document.createElement('div');
             screenshotsList.classList.add('screenshot-list');
             screenshotsList.dataset.appIndex = String(index);
+            screenshotsList.id = screenshotListId;
+            screenshotsList.setAttribute('role', 'list');
+            screenshotsList.setAttribute('aria-describedby', statusId);
+            screenshotsList.tabIndex = 0;
+
+            const carousel = utils.createElement('div', {
+                classNames: ['screenshot-carousel'],
+                attrs: {
+                    id: carouselId,
+                    role: 'region',
+                    'aria-labelledby': screenshotHeaderId,
+                    dataset: { appIndex: String(index) }
+                }
+            });
+            const carouselViewport = utils.createElement('div', {
+                classNames: ['screenshot-carousel__viewport']
+            });
+            carouselViewport.appendChild(screenshotsList);
+
+            const createNavButton = (direction) => {
+                const isNext = direction === 'next';
+                const button = utils.createElement('button', {
+                    classNames: [
+                        'screenshot-carousel__nav',
+                        isNext ? 'screenshot-carousel__nav--next' : 'screenshot-carousel__nav--prev'
+                    ],
+                    attrs: {
+                        type: 'button',
+                        'aria-label': isNext
+                            ? 'Show next screenshots'
+                            : 'Show previous screenshots',
+                        'aria-controls': screenshotListId
+                    }
+                });
+                button.innerHTML = `<span class="material-symbols-outlined" aria-hidden="true">${
+                    isNext ? 'chevron_right' : 'chevron_left'
+                }</span>`;
+                return button;
+            };
+
+            const previousButton = createNavButton('previous');
+            const nextButton = createNavButton('next');
+
+            const carouselStatus = utils.createElement('div', {
+                classNames: ['screenshot-carousel__status'],
+                attrs: { id: statusId },
+                text: '0/0'
+            });
+
+            const liveRegion = utils.createElement('div', {
+                classNames: ['sr-only'],
+                attrs: { id: liveRegionId, 'aria-live': 'polite', 'aria-atomic': 'true' }
+            });
+
+            carousel.appendChild(previousButton);
+            carousel.appendChild(carouselViewport);
+            carousel.appendChild(nextButton);
+            carousel.appendChild(carouselStatus);
+            carousel.appendChild(liveRegion);
+
+            let hintElement = null;
+            let hintHideTimer = null;
+            const hideHint = () => {
+                if (!hintElement) {
+                    return;
+                }
+                if (hintElement.dataset.state === 'hidden') {
+                    return;
+                }
+                hintElement.dataset.state = 'hidden';
+                if (hintHideTimer) {
+                    clearTimeout(hintHideTimer);
+                    hintHideTimer = null;
+                }
+                markScreenshotHintSeen();
+            };
+
+            if (!screenshotHintSeen) {
+                hintElement = utils.createElement('div', {
+                    classNames: ['screenshot-carousel__hint'],
+                    text: 'Scroll or use the arrows to see more screenshots.'
+                });
+                hintElement.dataset.state = 'visible';
+                carousel.appendChild(hintElement);
+                if (typeof window !== 'undefined') {
+                    hintHideTimer = window.setTimeout(() => {
+                        hideHint();
+                    }, 6000);
+                }
+            }
+
+            const dismissHint = () => {
+                hideHint();
+            };
+
+            const getScreenshotItems = () =>
+                Array.from(screenshotsList.querySelectorAll('.screenshot-item'));
+
+            let activeScreenshotIndex = 0;
+            let scheduledCarouselUpdate = null;
+
+            const updateCarouselState = ({ announce = false } = {}) => {
+                const items = getScreenshotItems();
+                const total = items.length;
+                if (!total) {
+                    carouselStatus.textContent = '0/0';
+                    carouselStatus.dataset.count = '0';
+                    liveRegion.textContent = '';
+                    previousButton.disabled = true;
+                    nextButton.disabled = true;
+                    carousel.dataset.edgeStart = 'true';
+                    carousel.dataset.edgeEnd = 'true';
+                    return;
+                }
+                if (activeScreenshotIndex >= total) {
+                    activeScreenshotIndex = total - 1;
+                }
+                if (activeScreenshotIndex < 0) {
+                    activeScreenshotIndex = 0;
+                }
+                const viewportRect = screenshotsList.getBoundingClientRect();
+                let bestIndex = activeScreenshotIndex;
+                let bestDistance = Infinity;
+                items.forEach((item, idx) => {
+                    const rect = item.getBoundingClientRect();
+                    const distance = Math.abs(rect.left - viewportRect.left);
+                    if (distance < bestDistance) {
+                        bestDistance = distance;
+                        bestIndex = idx;
+                    }
+                });
+                activeScreenshotIndex = bestIndex;
+                items.forEach((item, idx) => {
+                    const isActive = idx === activeScreenshotIndex;
+                    item.classList.toggle('is-active', isActive);
+                    if (isActive) {
+                        item.dataset.active = 'true';
+                    } else {
+                        delete item.dataset.active;
+                    }
+                });
+                const labelIndex = activeScreenshotIndex + 1;
+                carouselStatus.textContent = `${labelIndex}/${total}`;
+                carouselStatus.dataset.count = String(total);
+                if (announce) {
+                    liveRegion.textContent = `Screenshot ${labelIndex} of ${total}`;
+                }
+                const scrollLeft = screenshotsList.scrollLeft;
+                const maxScrollLeft = Math.max(0, screenshotsList.scrollWidth - screenshotsList.clientWidth);
+                const atStart = scrollLeft <= 2;
+                const atEnd = scrollLeft >= maxScrollLeft - 2;
+                carousel.dataset.edgeStart = atStart ? 'true' : 'false';
+                carousel.dataset.edgeEnd = atEnd ? 'true' : 'false';
+                const navDisabled = total <= 1;
+                previousButton.disabled = atStart || navDisabled;
+                nextButton.disabled = atEnd || navDisabled;
+                if (navDisabled) {
+                    liveRegion.textContent = '';
+                }
+            };
+
+            const scheduleCarouselUpdate = ({ announce = false } = {}) => {
+                const run = () => {
+                    scheduledCarouselUpdate = null;
+                    updateCarouselState({ announce });
+                };
+                if (typeof window === 'undefined' || typeof window.requestAnimationFrame !== 'function') {
+                    run();
+                    return;
+                }
+                if (scheduledCarouselUpdate) {
+                    window.cancelAnimationFrame(scheduledCarouselUpdate);
+                }
+                scheduledCarouselUpdate = window.requestAnimationFrame(run);
+            };
+
+            const getPageSize = () => {
+                const items = getScreenshotItems();
+                if (items.length <= 1) {
+                    return 1;
+                }
+                const firstRect = items[0].getBoundingClientRect();
+                const secondRect = items[1].getBoundingClientRect();
+                let gap = secondRect.left - firstRect.right;
+                if (!Number.isFinite(gap) || gap < 0) {
+                    try {
+                        const styles = window.getComputedStyle(screenshotsList);
+                        const parsedGap = parseFloat(styles.columnGap || styles.gap || '0');
+                        gap = Number.isFinite(parsedGap) ? parsedGap : 0;
+                    } catch (error) {
+                        gap = 0;
+                    }
+                }
+                const itemWidth = firstRect.width + Math.max(0, gap);
+                if (!itemWidth) {
+                    return 1;
+                }
+                const viewportWidth = screenshotsList.getBoundingClientRect().width;
+                return Math.max(1, Math.round(viewportWidth / itemWidth));
+            };
+
+            const scrollToScreenshot = (targetIndex, { announce = true } = {}) => {
+                const items = getScreenshotItems();
+                if (!items.length) {
+                    return;
+                }
+                const clamped = Math.max(0, Math.min(targetIndex, items.length - 1));
+                const target = items[clamped];
+                if (!target) {
+                    return;
+                }
+                const prefersReducedMotion =
+                    typeof window !== 'undefined' &&
+                    window.matchMedia &&
+                    window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+                target.scrollIntoView({
+                    behavior: prefersReducedMotion ? 'auto' : 'smooth',
+                    inline: 'start',
+                    block: 'nearest'
+                });
+                activeScreenshotIndex = clamped;
+                scheduleCarouselUpdate({ announce });
+            };
 
             const handleDragStart = (event) => {
                 const item = event.target.closest('.screenshot-item[data-screenshot-index]');
                 if (!item) {
                     return;
                 }
+                dismissHint();
                 draggingScreenshot = {
                     appIndex: index,
                     from: Number(item.dataset.screenshotIndex)
@@ -1520,18 +1777,97 @@
                 updateDragOverHighlight();
             };
 
+            const handleScroll = () => {
+                dismissHint();
+                scheduleCarouselUpdate();
+            };
+
+            const handleWheel = (event) => {
+                if (Math.abs(event.deltaY) <= Math.abs(event.deltaX)) {
+                    return;
+                }
+                event.preventDefault();
+                dismissHint();
+                const delta = event.deltaMode === 1 ? event.deltaY * 32 : event.deltaY;
+                screenshotsList.scrollBy({
+                    left: delta,
+                    behavior: Math.abs(delta) > 40 ? 'smooth' : 'auto'
+                });
+            };
+
+            const handleKeydown = (event) => {
+                if (event.defaultPrevented) {
+                    return;
+                }
+                let handled = false;
+                switch (event.key) {
+                    case 'ArrowRight':
+                    case 'ArrowDown':
+                        scrollToScreenshot(activeScreenshotIndex + 1);
+                        handled = true;
+                        break;
+                    case 'ArrowLeft':
+                    case 'ArrowUp':
+                        scrollToScreenshot(activeScreenshotIndex - 1);
+                        handled = true;
+                        break;
+                    case 'Home':
+                        scrollToScreenshot(0);
+                        handled = true;
+                        break;
+                    case 'End':
+                        scrollToScreenshot(getScreenshotItems().length - 1);
+                        handled = true;
+                        break;
+                    default:
+                        break;
+                }
+                if (handled) {
+                    event.preventDefault();
+                    dismissHint();
+                }
+            };
+
+            previousButton.addEventListener('focus', dismissHint);
+            nextButton.addEventListener('focus', dismissHint);
+
+            previousButton.addEventListener('click', () => {
+                dismissHint();
+                const pageSize = getPageSize();
+                scrollToScreenshot(activeScreenshotIndex - pageSize);
+            });
+            nextButton.addEventListener('click', () => {
+                dismissHint();
+                const pageSize = getPageSize();
+                scrollToScreenshot(activeScreenshotIndex + pageSize);
+            });
+
             screenshotsList.addEventListener('dragstart', handleDragStart);
             screenshotsList.addEventListener('dragend', handleDragEnd);
             screenshotsList.addEventListener('dragover', handleDragOver);
             screenshotsList.addEventListener('drop', handleDrop);
+            screenshotsList.addEventListener('scroll', handleScroll, { passive: true });
+            screenshotsList.addEventListener('wheel', handleWheel, { passive: false });
+            screenshotsList.addEventListener('pointerdown', dismissHint);
+            screenshotsList.addEventListener('touchstart', dismissHint, { passive: true });
+            screenshotsList.addEventListener('mouseenter', dismissHint);
+            screenshotsList.addEventListener('focus', dismissHint, true);
+            screenshotsList.addEventListener('keydown', handleKeydown);
 
             app.screenshots.forEach((url, screenshotIndex) => {
-                screenshotsList.appendChild(
-                    createScreenshotField(index, screenshotIndex, url, {
-                        onChange: () => updateScreenshotsState()
-                    })
-                );
+                const screenshotItem = createScreenshotField(index, screenshotIndex, url, {
+                    onChange: () => updateScreenshotsState()
+                });
+                screenshotItem.setAttribute('role', 'listitem');
+                screenshotItem.tabIndex = -1;
+                screenshotItem.addEventListener('focusin', () => {
+                    activeScreenshotIndex = Number(screenshotItem.dataset.screenshotIndex) || 0;
+                    scheduleCarouselUpdate();
+                });
+                screenshotsList.appendChild(screenshotItem);
             });
+
+            screenshotsSection.appendChild(carousel);
 
             const dropZone = document.createElement('div');
             dropZone.className = 'screenshot-dropzone';
@@ -1650,11 +1986,10 @@
                 }
             });
 
-            screenshotsSection.appendChild(screenshotsList);
             screenshotsSection.appendChild(dropZone);
             screenshotsSection.appendChild(screenshotActions);
 
-            const updateScreenshotsState = () => {
+            const updateScreenshotsState = ({ announce = false } = {}) => {
                 const count = getFilledScreenshotCount(index);
                 if (count >= 3) {
                     screenshotsSection.dataset.countState = 'ready';
@@ -1665,6 +2000,7 @@
                     screenshotCountChip.dataset.state = 'warning';
                     screenshotCountChip.textContent = `${count}/3 screenshots added`;
                 }
+                scheduleCarouselUpdate({ announce });
             };
 
             updateScreenshotsState();
@@ -1713,6 +2049,8 @@
             item.dataset.appIndex = String(appIndex);
             item.dataset.screenshotIndex = String(screenshotIndex);
             item.draggable = true;
+            item.setAttribute('role', 'listitem');
+            item.tabIndex = -1;
 
             const actionsRow = document.createElement('div');
             actionsRow.classList.add('screenshot-item-actions');
@@ -1760,6 +2098,7 @@
             const thumbnail = document.createElement('img');
             thumbnail.alt = `Screenshot ${screenshotIndex + 1}`;
             thumbnail.decoding = 'async';
+            thumbnail.loading = 'lazy';
             thumbnail.referrerPolicy = 'no-referrer';
             thumbnailWrapper.appendChild(thumbnail);
             item.appendChild(thumbnailWrapper);
