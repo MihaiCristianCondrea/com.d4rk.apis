@@ -986,19 +986,19 @@
     const FOCUS_STORAGE_KEY = 'englishWorkspaceNote';
     const GITHUB_TARGETS = {
         'home-debug': {
-            path: 'English with Lidia/debug/ro/home/api_get_lessons.json',
+            path: 'api/english_with_lidia/v1/debug/ro/home/api_get_lessons.json',
             previewKey: 'home'
         },
         'home-release': {
-            path: 'English with Lidia/release/ro/home/api_get_lessons.json',
+            path: 'api/english_with_lidia/v1/release/ro/home/api_get_lessons.json',
             previewKey: 'home'
         },
         'lesson-debug': {
-            prefix: 'English with Lidia/debug/ro/lessons/',
+            prefix: 'api/english_with_lidia/v1/debug/ro/lessons/',
             previewKey: 'lesson'
         },
         'lesson-release': {
-            prefix: 'English with Lidia/release/ro/lessons/',
+            prefix: 'api/english_with_lidia/v1/release/ro/lessons/',
             previewKey: 'lesson'
         }
     };

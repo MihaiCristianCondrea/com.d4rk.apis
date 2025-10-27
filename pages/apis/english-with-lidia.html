@@ -128,12 +128,13 @@
           to match the production schema for lessons.
         </li>
         <li>
-          When finished, export JSON files and replace them under
-          <code>English with Lidia/[debug|release]/ro</code> in the repository.
+          Publish-ready JSON now lives under
+          <code>api/english_with_lidia/v1/[debug|release]/ro/[home|lessons]/</code>.
+          Keep both channels aligned before opening a PR.
         </li>
         <li>
           Fetch the latest payloads before editing to compare changes in the diff
-          sheet.
+          sheet and verify the GitHub Pages output.
         </li>
       </ul>
     </div>
@@ -159,7 +160,7 @@
           id="englishFetchInput"
           type="url"
           label="JSON URL"
-          placeholder="https://example.com/english_home.json"
+          placeholder="https://mihaicristiancondrea.github.io/com.d4rk.apis/api/english_with_lidia/v1/debug/ro/home/api_get_lessons.json"
           supporting-text="Paste a direct link to the current payload"
           spellcheck="false"
         >
@@ -179,7 +180,7 @@
         <md-text-button
           has-icon
           data-english-fetch-target="home"
-          data-english-fetch-preset="https://raw.githubusercontent.com/MihaiCristianCondrea/com.d4rk.apis/refs/heads/main/English%20with%20Lidia/debug/ro/home/api_get_lessons.json"
+          data-english-fetch-preset="https://mihaicristiancondrea.github.io/com.d4rk.apis/api/english_with_lidia/v1/debug/ro/home/api_get_lessons.json"
         >
           <md-icon slot="icon"
             ><span class="material-symbols-outlined">download</span></md-icon
@@ -189,7 +190,7 @@
         <md-text-button
           has-icon
           data-english-fetch-target="home"
-          data-english-fetch-preset="https://raw.githubusercontent.com/MihaiCristianCondrea/com.d4rk.apis/refs/heads/main/English%20with%20Lidia/release/ro/home/api_get_lessons.json"
+          data-english-fetch-preset="https://mihaicristiancondrea.github.io/com.d4rk.apis/api/english_with_lidia/v1/release/ro/home/api_get_lessons.json"
         >
           <md-icon slot="icon"
             ><span class="material-symbols-outlined">download</span></md-icon
@@ -199,7 +200,7 @@
         <md-text-button
           has-icon
           data-english-fetch-target="lesson"
-          data-english-fetch-preset="https://raw.githubusercontent.com/MihaiCristianCondrea/com.d4rk.apis/refs/heads/main/English%20with%20Lidia/debug/ro/lessons/api_get_tell_me_about_yourself.json"
+          data-english-fetch-preset="https://mihaicristiancondrea.github.io/com.d4rk.apis/api/english_with_lidia/v1/debug/ro/lessons/api_get_tell_me_about_yourself.json"
         >
           <md-icon slot="icon"
             ><span class="material-symbols-outlined">download</span></md-icon
@@ -209,7 +210,7 @@
         <md-text-button
           has-icon
           data-english-fetch-target="lesson"
-          data-english-fetch-preset="https://raw.githubusercontent.com/MihaiCristianCondrea/com.d4rk.apis/refs/heads/main/English%20with%20Lidia/release/ro/lessons/api_get_to_be_or_not_to_be.json"
+          data-english-fetch-preset="https://mihaicristiancondrea.github.io/com.d4rk.apis/api/english_with_lidia/v1/release/ro/lessons/api_get_to_be_or_not_to_be.json"
         >
           <md-icon slot="icon"
             ><span class="material-symbols-outlined">download</span></md-icon
