@@ -6,7 +6,7 @@
     }
 
     const DEFAULT_FILENAME = 'faq_dataset.json';
-    const DEFAULT_DATA_URL = 'api/faq/v1/index.json';
+    const DEFAULT_DATA_URL = 'https://mihaicristiancondrea.github.io/com.d4rk.apis/api/app_toolkit/v1/debug/en/home/api_android_apps.json';
     const ICONS_ENDPOINT = 'https://fonts.google.com/metadata/icons?incomplete=1&icon.set=Material+Symbols';
     const ICON_PICKER_MAX_RENDER = 400;
 

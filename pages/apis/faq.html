@@ -5,7 +5,8 @@
       Publish a structured FAQ feed for app and web surfaces. The builder keeps
       questions, multi-category assignments, featured flags, and HTML answers
       aligned with the JSON served from
-      <code>api/faq/v1/index.json</code> and its category datasets.
+      <code>https://mihaicristiancondrea.github.io/com.d4rk.apis/api/app_toolkit/v1/debug/en/home/api_android_apps.json</code>
+      and its category datasets.
     </p>
   </header>
 
@@ -127,8 +128,8 @@
           id="faqFetchInput"
           type="url"
           label="JSON URL"
-          placeholder="https://example.com/api/faq/v1/index.json"
-          supporting-text="Paste a direct link to the current FAQ payload"
+          placeholder="https://mihaicristiancondrea.github.io/com.d4rk.apis/api/app_toolkit/v1/debug/en/home/api_android_apps.json"
+          supporting-text="Paste the live GitHub Pages FAQ payload URL"
           spellcheck="false"
         >
           <md-icon slot="leading-icon"
@@ -150,7 +151,7 @@
         <md-text-button
           has-icon
           id="faqPresetButton"
-          data-faq-preset="api/faq/v1/index.json"
+          data-faq-preset="https://mihaicristiancondrea.github.io/com.d4rk.apis/api/app_toolkit/v1/debug/en/home/api_android_apps.json"
         >
           <md-icon slot="icon"
             ><span class="material-symbols-outlined">download</span></md-icon
