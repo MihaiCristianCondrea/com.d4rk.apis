@@ -1442,15 +1442,61 @@
                 item.classList.add('dragging');
             };
 
+            const isHorizontalScreenshotLayout = () => {
+                const styles = window.getComputedStyle(screenshotsList);
+                if (styles.display === 'grid') {
+                    return styles.gridAutoFlow.includes('column');
+                }
+                if (styles.display === 'flex') {
+                    return !styles.flexDirection.startsWith('column');
+                }
+                return false;
+            };
+
+            const getDropIndexFromEvent = (item, event) => {
+                if (!item) {
+                    return state.apps[index].screenshots.length;
+                }
+                const baseIndex = Number(item.dataset.screenshotIndex);
+                const rect = item.getBoundingClientRect();
+                const isHorizontal = isHorizontalScreenshotLayout();
+                const offset = isHorizontal
+                    ? event.clientX - rect.left
+                    : event.clientY - rect.top;
+                const dimension = isHorizontal ? rect.width : rect.height;
+                if (offset > dimension / 2) {
+                    return baseIndex + 1;
+                }
+                return baseIndex;
+            };
+
+            const updateDragOverHighlight = (dropIndex) => {
+                screenshotsList
+                    .querySelectorAll('.drag-over')
+                    .forEach((el) => el.classList.remove('drag-over'));
+                if (typeof dropIndex !== 'number') {
+                    return;
+                }
+                const lastIndex = state.apps[index].screenshots.length - 1;
+                if (lastIndex < 0) {
+                    return;
+                }
+                const highlightIndex = Math.min(dropIndex, lastIndex);
+                const highlightItem = screenshotsList.querySelector(
+                    `.screenshot-item[data-screenshot-index="${highlightIndex}"]`
+                );
+                if (highlightItem) {
+                    highlightItem.classList.add('drag-over');
+                }
+            };
+
             const handleDragEnd = (event) => {
                 const item = event.target.closest('.screenshot-item[data-screenshot-index]');
                 if (item) {
                     item.classList.remove('dragging');
                 }
                 draggingScreenshot = null;
-                screenshotsList
-                    .querySelectorAll('.drag-over')
-                    .forEach((el) => el.classList.remove('drag-over'));
+                updateDragOverHighlight();
             };
 
             const handleDragOver = (event) => {
@@ -1459,12 +1505,8 @@
                 }
                 const item = event.target.closest('.screenshot-item[data-screenshot-index]');
                 event.preventDefault();
-                if (item) {
-                    screenshotsList
-                        .querySelectorAll('.drag-over')
-                        .forEach((el) => el.classList.remove('drag-over'));
-                    item.classList.add('drag-over');
-                }
+                const dropIndex = getDropIndexFromEvent(item, event);
+                updateDragOverHighlight(dropIndex);
             };
 
             const handleDrop = (event) => {
@@ -1473,19 +1515,9 @@
                 }
                 event.preventDefault();
                 const item = event.target.closest('.screenshot-item[data-screenshot-index]');
-                let targetIndex = item
-                    ? Number(item.dataset.screenshotIndex)
-                    : state.apps[index].screenshots.length - 1;
-                if (item) {
-                    const rect = item.getBoundingClientRect();
-                    const offset = event.clientY - rect.top;
-                    if (offset > rect.height / 2) {
-                        targetIndex += 1;
-                    }
-                } else {
-                    targetIndex += 1;
-                }
+                const targetIndex = getDropIndexFromEvent(item, event);
                 moveScreenshot(index, draggingScreenshot.from, targetIndex);
+                updateDragOverHighlight();
             };
 
             screenshotsList.addEventListener('dragstart', handleDragStart);

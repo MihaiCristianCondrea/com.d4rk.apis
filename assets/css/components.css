@@ -1537,7 +1537,11 @@ md-list-item[type='button'].expanded md-icon[slot='end'] { /*FIXME: Selector mat
 .screenshot-list {
   display: grid;
   gap: 0.75rem;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(240px, 1fr);
+  overflow-x: auto;
+  padding-block: 0.25rem;
+  scroll-snap-type: x proximity;
 }
 
 
@@ -1549,6 +1553,8 @@ md-list-item[type='button'].expanded md-icon[slot='end'] { /*FIXME: Selector mat
   gap: 0.75rem;
   transition: box-shadow 140ms ease, transform 140ms ease;
   border: 1px solid transparent;
+  min-width: 240px;
+  scroll-snap-align: start;
 }
 
 .screenshot-item.dragging {
@@ -1595,6 +1601,22 @@ md-list-item[type='button'].expanded md-icon[slot='end'] { /*FIXME: Selector mat
   position: relative;
   overflow: hidden;
   border: 1px solid var(--app-border-color);
+}
+
+@media (min-width: 1024px) {
+  .screenshot-list {
+    grid-auto-flow: row;
+    grid-auto-columns: unset;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    overflow-x: visible;
+    padding-block: 0;
+    scroll-snap-type: none;
+  }
+
+  .screenshot-item {
+    min-width: 0;
+    scroll-snap-align: unset;
+  }
 }
 
 .screenshot-thumbnail img {
