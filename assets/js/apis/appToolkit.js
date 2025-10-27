@@ -7,8 +7,8 @@
 
     const DEFAULT_FILENAME = 'api_android_apps.json';
     const GITHUB_CHANNEL_PATHS = {
-        debug: 'App Toolkit/debug/en/home/api_android_apps.json',
-        release: 'App Toolkit/release/en/home/api_android_apps.json'
+        debug: 'api/app_toolkit/v1/debug/en/home/api_android_apps.json',
+        release: 'api/app_toolkit/v1/release/en/home/api_android_apps.json'
     };
     const MIN_GITHUB_TOKEN_LENGTH = 20;
     const GOOGLE_PLAY_CATEGORIES = [

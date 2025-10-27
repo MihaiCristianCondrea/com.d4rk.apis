@@ -114,7 +114,8 @@
         </li>
         <li>
           When you are done, export the JSON and replace the existing file in
-          <code>App Toolkit/[debug|release]/en/home/api_android_apps.json</code>.
+          <code>api/app_toolkit/v1/[debug|release]/en/home/api_android_apps.json</code>
+          to mirror the production structure.
         </li>
         <li>
           Use <strong>Fetch existing JSON</strong> to pull the latest data from a
@@ -213,8 +214,8 @@
             id="appToolkitFetchInput"
             type="url"
             label="JSON URL"
-            placeholder="https://example.com/api_android_apps.json"
-            supporting-text="Paste a direct link to the current api_android_apps.json file"
+            placeholder="https://mihaicristiancondrea.github.io/com.d4rk.apis/api/app_toolkit/v1/debug/en/home/api_android_apps.json"
+            supporting-text="Paste the hosted GitHub Pages URL for the current api/app_toolkit/v1/[debug|release]/en/home/api_android_apps.json payload"
             spellcheck="false"
           >
             <md-icon slot="leading-icon"
@@ -232,7 +233,7 @@
           <span class="builder-remote-presets-label">Quick links</span>
           <md-text-button
             has-icon
-            data-app-toolkit-preset="https://raw.githubusercontent.com/MihaiCristianCondrea/com.d4rk.apis/refs/heads/main/App%20Toolkit/debug/en/home/api_android_apps.json"
+            data-app-toolkit-preset="https://mihaicristiancondrea.github.io/com.d4rk.apis/api/app_toolkit/v1/debug/en/home/api_android_apps.json"
             id="appToolkitDebugPreset"
           >
             <md-icon slot="icon"
@@ -242,7 +243,7 @@
           </md-text-button>
           <md-text-button
             has-icon
-            data-app-toolkit-preset="https://raw.githubusercontent.com/MihaiCristianCondrea/com.d4rk.apis/refs/heads/main/App%20Toolkit/release/en/home/api_android_apps.json"
+            data-app-toolkit-preset="https://mihaicristiancondrea.github.io/com.d4rk.apis/api/app_toolkit/v1/release/en/home/api_android_apps.json"
             id="appToolkitReleasePreset"
           >
             <md-icon slot="icon"
