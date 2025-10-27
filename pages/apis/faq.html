@@ -4,8 +4,10 @@
     <p>
       Publish a structured FAQ feed for app and web surfaces. The builder keeps
       questions, multi-category assignments, featured flags, and HTML answers
-      aligned with the JSON served from
-      <code>api/faq/v1/index.json</code> and its category datasets.
+      aligned with the GitHub Pages datasets, including
+      <code>https://mihaicristiancondrea.github.io/com.d4rk.apis/api/app_toolkit/v1/debug/en/home/api_android_apps.json</code>
+      and the FAQ category endpoints. Use the preset picker below to jump
+      between them while you iterate.
     </p>
   </header>
 
@@ -119,7 +121,10 @@
       <div class="builder-remote-header">
         <div>
           <h2>Fetch existing JSON</h2>
-          <p>Load a deployed payload directly into the workspace.</p>
+          <p>
+            Load a deployed payload directly into the workspace or choose a preset
+            API endpoint from the picker.
+          </p>
         </div>
       </div>
       <div class="builder-remote-controls">
@@ -127,8 +132,8 @@
           id="faqFetchInput"
           type="url"
           label="JSON URL"
-          placeholder="https://example.com/api/faq/v1/index.json"
-          supporting-text="Paste a direct link to the current FAQ payload"
+          placeholder="https://mihaicristiancondrea.github.io/com.d4rk.apis/api/app_toolkit/v1/debug/en/home/api_android_apps.json"
+          supporting-text="Paste the live GitHub Pages payload URL or select one of the presets"
           spellcheck="false"
         >
           <md-icon slot="leading-icon"
@@ -143,19 +148,20 @@
         </md-filled-tonal-button>
       </div>
       <div
-        class="builder-remote-presets"
-        aria-label="Quick fetch shortcuts"
+        class="builder-remote-presets builder-remote-picker"
+        aria-label="Preset API selector"
       >
-        <span class="builder-remote-presets-label">Quick links</span>
+        <span class="builder-remote-presets-label">Preset APIs</span>
+        <div id="faqPresetSelect" class="builder-remote-picker-select"></div>
         <md-text-button
           has-icon
           id="faqPresetButton"
-          data-faq-preset="api/faq/v1/index.json"
+          data-faq-preset="https://mihaicristiancondrea.github.io/com.d4rk.apis/api/app_toolkit/v1/debug/en/home/api_android_apps.json"
         >
           <md-icon slot="icon"
             ><span class="material-symbols-outlined">download</span></md-icon
           >
-          Repo · Release
+          <span id="faqPresetButtonLabel">Fetch App Toolkit · Debug</span>
         </md-text-button>
       </div>
       <p id="faqFetchStatus" class="builder-remote-status" role="status">
