@@ -1535,13 +1535,12 @@ md-list-item[type='button'].expanded md-icon[slot='end'] { /*FIXME: Selector mat
 }
 
 .screenshot-list {
-  display: grid;
+  display: flex;
+  flex-direction: column;
   gap: 0.75rem;
-  grid-auto-flow: column;
-  grid-auto-columns: minmax(240px, 1fr);
-  overflow-x: auto;
+  max-height: clamp(320px, 65vh, 560px);
+  overflow-y: auto;
   padding-block: 0.25rem;
-  scroll-snap-type: x proximity;
 }
 
 
@@ -1553,8 +1552,8 @@ md-list-item[type='button'].expanded md-icon[slot='end'] { /*FIXME: Selector mat
   gap: 0.75rem;
   transition: box-shadow 140ms ease, transform 140ms ease;
   border: 1px solid transparent;
-  min-width: 240px;
-  scroll-snap-align: start;
+  min-width: 0;
+  width: 100%;
 }
 
 .screenshot-item.dragging {
@@ -1605,17 +1604,7 @@ md-list-item[type='button'].expanded md-icon[slot='end'] { /*FIXME: Selector mat
 
 @media (min-width: 1024px) {
   .screenshot-list {
-    grid-auto-flow: row;
-    grid-auto-columns: unset;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    overflow-x: visible;
-    padding-block: 0;
-    scroll-snap-type: none;
-  }
-
-  .screenshot-item {
-    min-width: 0;
-    scroll-snap-align: unset;
+    max-height: clamp(360px, 70vh, 640px);
   }
 }
 
