@@ -1535,12 +1535,14 @@ md-list-item[type='button'].expanded md-icon[slot='end'] { /*FIXME: Selector mat
 }
 
 .screenshot-list {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(240px, 1fr);
   gap: 0.75rem;
-  max-height: clamp(320px, 65vh, 560px);
-  overflow-y: auto;
   padding-block: 0.25rem;
+  padding-inline: 0.25rem;
+  overflow-x: auto;
+  scroll-snap-type: x proximity;
 }
 
 
@@ -1553,7 +1555,7 @@ md-list-item[type='button'].expanded md-icon[slot='end'] { /*FIXME: Selector mat
   transition: box-shadow 140ms ease, transform 140ms ease;
   border: 1px solid transparent;
   min-width: 0;
-  width: 100%;
+  scroll-snap-align: start;
 }
 
 .screenshot-item.dragging {
@@ -1604,7 +1606,8 @@ md-list-item[type='button'].expanded md-icon[slot='end'] { /*FIXME: Selector mat
 
 @media (min-width: 1024px) {
   .screenshot-list {
-    max-height: clamp(360px, 70vh, 640px);
+    grid-auto-columns: minmax(280px, 1fr);
+    scroll-snap-type: none;
   }
 }
 
