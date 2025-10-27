@@ -1013,6 +1013,19 @@ md-list-item[type='button'].expanded md-icon[slot='end'] { /*FIXME: Selector mat
   align-items: center;
 }
 
+.builder-remote-picker {
+  gap: 0.75rem;
+}
+
+.builder-remote-picker-select {
+  flex: 1 1 220px;
+  min-width: 220px;
+}
+
+.builder-remote-picker-select .api-field {
+  margin: 0;
+}
+
 .builder-remote-presets-label {
   font-size: 0.75rem;
   font-weight: 700;

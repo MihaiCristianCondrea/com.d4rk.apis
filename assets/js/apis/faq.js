@@ -6,9 +6,11 @@
     }
 
     const DEFAULT_FILENAME = 'faq_dataset.json';
-    const DEFAULT_DATA_URL = 'https://mihaicristiancondrea.github.io/com.d4rk.apis/api/app_toolkit/v1/debug/en/home/api_android_apps.json';
+    const GITHUB_PAGES_BASE = 'https://mihaicristiancondrea.github.io/com.d4rk.apis';
+    const DEFAULT_DATA_URL = `${GITHUB_PAGES_BASE}/api/app_toolkit/v1/debug/en/home/api_android_apps.json`;
     const ICONS_ENDPOINT = 'https://fonts.google.com/metadata/icons?incomplete=1&icon.set=Material+Symbols';
     const ICON_PICKER_MAX_RENDER = 400;
+    const CUSTOM_PRESET_LABEL = 'Fetch custom URL';
 
     const CATEGORY_GROUPS = [
         {
@@ -44,6 +46,33 @@
     const CATEGORY_ORDER = new Map(ALL_CATEGORIES.map((item, index) => [item.value, index]));
     const DEFAULT_CATEGORIES = ['general'];
 
+    const FAQ_API_PRESET_OPTIONS = (() => {
+        const faqBase = `${GITHUB_PAGES_BASE}/api/faq/v1`;
+        const categoryPresets = ALL_CATEGORIES.map((category) => ({
+            value: `faq-${category.value}`,
+            label: `FAQ · ${category.label}`,
+            url: `${faqBase}/${category.value}.json`
+        }));
+        return [
+            {
+                value: 'app-toolkit-debug',
+                label: 'App Toolkit · Debug',
+                url: `${GITHUB_PAGES_BASE}/api/app_toolkit/v1/debug/en/home/api_android_apps.json`
+            },
+            {
+                value: 'app-toolkit-release',
+                label: 'App Toolkit · Release',
+                url: `${GITHUB_PAGES_BASE}/api/app_toolkit/v1/release/en/home/api_android_apps.json`
+            },
+            {
+                value: 'faq-index',
+                label: 'FAQ · Index (all categories)',
+                url: `${faqBase}/index.json`
+            },
+            ...categoryPresets
+        ];
+    })();
+
     function initFaqWorkspace() {
         const builderRoot = document.getElementById('faqBuilder');
         if (!builderRoot || builderRoot.dataset.initialized === 'true') {
@@ -59,6 +88,8 @@
         const fetchInput = document.getElementById('faqFetchInput');
         const fetchStatus = document.getElementById('faqFetchStatus');
         const presetButton = document.getElementById('faqPresetButton');
+        const presetSelectRoot = document.getElementById('faqPresetSelect');
+        const presetButtonLabel = document.getElementById('faqPresetButtonLabel');
         const previewArea = document.getElementById('faqPreview');
         const validationStatus = document.getElementById('faqValidation');
         const toolbarStatus = document.getElementById('faqToolbarStatus');
@@ -96,8 +127,33 @@
         let activeIconContext = null;
         let previousBodyOverflow = '';
         let activeCategoryMenu = null;
+        const defaultPreset =
+            FAQ_API_PRESET_OPTIONS.find((preset) => preset.url === DEFAULT_DATA_URL) ||
+            FAQ_API_PRESET_OPTIONS[0] ||
+            null;
+        let activePreset = defaultPreset;
+        let presetSelectEl = null;
 
         builderRoot.dataset.initialized = 'true';
+
+        if (presetSelectRoot && FAQ_API_PRESET_OPTIONS.length) {
+            const presetField = utils.createSelectField({
+                label: 'Select API preset',
+                value: activePreset ? activePreset.value : '',
+                options: FAQ_API_PRESET_OPTIONS.map((preset) => ({
+                    value: preset.value,
+                    label: preset.label
+                })),
+                onChange: (value) => {
+                    const selectedPreset = findPresetByValue(value);
+                    applyPresetSelection(selectedPreset);
+                }
+            });
+            presetSelectEl = presetField.select;
+            presetSelectRoot.appendChild(presetField.wrapper);
+        }
+
+        applyPresetSelection(activePreset, { updateInput: true, updatePlaceholder: true });
 
         function sortCategories(values = []) {
             const seen = new Set();
@@ -138,6 +194,68 @@
                 return `${labels[0]} • ${labels[1]}`;
             }
             return `${labels[0]} +${labels.length - 1} more`;
+        }
+
+        if (fetchInput) {
+            fetchInput.addEventListener('input', (event) => {
+                const typedValue = utils.trimString(event.target.value);
+                const matchingPreset = FAQ_API_PRESET_OPTIONS.find((preset) => preset.url === typedValue);
+                if (matchingPreset) {
+                    applyPresetSelection(matchingPreset, { updateInput: false, updatePlaceholder: false });
+                    return;
+                }
+                if (!typedValue) {
+                    if (defaultPreset) {
+                        applyPresetSelection(defaultPreset, { updateInput: false, updatePlaceholder: true });
+                    } else if (presetButtonLabel) {
+                        presetButtonLabel.textContent = CUSTOM_PRESET_LABEL;
+                    }
+                    return;
+                }
+                activePreset = null;
+                if (presetSelectEl) {
+                    presetSelectEl.value = '';
+                }
+                if (presetButton) {
+                    presetButton.removeAttribute('data-faq-preset');
+                }
+                if (presetButtonLabel) {
+                    presetButtonLabel.textContent = CUSTOM_PRESET_LABEL;
+                }
+            });
+        }
+
+        function findPresetByValue(value) {
+            return (
+                FAQ_API_PRESET_OPTIONS.find((preset) => preset.value === value) ||
+                FAQ_API_PRESET_OPTIONS.find((preset) => preset.url === value) ||
+                FAQ_API_PRESET_OPTIONS[0] ||
+                null
+            );
+        }
+
+        function applyPresetSelection(preset, { updateInput = true, updatePlaceholder = true } = {}) {
+            if (!preset) {
+                return;
+            }
+            activePreset = preset;
+            if (presetSelectEl && presetSelectEl.value !== preset.value) {
+                presetSelectEl.value = preset.value;
+            }
+            if (presetButton) {
+                presetButton.setAttribute('data-faq-preset', preset.url);
+            }
+            if (presetButtonLabel) {
+                presetButtonLabel.textContent = `Fetch ${preset.label}`;
+            }
+            if (fetchInput) {
+                if (updatePlaceholder) {
+                    fetchInput.setAttribute('placeholder', preset.url);
+                }
+                if (updateInput) {
+                    fetchInput.value = preset.url;
+                }
+            }
         }
 
         function createEmptyEntry() {
@@ -1330,7 +1448,8 @@
 
         if (presetButton) {
             presetButton.addEventListener('click', () => {
-                const presetUrl = presetButton.getAttribute('data-faq-preset');
+                const typedUrl = fetchInput ? utils.trimString(fetchInput.value) : '';
+                const presetUrl = activePreset?.url || typedUrl || presetButton.getAttribute('data-faq-preset');
                 if (presetUrl) {
                     if (fetchInput) {
                         fetchInput.value = presetUrl;
