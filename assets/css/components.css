@@ -1615,13 +1615,8 @@ md-list-item[type='button'].expanded md-icon[slot='end'] { /*FIXME: Selector mat
 }
 
 .builder-screenshots md-text-button, /*FIXME: Selector matches unknown element md-text-button */
-.builder-screenshots md-filled-tonal-button { /*FIXME: Selector matches unknown element md-filled-tonal-button */
+.builder-screenshots md-outlined-button { /*FIXME: Selector matches unknown element md-outlined-button */
   align-self: start;
-}
-
-.builder-screenshots md-filled-tonal-button { /*FIXME: Selector matches unknown element md-filled-tonal-button */
-  --md-filled-tonal-button-container-height: var(--screenshot-action-control-height);
-  --md-filled-tonal-button-container-shape: 16px;
 }
 
 /* Do not globalize button internals. Material components manage padding/height; only align containers here. */
@@ -1633,6 +1628,7 @@ md-list-item[type='button'].expanded md-icon[slot='end'] { /*FIXME: Selector mat
   --screenshot-action-control-height: 40px;
   --md-outlined-text-field-container-height: var(--screenshot-action-control-height);
   --md-outlined-text-field-container-shape: 16px;
+  --control-row-height: var(--screenshot-action-control-height);
 }
 
 .screenshot-actions md-outlined-text-field { /*FIXME: Selector matches unknown element md-outlined-text-field */
@@ -1977,28 +1973,6 @@ md-list-item[type='button'].expanded md-icon[slot='end'] { /*FIXME: Selector mat
   border: 1px solid var(--app-border-color);
 }
 
-.screenshot-dropzone {
-  border: 1px dashed var(--app-border-color);
-  border-radius: 16px;
-  padding: 1.25rem;
-  padding-inline: var(--screenshot-scroll-padding);
-  text-align: center;
-  font-size: 0.9rem;
-  color: var(--app-secondary-text-color);
-  transition: border-color 120ms ease, background-color 120ms ease;
-  background: var(--md-sys-color-surface-container-lowest);
-}
-
-.screenshot-dropzone:focus-visible {
-  outline: 2px solid var(--md-sys-color-primary);
-  outline-offset: 2px;
-}
-
-.screenshot-dropzone[data-state='active'] {
-  border-color: var(--md-sys-color-primary);
-  background: color-mix(in srgb, var(--md-sys-color-primary) 12%, transparent);
-  color: var(--md-sys-color-primary);
-}
 
 .builder-field-group--screenshots .screenshot-actions {
   padding-inline: var(--screenshot-scroll-padding);
