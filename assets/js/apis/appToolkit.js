@@ -1893,19 +1893,16 @@
 
             screenshotsSection.appendChild(carousel);
 
-            const dropZone = document.createElement('div');
-            dropZone.className = 'screenshot-dropzone';
-            dropZone.tabIndex = 0;
-            dropZone.setAttribute('aria-label', 'Drop images or paste links');
-
             const screenshotActions = document.createElement('div');
             screenshotActions.classList.add('screenshot-actions');
+            screenshotActions.setAttribute('role', 'group');
 
             const urlField = document.createElement('md-outlined-text-field');
             urlField.setAttribute('label', 'Screenshot URL');
             urlField.setAttribute('placeholder', 'https://example.com/screenshot.png');
             urlField.setAttribute('inputmode', 'url');
-            const addUrlButton = document.createElement('md-filled-tonal-button');
+            const addUrlButton = document.createElement('md-outlined-button');
+            addUrlButton.classList.add('builder-remote-inline-button');
             const addUrlIcon = document.createElement('md-icon');
             addUrlIcon.setAttribute('slot', 'icon');
             addUrlIcon.innerHTML =
@@ -1936,9 +1933,8 @@
             screenshotActions.appendChild(urlField);
             screenshotActions.appendChild(addUrlButton);
 
-            const handleDropZone = async (event) => {
+            const handleScreenshotImport = async (event) => {
                 event.preventDefault();
-                dropZone.dataset.state = '';
                 let added = 0;
                 const files = event.dataTransfer?.files;
                 if (files && files.length) {
@@ -1955,28 +1951,26 @@
                     render();
                 }
             };
-
-            dropZone.addEventListener('dragover', (event) => {
-                event.preventDefault();
-                dropZone.dataset.state = 'active';
-            });
-            dropZone.addEventListener('dragleave', () => {
-                dropZone.dataset.state = '';
-            });
-            dropZone.addEventListener('drop', handleDropZone);
-            dropZone.addEventListener('paste', (event) => {
-                const text = event.clipboardData?.getData('text');
-                if (text) {
+            screenshotActions.addEventListener('dragover', (event) => {
+                if (event.dataTransfer) {
                     event.preventDefault();
-                    const added = appendScreenshotsFromText(index, text).length;
-                    if (added) {
-                        touchWorkspace();
-                        render();
+                }
+            });
+            screenshotActions.addEventListener('drop', handleScreenshotImport);
+            screenshotActions.addEventListener('paste', (event) => {
+                if (event.target !== urlField) {
+                    const text = event.clipboardData?.getData('text');
+                    if (text) {
+                        event.preventDefault();
+                        const added = appendScreenshotsFromText(index, text).length;
+                        if (added) {
+                            touchWorkspace();
+                            render();
+                        }
                     }
                 }
             });
 
-            screenshotsSection.appendChild(dropZone);
             screenshotsSection.appendChild(screenshotActions);
 
             const updateScreenshotsState = ({ announce = false } = {}) => {
