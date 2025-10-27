@@ -699,25 +699,116 @@ md-list-item[type='button'].expanded md-icon[slot='end'] { /*FIXME: Selector mat
 
 .builder-remote-controls {
   display: grid;
-  grid-template-columns: minmax(240px, 1fr) auto;
   gap: 0.75rem;
+}
+
+.builder-remote-inline-action {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(240px, 1fr) auto;
+  gap: 0.65rem;
   align-items: stretch;
   --control-row-height: 56px;
   --md-outlined-text-field-container-height: var(--control-row-height);
   --md-filled-text-field-container-height: var(--control-row-height);
+  --md-outlined-text-field-container-shape: 16px;
 }
 
-.builder-remote-controls md-outlined-text-field { /*FIXME: Selector matches unknown element md-outlined-text-field */
+.builder-remote-inline-action::after {
+  content: '';
+  position: absolute;
+  inset: -0.2rem;
+  border-radius: 18px;
+  border: 2px solid transparent;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 160ms ease, border-color 160ms ease;
+}
+
+.builder-remote-inline-action[data-state='loading']::after {
+  border-color: var(--md-sys-color-primary);
+  opacity: 0.35;
+}
+
+.builder-remote-inline-action[data-state='error']::after {
+  border-color: var(--md-sys-color-error);
+  opacity: 0.45;
+}
+
+.builder-remote-inline-action--pulse::after {
+  border-color: var(--md-sys-color-tertiary);
+  opacity: 0.4;
+  animation: builderRemotePulse 900ms ease-out;
+}
+
+@keyframes builderRemotePulse {
+  0% {
+    opacity: 0.45;
+    transform: scale(0.99);
+  }
+  70% {
+    opacity: 0.25;
+    transform: scale(1.01);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.02);
+  }
+}
+
+.builder-remote-inline-action md-outlined-text-field { /*FIXME: Selector matches unknown element md-outlined-text-field */
   width: 100%;
 }
 
-.builder-remote-controls md-filled-tonal-button { /*FIXME: Selector matches unknown element md-filled-tonal-button */
-  justify-self: start;
-  align-self: stretch;
-  --md-filled-tonal-button-container-shape: 18px;
+.builder-remote-inline-button::part(button) { /*FIXME: Selector matches unknown element md-outlined-button */
   min-block-size: var(--control-row-height);
-  padding-block: 0;
-  line-height: var(--control-row-height);
+  padding-inline: 1.25rem;
+  border-radius: 16px;
+  border-width: 1px;
+  border-color: var(--app-border-color);
+  color: var(--md-sys-color-primary);
+  font-weight: 600;
+}
+
+.builder-remote-inline-button::part(focus-ring) { /*FIXME: Selector matches unknown element md-outlined-button */
+  border-radius: 16px;
+}
+
+.builder-remote-feedback {
+  margin: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.85rem;
+  color: var(--app-secondary-text-color);
+}
+
+.builder-remote-feedback[data-status='loading'],
+.builder-remote-feedback[data-status='preset'] {
+  color: var(--md-sys-color-primary);
+}
+
+.builder-remote-feedback[data-status='success'] {
+  color: var(--md-sys-color-tertiary);
+}
+
+.builder-remote-feedback[data-status='error'] {
+  color: var(--md-sys-color-error);
+}
+
+.builder-remote-feedback-icon {
+  font-size: 1.1rem;
+}
+
+@media (max-width: 720px) {
+  .builder-remote-inline-action {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+  }
+
+  .builder-remote-inline-button::part(button) { /*FIXME: Selector matches unknown element md-outlined-button */
+    justify-content: center;
+  }
 }
 
 /* --- FAQ builder enhancements --- */

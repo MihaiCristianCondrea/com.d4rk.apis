@@ -65,6 +65,14 @@
         const importInput = document.getElementById('appToolkitImportInput');
         const fetchInput = document.getElementById('appToolkitFetchInput');
         const fetchButton = document.getElementById('appToolkitFetchButton');
+        const fetchFieldset = document.getElementById('appToolkitFetchFieldset');
+        const fetchStatus = document.getElementById('appToolkitFetchStatus');
+        const fetchStatusIcon = fetchStatus
+            ? fetchStatus.querySelector('.builder-remote-feedback-icon')
+            : null;
+        const fetchStatusText = fetchStatus
+            ? fetchStatus.querySelector('.builder-remote-feedback-text')
+            : null;
         const presetButtons = Array.from(
             document.querySelectorAll('[data-app-toolkit-preset]')
         );
@@ -110,6 +118,21 @@
         const diffSheet = document.getElementById('appToolkitDiffSheet');
         const diffContent = document.getElementById('appToolkitDiffContent');
         const dialogsToWire = [screenshotDialog, focusDialog, githubDialog];
+        const FETCH_STATE_COPY = {
+            idle: 'Paste a JSON URL to load the latest data.',
+            preset: 'Preset URL ready. Press Load JSON to import.',
+            loading: 'Fetching the latest data…',
+            success: 'Data loaded successfully.',
+            error: 'Unable to fetch remote JSON.'
+        };
+        const FETCH_STATE_ICONS = {
+            idle: 'info',
+            preset: 'north_east',
+            loading: 'hourglass_top',
+            success: 'check_circle',
+            error: 'error'
+        };
+        let fetchPulseTimeout = null;
         dialogsToWire.forEach((dialog) => {
             if (!dialog || dialog.dataset.dialogCloseInit === 'true') {
                 return;
@@ -126,6 +149,7 @@
             });
             dialog.dataset.dialogCloseInit = 'true';
         });
+        setFetchState('idle');
         let sessionNotesStorage = null;
         const SESSION_NOTE_KEY = 'appToolkitWorkspaceNote';
         const SCREENSHOT_HINT_STORAGE_KEY = 'AppToolkitScreenshotHintSeen';
@@ -2278,6 +2302,37 @@
             return [];
         }
 
+        function setFetchState(state = 'idle', message) {
+            const resolvedState = FETCH_STATE_COPY[state] ? state : 'idle';
+            if (fetchStatus) {
+                fetchStatus.dataset.status = resolvedState;
+            }
+            if (fetchStatusIcon) {
+                fetchStatusIcon.textContent =
+                    FETCH_STATE_ICONS[resolvedState] || FETCH_STATE_ICONS.idle;
+            }
+            if (fetchStatusText) {
+                fetchStatusText.textContent =
+                    message || FETCH_STATE_COPY[resolvedState] || FETCH_STATE_COPY.idle;
+            }
+            if (fetchFieldset) {
+                fetchFieldset.dataset.state = resolvedState;
+                if (resolvedState === 'success') {
+                    fetchFieldset.classList.add('builder-remote-inline-action--pulse');
+                    if (fetchPulseTimeout) {
+                        clearTimeout(fetchPulseTimeout);
+                    }
+                    fetchPulseTimeout = setTimeout(() => {
+                        fetchFieldset.classList.remove(
+                            'builder-remote-inline-action--pulse'
+                        );
+                    }, 1200);
+                } else {
+                    fetchFieldset.classList.remove('builder-remote-inline-action--pulse');
+                }
+            }
+        }
+
         function flashButton(button, label) {
             if (!button) return;
             const originalLabel = button.innerHTML;
@@ -2299,12 +2354,14 @@
                 }
                 button.disabled = true;
                 button.innerHTML = LOADING_LABEL;
+                button.setAttribute('aria-busy', 'true');
             } else {
                 if (button.dataset.originalLabel) {
                     button.innerHTML = button.dataset.originalLabel;
                     delete button.dataset.originalLabel;
                 }
                 button.disabled = false;
+                button.removeAttribute('aria-busy');
             }
         }
 
@@ -2312,6 +2369,7 @@
             const targetUrl =
                 urlSource || (fetchInput ? fetchInput.value.trim() : '');
             if (!targetUrl) {
+                setFetchState('error', 'Enter a JSON URL to load data.');
                 setPreviewStatus({
                     status: 'error',
                     message: 'Enter a JSON URL to fetch.'
@@ -2328,6 +2386,7 @@
             if (fetchButton) {
                 setLoadingState(fetchButton, true);
             }
+            setFetchState('loading');
             try {
                 const response = await fetch(targetUrl, { cache: 'no-store' });
                 if (!response.ok) {
@@ -2348,11 +2407,13 @@
                         '<span class="material-symbols-outlined">check</span><span>Loaded</span>'
                     );
                 }
+                setFetchState('success');
             } catch (error) {
                 console.error('AppToolkit: Remote fetch failed.', error);
                 if (fetchButton) {
                     setLoadingState(fetchButton, false);
                 }
+                setFetchState('error', error.message || FETCH_STATE_COPY.error);
                 setPreviewStatus({
                     status: 'error',
                     message: error.message || 'Unable to fetch remote JSON.'
@@ -3003,15 +3064,35 @@
                     fetchRemoteJson(); /*FIXME: Promise returned from fetchRemoteJson is ignored && Invalid number of arguments, expected 1..2*/
                 }
             });
+            fetchInput.addEventListener('input', () => {
+                if (!fetchStatus || fetchStatus.dataset.status === 'loading') {
+                    return;
+                }
+                if (!fetchInput.value.trim()) {
+                    setFetchState('idle');
+                } else if (fetchStatus.dataset.status !== 'success') {
+                    setFetchState('preset', 'Press Load JSON to import this URL.');
+                }
+            });
         }
 
         if (presetButtons.length) {
             presetButtons.forEach((button) => {
                 button.addEventListener('click', () => {
-                    const presetUrl = button.dataset.appToolkitPreset;
-                    if (presetUrl) {
-                        fetchRemoteJson(presetUrl, { fromPreset: true });
+                    const presetUrl = utils.trimString(
+                        button.dataset.appToolkitPreset || ''
+                    );
+                    if (!presetUrl) {
+                        return;
                     }
+                    if (fetchInput) {
+                        fetchInput.value = presetUrl;
+                        fetchInput.focus();
+                        if (typeof fetchInput.select === 'function') {
+                            fetchInput.select();
+                        }
+                    }
+                    setFetchState('preset');
                 });
             });
         }
