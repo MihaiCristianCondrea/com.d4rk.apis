@@ -1536,11 +1536,12 @@ md-list-item[type='button'].expanded md-icon[slot='end'] { /*FIXME: Selector mat
 
 .screenshot-list {
   display: grid;
-  gap: 0.75rem;
   grid-auto-flow: column;
   grid-auto-columns: minmax(240px, 1fr);
-  overflow-x: auto;
+  gap: 0.75rem;
   padding-block: 0.25rem;
+  padding-inline: 0.25rem;
+  overflow-x: auto;
   scroll-snap-type: x proximity;
 }
 
@@ -1553,7 +1554,7 @@ md-list-item[type='button'].expanded md-icon[slot='end'] { /*FIXME: Selector mat
   gap: 0.75rem;
   transition: box-shadow 140ms ease, transform 140ms ease;
   border: 1px solid transparent;
-  min-width: 240px;
+  min-width: 0;
   scroll-snap-align: start;
 }
 
@@ -1605,17 +1606,8 @@ md-list-item[type='button'].expanded md-icon[slot='end'] { /*FIXME: Selector mat
 
 @media (min-width: 1024px) {
   .screenshot-list {
-    grid-auto-flow: row;
-    grid-auto-columns: unset;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    overflow-x: visible;
-    padding-block: 0;
+    grid-auto-columns: minmax(280px, 1fr);
     scroll-snap-type: none;
-  }
-
-  .screenshot-item {
-    min-width: 0;
-    scroll-snap-align: unset;
   }
 }
 
