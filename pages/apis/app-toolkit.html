@@ -421,13 +421,13 @@
         <h3>Pending checklist</h3>
         <md-list id="appToolkitFocusChecklist" class="focus-checklist"></md-list>
       </div>
-      <md-filled-text-field
+      <md-outlined-text-field
         id="appToolkitFocusNotes"
         label="Session notes"
         supporting-text="Notes are saved locally for this browser session."
         rows="4"
         multiline
-      ></md-filled-text-field>
+      ></md-outlined-text-field>
     </div>
     <div slot="actions">
       <md-text-button dialog-action="close">Close</md-text-button>
@@ -441,14 +441,14 @@
       <md-steppers id="appToolkitGithubStepper" value="authenticate">
         <md-step value="authenticate" label="Authenticate">
           <div class="github-step" data-step="authenticate">
-            <md-filled-text-field
+            <md-outlined-text-field
               id="appToolkitGithubToken"
               label="Personal access token"
               type="password"
               autocomplete="off"
               spellcheck="false"
               supporting-text="Tokens require Contents: Read &amp; write access."
-            ></md-filled-text-field>
+            ></md-outlined-text-field>
             <div class="github-step-actions">
               <input
                 type="file"
@@ -467,25 +467,25 @@
         </md-step>
         <md-step value="target" label="Target">
           <div class="github-step" data-step="target">
-            <md-filled-text-field
+            <md-outlined-text-field
               id="appToolkitGithubRepo"
               label="Repository (owner/name)"
               value="MihaiCristianCondrea/com.d4rk.apis"
               supporting-text="Use owner/name format."
               spellcheck="false"
-            ></md-filled-text-field>
-            <md-filled-text-field
+            ></md-outlined-text-field>
+            <md-outlined-text-field
               id="appToolkitGithubBranch"
               label="Branch"
               value="main"
               spellcheck="false"
-            ></md-filled-text-field>
-            <md-filled-text-field
+            ></md-outlined-text-field>
+            <md-outlined-text-field
               id="appToolkitGithubMessage"
               label="Commit message"
               value="chore(app-toolkit): update catalog"
               spellcheck="false"
-            ></md-filled-text-field>
+            ></md-outlined-text-field>
             <md-outlined-select
               id="appToolkitGithubChannel"
               label="Target channel"

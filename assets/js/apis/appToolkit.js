@@ -1209,7 +1209,7 @@
                 return { element: helper, setState, reset };
             };
 
-            const buildFilledTextField = ({
+            const buildOutlinedTextField = ({
                 label,
                 value = '',
                 placeholder = '',
@@ -1218,7 +1218,7 @@
                 type = 'text',
                 onInput = () => {}
             }) => {
-                const field = document.createElement('md-filled-text-field');
+                const field = document.createElement('md-outlined-text-field');
                 field.setAttribute('label', label);
                 if (placeholder) {
                     field.setAttribute('placeholder', placeholder);
@@ -1237,7 +1237,7 @@
                 return field;
             };
 
-            const nameField = buildFilledTextField({ /*FIXME: Argument type {    label: string,    value: any,    onInput: function(any): void} is not assignable to parameter type {    label: any,    value?: string,    placeholder?: string,    rows?: number,    multiline?: boolean,    type?: string,    onInput?: function()}  Type function(any): void is not assignable to type function() */
+            const nameField = buildOutlinedTextField({ /*FIXME: Argument type {    label: string,    value: any,    onInput: function(any): void} is not assignable to parameter type {    label: any,    value?: string,    placeholder?: string,    rows?: number,    multiline?: boolean,    type?: string,    onInput?: function()}  Type function(any): void is not assignable to type function() */
                 label: 'App name',
                 value: app.name,
                 onInput: (value) => {
@@ -1275,7 +1275,7 @@
                 packageField.error = false;
             };
 
-            const packageField = buildFilledTextField({ /*FIXME: Argument type {    label: string,    value: string | any,    placeholder: string,    onInput: function(any): void} is not assignable to parameter type {    label: any,    value?: string,    placeholder?: string,    rows?: number,    multiline?: boolean,    type?: string,    onInput?: function()}  Type function(any): void is not assignable to type function() */
+            const packageField = buildOutlinedTextField({ /*FIXME: Argument type {    label: string,    value: string | any,    placeholder: string,    onInput: function(any): void} is not assignable to parameter type {    label: any,    value?: string,    placeholder?: string,    rows?: number,    multiline?: boolean,    type?: string,    onInput?: function()}  Type function(any): void is not assignable to type function() */
                 label: 'Package name',
                 value: app.packageName,
                 placeholder: 'com.example.app',
@@ -1321,7 +1321,7 @@
             });
             createFieldGroup(categorySelect);
 
-            const descriptionField = buildFilledTextField({ /*FIXME: Argument type {    label: string,    value: any,    multiline: boolean,    rows: number,    onInput: function(any): void} is not assignable to parameter type {    label: any,    value?: string,    placeholder?: string,    rows?: number,    multiline?: boolean,    type?: string,    onInput?: function()}  Type function(any): void is not assignable to type function() */
+            const descriptionField = buildOutlinedTextField({ /*FIXME: Argument type {    label: string,    value: any,    multiline: boolean,    rows: number,    onInput: function(any): void} is not assignable to parameter type {    label: any,    value?: string,    placeholder?: string,    rows?: number,    multiline?: boolean,    type?: string,    onInput?: function()}  Type function(any): void is not assignable to type function() */
                 label: 'Description',
                 value: app.description,
                 multiline: true,
@@ -1443,7 +1443,7 @@
                 probe.src = trimmed;
             };
 
-            const iconField = buildFilledTextField({ /*FIXME: Argument type {    label: string,    value: string | any,    placeholder: string,    onInput: function(any): void} is not assignable to parameter type {    label: any,    value?: string,    placeholder?: string,    rows?: number,    multiline?: boolean,    type?: string,    onInput?: function()}  Type function(any): void is not assignable to type function() */
+            const iconField = buildOutlinedTextField({ /*FIXME: Argument type {    label: string,    value: string | any,    placeholder: string,    onInput: function(any): void} is not assignable to parameter type {    label: any,    value?: string,    placeholder?: string,    rows?: number,    multiline?: boolean,    type?: string,    onInput?: function()}  Type function(any): void is not assignable to type function() */
                 label: 'Icon URL',
                 value: app.iconLogo,
                 placeholder: 'https://example.com/icon.png',
@@ -1896,44 +1896,12 @@
             const dropZone = document.createElement('div');
             dropZone.className = 'screenshot-dropzone';
             dropZone.tabIndex = 0;
-            dropZone.innerHTML =
-                '<strong>Drop images or paste links</strong>' +
-                '<span>Drag files, paste URLs, or use the upload button below.</span>' +
-                '<span class="shortcut">Tip: <kbd>Ctrl</kbd> + <kbd>V</kbd> to add from clipboard.</span>';
+            dropZone.setAttribute('aria-label', 'Drop images or paste links');
 
             const screenshotActions = document.createElement('div');
             screenshotActions.classList.add('screenshot-actions');
 
-            const fileInput = document.createElement('input');
-            fileInput.type = 'file';
-            fileInput.accept = 'image/*';
-            fileInput.multiple = true;
-            fileInput.hidden = true;
-
-            const uploadButton = document.createElement('md-filled-tonal-button');
-            const uploadIcon = document.createElement('md-icon');
-            uploadIcon.setAttribute('slot', 'icon');
-            uploadIcon.innerHTML = '<span class="material-symbols-outlined">cloud_upload</span>';
-            uploadButton.appendChild(uploadIcon);
-            uploadButton.appendChild(document.createTextNode('Upload images'));
-            uploadButton.addEventListener('click', () => {
-                fileInput.click();
-            });
-
-            fileInput.addEventListener('change', async () => {
-                const files = fileInput.files;
-                let added = 0;
-                if (files && files.length) {
-                    added += (await appendScreenshotsFromFiles(index, files)).length;
-                }
-                fileInput.value = '';
-                if (added) {
-                    touchWorkspace();
-                    render();
-                }
-            });
-
-            const urlField = document.createElement('md-filled-text-field');
+            const urlField = document.createElement('md-outlined-text-field');
             urlField.setAttribute('label', 'Screenshot URL');
             urlField.setAttribute('placeholder', 'https://example.com/screenshot.png');
             urlField.setAttribute('inputmode', 'url');
@@ -1965,10 +1933,8 @@
                 }
             });
 
-            screenshotActions.appendChild(uploadButton);
             screenshotActions.appendChild(urlField);
             screenshotActions.appendChild(addUrlButton);
-            screenshotActions.appendChild(fileInput);
 
             const handleDropZone = async (event) => {
                 event.preventDefault();
@@ -2130,7 +2096,7 @@
             const infoContainer = document.createElement('div');
             infoContainer.classList.add('screenshot-info');
 
-            const textField = document.createElement('md-filled-text-field');
+            const textField = document.createElement('md-outlined-text-field');
             textField.setAttribute('label', `Screenshot ${screenshotIndex + 1}`);
             textField.setAttribute('placeholder', 'https://example.com/screenshot.png');
             textField.value = value || '';

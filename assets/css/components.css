@@ -1412,6 +1412,7 @@ md-list-item[type='button'].expanded md-icon[slot='end'] { /*FIXME: Selector mat
 }
 
 .builder-card-grid md-filled-text-field, /*FIXME: Selector matches unknown element md-filled-text-field*/
+.builder-card-grid md-outlined-text-field, /*FIXME: Selector matches unknown element md-outlined-text-field*/
 .builder-card-grid md-outlined-select, /*FIXME: Selector matches unknown element md-outlined-select*/
 .builder-card-grid md-assist-chip-set, /*FIXME: Selector matches unknown element md-assist-chip-set*/
 .builder-card-grid .builder-subsection {
@@ -1465,6 +1466,10 @@ md-list-item[type='button'].expanded md-icon[slot='end'] { /*FIXME: Selector mat
   ) {
   width: 100%;
   box-sizing: border-box;
+}
+
+.builder-field-group :where(md-outlined-text-field) { /*FIXME: Selector matches unknown element md-outlined-text-field */
+  --md-outlined-text-field-container-shape: 16px;
 }
 
 .builder-hint-chip-set {
@@ -1614,6 +1619,11 @@ md-list-item[type='button'].expanded md-icon[slot='end'] { /*FIXME: Selector mat
   align-self: start;
 }
 
+.builder-screenshots md-filled-tonal-button { /*FIXME: Selector matches unknown element md-filled-tonal-button */
+  --md-filled-tonal-button-container-height: var(--screenshot-action-control-height);
+  --md-filled-tonal-button-container-shape: 16px;
+}
+
 /* Do not globalize button internals. Material components manage padding/height; only align containers here. */
 .screenshot-actions {
   display: flex;
@@ -1621,13 +1631,12 @@ md-list-item[type='button'].expanded md-icon[slot='end'] { /*FIXME: Selector mat
   gap: 0.5rem;
   align-items: center;
   --screenshot-action-control-height: 40px;
+  --md-outlined-text-field-container-height: var(--screenshot-action-control-height);
+  --md-outlined-text-field-container-shape: 16px;
 }
 
-.screenshot-actions md-filled-text-field { /*FIXME: Selector matches unknown element md-filled-text-field */
+.screenshot-actions md-outlined-text-field { /*FIXME: Selector matches unknown element md-outlined-text-field */
   min-width: min(320px, 100%);
-  --md-filled-text-field-container-height: var(
-    --screenshot-action-control-height
-  );
 }
 
 .builder-field-group--screenshots .builder-subsection {
@@ -1993,31 +2002,6 @@ md-list-item[type='button'].expanded md-icon[slot='end'] { /*FIXME: Selector mat
 
 .builder-field-group--screenshots .screenshot-actions {
   padding-inline: var(--screenshot-scroll-padding);
-}
-
-.screenshot-dropzone strong {
-  display: block;
-  font-weight: 600;
-  color: var(--app-text-color);
-}
-
-.screenshot-dropzone span {
-  display: block;
-  margin-top: 0.25rem;
-}
-
-.screenshot-dropzone .shortcut {
-  font-size: 0.75rem;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
-}
-
-.screenshot-dropzone .shortcut kbd {
-  font-size: 0.7rem;
-  padding: 0.15rem 0.4rem;
-  border-radius: 4px;
-  border: 1px solid var(--app-border-color);
 }
 
 .diff-view {
