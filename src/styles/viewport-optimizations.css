@@ -9,6 +9,30 @@
   contain-intrinsic-size: 960px 1200px;
 }
 
+.builder-card,
+.builder-card .builder-subsection,
+.builder-card .builder-screenshots,
+.screenshot-carousel {
+  content-visibility: auto;
+  contain: layout paint;
+  contain-intrinsic-size: 520px 640px;
+}
+
+.builder-card .screenshot-thumbnail img,
+.screenshot-carousel__viewport img {
+  aspect-ratio: 9 / 16;
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+}
+
+.carousel .carousel-slide {
+  aspect-ratio: 16 / 9;
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+}
+
 img[loading="lazy"],
 .builder-screenshot img,
 .builder-screenshot picture img {

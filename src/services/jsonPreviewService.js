@@ -50,7 +50,9 @@ export async function renderJsonPreview({
       formatted = formatJson(payload ?? {});
     }
 
-    previewArea.value = formatted;
+    if (previewArea.value !== formatted) {
+      previewArea.value = formatted;
+    }
     if (statusElement) {
       const message = resolveMessage(successMessage, payload) || 'Valid JSON';
       setValidationStatus(statusElement, { status: 'success', message });
