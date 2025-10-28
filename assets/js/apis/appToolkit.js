@@ -2042,6 +2042,64 @@
         }
 
         function createScreenshotField(appIndex, screenshotIndex, value, { onChange } = {}) {
+            const appName = utils.trimString(
+                state.apps[appIndex]?.packageName || state.apps[appIndex]?.name || ''
+            );
+            const existingMeta = getScreenshotMeta(appIndex, screenshotIndex);
+            if (
+                typeof window !== 'undefined' &&
+                window.AppToolkitScreenshotField &&
+                typeof window.AppToolkitScreenshotField.create === 'function'
+            ) {
+                const element = window.AppToolkitScreenshotField.create({
+                    appIndex,
+                    screenshotIndex,
+                    value,
+                    appName,
+                    onChange: (nextValue) => {
+                        state.apps[appIndex].screenshots[screenshotIndex] = nextValue;
+                        touchWorkspace();
+                        requestPreviewUpdate();
+                        if (typeof onChange === 'function') {
+                            onChange();
+                        }
+                    },
+                    onRemove: () => {
+                        state.apps[appIndex].screenshots.splice(screenshotIndex, 1);
+                        removeScreenshotMeta(appIndex, screenshotIndex);
+                        if (!state.apps[appIndex].screenshots.length) {
+                            state.apps[appIndex].screenshots.push('');
+                        }
+                        touchWorkspace();
+                        render();
+                    },
+                    onPreview: ({ value: url }) => {
+                        openScreenshotDialog(url, {
+                            title: `Screenshot ${screenshotIndex + 1}`,
+                            packageName: appName
+                        });
+                    },
+                    onMeta: (meta) => {
+                        if (meta && meta.width && meta.height) {
+                            setScreenshotMeta(appIndex, screenshotIndex, {
+                                width: meta.width,
+                                height: meta.height,
+                                ratio: meta.ratio || formatAspectRatio(meta.width, meta.height)
+                            });
+                        } else {
+                            setScreenshotMeta(appIndex, screenshotIndex, null);
+                        }
+                    }
+                });
+                if (existingMeta && element) {
+                    element.meta = existingMeta;
+                }
+                return element;
+            }
+            return legacyCreateScreenshotField(appIndex, screenshotIndex, value, { onChange });
+        }
+
+        function legacyCreateScreenshotField(appIndex, screenshotIndex, value, { onChange } = {}) {
             const item = document.createElement('div');
             item.classList.add('screenshot-item');
             item.dataset.appIndex = String(appIndex);
