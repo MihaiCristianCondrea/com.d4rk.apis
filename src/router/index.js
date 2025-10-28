@@ -1,3 +1,8 @@
+import RouterRoutes from './routes.js';
+import RouterAnimation from './animation.js';
+import RouterContentLoader from './contentLoader.js';
+import RouterHistory from './history.js';
+
 let pageContentArea, appBarHeadline;
 let initialHomepageHTML = '';
 const MINIMUM_LOAD_DURATION = 600;
@@ -13,12 +18,13 @@ const routerRuntime = {
 };
 
 function updateMetadataForPage(routeConfig, pageTitle, normalizedPageId, loadStatus) {
-    if (typeof SiteMetadata === 'undefined' || !SiteMetadata || typeof SiteMetadata.updateForRoute !== 'function') {
+    const siteMetadata = typeof window !== 'undefined' ? window.SiteMetadata : globalThis.SiteMetadata;
+    if (!siteMetadata || typeof siteMetadata.updateForRoute !== 'function') {
         return;
     }
 
     try {
-        SiteMetadata.updateForRoute(routeConfig, {
+        siteMetadata.updateForRoute(routeConfig, {
             pageId: normalizedPageId,
             pageTitle,
             loadStatus
@@ -109,7 +115,7 @@ function createGenericErrorHtml(message) {
 }
 
 function getRegisteredRoute(pageId) {
-    if (typeof RouterRoutes === 'undefined' || !RouterRoutes) {
+    if (!RouterRoutes) {
         return null;
     }
     if (typeof RouterRoutes.getRoute === 'function') {
@@ -161,9 +167,9 @@ async function loadPageContent(pageId, updateHistory = true) {
     const normalizedPageId = normalizePageId(pageId);
     const newUrlFragment = normalizedPageId;
 
-    const animationHelper = typeof RouterAnimation !== 'undefined' ? RouterAnimation : null;
-    const contentLoader = typeof RouterContentLoader !== 'undefined' ? RouterContentLoader : null;
-    const historyHelper = typeof RouterHistory !== 'undefined' ? RouterHistory : null;
+    const animationHelper = RouterAnimation;
+    const contentLoader = RouterContentLoader;
+    const historyHelper = RouterHistory;
 
     const routeConfig = getRegisteredRoute(normalizedPageId);
 
@@ -344,3 +350,13 @@ function updateActiveNavLink(currentPageId) {
         }
     });
 }
+
+const Router = {
+    initRouter,
+    loadPageContent,
+    normalizePageId,
+    updateActiveNavLink
+};
+
+export default Router;
+export { Router, initRouter, loadPageContent, normalizePageId, updateActiveNavLink };

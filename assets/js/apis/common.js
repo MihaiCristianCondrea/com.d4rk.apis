@@ -413,7 +413,7 @@
         element.appendChild(createElement('span', { text: message }));
     }
 
-    function renderJsonPreview({
+    async function renderJsonPreview({
         previewArea,
         statusElement,
         data,
@@ -427,6 +427,7 @@
             return { success: false };
         }
         const previousValue = previewArea.value;
+        const workerClient = global.jsonWorkerClient;
         try {
             let payload = buildPayload ? buildPayload(data) : data;
             if (payload && typeof payload === 'object') {
@@ -444,13 +445,19 @@
                     payload = result;
                 }
             }
+
             let formatted;
-            try {
-                formatted = JSON.stringify(payload ?? {}, null, 2);
-            } catch (error) {
-                console.error('ApiBuilderUtils: Failed to format JSON preview.', error);
-                throw new Error('Unable to format JSON preview.'); /*FIXME: 'throw' of exception caught locally */
+            if (workerClient && typeof workerClient.stringify === 'function') {
+                formatted = await workerClient.stringify(payload ?? {});
+            } else {
+                try {
+                    formatted = JSON.stringify(payload ?? {}, null, 2);
+                } catch (error) {
+                    console.error('ApiBuilderUtils: Failed to format JSON preview.', error);
+                    throw new Error('Unable to format JSON preview.');
+                }
             }
+
             previewArea.value = formatted;
             if (statusElement) {
                 const message =

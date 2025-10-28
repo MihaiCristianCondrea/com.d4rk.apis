@@ -104,6 +104,8 @@
     <link rel="stylesheet" href="assets/css/base.css" />
     <link rel="stylesheet" href="assets/css/components.css" />
     <link rel="stylesheet" href="assets/css/pages.css" />
+    <link rel="stylesheet" href="src/styles/layered-panels.css" />
+    <link rel="stylesheet" href="src/styles/viewport-optimizations.css" />
     <script
       src="https://cdn.jsdelivr.net/npm/jsondiffpatch@0.7.3/dist/jsondiffpatch.umd.min.js"
       integrity="sha384-k9hBYqZuhiIeZAdNgw0X29mNq2BdJvNBmlF/CaPEzgPieGEAFFSz9KlOjE7td6d7"
@@ -288,7 +290,7 @@
     </md-top-app-bar>
 
     <div class="content-wrapper" id="pageContentArea" data-drawer-inert-target>
-      <div id="mainContentPage" class="page-section active">
+      <div id="mainContentPage" class="page-section app-shell-panel active">
         <section class="hero">
           <div class="hero-copy">
             <p class="hero-eyebrow">Purpose-built for D4rK apps</p>
@@ -566,23 +568,15 @@
       <span id="copyright-message"></span>
     </footer>
 
-    <script src="assets/js/utils.js" defer></script>
-    <script src="assets/js/theme.js" defer></script>
     <script src="assets/js/dialogs.js" defer></script>
-    <script src="assets/js/navigationDrawer.js" defer></script>
     <script src="assets/js/apis/common.js" defer></script>
     <script src="assets/js/apis/appToolkit.js" defer></script>
     <script src="assets/js/apis/faq.js" defer></script>
     <script src="assets/js/apis/englishWithLidia.js" defer></script>
     <script src="assets/js/apis/androidStudioTutorials.js" defer></script>
     <script src="assets/js/apis/pagers.js" defer></script>
-    <script src="assets/js/router/routes.js" defer></script>
-    <script src="assets/js/router/animation.js" defer></script>
     <script src="assets/js/animations.js" defer></script>
-    <script src="assets/js/router/contentLoader.js" defer></script>
     <script src="assets/js/metadataManager.js" defer></script>
-    <script src="assets/js/router/history.js" defer></script>
-    <script src="assets/js/router.js" defer></script>
-    <script src="assets/js/app.js" defer></script>
+    <script type="module" src="src/app/app.js"></script>
   </body>
 </html>

@@ -1030,11 +1030,11 @@
             return { errors, warnings };
         }
 
-        function updatePreview() {
+        async function updatePreview() {
             if (!previewArea) {
                 return;
             }
-            const result = utils.renderJsonPreview({
+            const result = await utils.renderJsonPreview({
                 previewArea,
                 statusElement: null,
                 data: state.entries,

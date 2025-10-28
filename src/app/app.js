@@ -1,8 +1,39 @@
-// Global DOM element references needed by multiple modules or for initialization
-const PROFILE_AVATAR_FALLBACK_SRC = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
+import {
+    getDynamicElement,
+    updateCopyrightYear,
+    showPageLoadingOverlay,
+    hidePageLoadingOverlay,
+    rafThrottle,
+} from '../domain/utils.js';
+import { PROFILE_AVATAR_FALLBACK_SRC } from '../domain/constants.js';
+import { initThemeControls } from '../services/themeService.js';
+import { initNavigationDrawer } from '../services/navigationDrawerService.js';
+import Router, { initRouter, loadPageContent, normalizePageId } from '../router/index.js';
+import RouterRoutes from '../router/routes.js';
+import { registerGlobalUtilities, registerCompatibilityGlobals } from './globals.js';
+
 let pageContentAreaEl, mainContentPageOriginalEl, appBarHeadlineEl, topAppBarEl;
+let navigationController = null;
 
 let routeLinkHandlerRegistered = false;
+
+registerGlobalUtilities();
+registerCompatibilityGlobals({
+    getDynamicElement,
+    initRouter,
+    initTheme: initThemeControls,
+    initNavigationDrawer: (...args) => {
+        navigationController = initNavigationDrawer(...args);
+        return navigationController;
+    },
+    loadPageContent,
+    normalizePageId,
+    RouterRoutes,
+    setCopyrightYear: updateCopyrightYear,
+    showPageLoadingOverlay,
+    hidePageLoadingOverlay,
+    closeDrawer: () => navigationController?.close(),
+});
 
 document.addEventListener('DOMContentLoaded', () => {
     // --- Get DOM Elements ---
@@ -15,9 +46,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     // --- Initialize Modules ---
-    setCopyrightYear();
-    initTheme();
-    initNavigationDrawer();
+    updateCopyrightYear();
+    initThemeControls();
+    navigationController = initNavigationDrawer();
 
     if (typeof SiteAnimations !== 'undefined' && SiteAnimations && typeof SiteAnimations.init === 'function') {
         try {
@@ -54,6 +85,11 @@ document.addEventListener('DOMContentLoaded', () => {
         loadPageContent(pageId, false); /*FIXME: Promise returned from loadPageContent is ignored */
     });
 
+    decoratePanels();
+    initLazyMediaObserver();
+    const throttledPanelResize = rafThrottle(() => decoratePanels());
+    window.addEventListener('resize', throttledPanelResize);
+
     // --- App Bar Scroll Behavior ---
     if (topAppBarEl) {
         window.addEventListener('scroll', () => {
@@ -64,47 +100,40 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function buildRouterOptions() {
-    const options = {};
-
-    if (typeof showPageLoadingOverlay === 'function') {
-        options.showOverlay = () => {
-            showPageLoadingOverlay();
-        };
-    }
-
-    if (typeof hidePageLoadingOverlay === 'function') {
-        options.hideOverlay = () => {
-            hidePageLoadingOverlay();
-        };
-    }
-
-    if (typeof closeDrawer === 'function') {
-        options.closeDrawer = () => {
-            closeDrawer();
-        };
-    }
+    const options = {
+        showOverlay: () => showPageLoadingOverlay(),
+        hideOverlay: () => hidePageLoadingOverlay(),
+        closeDrawer: () => navigationController?.close(),
+    };
 
     const pageHandlers = {};
+    const globalScope = typeof window !== 'undefined' ? window : globalThis;
 
-    if (typeof initAppToolkitWorkspace === 'function') {
-        pageHandlers['app-toolkit-api'] = initAppToolkitWorkspace;
+    if (typeof globalScope.initAppToolkitWorkspace === 'function') {
+        pageHandlers['app-toolkit-api'] = globalScope.initAppToolkitWorkspace;
     }
 
-    if (typeof initFaqWorkspace === 'function') {
-        pageHandlers['faq-api'] = initFaqWorkspace;
+    if (typeof globalScope.initFaqWorkspace === 'function') {
+        pageHandlers['faq-api'] = globalScope.initFaqWorkspace;
     }
 
-    if (typeof initEnglishWorkspace === 'function') {
-        pageHandlers['english-with-lidia-api'] = initEnglishWorkspace;
+    if (typeof globalScope.initEnglishWorkspace === 'function') {
+        pageHandlers['english-with-lidia-api'] = globalScope.initEnglishWorkspace;
     }
 
-    if (typeof initAndroidTutorialsWorkspace === 'function') {
-        pageHandlers['android-studio-tutorials-api'] = initAndroidTutorialsWorkspace;
+    if (typeof globalScope.initAndroidTutorialsWorkspace === 'function') {
+        pageHandlers['android-studio-tutorials-api'] = globalScope.initAndroidTutorialsWorkspace;
     }
 
-    if (typeof initPagerControls === 'function') {
-        pageHandlers['english-with-lidia-api'] = chainHandlers(pageHandlers['english-with-lidia-api'], () => initPagerControls('englishPager'));
-        pageHandlers['android-studio-tutorials-api'] = chainHandlers(pageHandlers['android-studio-tutorials-api'], () => initPagerControls('androidPager'));
+    if (typeof globalScope.initPagerControls === 'function') {
+        pageHandlers['english-with-lidia-api'] = chainHandlers(
+            pageHandlers['english-with-lidia-api'],
+            () => globalScope.initPagerControls('englishPager'),
+        );
+        pageHandlers['android-studio-tutorials-api'] = chainHandlers(
+            pageHandlers['android-studio-tutorials-api'],
+            () => globalScope.initPagerControls('androidPager'),
+        );
     }
 
     if (Object.keys(pageHandlers).length > 0) {
@@ -132,7 +161,7 @@ function setupRouteLinkInterception() {
         return;
     }
 
-    const routesApi = typeof RouterRoutes !== 'undefined' ? RouterRoutes : null;
+    const routesApi = RouterRoutes;
     const hasRoute = routesApi
         ? (typeof routesApi.hasRoute === 'function'
             ? routesApi.hasRoute.bind(routesApi)
@@ -200,4 +229,59 @@ function initProfileAvatarFallback() {
     if (profileAvatar.complete && profileAvatar.naturalWidth === 0) {
         applyFallback();
     }
+}
+
+function decoratePanels() {
+    if (typeof document === 'undefined') {
+        return;
+    }
+    const isCompact = window.innerWidth < 960;
+    document.querySelectorAll('.app-shell-panel').forEach((panel) => {
+        if (!panel) {
+            return;
+        }
+        panel.dataset.compact = String(isCompact);
+    });
+}
+
+function initLazyMediaObserver() {
+    if (typeof document === 'undefined') {
+        return;
+    }
+    const lazyImages = Array.from(document.querySelectorAll('img[loading="lazy"]'));
+    if (!lazyImages.length) {
+        return;
+    }
+
+    if (typeof IntersectionObserver === 'undefined') {
+        lazyImages.forEach((img) => {
+            img.dataset.observed = 'true';
+            if (img.dataset.src && !img.src) {
+                img.src = img.dataset.src;
+            }
+        });
+        return;
+    }
+
+    const observer = new IntersectionObserver(
+        (entries) => {
+            entries.forEach((entry) => {
+                const target = entry.target;
+                if (!entry.isIntersecting || !target) {
+                    return;
+                }
+                target.dataset.observed = 'true';
+                if (target.dataset.src && !target.src) {
+                    target.src = target.dataset.src;
+                }
+                observer.unobserve(target);
+            });
+        },
+        {
+            rootMargin: '200px 0px 200px 0px',
+            threshold: 0.15,
+        },
+    );
+
+    lazyImages.forEach((img) => observer.observe(img));
 }

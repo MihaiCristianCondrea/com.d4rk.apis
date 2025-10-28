@@ -1,0 +1,29 @@
+.page-section,
+.workspace-dashboard,
+.api-builder,
+.builder-layout,
+.workspace-secondary-grid,
+.preview-pane {
+  content-visibility: auto;
+  contain: content;
+  contain-intrinsic-size: 960px 1200px;
+}
+
+img[loading="lazy"],
+.builder-screenshot img,
+.builder-screenshot picture img {
+  loading: lazy;
+  decoding: async;
+  content-visibility: auto;
+}
+
+img[loading="lazy"][data-observed="true"],
+.builder-screenshot img[data-observed="true"] {
+  transition: opacity 220ms var(--md-sys-motion-easing-emphasized, ease-out);
+  opacity: 1;
+}
+
+img[loading="lazy"],
+.builder-screenshot img {
+  opacity: 0;
+}
