@@ -712,6 +712,10 @@ md-list-item[type='button'].expanded md-icon[slot='end'] { /*FIXME: Selector mat
   --md-outlined-text-field-container-height: var(--control-row-height);
   --md-filled-text-field-container-height: var(--control-row-height);
   --md-outlined-text-field-container-shape: 16px;
+  --md-outlined-select-container-height: var(--control-row-height);
+  --md-outlined-select-container-shape: 16px;
+  --md-filled-select-container-height: var(--control-row-height);
+  --md-filled-select-container-shape: 16px;
 }
 
 .builder-remote-inline-action::after {
@@ -1158,6 +1162,12 @@ md-list-item[type='button'].expanded md-icon[slot='end'] { /*FIXME: Selector mat
   gap: 1rem;
 }
 
+.github-step :where(md-outlined-text-field, md-outlined-select) {
+  --github-step-field-shape: 16px;
+  --md-outlined-text-field-container-shape: var(--github-step-field-shape);
+  --md-outlined-select-container-shape: var(--github-step-field-shape);
+}
+
 .github-step[hidden] {
   display: none;
 }
@@ -1468,8 +1478,17 @@ md-list-item[type='button'].expanded md-icon[slot='end'] { /*FIXME: Selector mat
   box-sizing: border-box;
 }
 
-.builder-field-group :where(md-outlined-text-field) { /*FIXME: Selector matches unknown element md-outlined-text-field */
-  --md-outlined-text-field-container-shape: 16px;
+.builder-field-group :where(
+    md-outlined-text-field,
+    md-outlined-select,
+    md-filled-text-field,
+    md-filled-select
+  ) {
+  --builder-field-container-shape: 16px;
+  --md-outlined-text-field-container-shape: var(--builder-field-container-shape);
+  --md-outlined-select-container-shape: var(--builder-field-container-shape);
+  --md-filled-text-field-container-shape: var(--builder-field-container-shape);
+  --md-filled-select-container-shape: var(--builder-field-container-shape);
 }
 
 .builder-hint-chip-set {
