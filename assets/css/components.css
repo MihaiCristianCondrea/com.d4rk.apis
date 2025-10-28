@@ -174,8 +174,6 @@ md-top-app-bar { /*FIXME: Selector matches unknown element md-top-app-bar*/
   padding-inline-start: calc(4px + var(--safe-area-inset-left));
   padding-inline-end: calc(4px + var(--safe-area-inset-right));
   backdrop-filter: none !important;
-  background-color: var(--md-sys-color-surface-container-high);
-  border-bottom: 1px solid color-mix(in srgb, var(--md-sys-color-outline) 12%, transparent);
   transition:
     background-color var(--app-motion-duration-short, 200ms)
       var(--app-motion-ease-standard, cubic-bezier(0, 0, 0.2, 1)),
@@ -186,6 +184,8 @@ md-top-app-bar { /*FIXME: Selector matches unknown element md-top-app-bar*/
 md-top-app-bar.scrolled { /*FIXME: Selector matches unknown element md-top-app-bar */
   background-color: var(--md-sys-color-surface-container);
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  border-bottom-left-radius: 24px;
+  border-bottom-right-radius: 24px;
 }
 
 md-top-app-bar [slot='headline'] { /*FIXME: Selector matches unknown element md-top-app-bar */
