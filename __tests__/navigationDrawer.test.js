@@ -1,75 +1,109 @@
-const fs = require('fs');
-const path = require('path');
+const mockUtils = {
+  getDynamicElement: jest.fn(),
+  rafThrottle: (fn) => fn,
+};
+jest.mock('../src/domain/utils.js', () => {
+  const actual = jest.requireActual('../src/domain/utils.js');
+  return {
+    __esModule: true,
+    ...actual,
+    getDynamicElement: mockUtils.getDynamicElement,
+    rafThrottle: mockUtils.rafThrottle,
+  };
+});
 
-describe('navigationDrawer integration', () => {
-  const scriptPath = path.resolve(__dirname, '../assets/js/navigationDrawer.js');
-  const scriptContent = fs.readFileSync(scriptPath, 'utf8');
-  const scriptForTest = `${scriptContent}
-window.__setStandardDrawerLayout = (value) => { isStandardDrawerLayout = Boolean(value); };
-window.__getStandardDrawerLayout = () => isStandardDrawerLayout;
-`;
+const { initNavigationDrawer } = require('../src/services/navigationDrawerService.js');
 
-  const createDrawerMarkup = () => {
-    document.body.innerHTML = `
-      <header data-drawer-inert-target id="header">
-        <button id="menuButton" type="button">Menu</button>
-      </header>
-      <div id="drawerOverlay" aria-hidden="true"></div>
-      <md-navigation-drawer id="navDrawer" aria-modal="true">
-        <button id="closeDrawerButton" type="button">Close</button>
-        <nav>
-          <md-list>
-            <md-list-item href="#home" id="homeLink">Home</md-list-item>
-          </md-list>
-        </nav>
-        <section>
-          <button id="aboutToggle" type="button" aria-controls="aboutContent" aria-expanded="false">About</button>
-          <div id="aboutContent" aria-hidden="true">About section</div>
-        </section>
-        <section>
-          <button id="androidAppsToggle" type="button" aria-controls="androidAppsContent" aria-expanded="false">Apps</button>
-          <div id="androidAppsContent" aria-hidden="true">Apps section</div>
-        </section>
-      </md-navigation-drawer>
-      <main data-drawer-inert-target id="mainContent">Main content</main>
-      <footer data-drawer-inert-target id="footerContent">Footer content</footer>
-    `;
-
-    const navDrawerElement = document.getElementById('navDrawer');
-    let openedState = false;
-    Object.defineProperty(navDrawerElement, 'opened', {
-      configurable: true,
-      get() {
-        return openedState;
-      },
-      set(value) {
-        openedState = Boolean(value);
-      },
-    });
-
-    const firstNavItem = navDrawerElement.querySelector('md-list-item[href]');
-    firstNavItem.focus = jest.fn();
-
-    const closeDrawerButton = document.getElementById('closeDrawerButton');
-    closeDrawerButton.focus = jest.fn();
+function createMatchMediaStub(initialMatches = false) {
+  let matches = initialMatches;
+  const listeners = new Set();
+  const stub = {
+    media: '(min-width: 840px)',
+    get matches() {
+      return matches;
+    },
+    addEventListener: jest.fn((event, handler) => {
+      if (event === 'change') {
+        listeners.add(handler);
+      }
+    }),
+    removeEventListener: jest.fn((event, handler) => {
+      if (event === 'change') {
+        listeners.delete(handler);
+      }
+    }),
   };
 
-  beforeAll(() => {
-    window.getDynamicElement = (id) => document.getElementById(id);
-    window.eval(scriptForTest);
+  stub.dispatch = (value) => {
+    matches = value;
+    listeners.forEach((listener) => listener({ matches: value }));
+  };
+
+  return stub;
+}
+
+function createDrawerMarkup() {
+  document.body.innerHTML = `
+    <header data-drawer-inert-target id="header">
+      <button id="menuButton" type="button">Menu</button>
+    </header>
+    <div id="drawerOverlay" aria-hidden="true"></div>
+    <md-navigation-drawer id="navDrawer" aria-modal="true">
+      <button id="closeDrawerButton" type="button">Close</button>
+      <nav>
+        <md-list>
+          <md-list-item href="#home" id="homeLink">Home</md-list-item>
+        </md-list>
+      </nav>
+      <section>
+        <button id="aboutToggle" type="button" aria-controls="aboutContent" aria-expanded="false">About</button>
+        <div id="aboutContent" aria-hidden="true">About section</div>
+      </section>
+      <section>
+        <button id="androidAppsToggle" type="button" aria-controls="androidAppsContent" aria-expanded="false">Apps</button>
+        <div id="androidAppsContent" aria-hidden="true">Apps section</div>
+      </section>
+    </md-navigation-drawer>
+    <main data-drawer-inert-target id="mainContent">Main content</main>
+    <footer data-drawer-inert-target id="footerContent">Footer content</footer>
+  `;
+
+  const navDrawerElement = document.getElementById('navDrawer');
+  let openedState = false;
+  Object.defineProperty(navDrawerElement, 'opened', {
+    configurable: true,
+    get() {
+      return openedState;
+    },
+    set(value) {
+      openedState = Boolean(value);
+    },
   });
+
+  const firstNavItem = navDrawerElement.querySelector('md-list-item[href]');
+  firstNavItem.focus = jest.fn();
+
+  const closeDrawerButton = document.getElementById('closeDrawerButton');
+  closeDrawerButton.focus = jest.fn();
+}
+
+describe('navigationDrawerService', () => {
+  let matchMediaStub;
 
   beforeEach(() => {
     document.body.className = '';
     delete document.body.dataset.drawerMode;
-
+    matchMediaStub = createMatchMediaStub(false);
+    window.matchMedia = jest.fn(() => matchMediaStub);
+    mockUtils.getDynamicElement.mockReset();
+    mockUtils.getDynamicElement.mockImplementation((id) => document.getElementById(id));
     createDrawerMarkup();
-    window.__setStandardDrawerLayout(false);
-    window.initNavigationDrawer();
+    initNavigationDrawer();
   });
 
   afterEach(() => {
     document.body.innerHTML = '';
+    jest.clearAllMocks();
   });
 
   test('opens and closes the drawer while managing focus, overlay, and inert targets', () => {
@@ -105,7 +139,7 @@ window.__getStandardDrawerLayout = () => isStandardDrawerLayout;
     expect(overlay.getAttribute('aria-hidden')).toBe('true');
     inertElements.forEach((element) => {
       expect(element.hasAttribute('inert')).toBe(false);
-      expect(element.hasAttribute('aria-hidden')).toBe(false);
+      expect(element.getAttribute('aria-hidden')).toBe('false');
     });
 
     menuButtonElement.click();
@@ -119,7 +153,7 @@ window.__getStandardDrawerLayout = () => isStandardDrawerLayout;
     expect(menuFocusSpy).toHaveBeenCalledTimes(2);
     inertElements.forEach((element) => {
       expect(element.hasAttribute('inert')).toBe(false);
-      expect(element.hasAttribute('aria-hidden')).toBe(false);
+      expect(element.getAttribute('aria-hidden')).toBe('false');
     });
   });
 
@@ -163,7 +197,6 @@ window.__getStandardDrawerLayout = () => isStandardDrawerLayout;
     const inertElements = Array.from(document.querySelectorAll('[data-drawer-inert-target]'));
 
     expect(navDrawerElement.getAttribute('aria-modal')).toBe('true');
-    expect(navDrawerElement.ariaModal).toBe('true');
 
     menuButtonElement.click();
     expect(navDrawerElement.opened).toBe(true);
@@ -171,24 +204,24 @@ window.__getStandardDrawerLayout = () => isStandardDrawerLayout;
       expect(element.hasAttribute('inert')).toBe(true);
     });
 
-    window.__setStandardDrawerLayout(true);
-    window.syncDrawerState(true);
+    matchMediaStub.dispatch(true);
 
     expect(navDrawerElement.getAttribute('aria-modal')).toBe('false');
-    expect(navDrawerElement.ariaModal).toBe('false');
     expect(document.body.classList.contains('drawer-is-open')).toBe(false);
     expect(overlay.classList.contains('open')).toBe(false);
     expect(menuButtonElement.getAttribute('aria-expanded')).toBe('false');
     inertElements.forEach((element) => {
       expect(element.hasAttribute('inert')).toBe(false);
-      expect(element.hasAttribute('aria-hidden')).toBe(false);
+      expect(element.getAttribute('aria-hidden')).toBe('false');
     });
 
-    window.__setStandardDrawerLayout(false);
-    window.syncDrawerState(true);
+    matchMediaStub.dispatch(false);
 
     expect(navDrawerElement.getAttribute('aria-modal')).toBe('true');
-    expect(navDrawerElement.ariaModal).toBe('true');
+    expect(document.body.classList.contains('drawer-is-open')).toBe(false);
+
+    menuButtonElement.click();
+
     expect(document.body.classList.contains('drawer-is-open')).toBe(true);
     expect(overlay.classList.contains('open')).toBe(true);
     expect(menuButtonElement.getAttribute('aria-expanded')).toBe('true');

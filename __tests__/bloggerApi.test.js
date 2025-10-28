@@ -4,7 +4,7 @@ const path = require('path');
 const {
   getNestedValue,
   extractFirstImageFromHtml
-} = require('../assets/js/utils.js');
+} = require('../src/domain/utils.js');
 
 const scriptPath = path.resolve(__dirname, '../assets/js/bloggerApi.js');
 

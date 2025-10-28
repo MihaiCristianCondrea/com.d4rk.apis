@@ -89,7 +89,7 @@ window.DOMPurify = {
 };
 global.DOMPurify = window.DOMPurify;
 window.print = jest.fn();
-eval(resumeScript);
+window.eval(resumeScript);
 Object.assign(window, {
   addListItem,
   addInterestItem,
