@@ -120,7 +120,7 @@
         const dialogsToWire = [screenshotDialog, focusDialog, githubDialog];
         const FETCH_STATE_COPY = {
             idle: 'Paste a JSON URL to load the latest data.',
-            preset: 'Preset URL ready. Press Load JSON to import.',
+            preset: 'Preset URL ready. Press Enter or Load JSON to import.',
             loading: 'Fetching the latest data…',
             success: 'Data loaded successfully.',
             error: 'Unable to fetch remote JSON.'
@@ -3031,7 +3031,7 @@
                 if (!fetchInput.value.trim()) {
                     setFetchState('idle');
                 } else if (fetchStatus.dataset.status !== 'success') {
-                    setFetchState('preset', 'Press Load JSON to import this URL.');
+                    setFetchState('preset', 'Press Enter or Load JSON to import this URL.');
                 }
             });
         }
@@ -3047,12 +3047,14 @@
                     }
                     if (fetchInput) {
                         fetchInput.value = presetUrl;
-                        fetchInput.focus();
+                        if (typeof fetchInput.focus === 'function') {
+                            fetchInput.focus();
+                        }
                         if (typeof fetchInput.select === 'function') {
                             fetchInput.select();
                         }
                     }
-                    setFetchState('preset');
+                    fetchRemoteJson(presetUrl, { fromPreset: true });
                 });
             });
         }
