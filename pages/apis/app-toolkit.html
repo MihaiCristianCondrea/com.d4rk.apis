@@ -57,21 +57,6 @@
               <span class="plan-step-meta">Ship debug and release catalogs together.</span>
             </li>
           </ol>
-          <div class="plan-actions">
-            <md-filled-tonal-button id="appToolkitFocusButton" has-icon>
-              <md-icon slot="icon"
-                ><span class="material-symbols-outlined">timelapse</span></md-icon
-              >
-              Start focus session
-            </md-filled-tonal-button>
-            <md-text-button id="appToolkitNotesButton" has-icon>
-              <md-icon slot="icon"
-                ><span class="material-symbols-outlined">edit_note</span></md-icon
-              >
-              Capture notes
-              <span class="note-indicator" aria-hidden="true">●</span>
-            </md-text-button>
-          </div>
         </div>
       </md-filled-card>
 
@@ -138,18 +123,6 @@
           >
           Add app
         </md-filled-button>
-        <md-outlined-button id="appToolkitImportButton" has-icon>
-          <md-icon slot="icon"
-            ><span class="material-symbols-outlined">upload</span></md-icon
-          >
-          Import JSON
-        </md-outlined-button>
-        <input
-          type="file"
-          id="appToolkitImportInput"
-          accept="application/json"
-          hidden
-        />
         <md-text-button id="appToolkitResetButton" has-icon>
           <md-icon slot="icon"
             ><span class="material-symbols-outlined">refresh</span></md-icon
@@ -367,35 +340,6 @@
       <md-text-button id="appToolkitScreenshotDialogOpen" target="_blank">
         Open in new tab
       </md-text-button>
-    </div>
-  </md-dialog>
-
-  <md-dialog id="appToolkitFocusDialog" class="app-dialog focus-dialog">
-    <div slot="headline">Focus session</div>
-    <div slot="content" class="focus-dialog-content">
-      <div class="focus-dialog-timer" id="appToolkitFocusTimer" aria-live="polite">25:00</div>
-      <div class="focus-dialog-controls">
-        <md-filled-tonal-button id="appToolkitFocusStart" data-dialog-initial-focus>
-          Start
-        </md-filled-tonal-button>
-        <md-filled-tonal-button id="appToolkitFocusPause">Pause</md-filled-tonal-button>
-        <md-text-button id="appToolkitFocusReset">Reset</md-text-button>
-      </div>
-      <div class="focus-dialog-checklist">
-        <h3>Pending checklist</h3>
-        <md-list id="appToolkitFocusChecklist" class="focus-checklist"></md-list>
-      </div>
-      <md-outlined-text-field
-        id="appToolkitFocusNotes"
-        label="Session notes"
-        supporting-text="Notes are saved locally for this browser session."
-        rows="4"
-        multiline
-      ></md-outlined-text-field>
-    </div>
-    <div slot="actions">
-      <md-text-button dialog-action="close">Close</md-text-button>
-      <md-filled-button id="appToolkitFocusSave">Save note</md-filled-button>
     </div>
   </md-dialog>
 

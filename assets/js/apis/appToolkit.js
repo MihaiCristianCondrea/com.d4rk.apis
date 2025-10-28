@@ -61,8 +61,6 @@
         const downloadButton = document.getElementById('appToolkitDownloadButton');
         const previewArea = document.getElementById('appToolkitPreview');
         const validationStatus = document.getElementById('appToolkitValidation');
-        const importButton = document.getElementById('appToolkitImportButton');
-        const importInput = document.getElementById('appToolkitImportInput');
         const fetchInput = document.getElementById('appToolkitFetchInput');
         const fetchButton = document.getElementById('appToolkitFetchButton');
         const fetchFieldset = document.getElementById('appToolkitFetchFieldset');
@@ -100,24 +98,14 @@
         const channelSegments = document.getElementById('appToolkitChannelSegments');
         const modeSegments = document.getElementById('appToolkitLayoutSegments');
         const filterChipSet = document.getElementById('appToolkitFilterChips');
-        const focusButton = document.getElementById('appToolkitFocusButton');
-        const notesButton = document.getElementById('appToolkitNotesButton');
         const screenshotDialog = document.getElementById('appToolkitScreenshotDialog');
         const screenshotDialogHeadline = document.getElementById('appToolkitScreenshotDialogHeadline');
         const screenshotDialogImage = document.getElementById('appToolkitScreenshotDialogImage');
         const screenshotDialogCaption = document.getElementById('appToolkitScreenshotDialogCaption');
         const screenshotDialogOpenButton = document.getElementById('appToolkitScreenshotDialogOpen');
-        const focusDialog = document.getElementById('appToolkitFocusDialog');
-        const focusTimerEl = document.getElementById('appToolkitFocusTimer');
-        const focusStartButton = document.getElementById('appToolkitFocusStart');
-        const focusPauseButton = document.getElementById('appToolkitFocusPause');
-        const focusResetButton = document.getElementById('appToolkitFocusReset');
-        const focusSaveButton = document.getElementById('appToolkitFocusSave');
-        const focusChecklist = document.getElementById('appToolkitFocusChecklist');
-        const focusNotesField = document.getElementById('appToolkitFocusNotes');
         const diffSheet = document.getElementById('appToolkitDiffSheet');
         const diffContent = document.getElementById('appToolkitDiffContent');
-        const dialogsToWire = [screenshotDialog, focusDialog, githubDialog];
+        const dialogsToWire = [screenshotDialog, githubDialog];
         const FETCH_STATE_COPY = {
             idle: 'Paste a JSON URL to load the latest data.',
             preset: 'Preset URL ready. Press Enter or Load JSON to import.',
@@ -150,8 +138,6 @@
             dialog.dataset.dialogCloseInit = 'true';
         });
         setFetchState('idle');
-        let sessionNotesStorage = null;
-        const SESSION_NOTE_KEY = 'appToolkitWorkspaceNote';
         const SCREENSHOT_HINT_STORAGE_KEY = 'AppToolkitScreenshotHintSeen';
         let screenshotHintSeen = false;
         try {
@@ -187,18 +173,8 @@
         let remoteBaselinePayload = null;
         const activeFilters = new Set();
         let draggingScreenshot = null;
-        const FOCUS_DEFAULT_DURATION = 25 * 60;
-        let focusTimeRemaining = FOCUS_DEFAULT_DURATION;
-        let focusTimerInterval = null;
         const GITHUB_STEPS = ['authenticate', 'target', 'review'];
         let githubStepIndex = 0;
-        let lastMetricsSnapshot = {
-            total: 0,
-            releaseReady: 0,
-            pending: 0,
-            needsScreenshotsCount: 0,
-            missingRequiredCount: 0
-        };
         const supportsFileSystemAccess =
             typeof window !== 'undefined' && typeof window.showOpenFilePicker === 'function'; /*FIXME: Unresolved variable showOpenFilePicker */
         const githubTokenHandleStore = createFileHandleStore({
@@ -209,22 +185,6 @@
         let githubTokenFileHandle = null;
         let githubTokenHandleLoaded = false;
         let githubTokenFallbackFile = null;
-
-        if (typeof sessionStorage !== 'undefined') {
-            try {
-                sessionNotesStorage = sessionStorage;
-                const probeKey = `${SESSION_NOTE_KEY}__probe`;
-                sessionNotesStorage.setItem(probeKey, '1');
-                sessionNotesStorage.removeItem(probeKey);
-            } catch (error) {
-                sessionNotesStorage = null;
-                console.warn('AppToolkit: Session storage unavailable for workspace notes.', error);
-            }
-        }
-
-        if (!sessionNotesStorage && focusSaveButton) {
-            focusSaveButton.disabled = true;
-        }
 
         function createEmptyApp() {
             return {
@@ -604,13 +564,6 @@
                 }
                 workspacePulseEl.textContent = message;
             }
-            refreshFocusChecklist({
-                total,
-                releaseReady,
-                pending,
-                needsScreenshotsCount,
-                missingRequiredCount
-            });
             updateDiffSheet();
             return { total, releaseReady, pending, needsScreenshotsCount, missingRequiredCount };
         }
@@ -652,75 +605,6 @@
             } else {
                 toolbarPulseEl.textContent = 'Awaiting input';
             }
-        }
-
-        function refreshFocusChecklist(metrics = {}) {
-            if (!focusChecklist) {
-                return;
-            }
-            const snapshot = {
-                total: metrics.total || 0,
-                releaseReady: metrics.releaseReady || 0,
-                pending: metrics.pending || 0,
-                needsScreenshotsCount: metrics.needsScreenshotsCount || 0,
-                missingRequiredCount: metrics.missingRequiredCount || 0
-            };
-            lastMetricsSnapshot = snapshot;
-            focusChecklist.innerHTML = '';
-            const previewReady = validationStatus?.dataset.status === 'success';
-            const previewMessage = extractStatusMessage(validationStatus) ||
-                (previewReady ? 'Preview ready to publish.' : 'Resolve JSON validation before publishing.');
-            const pluralize = (count, singular, plural = `${singular}s`) =>
-                count === 1 ? singular : plural;
-            const items = [
-                {
-                    label: 'Add apps to workspace',
-                    detail: snapshot.total
-                        ? `${snapshot.total} ${pluralize(snapshot.total, 'app')} tracked`
-                        : 'Start by adding your first listing.',
-                    done: snapshot.total > 0
-                },
-                {
-                    label: 'Complete required metadata',
-                    detail: snapshot.missingRequiredCount
-                        ? `${snapshot.missingRequiredCount} ${pluralize(snapshot.missingRequiredCount, 'entry')} missing required fields`
-                        : 'All required fields captured.',
-                    done: snapshot.total > 0 && snapshot.missingRequiredCount === 0
-                },
-                {
-                    label: 'Provide 3+ screenshots',
-                    detail: snapshot.needsScreenshotsCount
-                        ? `${snapshot.needsScreenshotsCount} ${pluralize(snapshot.needsScreenshotsCount, 'entry')} under 3 screenshots`
-                        : 'Screenshot goals met.',
-                    done: snapshot.total > 0 && snapshot.needsScreenshotsCount === 0
-                },
-                {
-                    label: 'Validate JSON preview',
-                    detail: previewMessage,
-                    done: previewReady
-                }
-            ];
-
-            items.forEach((item) => {
-                const listItem = document.createElement('md-list-item');
-                listItem.classList.add('focus-checklist-item');
-                const checkbox = document.createElement('md-checkbox');
-                checkbox.setAttribute('slot', 'start');
-                checkbox.checked = item.done;
-                checkbox.disabled = true;
-                listItem.appendChild(checkbox);
-                const headline = document.createElement('div');
-                headline.setAttribute('slot', 'headline');
-                headline.textContent = item.label;
-                listItem.appendChild(headline);
-                if (item.detail) {
-                    const supporting = document.createElement('div');
-                    supporting.setAttribute('slot', 'supporting-text');
-                    supporting.textContent = item.detail;
-                    listItem.appendChild(supporting);
-                }
-                focusChecklist.appendChild(listItem);
-            });
         }
 
         function updateDiffSheet() {
@@ -863,101 +747,6 @@
             applyCardFilters();
         }
 
-        function updateFocusTimerDisplay() {
-            if (!focusTimerEl) {
-                return;
-            }
-            const minutes = Math.floor(focusTimeRemaining / 60);
-            const seconds = focusTimeRemaining % 60;
-            focusTimerEl.textContent = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
-        }
-
-        function updateFocusControls() {
-            if (focusStartButton) {
-                focusStartButton.disabled = Boolean(focusTimerInterval);
-            }
-            if (focusPauseButton) {
-                focusPauseButton.disabled = !focusTimerInterval;
-            }
-        }
-
-        function startFocusTimer() {
-            if (typeof window === 'undefined') {
-                return;
-            }
-            if (focusTimerInterval) {
-                return;
-            }
-            if (focusTimeRemaining <= 0) {
-                focusTimeRemaining = FOCUS_DEFAULT_DURATION;
-            }
-            focusTimerInterval = window.setInterval(() => {
-                if (focusTimeRemaining <= 0) {
-                    pauseFocusTimer();
-                    focusTimeRemaining = 0;
-                    updateFocusTimerDisplay();
-                    if (toolbarPulseEl) {
-                        toolbarPulseEl.textContent = 'Focus session complete.';
-                    }
-                    return;
-                }
-                focusTimeRemaining -= 1;
-                updateFocusTimerDisplay();
-            }, 1000);
-            updateFocusControls();
-        }
-
-        function pauseFocusTimer() {
-            if (typeof window === 'undefined') {
-                return;
-            }
-            if (focusTimerInterval) {
-                window.clearInterval(focusTimerInterval);
-                focusTimerInterval = null;
-            }
-            updateFocusControls();
-        }
-
-        function resetFocusTimer() {
-            pauseFocusTimer();
-            focusTimeRemaining = FOCUS_DEFAULT_DURATION;
-            updateFocusTimerDisplay();
-        }
-
-        function openFocusDialog({ autoStart = false } = {}) {
-            if (!focusDialog) {
-                return;
-            }
-            updateFocusTimerDisplay();
-            updateFocusControls();
-            loadSavedNote();
-            if (typeof AppDialogs !== 'undefined' && AppDialogs && typeof AppDialogs.rememberTrigger === 'function') {
-                AppDialogs.rememberTrigger(focusDialog, document.activeElement);
-            }
-            focusDialog.open = true;
-            if (autoStart) {
-                resetFocusTimer();
-                startFocusTimer();
-            }
-        }
-
-        function saveSessionNote(note) {
-            if (!sessionNotesStorage) {
-                if (toolbarPulseEl) {
-                    toolbarPulseEl.textContent = 'Session notes are unavailable in this browser.';
-                }
-                return '';
-            }
-            const trimmed = utils.trimString(note);
-            if (trimmed) {
-                sessionNotesStorage.setItem(SESSION_NOTE_KEY, trimmed);
-            } else {
-                sessionNotesStorage.removeItem(SESSION_NOTE_KEY);
-            }
-            loadSavedNote();
-            return trimmed;
-        }
-
         function setGithubStep(index) {
             githubStepIndex = Math.max(0, Math.min(index, GITHUB_STEPS.length - 1));
             const stepValue = GITHUB_STEPS[githubStepIndex];
@@ -1064,37 +853,14 @@
             updateToolbarPulse();
         }
 
-        function loadSavedNote() {
-            const saved = sessionNotesStorage
-                ? sessionNotesStorage.getItem(SESSION_NOTE_KEY) || ''
-                : '';
-            if (notesButton) {
-                notesButton.dataset.noteState = saved ? 'saved' : 'empty';
-                if (saved) {
-                    notesButton.setAttribute('aria-label', 'Edit session note');
-                    notesButton.setAttribute('title', saved);
-                } else {
-                    notesButton.setAttribute('aria-label', 'Capture session note');
-                    notesButton.removeAttribute('title');
-                }
-            }
-            if (focusNotesField) {
-                focusNotesField.value = saved;
-            }
-            return saved;
-        }
-
         setLayoutMode(builderRoot && builderRoot.dataset ? builderRoot.dataset.layout : 'flow');
         setChannelFocus(
             builderRoot && builderRoot.dataset ? builderRoot.dataset.channel : 'both'
         );
         updateLastEditedDisplay();
-        loadSavedNote();
         if (githubStepper) {
             setGithubStep(0);
         }
-        updateFocusTimerDisplay();
-        updateFocusControls();
         syncFiltersFromChipSet();
 
         function render() {
@@ -3079,10 +2845,6 @@
             });
         }
 
-        if (importButton && importInput) {
-            utils.attachFilePicker(importButton, importInput, importJson);
-        }
-
         if (fetchButton) {
             fetchButton.addEventListener('click', () => {
                 fetchRemoteJson(); /*FIXME: Promise returned from fetchRemoteJson is ignored && Invalid number of arguments, expected 1..2*/
@@ -3261,65 +3023,6 @@
             });
             filterChipSet.addEventListener('click', () => {
                 syncFiltersFromChipSet();
-            });
-        }
-
-        if (focusButton) {
-            focusButton.addEventListener('click', () => {
-                openFocusDialog({ autoStart: true });
-                if (toolbarPulseEl) {
-                    toolbarPulseEl.textContent = 'Focus session started.';
-                }
-            });
-        }
-
-        if (notesButton) {
-            notesButton.addEventListener('click', () => {
-                openFocusDialog({ autoStart: false });
-                if (toolbarPulseEl) {
-                    toolbarPulseEl.textContent = 'Review or capture session notes.';
-                }
-            });
-        }
-
-        if (focusDialog) {
-            ['close', 'cancel'].forEach((eventName) => {
-                focusDialog.addEventListener(eventName, () => {
-                    pauseFocusTimer();
-                    loadSavedNote();
-                });
-            });
-        }
-
-        if (focusStartButton) {
-            focusStartButton.addEventListener('click', () => {
-                startFocusTimer();
-            });
-        }
-
-        if (focusPauseButton) {
-            focusPauseButton.addEventListener('click', () => {
-                pauseFocusTimer();
-            });
-        }
-
-        if (focusResetButton) {
-            focusResetButton.addEventListener('click', () => {
-                resetFocusTimer();
-            });
-        }
-
-        if (focusSaveButton) {
-            focusSaveButton.addEventListener('click', () => {
-                const savedNote = saveSessionNote(focusNotesField ? focusNotesField.value : '');
-                if (toolbarPulseEl) {
-                    toolbarPulseEl.textContent = savedNote
-                        ? 'Session note saved.'
-                        : 'Session note cleared.';
-                }
-                if (focusDialog) {
-                    focusDialog.open = false;
-                }
             });
         }
 
