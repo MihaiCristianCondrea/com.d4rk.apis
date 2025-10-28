@@ -177,8 +177,8 @@ export class NavigationDrawerController {
       return;
     }
 
-    const shouldUseStandard = false;
-    document.body.dataset.drawerMode = 'modal';
+    const shouldUseStandard = Boolean(shouldUseStandardLayout);
+    document.body.dataset.drawerMode = shouldUseStandard ? 'standard' : 'modal';
     document.body.classList.toggle('drawer-standard-mode', shouldUseStandard);
 
     this.menuButton?.toggleAttribute('hidden', shouldUseStandard);
@@ -186,7 +186,7 @@ export class NavigationDrawerController {
 
     this.isStandardDrawerLayout = shouldUseStandard;
     this.navDrawer.opened = shouldUseStandard;
-    this.syncDrawerState(Boolean(this.navDrawer.opened));
+    this.syncDrawerState(shouldUseStandard);
   }
 
   syncDrawerState(isOpened) {

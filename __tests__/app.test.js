@@ -1,4 +1,71 @@
-const APP_PATH = '../assets/js/app.js';
+const APP_PATH = '../src/app/app.js';
+
+const mockUtils = {
+  getDynamicElement: jest.fn(),
+  updateCopyrightYear: jest.fn(),
+  showPageLoadingOverlay: jest.fn(),
+  hidePageLoadingOverlay: jest.fn(),
+  rafThrottle: (fn) => fn,
+};
+jest.mock('../src/domain/utils.js', () => {
+  const actual = jest.requireActual('../src/domain/utils.js');
+  return {
+    __esModule: true,
+    ...actual,
+    getDynamicElement: mockUtils.getDynamicElement,
+    updateCopyrightYear: mockUtils.updateCopyrightYear,
+    showPageLoadingOverlay: mockUtils.showPageLoadingOverlay,
+    hidePageLoadingOverlay: mockUtils.hidePageLoadingOverlay,
+    rafThrottle: mockUtils.rafThrottle,
+  };
+});
+
+const themeMocks = {};
+jest.mock('../src/services/themeService.js', () => {
+  themeMocks.initThemeControls = jest.fn();
+  themeMocks.applyTheme = jest.fn();
+  return {
+    __esModule: true,
+    initThemeControls: (...args) => themeMocks.initThemeControls(...args),
+    applyTheme: (...args) => themeMocks.applyTheme(...args),
+  };
+});
+
+const mockNavigation = {
+  initNavigationDrawer: jest.fn(),
+  NavigationDrawerController: jest.fn(),
+  controller: null,
+};
+jest.mock('../src/services/navigationDrawerService.js', () => ({
+  __esModule: true,
+  initNavigationDrawer: (...args) => mockNavigation.initNavigationDrawer(...args),
+  NavigationDrawerController: mockNavigation.NavigationDrawerController,
+}));
+
+const mockRouter = {
+  initRouter: jest.fn(),
+  loadPageContent: jest.fn(),
+  normalizePageId: jest.fn((value) => value),
+  updateActiveNavLink: jest.fn(),
+};
+jest.mock('../src/router/index.js', () => ({
+  __esModule: true,
+  default: mockRouter,
+  initRouter: (...args) => mockRouter.initRouter(...args),
+  loadPageContent: (...args) => mockRouter.loadPageContent(...args),
+  normalizePageId: (...args) => mockRouter.normalizePageId(...args),
+  updateActiveNavLink: (...args) => mockRouter.updateActiveNavLink(...args),
+}));
+
+const mockRoutesApi = {
+  hasRoute: jest.fn(() => true),
+  getRoute: jest.fn(),
+  PAGE_ROUTES: {},
+};
+jest.mock('../src/router/routes.js', () => ({
+  __esModule: true,
+  default: mockRoutesApi,
+}));
 
 const OPTIONAL_GLOBALS = [
   'showPageLoadingOverlay',
@@ -35,6 +102,9 @@ let registeredWindowHandlers = [];
 function clearGlobals() {
   [...OPTIONAL_GLOBALS, ...CORE_GLOBALS].forEach((key) => {
     delete global[key];
+    if (typeof window !== 'undefined') {
+      delete window[key];
+    }
   });
 }
 
@@ -66,6 +136,23 @@ function removeRegisteredHandlers() {
 describe('app.js bootstrap integration', () => {
   beforeEach(() => {
     jest.resetModules();
+    jest.clearAllMocks();
+    mockNavigation.controller = { close: jest.fn() };
+    mockNavigation.initNavigationDrawer.mockReset();
+    mockNavigation.initNavigationDrawer.mockImplementation(() => mockNavigation.controller);
+    mockRouter.initRouter.mockReset();
+    mockRouter.loadPageContent.mockReset();
+    mockRouter.normalizePageId.mockReset();
+    mockRouter.normalizePageId.mockImplementation((value) => stubNormalizePageId(value));
+    mockRoutesApi.hasRoute.mockReset();
+    mockRoutesApi.getRoute.mockReset();
+    mockRoutesApi.PAGE_ROUTES = {};
+    mockRoutesApi.hasRoute.mockImplementation(() => true);
+    mockUtils.getDynamicElement.mockReset();
+    mockUtils.getDynamicElement.mockImplementation((id) => document.getElementById(id));
+    mockUtils.updateCopyrightYear.mockReset();
+    mockUtils.showPageLoadingOverlay.mockReset();
+    mockUtils.hidePageLoadingOverlay.mockReset();
     clearGlobals();
     document.body.innerHTML = '';
     window.location.hash = '#home';
@@ -107,31 +194,17 @@ describe('app.js bootstrap integration', () => {
       <header id="topAppBar"></header>
     `;
 
-    const initRouter = jest.fn();
-    const loadPageContent = jest.fn();
+    const { initRouter, loadPageContent } = mockRouter;
+    initRouter.mockReset();
+    loadPageContent.mockReset();
 
-    global.getDynamicElement = jest.fn((id) => document.getElementById(id));
-    global.initTheme = jest.fn();
-    global.initNavigationDrawer = jest.fn();
-    global.setCopyrightYear = jest.fn();
-    global.initRouter = initRouter;
-    global.loadPageContent = loadPageContent;
-    global.normalizePageId = jest.fn(stubNormalizePageId);
-    global.RouterRoutes = { hasRoute: jest.fn(() => true) };
-
-    const showPageLoadingOverlay = jest.fn();
-    const hidePageLoadingOverlay = jest.fn();
-    const closeDrawer = jest.fn();
     const initAppToolkitWorkspace = jest.fn();
     const initFaqWorkspace = jest.fn();
     const initEnglishWorkspace = jest.fn();
     const initAndroidTutorialsWorkspace = jest.fn();
     const initPagerControls = jest.fn();
 
-    Object.assign(global, {
-      showPageLoadingOverlay,
-      hidePageLoadingOverlay,
-      closeDrawer,
+    Object.assign(window, {
       initAppToolkitWorkspace,
       initFaqWorkspace,
       initEnglishWorkspace,
@@ -159,13 +232,13 @@ describe('app.js bootstrap integration', () => {
     );
 
     routerOptions.showOverlay();
-    expect(showPageLoadingOverlay).toHaveBeenCalledTimes(1);
+    expect(mockUtils.showPageLoadingOverlay).toHaveBeenCalledTimes(1);
 
     routerOptions.hideOverlay();
-    expect(hidePageLoadingOverlay).toHaveBeenCalledTimes(1);
+    expect(mockUtils.hidePageLoadingOverlay).toHaveBeenCalledTimes(1);
 
     routerOptions.closeDrawer();
-    expect(closeDrawer).toHaveBeenCalledTimes(1);
+    expect(mockNavigation.controller.close).toHaveBeenCalledTimes(1);
 
     routerOptions.pageHandlers['app-toolkit-api']();
     expect(initAppToolkitWorkspace).toHaveBeenCalledTimes(1);
@@ -194,19 +267,14 @@ describe('app.js bootstrap integration', () => {
       <md-list-item id="englishItem" href="#english-with-lidia-api"></md-list-item>
     `;
 
-    const loadPageContent = jest.fn();
+    const loadPageContent = mockRouter.loadPageContent;
     const hasRoute = jest.fn((id) =>
       ['home', 'app-toolkit-api', 'faq-api', 'english-with-lidia-api'].includes(id)
     );
 
-    global.getDynamicElement = jest.fn((id) => document.getElementById(id));
-    global.initTheme = jest.fn();
-    global.initNavigationDrawer = jest.fn();
-    global.setCopyrightYear = jest.fn();
-    global.initRouter = jest.fn();
-    global.loadPageContent = loadPageContent;
-    global.normalizePageId = jest.fn(stubNormalizePageId);
-    global.RouterRoutes = { hasRoute };
+    loadPageContent.mockReset();
+    mockRouter.initRouter.mockReset();
+    mockRoutesApi.hasRoute.mockImplementation(hasRoute);
 
     loadAppModule();
 
@@ -263,23 +331,20 @@ describe('app.js bootstrap integration', () => {
       <header id="topAppBar"></header>
     `;
 
-    const initRouter = jest.fn();
-    const loadPageContent = jest.fn();
-
-    global.getDynamicElement = jest.fn((id) => document.getElementById(id));
-    global.initTheme = jest.fn();
-    global.initNavigationDrawer = jest.fn();
-    global.setCopyrightYear = jest.fn();
-    global.initRouter = initRouter;
-    global.loadPageContent = loadPageContent;
-    global.normalizePageId = jest.fn(stubNormalizePageId);
-    global.RouterRoutes = { hasRoute: jest.fn(() => false) };
+    const { initRouter, loadPageContent } = mockRouter;
+    initRouter.mockReset();
+    loadPageContent.mockReset();
+    mockRoutesApi.hasRoute.mockImplementation(() => false);
 
     loadAppModule();
     document.dispatchEvent(new Event('DOMContentLoaded'));
 
     expect(initRouter).toHaveBeenCalledTimes(1);
     const routerOptions = initRouter.mock.calls[0][3];
-    expect(routerOptions).toEqual({});
+    expect(routerOptions).toEqual({
+      showOverlay: expect.any(Function),
+      hideOverlay: expect.any(Function),
+      closeDrawer: expect.any(Function),
+    });
   });
 });
