@@ -16,6 +16,7 @@ import { readFileAsText } from '../../services/fileService.js';
 import { attachFilePicker } from '../../services/filePickerService.js';
 import { setValidationStatus } from '../../services/validation/statusService.js';
 import { renderJsonPreview } from '../../services/jsonPreviewService.js';
+import { createDeferredTask, createIdleTask } from '../../services/scheduler/deferredTask.js';
 
 export const apiBuilderUtils = Object.freeze({
   createElement,
@@ -39,6 +40,8 @@ export const apiBuilderUtils = Object.freeze({
   cloneJson,
   setValidationStatus,
   renderJsonPreview,
+  createDeferredTask,
+  createIdleTask,
 });
 
 export function registerApiBuilderUtilsGlobal(target = typeof window !== 'undefined' ? window : undefined) {
@@ -67,3 +70,4 @@ export { readFileAsText } from '../../services/fileService.js';
 export { attachFilePicker } from '../../services/filePickerService.js';
 export { setValidationStatus } from '../../services/validation/statusService.js';
 export { renderJsonPreview } from '../../services/jsonPreviewService.js';
+export { createDeferredTask, createIdleTask } from '../../services/scheduler/deferredTask.js';

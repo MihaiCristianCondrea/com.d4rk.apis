@@ -394,7 +394,7 @@
             state.entries.forEach((entry, index) => {
                 entriesContainer.appendChild(createEntryCard(entry, index));
             });
-            updatePreview();
+            requestPreviewUpdate();
         }
 
         function createEntryCard(entry, index) {
@@ -454,7 +454,7 @@
                 helperText: 'Use lowercase hyphenated IDs (e.g., faq-gms).',
                 onInput: (value) => {
                     state.entries[index].id = value;
-                    updatePreview();
+                    requestPreviewUpdate();
                 }
             });
             fields.appendChild(idField.wrapper);
@@ -465,7 +465,7 @@
                 helperText: 'Keep questions concise and specific.',
                 onInput: (value) => {
                     state.entries[index].question = value;
-                    updatePreview();
+                    requestPreviewUpdate();
                 }
             });
             fields.appendChild(questionField.wrapper);
@@ -482,7 +482,7 @@
                         updateIconPickerSelection(normalized);
                         renderIconPickerOptions(iconPickerSearch ? iconPickerSearch.value : '');
                     }
-                    updatePreview();
+                    requestPreviewUpdate();
                 }
             });
             if (iconField.input) {
@@ -525,7 +525,7 @@
                         updateIconPickerSelection('');
                         renderIconPickerOptions(iconPickerSearch ? iconPickerSearch.value : '');
                     }
-                    updatePreview();
+                    requestPreviewUpdate();
                 }
             });
             clearButton.classList.add('faq-icon-button');
@@ -625,7 +625,7 @@
                         }
                         state.entries[index].categories = sortCategories(selected);
                         syncCategorySummary();
-                        updatePreview();
+                        requestPreviewUpdate();
                     });
                     checkboxRefs.push({ input: checkbox, value: option.value });
                     optionRow.appendChild(checkbox);
@@ -659,7 +659,7 @@
                 ],
                 onChange: (value) => {
                     state.entries[index].featured = value === 'true';
-                    updatePreview();
+                    requestPreviewUpdate();
                 }
             });
             fields.appendChild(featuredField.wrapper);
@@ -672,7 +672,7 @@
                 helperText: 'Shortened copy for home surfaces. Leave blank to omit.',
                 onInput: (value) => {
                     state.entries[index].homeAnswerHtml = value;
-                    updatePreview();
+                    requestPreviewUpdate();
                 }
             });
             fields.appendChild(homeAnswerField.wrapper);
@@ -687,7 +687,7 @@
                 onInput: (value) => {
                     state.entries[index].answerHtml = value;
                     renderAnswerPreview();
-                    updatePreview();
+                    requestPreviewUpdate();
                 }
             });
             fields.appendChild(answerField.wrapper);
@@ -729,7 +729,7 @@
                         answerField.textarea.value = state.entries[index].answerHtml;
                     }
                     renderAnswerPreview();
-                    updatePreview();
+                    requestPreviewUpdate();
                 }
             });
             formatButton.classList.add('faq-html-format-button');
@@ -1050,6 +1050,20 @@
             applyValidationState(payload);
             updateMetrics(payload);
             updateExportControls();
+        }
+
+        const previewUpdateTask = utils.createDeferredTask(updatePreview, {
+            delay: 320,
+            idle: true
+        });
+
+        function requestPreviewUpdate(options = {}) {
+            const { immediate = false } = options;
+            if (immediate) {
+                return previewUpdateTask.flush();
+            }
+            previewUpdateTask.schedule();
+            return undefined;
         }
 
         function applyValidationState(payload) {
@@ -1404,7 +1418,7 @@
             }
             updateIconPickerSelection(normalized);
             renderIconPickerOptions(iconPickerSearch ? iconPickerSearch.value : '');
-            updatePreview();
+            requestPreviewUpdate();
         }
 
         async function handleImport(content) {

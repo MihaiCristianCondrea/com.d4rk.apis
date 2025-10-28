@@ -1121,7 +1121,7 @@
             state.cards.forEach((card, index) => {
                 entriesContainer.appendChild(createCard(card, index));
             });
-            updatePreview();
+            requestPreviewUpdate();
         }
 
         function createCard(card, index) {
@@ -1150,7 +1150,7 @@
                     value: card.lesson_id,
                     onInput: (value) => {
                         state.cards[index].lesson_id = value;
-                        updatePreview();
+                        requestPreviewUpdate();
                     }
                 }).wrapper
             );
@@ -1161,7 +1161,7 @@
                     helperText: BLOCK_TYPE_HINT,
                     onInput: (value) => {
                         state.cards[index].lesson_type = value;
-                        updatePreview();
+                        requestPreviewUpdate();
                     }
                 }).wrapper
             );
@@ -1171,7 +1171,7 @@
                     value: card.lesson_title,
                     onInput: (value) => {
                         state.cards[index].lesson_title = value;
-                        updatePreview();
+                        requestPreviewUpdate();
                     }
                 }).wrapper
             );
@@ -1182,7 +1182,7 @@
                     placeholder: 'https://example.com/thumbnail.webp',
                     onInput: (value) => {
                         state.cards[index].lesson_thumbnail_image_url = value;
-                        updatePreview();
+                        requestPreviewUpdate();
                     }
                 }).wrapper
             );
@@ -1193,7 +1193,7 @@
                     placeholder: 'com.d4rk.english://lesson/...',
                     onInput: (value) => {
                         state.cards[index].lesson_deep_link_path = value;
-                        updatePreview();
+                        requestPreviewUpdate();
                     }
                 }).wrapper
             );
@@ -1204,10 +1204,10 @@
             card.customFields.forEach((field, fieldIndex) => {
                 list.appendChild(createCustomFieldRow(field, (key) => {
                     state.cards[index].customFields[fieldIndex].key = key;
-                    updatePreview();
+                    requestPreviewUpdate();
                 }, (value) => {
                     state.cards[index].customFields[fieldIndex].value = value;
-                    updatePreview();
+                    requestPreviewUpdate();
                 }, () => {
                     state.cards[index].customFields.splice(fieldIndex, 1);
                     render();
@@ -1346,6 +1346,20 @@
             handlePreviewResult('home', result, validationStatus);
         }
 
+        const previewUpdateTask = utils.createDeferredTask(updatePreview, {
+            delay: 360,
+            idle: true
+        });
+
+        function requestPreviewUpdate(options = {}) {
+            const { immediate = false } = options;
+            if (immediate) {
+                return previewUpdateTask.flush();
+            }
+            previewUpdateTask.schedule();
+            return undefined;
+        }
+
         attachCommonHandlers({
             addButton,
             resetButton,
@@ -1404,14 +1418,14 @@
         if (titleField) {
             titleField.addEventListener('input', (event) => {
                 state.title = event.target.value;
-                updatePreview();
+                requestPreviewUpdate();
             });
         }
 
         function render() {
             renderMetadata();
             renderBlocks();
-            updatePreview();
+            requestPreviewUpdate();
         }
 
         function renderMetadata() {
@@ -1425,7 +1439,7 @@
                 onClick: () => {
                     state.metadata.push({ key: '', value: '' });
                     renderMetadata();
-                    updatePreview();
+                    requestPreviewUpdate();
                 }
             }));
             metadataContainer.appendChild(header);
@@ -1433,14 +1447,14 @@
             state.metadata.forEach((field, index) => {
                 list.appendChild(createCustomFieldRow(field, (key) => {
                     state.metadata[index].key = key;
-                    updatePreview();
+                    requestPreviewUpdate();
                 }, (value) => {
                     state.metadata[index].value = value;
-                    updatePreview();
+                    requestPreviewUpdate();
                 }, () => {
                     state.metadata.splice(index, 1);
                     renderMetadata();
-                    updatePreview();
+                    requestPreviewUpdate();
                 }));
             });
             metadataContainer.appendChild(list);
@@ -1481,7 +1495,7 @@
                         state.blocks.splice(index, 1);
                     }
                     renderBlocks();
-                    updatePreview();
+                    requestPreviewUpdate();
                 }
             }));
             card.appendChild(header);
@@ -1493,7 +1507,7 @@
                     value: block.content_id,
                     onInput: (value) => {
                         state.blocks[index].content_id = value;
-                        updatePreview();
+                        requestPreviewUpdate();
                     }
                 }).wrapper
             );
@@ -1506,7 +1520,7 @@
                         state.blocks[index].content_type = value;
                         cleanupPropsForType(state.blocks[index]);
                         renderBlocks();
-                        updatePreview();
+                        requestPreviewUpdate();
                     }
                 }).wrapper
             );
@@ -1521,7 +1535,7 @@
                             helperText: definition.helperText || '',
                             onInput: (value) => {
                                 state.blocks[index].props[definition.key] = value;
-                                updatePreview();
+                                requestPreviewUpdate();
                             }
                         }).wrapper
                     );
@@ -1535,7 +1549,7 @@
                             helperText: definition.helperText || '',
                             onInput: (value) => {
                                 state.blocks[index].props[definition.key] = value;
-                                updatePreview();
+                                requestPreviewUpdate();
                             }
                         }).wrapper
                     );
@@ -1548,14 +1562,14 @@
             block.customFields.forEach((field, fieldIndex) => {
                 list.appendChild(createCustomFieldRow(field, (key) => {
                     state.blocks[index].customFields[fieldIndex].key = key;
-                    updatePreview();
+                    requestPreviewUpdate();
                 }, (value) => {
                     state.blocks[index].customFields[fieldIndex].value = value;
-                    updatePreview();
+                    requestPreviewUpdate();
                 }, () => {
                     state.blocks[index].customFields.splice(fieldIndex, 1);
                     renderBlocks();
-                    updatePreview();
+                    requestPreviewUpdate();
                 }));
             });
             customSection.appendChild(list);
@@ -1693,6 +1707,20 @@
             handlePreviewResult('lesson', result, validationStatus);
         }
 
+        const previewUpdateTask = utils.createDeferredTask(updatePreview, {
+            delay: 360,
+            idle: true
+        });
+
+        function requestPreviewUpdate(options = {}) {
+            const { immediate = false } = options;
+            if (immediate) {
+                return previewUpdateTask.flush();
+            }
+            previewUpdateTask.schedule();
+            return undefined;
+        }
+
         function buildBlockPayload(block) {
             const payload = {};
             const contentId = utils.trimString(block.content_id ?? '');
@@ -1740,7 +1768,7 @@
             onAdd: () => {
                 state.blocks.push(createEmptyBlock());
                 renderBlocks();
-                updatePreview();
+                requestPreviewUpdate();
             },
             onReset: () => {
                 state.title = '';

@@ -461,6 +461,20 @@
             updateExportControls();
         }
 
+        const previewUpdateTask = utils.createDeferredTask(updatePreview, {
+            delay: 360,
+            idle: true
+        });
+
+        function requestPreviewUpdate(options = {}) {
+            const { immediate = false } = options;
+            if (immediate) {
+                return previewUpdateTask.flush();
+            }
+            previewUpdateTask.schedule();
+            return undefined;
+        }
+
         function sanitizeAppEntry(app) {
             const trimmed = (value) =>
                 utils.trimString(
@@ -1092,7 +1106,7 @@
             state.apps.forEach((app, index) => {
                 entriesContainer.appendChild(createAppCard(app, index));
             });
-            updatePreview();
+            requestPreviewUpdate();
             applyCardFilters();
         }
 
@@ -1243,7 +1257,7 @@
                 onInput: (value) => {
                     state.apps[index].name = value;
                     touchWorkspace();
-                    updatePreview();
+                    requestPreviewUpdate();
                 }
             });
             createFieldGroup(nameField);
@@ -1282,7 +1296,7 @@
                 onInput: (value) => {
                     state.apps[index].packageName = value;
                     touchWorkspace();
-                    updatePreview();
+                    requestPreviewUpdate();
                     validatePackageField(value);
                 }
             });
@@ -1317,7 +1331,7 @@
             categorySelect.addEventListener('change', () => {
                 state.apps[index].category = categorySelect.value || '';
                 touchWorkspace();
-                updatePreview();
+                requestPreviewUpdate();
             });
             createFieldGroup(categorySelect);
 
@@ -1329,7 +1343,7 @@
                 onInput: (value) => {
                     state.apps[index].description = value;
                     touchWorkspace();
-                    updatePreview();
+                    requestPreviewUpdate();
                 }
             });
             createFieldGroup(descriptionField);
@@ -1450,7 +1464,7 @@
                 onInput: (value) => {
                     state.apps[index].iconLogo = value;
                     touchWorkspace();
-                    updatePreview();
+                    requestPreviewUpdate();
                     validateIconField(value);
                 }
             });
@@ -2099,7 +2113,7 @@
                 state.apps[appIndex].screenshots[screenshotIndex] = nextValue;
                 updateThumbnail(nextValue);
                 touchWorkspace();
-                updatePreview();
+                requestPreviewUpdate();
                 if (typeof onChange === 'function') {
                     onChange();
                 }
