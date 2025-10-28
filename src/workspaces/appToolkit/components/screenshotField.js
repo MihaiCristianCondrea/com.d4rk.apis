@@ -42,7 +42,30 @@ export class AppToolkitScreenshotField extends HTMLElement {
     const link = document.createElement('link');
     link.rel = 'stylesheet';
     link.href = styleHref;
-    this.shadowRoot.append(link, template.content.cloneNode(true));
+
+    const iconStyle = document.createElement('style');
+    iconStyle.textContent = `
+      .material-symbols-outlined {
+        font-family:
+          var(--material-symbols-font, 'Material Symbols Outlined'),
+          'Material Symbols Outlined', sans-serif;
+        font-weight: normal;
+        font-style: normal;
+        font-size: 20px;
+        line-height: 1;
+        letter-spacing: normal;
+        text-transform: none;
+        display: inline-block;
+        white-space: nowrap;
+        word-wrap: normal;
+        direction: ltr;
+        font-feature-settings: 'liga';
+        -webkit-font-feature-settings: 'liga';
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      }
+    `;
+
+    this.shadowRoot.append(link, iconStyle, template.content.cloneNode(true));
 
     this._input = this.shadowRoot.querySelector('.input');
     this._thumbnail = this.shadowRoot.querySelector('.thumbnail');
