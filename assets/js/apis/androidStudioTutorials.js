@@ -1403,8 +1403,8 @@
             return payload;
         }
 
-        function updatePreview() {
-            const result = utils.renderJsonPreview({
+        async function updatePreview() {
+            const result = await utils.renderJsonPreview({
                 previewArea,
                 statusElement: validationStatus,
                 data: state.cards,
@@ -1773,8 +1773,8 @@
             return { data: finalData };
         }
 
-        function updatePreview() {
-            const result = utils.renderJsonPreview({
+        async function updatePreview() {
+            const result = await utils.renderJsonPreview({
                 previewArea,
                 statusElement: validationStatus,
                 data: null,

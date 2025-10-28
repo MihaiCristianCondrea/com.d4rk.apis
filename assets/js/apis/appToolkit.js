@@ -431,8 +431,8 @@
             }
         }
 
-        function updatePreview() {
-            const result = utils.renderJsonPreview({ /*FIXME: Argument type {    previewArea: HTMLElement,    statusElement: HTMLElement,    data: [{        name: string,        packageName: string,        category: string,        description: string,        iconLogo: string,        screenshots: [string]    }],    buildPayload: function(any): {        data: {            apps: any        }    },    autoFix: function(any): any,    successMessage: function(any): (string | string | string)} is not assignable to parameter type {    previewArea: any,    statusElement: any,    data: any,    buildPayload: any,    autoFix: any,    validator: any,    successMessage?: string,    errorMessage?: string}  Type function(any): (string | string | string) is not assignable to type string */
+        async function updatePreview() {
+            const result = await utils.renderJsonPreview({
                 previewArea,
                 statusElement: validationStatus,
                 data: state.apps,
