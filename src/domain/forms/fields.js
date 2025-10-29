@@ -62,21 +62,28 @@ export function createTextareaField({
 export function createSelectField({ label, value = '', options = [], onChange = noop }) {
   const wrapper = createElement('label', { classNames: 'api-field' });
 
+  const selectAttrs = {};
   if (label) {
-    wrapper.appendChild(createElement('span', { classNames: 'api-field-label', text: label }));
+    selectAttrs.label = label;
+    selectAttrs['aria-label'] = label;
   }
 
-  const select = createElement('select', { classNames: 'api-select' });
+  const select = createElement('md-outlined-select', { attrs: selectAttrs });
+
   options.forEach((option) => {
-    const optionEl = createElement('option', {
+    const optionEl = createElement('md-select-option', {
       attrs: { value: option.value },
       text: option.label,
     });
     if (option.value === value) {
-      optionEl.selected = true;
+      optionEl.setAttribute('selected', '');
     }
     select.appendChild(optionEl);
   });
+
+  if (value != null) {
+    select.value = value;
+  }
 
   select.addEventListener('change', (event) => onChange(event.target.value));
   wrapper.appendChild(select);

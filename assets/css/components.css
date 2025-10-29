@@ -2149,7 +2149,6 @@ md-list-item[type='button'].expanded md-icon[slot='end'] { /*FIXME: Selector mat
 }
 
 .api-input,
-.api-select,
 .api-textarea {
   width: 100%;
   border: 1px solid var(--app-border-color);
@@ -2163,7 +2162,6 @@ md-list-item[type='button'].expanded md-icon[slot='end'] { /*FIXME: Selector mat
 }
 
 .api-input:focus,
-.api-select:focus,
 .api-textarea:focus {
   border-color: var(--md-sys-color-primary);
   outline: none;
@@ -2172,6 +2170,13 @@ md-list-item[type='button'].expanded md-icon[slot='end'] { /*FIXME: Selector mat
 .api-textarea {
   min-height: 140px;
   resize: vertical;
+}
+
+.api-field md-outlined-select { /*FIXME: Selector matches unknown element md-outlined-select*/
+  width: 100%;
+  box-sizing: border-box;
+  --md-outlined-select-container-shape: 16px;
+  --md-outlined-select-container-height: 56px;
 }
 
 .api-field-helper {
