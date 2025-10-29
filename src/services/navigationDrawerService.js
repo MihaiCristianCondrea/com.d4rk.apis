@@ -177,20 +177,20 @@ export class NavigationDrawerController {
       return;
     }
 
-    // Keep the drawer in modal mode even on wider screens so that
-    // the toggle button continues to work. The labs drawer component
-    // still reports layout changes through the media query matcher,
-    // but we intentionally ignore them to preserve the previous UX
-    // where the drawer can always be dismissed.
-    const shouldUseStandard = false;
-    document.body.dataset.drawerMode = 'modal';
+    const shouldUseStandard = Boolean(shouldUseStandardLayout);
+    document.body.dataset.drawerMode = shouldUseStandard ? 'standard' : 'modal';
     document.body.classList.toggle('drawer-standard-mode', shouldUseStandard);
 
     this.menuButton?.toggleAttribute('hidden', shouldUseStandard);
     this.closeDrawerButton?.toggleAttribute('hidden', shouldUseStandard);
 
     this.isStandardDrawerLayout = shouldUseStandard;
-    this.syncDrawerState(Boolean(this.navDrawer.opened));
+    if (shouldUseStandard && this.navDrawer && this.navDrawer.opened) {
+      this.navDrawer.opened = false;
+    }
+
+    const isOpen = Boolean(this.navDrawer?.opened);
+    this.syncDrawerState(isOpen);
   }
 
   syncDrawerState(isOpened) {
