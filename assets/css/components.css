@@ -16,6 +16,19 @@ body[data-dialog-open='true'] {
   --app-button-inline-padding: 24px;
   --app-button-icon-leading-padding: 16px;
   --app-button-icon-trailing-padding: 24px;
+  --app-field-shape: 16px;
+}
+
+:where(
+    md-outlined-text-field, /*FIXME: Selector matches unknown element md-outlined-text-field*/
+    md-filled-text-field, /*FIXME: Selector matches unknown element md-filled-text-field*/
+    md-outlined-select, /*FIXME: Selector matches unknown element md-outlined-select*/
+    md-filled-select /*FIXME: Selector matches unknown element md-filled-select*/
+  ) {
+  --md-outlined-text-field-container-shape: var(--app-field-shape);
+  --md-filled-text-field-container-shape: var(--app-field-shape);
+  --md-outlined-select-container-shape: var(--app-field-shape);
+  --md-filled-select-container-shape: var(--app-field-shape);
 }
 
 :where(
@@ -711,11 +724,11 @@ md-list-item[type='button'].expanded md-icon[slot='end'] { /*FIXME: Selector mat
   --control-row-height: 56px;
   --md-outlined-text-field-container-height: var(--control-row-height);
   --md-filled-text-field-container-height: var(--control-row-height);
-  --md-outlined-text-field-container-shape: 16px;
+  --md-outlined-text-field-container-shape: var(--app-field-shape);
   --md-outlined-select-container-height: var(--control-row-height);
-  --md-outlined-select-container-shape: 16px;
+  --md-outlined-select-container-shape: var(--app-field-shape);
   --md-filled-select-container-height: var(--control-row-height);
-  --md-filled-select-container-shape: 16px;
+  --md-filled-select-container-shape: var(--app-field-shape);
 }
 
 .builder-remote-inline-action::after {
@@ -1163,7 +1176,7 @@ md-list-item[type='button'].expanded md-icon[slot='end'] { /*FIXME: Selector mat
 }
 
 .github-step :where(md-outlined-text-field, md-outlined-select) {
-  --github-step-field-shape: 16px;
+  --github-step-field-shape: var(--app-field-shape);
   --md-outlined-text-field-container-shape: var(--github-step-field-shape);
   --md-outlined-select-container-shape: var(--github-step-field-shape);
 }
@@ -1338,7 +1351,7 @@ md-list-item[type='button'].expanded md-icon[slot='end'] { /*FIXME: Selector mat
   background-color: var(--md-sys-color-surface);
   color: var(--app-text-color);
   border: 1px solid var(--app-border-color);
-  border-radius: 12px;
+  border-radius: var(--app-field-shape);
   padding: 1rem;
   font-family: 'Fira Code', 'Source Code Pro', monospace;
   font-size: 0.85rem;
@@ -1484,7 +1497,7 @@ md-list-item[type='button'].expanded md-icon[slot='end'] { /*FIXME: Selector mat
     md-filled-text-field,
     md-filled-select
   ) {
-  --builder-field-container-shape: 16px;
+  --builder-field-container-shape: var(--app-field-shape);
   --md-outlined-text-field-container-shape: var(--builder-field-container-shape);
   --md-outlined-select-container-shape: var(--builder-field-container-shape);
   --md-filled-text-field-container-shape: var(--builder-field-container-shape);
@@ -1646,7 +1659,7 @@ md-list-item[type='button'].expanded md-icon[slot='end'] { /*FIXME: Selector mat
   align-items: center;
   --screenshot-action-control-height: 40px;
   --md-outlined-text-field-container-height: var(--screenshot-action-control-height);
-  --md-outlined-text-field-container-shape: 16px;
+  --md-outlined-text-field-container-shape: var(--app-field-shape);
   --control-row-height: var(--screenshot-action-control-height);
 }
 
@@ -2152,7 +2165,7 @@ md-list-item[type='button'].expanded md-icon[slot='end'] { /*FIXME: Selector mat
 .api-textarea {
   width: 100%;
   border: 1px solid var(--app-border-color);
-  border-radius: 12px;
+  border-radius: var(--app-field-shape);
   padding: 0.65rem 0.75rem;
   font-size: 0.95rem;
   font-family: inherit;
@@ -2175,7 +2188,7 @@ md-list-item[type='button'].expanded md-icon[slot='end'] { /*FIXME: Selector mat
 .api-field md-outlined-select { /*FIXME: Selector matches unknown element md-outlined-select*/
   width: 100%;
   box-sizing: border-box;
-  --md-outlined-select-container-shape: 16px;
+  --md-outlined-select-container-shape: var(--app-field-shape);
   --md-outlined-select-container-height: 56px;
 }
 
@@ -2195,7 +2208,7 @@ md-list-item[type='button'].expanded md-icon[slot='end'] { /*FIXME: Selector mat
 .faq-category-trigger {
   width: 100%;
   border: 1px solid var(--app-border-color);
-  border-radius: 12px;
+  border-radius: var(--app-field-shape);
   padding: 0.65rem 0.75rem;
   font: inherit;
   font-size: 0.95rem;

@@ -112,6 +112,10 @@
   gap: 0.5rem;
 }
 
+.input {
+  --md-outlined-text-field-container-shape: var(--app-field-shape, 16px);
+}
+
 .meta {
   font-size: 0.75rem;
   color: var(--app-secondary-text-color);
