@@ -28,7 +28,9 @@ body[data-dialog-open='true'] {
   --md-outlined-text-field-container-shape: var(--app-field-shape);
   --md-filled-text-field-container-shape: var(--app-field-shape);
   --md-outlined-select-container-shape: var(--app-field-shape);
+  --md-outlined-field-container-shape: var(--app-field-shape);
   --md-filled-select-container-shape: var(--app-field-shape);
+  --md-filled-field-container-shape: var(--app-field-shape);
 }
 
 :where(
@@ -727,8 +729,10 @@ md-list-item[type='button'].expanded md-icon[slot='end'] { /*FIXME: Selector mat
   --md-outlined-text-field-container-shape: var(--app-field-shape);
   --md-outlined-select-container-height: var(--control-row-height);
   --md-outlined-select-container-shape: var(--app-field-shape);
+  --md-outlined-field-container-shape: var(--app-field-shape);
   --md-filled-select-container-height: var(--control-row-height);
   --md-filled-select-container-shape: var(--app-field-shape);
+  --md-filled-field-container-shape: var(--app-field-shape);
 }
 
 .builder-remote-inline-action::after {
@@ -1179,6 +1183,7 @@ md-list-item[type='button'].expanded md-icon[slot='end'] { /*FIXME: Selector mat
   --github-step-field-shape: var(--app-field-shape);
   --md-outlined-text-field-container-shape: var(--github-step-field-shape);
   --md-outlined-select-container-shape: var(--github-step-field-shape);
+  --md-outlined-field-container-shape: var(--github-step-field-shape);
 }
 
 .github-step[hidden] {
@@ -1500,8 +1505,10 @@ md-list-item[type='button'].expanded md-icon[slot='end'] { /*FIXME: Selector mat
   --builder-field-container-shape: var(--app-field-shape);
   --md-outlined-text-field-container-shape: var(--builder-field-container-shape);
   --md-outlined-select-container-shape: var(--builder-field-container-shape);
+  --md-outlined-field-container-shape: var(--builder-field-container-shape);
   --md-filled-text-field-container-shape: var(--builder-field-container-shape);
   --md-filled-select-container-shape: var(--builder-field-container-shape);
+  --md-filled-field-container-shape: var(--builder-field-container-shape);
 }
 
 .builder-hint-chip-set {
@@ -2189,6 +2196,7 @@ md-list-item[type='button'].expanded md-icon[slot='end'] { /*FIXME: Selector mat
   width: 100%;
   box-sizing: border-box;
   --md-outlined-select-container-shape: var(--app-field-shape);
+  --md-outlined-field-container-shape: var(--app-field-shape);
   --md-outlined-select-container-height: 56px;
 }
 
