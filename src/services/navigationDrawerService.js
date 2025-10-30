@@ -181,8 +181,10 @@ export class NavigationDrawerController {
     document.body.dataset.drawerMode = shouldUseStandard ? 'standard' : 'modal';
     document.body.classList.toggle('drawer-standard-mode', shouldUseStandard);
 
-    this.menuButton?.toggleAttribute('hidden', shouldUseStandard);
-    this.closeDrawerButton?.toggleAttribute('hidden', shouldUseStandard);
+    // Always keep the menu controls available so the drawer can be opened
+    // regardless of the current layout width. Hiding these controls caused the
+    // hamburger button to disappear on larger screens, leaving no way to open
+    // the navigation drawer.
 
     this.isStandardDrawerLayout = shouldUseStandard;
     if (shouldUseStandard && this.navDrawer && this.navDrawer.opened) {
