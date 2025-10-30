@@ -14,6 +14,9 @@
   content-visibility: auto;
   contain-intrinsic-size: 840px 1200px;
   padding: clamp(1.5rem, 2vw, 2.5rem);
+  width: min(100%, 1200px);
+  margin-inline: auto;
+  overflow-x: hidden;
   backdrop-filter: blur(12px) saturate(120%);
 }
 
