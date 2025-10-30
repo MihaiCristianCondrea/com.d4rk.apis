@@ -548,6 +548,25 @@ md-list-item[type='button'].expanded md-icon[slot='end'] { /*FIXME: Selector mat
   gap: 1.5rem;
 }
 
+.app-shell-panel :where(
+    p,
+    li,
+    code,
+    .toolbar-status-value,
+    .builder-field-helper,
+    .builder-github-helper,
+    .builder-remote-feedback,
+    .github-review-copy,
+    .github-status
+  ) {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.app-shell-panel code {
+  white-space: normal;
+}
+
 .builder-toolbar {
   display: flex;
   flex-wrap: wrap;
@@ -723,6 +742,7 @@ md-list-item[type='button'].expanded md-icon[slot='end'] { /*FIXME: Selector mat
   grid-template-columns: minmax(240px, 1fr) auto;
   gap: 0.65rem;
   align-items: stretch;
+  min-width: 0;
   --control-row-height: 56px;
   --md-outlined-text-field-container-height: var(--control-row-height);
   --md-filled-text-field-container-height: var(--control-row-height);
@@ -738,7 +758,7 @@ md-list-item[type='button'].expanded md-icon[slot='end'] { /*FIXME: Selector mat
 .builder-remote-inline-action::after {
   content: '';
   position: absolute;
-  inset: -0.2rem;
+  inset: 0;
   border-radius: 18px;
   border: 2px solid transparent;
   pointer-events: none;
@@ -1177,6 +1197,7 @@ md-list-item[type='button'].expanded md-icon[slot='end'] { /*FIXME: Selector mat
 .github-step {
   display: grid;
   gap: 1rem;
+  min-width: 0;
 }
 
 .github-step :where(md-outlined-text-field, md-outlined-select) {
@@ -1184,6 +1205,10 @@ md-list-item[type='button'].expanded md-icon[slot='end'] { /*FIXME: Selector mat
   --md-outlined-text-field-container-shape: var(--github-step-field-shape);
   --md-outlined-select-container-shape: var(--github-step-field-shape);
   --md-outlined-field-container-shape: var(--github-step-field-shape);
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
 }
 
 .github-step[hidden] {
@@ -1205,36 +1230,60 @@ md-list-item[type='button'].expanded md-icon[slot='end'] { /*FIXME: Selector mat
   display: grid;
   gap: 1.5rem;
   align-items: start;
+  width: 100%;
 }
 
-.builder-columns {
-  grid-template-columns: minmax(0, 2.25fr) minmax(0, 1.35fr);
+.builder-layout > * {
+  min-width: 0;
 }
 
+.builder-layout :where(
+    md-filled-text-field,
+    md-outlined-text-field,
+    md-outlined-select,
+    md-filled-select,
+    md-assist-chip-set,
+    md-textarea
+  ) {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+.builder-columns,
 .builder-columns--with-diff {
-  grid-template-columns: minmax(0, 2.25fr) minmax(0, 1.35fr) minmax(0, 1.1fr);
+  grid-template-columns: minmax(0, 1fr);
 }
 
-@media (max-width: 1440px) {
+@media (min-width: 768px) {
+  .builder-columns,
+  .builder-columns--with-diff {
+    grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+  }
+}
+
+@media (min-width: 1280px) {
+  .builder-columns {
+    grid-template-columns: minmax(0, 2.25fr) minmax(0, 1.35fr);
+  }
+
+  .builder-columns--with-diff {
+    grid-template-columns: minmax(0, 2.25fr) minmax(0, 1.35fr) minmax(0, 1.1fr);
+  }
+}
+
+@media (min-width: 1280px) and (max-width: 1440px) {
   .builder-columns--with-diff {
     grid-template-columns: minmax(0, 2fr) minmax(0, 1.25fr) minmax(0, 1fr);
   }
 }
 
 @media (max-width: 1024px) {
-  .builder-columns,
-  .builder-columns--with-diff {
-    grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
-  }
   .builder-diff-sheet {
     display: none;
-  }
-}
-
-@media (max-width: 768px) {
-  .builder-columns,
-  .builder-columns--with-diff {
-    grid-template-columns: 1fr;
   }
 }
 
@@ -1277,6 +1326,8 @@ md-list-item[type='button'].expanded md-icon[slot='end'] { /*FIXME: Selector mat
   top: 1rem;
   max-height: calc(100vh - 6rem);
   overflow: auto;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .builder-diff-sheet {
@@ -1288,6 +1339,9 @@ md-list-item[type='button'].expanded md-icon[slot='end'] { /*FIXME: Selector mat
   max-height: calc(100vh - 6rem);
   overflow: hidden;
   box-shadow: 0 12px 32px rgba(15, 20, 25, 0.12);
+  width: min(100%, var(--md-side-sheet-container-width));
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .builder-diff-sheet:not([open]) {
@@ -1494,6 +1548,8 @@ md-list-item[type='button'].expanded md-icon[slot='end'] { /*FIXME: Selector mat
   ) {
   width: 100%;
   box-sizing: border-box;
+  max-width: 100%;
+  min-width: 0;
 }
 
 .builder-field-group :where(
