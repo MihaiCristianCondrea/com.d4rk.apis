@@ -76,12 +76,14 @@ export class NavigationDrawerController {
   }
 
   open() {
-    if (!this.navDrawer || this.isStandardDrawerLayout) {
+    if (!this.navDrawer) {
       return;
     }
     this.navDrawer.opened = true;
     this.syncDrawerState(true);
-    this.focusFirstNavItem();
+    if (!this.isStandardDrawerLayout) {
+      this.focusFirstNavItem();
+    }
   }
 
   close() {
@@ -178,6 +180,7 @@ export class NavigationDrawerController {
     }
 
     const shouldUseStandard = Boolean(shouldUseStandardLayout);
+    const wasStandard = this.isStandardDrawerLayout;
     document.body.dataset.drawerMode = shouldUseStandard ? 'standard' : 'modal';
     document.body.classList.toggle('drawer-standard-mode', shouldUseStandard);
 
@@ -187,7 +190,9 @@ export class NavigationDrawerController {
     // the navigation drawer.
 
     this.isStandardDrawerLayout = shouldUseStandard;
-    if (shouldUseStandard && this.navDrawer && this.navDrawer.opened) {
+    if (shouldUseStandard && !wasStandard) {
+      this.navDrawer.opened = true;
+    } else if (!shouldUseStandard && wasStandard) {
       this.navDrawer.opened = false;
     }
 

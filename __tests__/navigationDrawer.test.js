@@ -207,6 +207,7 @@ describe('navigationDrawerService', () => {
     matchMediaStub.dispatch(true);
 
     expect(navDrawerElement.getAttribute('aria-modal')).toBe('false');
+    expect(navDrawerElement.opened).toBe(true);
     expect(document.body.classList.contains('drawer-is-open')).toBe(false);
     expect(overlay.classList.contains('open')).toBe(false);
     expect(menuButtonElement.getAttribute('aria-expanded')).toBe('false');
@@ -218,6 +219,7 @@ describe('navigationDrawerService', () => {
     matchMediaStub.dispatch(false);
 
     expect(navDrawerElement.getAttribute('aria-modal')).toBe('true');
+    expect(navDrawerElement.opened).toBe(false);
     expect(document.body.classList.contains('drawer-is-open')).toBe(false);
 
     menuButtonElement.click();
