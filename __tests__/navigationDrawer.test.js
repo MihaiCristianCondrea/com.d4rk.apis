@@ -14,34 +14,6 @@ jest.mock('../src/domain/utils.js', () => {
 
 const { initNavigationDrawer } = require('../src/services/navigationDrawerService.js');
 
-function createMatchMediaStub(initialMatches = false) {
-  let matches = initialMatches;
-  const listeners = new Set();
-  const stub = {
-    media: '(min-width: 840px)',
-    get matches() {
-      return matches;
-    },
-    addEventListener: jest.fn((event, handler) => {
-      if (event === 'change') {
-        listeners.add(handler);
-      }
-    }),
-    removeEventListener: jest.fn((event, handler) => {
-      if (event === 'change') {
-        listeners.delete(handler);
-      }
-    }),
-  };
-
-  stub.dispatch = (value) => {
-    matches = value;
-    listeners.forEach((listener) => listener({ matches: value }));
-  };
-
-  return stub;
-}
-
 function createDrawerMarkup() {
   document.body.innerHTML = `
     <header data-drawer-inert-target id="header">
@@ -88,13 +60,8 @@ function createDrawerMarkup() {
 }
 
 describe('navigationDrawerService', () => {
-  let matchMediaStub;
-
   beforeEach(() => {
     document.body.className = '';
-    delete document.body.dataset.drawerMode;
-    matchMediaStub = createMatchMediaStub(false);
-    window.matchMedia = jest.fn(() => matchMediaStub);
     mockUtils.getDynamicElement.mockReset();
     mockUtils.getDynamicElement.mockImplementation((id) => document.getElementById(id));
     createDrawerMarkup();
@@ -190,46 +157,4 @@ describe('navigationDrawerService', () => {
     expect(androidContentElement.getAttribute('aria-hidden')).toBe('true');
   });
 
-  test('manages inert targets and aria-modal when switching layout modes', () => {
-    const menuButtonElement = document.getElementById('menuButton');
-    const navDrawerElement = document.getElementById('navDrawer');
-    const overlay = document.getElementById('drawerOverlay');
-    const inertElements = Array.from(document.querySelectorAll('[data-drawer-inert-target]'));
-
-    expect(navDrawerElement.getAttribute('aria-modal')).toBe('true');
-
-    menuButtonElement.click();
-    expect(navDrawerElement.opened).toBe(true);
-    inertElements.forEach((element) => {
-      expect(element.hasAttribute('inert')).toBe(true);
-    });
-
-    matchMediaStub.dispatch(true);
-
-    expect(navDrawerElement.getAttribute('aria-modal')).toBe('false');
-    expect(navDrawerElement.opened).toBe(true);
-    expect(document.body.classList.contains('drawer-is-open')).toBe(false);
-    expect(overlay.classList.contains('open')).toBe(false);
-    expect(menuButtonElement.getAttribute('aria-expanded')).toBe('false');
-    inertElements.forEach((element) => {
-      expect(element.hasAttribute('inert')).toBe(false);
-      expect(element.getAttribute('aria-hidden')).toBe('false');
-    });
-
-    matchMediaStub.dispatch(false);
-
-    expect(navDrawerElement.getAttribute('aria-modal')).toBe('true');
-    expect(navDrawerElement.opened).toBe(false);
-    expect(document.body.classList.contains('drawer-is-open')).toBe(false);
-
-    menuButtonElement.click();
-
-    expect(document.body.classList.contains('drawer-is-open')).toBe(true);
-    expect(overlay.classList.contains('open')).toBe(true);
-    expect(menuButtonElement.getAttribute('aria-expanded')).toBe('true');
-    inertElements.forEach((element) => {
-      expect(element.hasAttribute('inert')).toBe(true);
-      expect(element.getAttribute('aria-hidden')).toBe('true');
-    });
-  });
 });

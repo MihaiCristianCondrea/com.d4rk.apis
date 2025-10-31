@@ -1,7 +1,5 @@
 import { getDynamicElement, rafThrottle } from '../domain/utils.js';
 
-const STANDARD_DRAWER_MEDIA_QUERY = '(min-width: 840px)';
-
 export class NavigationDrawerController {
   constructor({
     menuButtonId = 'menuButton',
@@ -27,11 +25,8 @@ export class NavigationDrawerController {
         : [],
     );
 
-    this.isStandardDrawerLayout = false;
-    this.standardLayoutMatcher = null;
     this.syncDrawerState = this.syncDrawerState.bind(this);
     this.handleKeydown = this.handleKeydown.bind(this);
-    this.updateDrawerLayout = this.updateDrawerLayout.bind(this);
     this.focusFirstNavItem = this.focusFirstNavItem.bind(this);
     this.handleDrawerChanged = rafThrottle((event) => {
       const opened =
@@ -46,7 +41,6 @@ export class NavigationDrawerController {
     }
 
     this.wireButtons();
-    this.setupResponsiveDrawerLayout();
     this.syncDrawerState(Boolean(this.navDrawer.opened));
   }
 
@@ -81,13 +75,11 @@ export class NavigationDrawerController {
     }
     this.navDrawer.opened = true;
     this.syncDrawerState(true);
-    if (!this.isStandardDrawerLayout) {
-      this.focusFirstNavItem();
-    }
+    this.focusFirstNavItem();
   }
 
   close() {
-    if (!this.navDrawer || this.isStandardDrawerLayout) {
+    if (!this.navDrawer) {
       return;
     }
     this.navDrawer.opened = false;
@@ -96,7 +88,7 @@ export class NavigationDrawerController {
   }
 
   handleKeydown(event) {
-    if (event.key === 'Escape' && this.navDrawer?.opened && !this.isStandardDrawerLayout) {
+    if (event.key === 'Escape' && this.navDrawer?.opened) {
       this.close();
     }
   }
@@ -150,56 +142,6 @@ export class NavigationDrawerController {
     this.closeDrawerButton?.focus?.();
   }
 
-  setupResponsiveDrawerLayout() {
-    if (!this.navDrawer) {
-      return;
-    }
-
-    const applyLayout = (matches) => {
-      this.updateDrawerLayout(Boolean(matches));
-    };
-
-    if (typeof window.matchMedia === 'function') {
-      this.standardLayoutMatcher = window.matchMedia(STANDARD_DRAWER_MEDIA_QUERY);
-      applyLayout(this.standardLayoutMatcher.matches);
-      const handler = (event) => applyLayout(event.matches);
-      if (typeof this.standardLayoutMatcher.addEventListener === 'function') {
-        this.standardLayoutMatcher.addEventListener('change', handler);
-      } else if (typeof this.standardLayoutMatcher.addListener === 'function') {
-        this.standardLayoutMatcher.addListener(handler);
-      }
-    } else {
-      applyLayout(window.innerWidth >= 840);
-      window.addEventListener('resize', () => applyLayout(window.innerWidth >= 840));
-    }
-  }
-
-  updateDrawerLayout(shouldUseStandardLayout) {
-    if (!this.navDrawer) {
-      return;
-    }
-
-    const shouldUseStandard = Boolean(shouldUseStandardLayout);
-    const wasStandard = this.isStandardDrawerLayout;
-    document.body.dataset.drawerMode = shouldUseStandard ? 'standard' : 'modal';
-    document.body.classList.toggle('drawer-standard-mode', shouldUseStandard);
-
-    // Always keep the menu controls available so the drawer can be opened
-    // regardless of the current layout width. Hiding these controls caused the
-    // hamburger button to disappear on larger screens, leaving no way to open
-    // the navigation drawer.
-
-    this.isStandardDrawerLayout = shouldUseStandard;
-    if (shouldUseStandard && !wasStandard) {
-      this.navDrawer.opened = true;
-    } else if (!shouldUseStandard && wasStandard) {
-      this.navDrawer.opened = false;
-    }
-
-    const isOpen = Boolean(this.navDrawer?.opened);
-    this.syncDrawerState(isOpen);
-  }
-
   syncDrawerState(isOpened) {
     if (!this.navDrawer) {
       return;
@@ -208,14 +150,6 @@ export class NavigationDrawerController {
     const isDrawerOpen = Boolean(isOpened);
     this.updateNavDrawerAriaModal();
     this.updateModalAccessibilityState(isDrawerOpen);
-
-    if (this.isStandardDrawerLayout) {
-      this.drawerOverlay?.classList.remove('open');
-      this.drawerOverlay?.setAttribute('aria-hidden', 'true');
-      document.body.classList.remove('drawer-is-open');
-      this.menuButton?.setAttribute('aria-expanded', 'false');
-      return;
-    }
 
     if (isDrawerOpen) {
       this.drawerOverlay?.classList.add('open');
@@ -234,11 +168,11 @@ export class NavigationDrawerController {
     if (!this.navDrawer) {
       return;
     }
-    this.navDrawer.setAttribute('aria-modal', String(!this.isStandardDrawerLayout));
+    this.navDrawer.setAttribute('aria-modal', 'true');
   }
 
   updateModalAccessibilityState(isDrawerOpen) {
-    const inert = !this.isStandardDrawerLayout && isDrawerOpen;
+    const inert = Boolean(isDrawerOpen);
     this.drawerOverlay?.toggleAttribute('aria-hidden', !inert);
 
     this.inertTargets.forEach((element) => {
