@@ -98,14 +98,9 @@
         const channelSegments = document.getElementById('appToolkitChannelSegments');
         const modeSegments = document.getElementById('appToolkitLayoutSegments');
         const filterChipSet = document.getElementById('appToolkitFilterChips');
-        const screenshotDialog = document.getElementById('appToolkitScreenshotDialog');
-        const screenshotDialogHeadline = document.getElementById('appToolkitScreenshotDialogHeadline');
-        const screenshotDialogImage = document.getElementById('appToolkitScreenshotDialogImage');
-        const screenshotDialogCaption = document.getElementById('appToolkitScreenshotDialogCaption');
-        const screenshotDialogOpenButton = document.getElementById('appToolkitScreenshotDialogOpen');
         const diffSheet = document.getElementById('appToolkitDiffSheet');
         const diffContent = document.getElementById('appToolkitDiffContent');
-        const dialogsToWire = [screenshotDialog, githubDialog];
+        const dialogsToWire = [githubDialog];
         const FETCH_STATE_COPY = {
             idle: 'Paste a JSON URL to load the latest data.',
             preset: 'Preset URL ready. Press Enter or Load JSON to import.',
@@ -1839,12 +1834,6 @@
                         touchWorkspace();
                         render();
                     },
-                    onPreview: ({ value: url }) => {
-                        openScreenshotDialog(url, {
-                            title: `Screenshot ${screenshotIndex + 1}`,
-                            packageName: appName
-                        });
-                    },
                     onMeta: (meta) => {
                         if (meta && meta.width && meta.height) {
                             setScreenshotMeta(appIndex, screenshotIndex, {
@@ -1884,18 +1873,6 @@
 
             const actionsEnd = document.createElement('div');
             actionsEnd.classList.add('screenshot-item-actions-end');
-
-            const openButton = document.createElement('md-icon-button');
-            openButton.setAttribute('aria-label', 'Preview screenshot');
-            openButton.innerHTML = '<span class="material-symbols-outlined">visibility</span>';
-            openButton.addEventListener('click', (event) => {
-                event.stopPropagation();
-                openScreenshotDialog(state.apps[appIndex].screenshots[screenshotIndex], {
-                    title: `Screenshot ${screenshotIndex + 1}`,
-                    packageName: state.apps[appIndex].packageName || state.apps[appIndex].name || ''
-                });
-            });
-            actionsEnd.appendChild(openButton);
 
             const removeButton = document.createElement('md-icon-button');
             removeButton.setAttribute('aria-label', 'Remove screenshot');
@@ -1990,13 +1967,6 @@
                 metaInfo.textContent = 'Preview unavailable — check the link.';
             });
 
-            item.addEventListener('dblclick', () => {
-                openScreenshotDialog(state.apps[appIndex].screenshots[screenshotIndex], {
-                    title: `Screenshot ${screenshotIndex + 1}`,
-                    packageName: state.apps[appIndex].packageName || state.apps[appIndex].name || ''
-                });
-            });
-
             const existingMeta = getScreenshotMeta(appIndex, screenshotIndex);
             if (existingMeta) {
                 applyMetaInfo(existingMeta);
@@ -2006,44 +1976,6 @@
 
             updateThumbnail(value);
             return item;
-        }
-
-        function openScreenshotDialog(url, { title = 'Screenshot preview', packageName = '' } = {}) {
-            if (!screenshotDialog || !screenshotDialogImage || !screenshotDialogCaption) {
-                return;
-            }
-            const trimmed = utils.trimString(url);
-            if (screenshotDialogHeadline) {
-                screenshotDialogHeadline.textContent = title;
-            }
-            if (trimmed) {
-                screenshotDialogImage.removeAttribute('hidden');
-                screenshotDialogImage.src = trimmed;
-                screenshotDialogImage.alt = packageName ? `${title} · ${packageName}` : title;
-                screenshotDialogCaption.textContent = packageName ? `${packageName}` : trimmed;
-            } else {
-                screenshotDialogImage.setAttribute('hidden', 'true');
-                screenshotDialogImage.removeAttribute('src');
-                screenshotDialogImage.alt = 'No screenshot available';
-                screenshotDialogCaption.textContent = 'Provide a screenshot URL to preview it here.';
-            }
-            if (screenshotDialogOpenButton) {
-                if (trimmed) {
-                    screenshotDialogOpenButton.disabled = false;
-                    screenshotDialogOpenButton.onclick = () => {
-                        if (typeof window !== 'undefined') {
-                            window.open(trimmed, '_blank', 'noopener');
-                        }
-                    };
-                } else {
-                    screenshotDialogOpenButton.disabled = true;
-                    screenshotDialogOpenButton.onclick = null;
-                }
-            }
-            if (typeof AppDialogs !== 'undefined' && AppDialogs && typeof AppDialogs.rememberTrigger === 'function') {
-                AppDialogs.rememberTrigger(screenshotDialog, document.activeElement);
-            }
-            screenshotDialog.open = true;
         }
 
         function importJson(text) {

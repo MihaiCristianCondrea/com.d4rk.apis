@@ -12,9 +12,6 @@ template.innerHTML = `
       </md-icon-button>
     </slot>
     <div class="actions-end" part="actions-end">
-      <md-icon-button class="preview-button" aria-label="Preview screenshot" part="preview-button">
-        <span class="material-symbols-outlined">visibility</span>
-      </md-icon-button>
       <md-icon-button class="remove-button" aria-label="Remove screenshot" part="remove-button">
         <span class="material-symbols-outlined">delete</span>
       </md-icon-button>
@@ -71,7 +68,6 @@ export class AppToolkitScreenshotField extends HTMLElement {
     this._thumbnail = this.shadowRoot.querySelector('.thumbnail');
     this._image = this.shadowRoot.querySelector('img');
     this._meta = this.shadowRoot.querySelector('.meta');
-    this._previewButton = this.shadowRoot.querySelector('.preview-button');
     this._removeButton = this.shadowRoot.querySelector('.remove-button');
 
     this._value = '';
@@ -90,13 +86,9 @@ export class AppToolkitScreenshotField extends HTMLElement {
     if (this._input) {
       this._input.addEventListener('input', this._handleInput);
     }
-    if (this._previewButton) {
-      this._previewButton.addEventListener('click', this._handlePreview);
-    }
     if (this._removeButton) {
       this._removeButton.addEventListener('click', this._handleRemove);
     }
-    this.addEventListener('dblclick', this._handlePreview);
     this._syncFromAttributes();
   }
 
@@ -104,13 +96,9 @@ export class AppToolkitScreenshotField extends HTMLElement {
     if (this._input) {
       this._input.removeEventListener('input', this._handleInput);
     }
-    if (this._previewButton) {
-      this._previewButton.removeEventListener('click', this._handlePreview);
-    }
     if (this._removeButton) {
       this._removeButton.removeEventListener('click', this._handleRemove);
     }
-    this.removeEventListener('dblclick', this._handlePreview);
     this._abortMetaProbe();
   }
 
@@ -176,17 +164,6 @@ export class AppToolkitScreenshotField extends HTMLElement {
     this.dispatchEvent(
       new CustomEvent('screenshot-change', {
         detail: { value: this._value },
-        bubbles: true,
-        composed: true,
-      })
-    );
-  };
-
-  _handlePreview = (event) => {
-    event?.stopPropagation?.();
-    this.dispatchEvent(
-      new CustomEvent('screenshot-preview', {
-        detail: { value: this._value, position: this._position, appName: this._appName },
         bubbles: true,
         composed: true,
       })
@@ -317,7 +294,6 @@ export function createScreenshotField({
   appName = '',
   onChange,
   onRemove,
-  onPreview,
   onMeta,
 }) {
   const element = document.createElement('app-toolkit-screenshot-field');
@@ -340,12 +316,6 @@ export function createScreenshotField({
   if (typeof onRemove === 'function') {
     element.addEventListener('screenshot-remove', (event) => {
       onRemove(event.detail?.value ?? '');
-    });
-  }
-
-  if (typeof onPreview === 'function') {
-    element.addEventListener('screenshot-preview', (event) => {
-      onPreview(event.detail);
     });
   }
 
