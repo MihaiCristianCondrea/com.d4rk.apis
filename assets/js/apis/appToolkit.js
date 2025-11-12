@@ -153,6 +153,9 @@
         const entriesContainer = document.getElementById('appToolkitEntries');
         const builderLayout = builderRoot.querySelector('.builder-layout');
         const addButton = document.getElementById('appToolkitAddApp');
+        const sortButton = document.getElementById('appToolkitSortButton');
+        const sortLabel = document.getElementById('appToolkitSortLabel');
+        const sortMenu = document.getElementById('appToolkitSortMenu');
         const resetButton = document.getElementById('appToolkitResetButton');
         const copyButton = document.getElementById('appToolkitCopyButton');
         const downloadButton = document.getElementById('appToolkitDownloadButton');
@@ -258,6 +261,35 @@
         const state = {
             apps: [createEmptyApp()]
         };
+        let currentSortKey = 'name';
+        let sortMenuItems = [];
+        const SORT_OPTIONS = {
+            name: {
+                key: 'name',
+                label: 'App name (A–Z)',
+                buttonLabel: 'App name (A–Z)',
+                ariaLabel: 'app name, alphabetical A to Z',
+                type: 'string',
+                getValue: (_app, sanitized) => sanitized.name || ''
+            },
+            category: {
+                key: 'category',
+                label: 'Category (A–Z)',
+                buttonLabel: 'Category (A–Z)',
+                ariaLabel: 'category, alphabetical A to Z',
+                type: 'string',
+                getValue: (_app, sanitized) => sanitized?.category?.label || ''
+            },
+            screenshots: {
+                key: 'screenshots',
+                label: 'Screenshot count (high to low)',
+                buttonLabel: 'Screenshot count (high to low)',
+                ariaLabel: 'screenshot count, high to low',
+                type: 'number',
+                getValue: (_app, _sanitized, meta) => meta.screenshotCount || 0,
+                compare: (a, b) => b.value - a.value
+            }
+        };
         let lastPreviewState = { success: false, payload: null };
         let lastExportEvaluation = { valid: false, reasons: [] };
         let lastTouchedAt = null;
@@ -348,6 +380,117 @@
         function getFilledScreenshotCount(appIndex) {
             const screenshots = state.apps[appIndex]?.screenshots || [];
             return screenshots.reduce((count, value) => (utils.trimString(value) ? count + 1 : count), 0);
+        }
+
+        function normalizeSortString(value) {
+            return utils.trimString(typeof value === 'string' ? value : value == null ? '' : String(value));
+        }
+
+        function compareStrings(a, b) {
+            const valueA = normalizeSortString(a);
+            const valueB = normalizeSortString(b);
+            const hasA = Boolean(valueA);
+            const hasB = Boolean(valueB);
+            if (hasA && hasB) {
+                const diff = valueA.localeCompare(valueB, undefined, { sensitivity: 'base' });
+                if (diff !== 0) {
+                    return diff;
+                }
+            } else if (hasA) {
+                return -1;
+            } else if (hasB) {
+                return 1;
+            }
+            return 0;
+        }
+
+        function defaultCompare(option, a, b) {
+            if (option?.type === 'number') {
+                return (a || 0) - (b || 0);
+            }
+            return compareStrings(a, b);
+        }
+
+        function sortAppsInPlace() {
+            const option = SORT_OPTIONS[currentSortKey];
+            if (!option) {
+                return;
+            }
+            const decorated = state.apps.map((app, index) => {
+                const sanitized = sanitizeAppEntry(app);
+                const meta = deriveAppMeta(app, sanitized);
+                const value = option.getValue(app, sanitized, meta);
+                return { app, index, sanitized, meta, value };
+            });
+            decorated.sort((a, b) => {
+                const primary = typeof option.compare === 'function'
+                    ? option.compare(a, b)
+                    : defaultCompare(option, a.value, b.value);
+                if (primary !== 0) {
+                    return primary;
+                }
+                const tieByName = compareStrings(a.sanitized.name, b.sanitized.name);
+                if (tieByName !== 0) {
+                    return tieByName;
+                }
+                return a.index - b.index;
+            });
+            state.apps.splice(
+                0,
+                state.apps.length,
+                ...decorated.map((entry) => {
+                    entry.app._meta = entry.meta;
+                    return entry.app;
+                })
+            );
+        }
+
+        function updateSortUi() {
+            const option = SORT_OPTIONS[currentSortKey];
+            if (sortLabel && option) {
+                sortLabel.textContent = option.buttonLabel;
+            }
+            if (sortButton && option) {
+                sortButton.setAttribute('aria-label', `Sort apps by ${option.ariaLabel}`);
+            }
+            if (Array.isArray(sortMenuItems) && sortMenuItems.length) {
+                sortMenuItems.forEach((item) => {
+                    const isSelected = item.dataset.sortKey === currentSortKey;
+                    if (isSelected) {
+                        item.setAttribute('selected', '');
+                        item.setAttribute('aria-checked', 'true');
+                    } else {
+                        item.removeAttribute('selected');
+                        item.removeAttribute('aria-checked');
+                    }
+                });
+            }
+        }
+
+        function handleSortSelection(sortKey) {
+            const normalizedKey = utils.trimString(sortKey || '');
+            if (!normalizedKey || !SORT_OPTIONS[normalizedKey]) {
+                return;
+            }
+            if (currentSortKey === normalizedKey) {
+                if (sortMenu) {
+                    sortMenu.open = false;
+                }
+                if (sortButton) {
+                    sortButton.setAttribute('aria-expanded', 'false');
+                }
+                updateSortUi();
+                return;
+            }
+            currentSortKey = normalizedKey;
+            touchWorkspace();
+            render();
+            if (sortMenu) {
+                sortMenu.open = false;
+            }
+            if (sortButton) {
+                sortButton.setAttribute('aria-expanded', 'false');
+            }
         }
 
         function appendScreenshots(appIndex, values) {
@@ -968,6 +1111,8 @@
             if (!state.apps.length) {
                 state.apps.push(createEmptyApp());
             }
+            sortAppsInPlace();
+            updateSortUi();
             state.apps.forEach((app, index) => {
                 entriesContainer.appendChild(createAppCard(app, index));
             });
@@ -2932,6 +3077,35 @@
                     }
                     fetchRemoteJson(presetUrl, { fromPreset: true });
                 });
+            });
+        }
+
+        if (sortMenu) {
+            if (sortButton && 'anchorElement' in sortMenu) {
+                try {
+                    sortMenu.anchorElement = sortButton;
+                } catch (error) {
+                    console.warn('AppToolkit: Unable to set sort menu anchor.', error);
+                }
+            }
+            sortMenuItems = Array.from(sortMenu.querySelectorAll('[data-sort-key]'));
+            sortMenuItems.forEach((item) => {
+                item.addEventListener('click', () => {
+                    handleSortSelection(item.dataset.sortKey || '');
+                });
+            });
+            sortMenu.addEventListener('closed', () => {
+                if (sortButton) {
+                    sortButton.setAttribute('aria-expanded', 'false');
+                }
+            });
+        }
+
+        if (sortButton && sortMenu) {
+            sortButton.addEventListener('click', () => {
+                const nextState = !sortMenu.open;
+                sortMenu.open = nextState;
+                sortButton.setAttribute('aria-expanded', nextState ? 'true' : 'false');
             });
         }
 

@@ -586,6 +586,16 @@ md-list-item[type='button'].expanded md-icon[slot='end'] { /*FIXME: Selector mat
   align-items: center;
 }
 
+.builder-sort-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+#appToolkitSortMenu {
+  min-width: 220px;
+}
+
 .builder-toolbar-meta {
   display: grid;
   gap: 0.75rem;

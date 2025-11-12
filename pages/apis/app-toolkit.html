@@ -124,6 +124,34 @@
           >
           Add app
         </md-filled-button>
+        <md-outlined-button
+          id="appToolkitSortButton"
+          has-icon
+          trailing-icon
+          aria-haspopup="menu"
+          aria-expanded="false"
+        >
+          <md-icon slot="icon"
+            ><span class="material-symbols-outlined">sort</span></md-icon
+          >
+          <span class="builder-sort-label"
+            >Sort · <span id="appToolkitSortLabel">App name (A–Z)</span></span
+          >
+          <md-icon slot="trailing-icon"
+            ><span class="material-symbols-outlined">arrow_drop_down</span></md-icon
+          >
+        </md-outlined-button>
+        <md-menu id="appToolkitSortMenu" anchor="appToolkitSortButton">
+          <md-menu-item type="radio" data-sort-key="name" selected>
+            <div slot="headline">App name (A–Z)</div>
+          </md-menu-item>
+          <md-menu-item type="radio" data-sort-key="category">
+            <div slot="headline">Category (A–Z)</div>
+          </md-menu-item>
+          <md-menu-item type="radio" data-sort-key="screenshots">
+            <div slot="headline">Screenshot count (high to low)</div>
+          </md-menu-item>
+        </md-menu>
         <md-text-button id="appToolkitResetButton" has-icon>
           <md-icon slot="icon"
             ><span class="material-symbols-outlined">refresh</span></md-icon
