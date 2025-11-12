@@ -4,10 +4,7 @@
       {
         "name": "Android Studio Tutorials",
         "packageName": "com.d4rk.androidtutorials",
-        "category": {
-          "label": "Education",
-          "category_id": "education"
-        },
+        "category": "education",
         "description": "Delve into Android development through hands-on lessons and real-world projects. This app guides you step by step in mastering Android Studio, from UI layouts to app logic, helping you build functional apps with confidence. Ideal for beginners and intermediates alike, it stays updated with the latest Android tooling and best practices.",
         "iconLogo": "https://raw.githubusercontent.com/D4rK7355608/com.d4rk.androidtutorials/refs/heads/master/app/src/main/play/listings/en-US/graphics/ic_launcher-playstore.png",
         "screenshots": [
@@ -20,11 +17,8 @@
       {
         "name": "Android Studio Tutorials: Java",
         "packageName": "com.d4rk.androidtutorials.java",
-        "category": {
-          "label": "Education",
-          "category_id": "education"
-        },
-        "description": "Learn to build Android apps using Java in a structured, practical way. Through coding exercises, sample projects, and clear explanations, you\u2019ll explore Android SDK features, activity lifecycles, UI design, and data handling all with Java. It\u2019s tailored for developers who prefer Java or want to strengthen foundational skills before moving to Kotlin.",
+        "category": "education",
+        "description": "Learn to build Android apps using Java in a structured, practical way. Through coding exercises, sample projects, and clear explanations, you’ll explore Android SDK features, activity lifecycles, UI design, and data handling all with Java. It’s tailored for developers who prefer Java or want to strengthen foundational skills before moving to Kotlin.",
         "iconLogo": "https://raw.githubusercontent.com/D4rK7355608/com.d4rk.androidtutorials.java/refs/heads/main/app/src/main/play/listings/en-US/graphics/ic_launcher-playstore.png",
         "screenshots": [
           "https://play-lh.googleusercontent.com/yQKr9Klh7I2nWH9bb6BybjFU6kICI_tYIrW1m9GSqbzYKxRC_Q6srrJNAyKBJHpMzlY=w2560-h1440-rw",
@@ -36,11 +30,8 @@
       {
         "name": "Cleaner for Android",
         "packageName": "com.d4rk.cleaner",
-        "category": {
-          "label": "Tools",
-          "category_id": "tools"
-        },
-        "description": "Cleaner for Android helps you reclaim storage by removing cache, junk files, residual data, and duplicates. It also helps you detect large files and unused apps. With a clean, minimal interface, it\u2019s designed for users who want a lightweight, no-fuss way to keep their device running smoothly.",
+        "category": "tools",
+        "description": "Cleaner for Android helps you reclaim storage by removing cache, junk files, residual data, and duplicates. It also helps you detect large files and unused apps. With a clean, minimal interface, it’s designed for users who want a lightweight, no-fuss way to keep their device running smoothly.",
         "iconLogo": "https://raw.githubusercontent.com/D4rK7355608/com.d4rk.cleaner/refs/heads/master/app/src/main/play/listings/en-US/graphics/ic_launcher-playstore.png",
         "screenshots": [
           "https://play-lh.googleusercontent.com/kZorcBMqxV0DQilcYiCkN-L36zPQ4Fv6j35JrrXT27G0HOdr6_aKFpY7PrvUb64Lqs8=w2560-h1440-rw",
@@ -53,11 +44,8 @@
       {
         "name": "English with Lidia Plus",
         "packageName": "com.d4rk.englishwithlidia.plus",
-        "category": {
-          "label": "Education",
-          "category_id": "education"
-        },
-        "description": "An English learning app centered around Lidia\u2019s teaching method. It offers lessons, exercises, and practical tools to build vocabulary, grammar, speaking, and comprehension skills, ideal for learners at beginner to intermediate levels. Thoughtfully structured to guide you from basics toward fluency.",
+        "category": "education",
+        "description": "An English learning app centered around Lidia’s teaching method. It offers lessons, exercises, and practical tools to build vocabulary, grammar, speaking, and comprehension skills, ideal for learners at beginner to intermediate levels. Thoughtfully structured to guide you from basics toward fluency.",
         "iconLogo": "https://raw.githubusercontent.com/D4rK7355608/com.d4rk.englishwithlidia.plus/refs/heads/master/app/src/main/play/listings/en-US/graphics/ic_launcher-playstore.png",
         "screenshots": [
           "https://play-lh.googleusercontent.com/00mqj3ioB--Ske24aQgoo1Do0tmJ33GQ9YRaC6avuYj7w6jOOGg39ZYakjpbm3eHBGT8RRSZ_uOEm-gpPcfz1A=w2560-h1440-rw",
@@ -69,11 +57,8 @@
       {
         "name": "Low Brightness",
         "packageName": "com.d4rk.lowbrightness",
-        "category": {
-          "label": "Tools",
-          "category_id": "tools"
-        },
-        "description": "Low Brightness gives you finer control over your screen\u2019s brightness beyond system limits. Useful in low-light environments, it lets you lower brightness more than the default minimum, reducing eye strain and saving battery when you\u2019re in dark settings.",
+        "category": "tools",
+        "description": "Low Brightness gives you finer control over your screen’s brightness beyond system limits. Useful in low-light environments, it lets you lower brightness more than the default minimum, reducing eye strain and saving battery when you’re in dark settings.",
         "iconLogo": "https://raw.githubusercontent.com/D4rK7355608/com.d4rk.lowbrightness/refs/heads/master/app/src/main/play/listings/en-US/graphics/ic_launcher-playstore.png",
         "screenshots": [
           "https://play-lh.googleusercontent.com/dRqiWuIwTgAU_YwQPGbSOl6lU-3BJF1ljTWLy8-XJaQ6oETqoUrYgruQ4Ld3ndGQ4Ds=w2560-h1440-rw",
@@ -85,10 +70,7 @@
       {
         "name": "Music Sleep Timer Plus",
         "packageName": "com.d4rk.musicsleeptimer.plus",
-        "category": {
-          "label": "Media",
-          "category_id": "media"
-        },
+        "category": "media",
         "description": "Music Sleep Timer Plus lets you schedule playback pauses so your music winds down gracefully. Useful for listening while falling asleep, it supports adjustable timers, fade-out effects, and works with most music apps. Let your music help you drift off without playing all night.",
         "iconLogo": "https://raw.githubusercontent.com/D4rK7355608/com.d4rk.musicsleeptimer.plus/refs/heads/master/app/src/main/play/listings/en-US/graphics/ic_launcher-playstore.png",
         "screenshots": [
@@ -102,11 +84,8 @@
       {
         "name": "Net Probe",
         "packageName": "com.d4rk.netprobe",
-        "category": {
-          "label": "Tools",
-          "category_id": "tools"
-        },
-        "description": "Net Probe is a network diagnostic utility for Android. Use it to test your connection, trace routes, ping servers, and monitor latency. Whether you\u2019re debugging connectivity on mobile, Wi-Fi, or cellular, it helps you see where network issues might lie.",
+        "category": "tools",
+        "description": "Net Probe is a network diagnostic utility for Android. Use it to test your connection, trace routes, ping servers, and monitor latency. Whether you’re debugging connectivity on mobile, Wi-Fi, or cellular, it helps you see where network issues might lie.",
         "iconLogo": "https://raw.githubusercontent.com/D4rK7355608/com.d4rk.netprobe/refs/heads/main/app/src/main/play/listings/en-US/graphics/ic_launcher-playstore.png",
         "screenshots": [
           "https://raw.githubusercontent.com/D4rK7355608/com.d4rk.androidtutorials/refs/heads/master/app/src/main/play/listings/en-US/graphics/ic_launcher-playstore.png"
@@ -115,10 +94,7 @@
       {
         "name": "QR & Bar Code Scanner Plus",
         "packageName": "com.d4rk.qrcodescanner.plus",
-        "category": {
-          "label": "Tools",
-          "category_id": "tools"
-        },
+        "category": "tools",
         "description": "Scan QR codes and barcodes quickly and securely with QR & Bar Code Scanner Plus. It supports all common formats, works offline, saves scan history, and gives you links, product info, or embedded data. Lightweight and efficient, ideal for daily use.",
         "iconLogo": "https://raw.githubusercontent.com/D4rK7355608/com.d4rk.qrcodescanner.plus/refs/heads/master/app/src/main/play/listings/en-US/graphics/ic_launcher-playstore.png",
         "screenshots": [
@@ -128,11 +104,8 @@
       {
         "name": "Shopping Cart Calculator",
         "packageName": "com.d4rk.cartcalculator",
-        "category": {
-          "label": "Utilities",
-          "category_id": "utilities"
-        },
-        "description": "Shopping Cart Calculator helps you keep your shopping in check. Add items with price and quantity, and instantly see your total cost. Perfect for grocery runs or budgeting, it\u2019s simple, intuitive, and lets you track your spend before you even reach checkout.",
+        "category": "utilities",
+        "description": "Shopping Cart Calculator helps you keep your shopping in check. Add items with price and quantity, and instantly see your total cost. Perfect for grocery runs or budgeting, it’s simple, intuitive, and lets you track your spend before you even reach checkout.",
         "iconLogo": "https://raw.githubusercontent.com/D4rK7355608/com.d4rk.cartcalculator/refs/heads/master/app/src/main/play/listings/en-US/graphics/ic_launcher-playstore.png",
         "screenshots": [
           "https://play-lh.googleusercontent.com/F3Dln9IlcbDahBIYOB4nPG_cykpO8uTmxNqBYFNkdulymo2b8ToWEY8iYrHaxPEodNVV=w2560-h1440-rw",
@@ -144,10 +117,7 @@
       {
         "name": "Weddix - Create/Manage Events",
         "packageName": "com.d4rk.android.apps.weddix",
-        "category": {
-          "label": "Productivity",
-          "category_id": "productivity"
-        },
+        "category": "productivity",
         "description": "Weddix is your tool for planning and managing events like weddings, parties, meetings, you name it. Create event tasks, track guest lists, manage schedules, send invitations, and monitor logistics all in one place. Built to reduce stress while organizing special moments.",
         "iconLogo": "https://play-lh.googleusercontent.com/WXjYIEVCm14Ngbg8buU4L-_uxH74Oxr3WCKswvMS_8NsAYI7dA5mBYC3pJzT4hSQWUc=w240-h480-rw",
         "screenshots": [
