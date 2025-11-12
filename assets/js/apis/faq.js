@@ -7,7 +7,7 @@
 
     const DEFAULT_FILENAME = 'faq_dataset.json';
     const GITHUB_PAGES_BASE = 'https://mihaicristiancondrea.github.io/com.d4rk.apis';
-    const DEFAULT_DATA_URL = `${GITHUB_PAGES_BASE}/api/app_toolkit/v1/debug/en/home/api_android_apps.json`;
+    const DEFAULT_DATA_URL = `${GITHUB_PAGES_BASE}/api/app_toolkit/v2/debug/en/home/api_android_apps.json`;
     const ICONS_ENDPOINT = 'https://fonts.google.com/metadata/icons?incomplete=1&icon.set=Material+Symbols';
     const ICON_PICKER_MAX_RENDER = 400;
     const CUSTOM_PRESET_LABEL = 'Fetch custom URL';
@@ -57,12 +57,12 @@
             {
                 value: 'app-toolkit-debug',
                 label: 'App Toolkit · Debug',
-                url: `${GITHUB_PAGES_BASE}/api/app_toolkit/v1/debug/en/home/api_android_apps.json`
+                url: `${GITHUB_PAGES_BASE}/api/app_toolkit/v2/debug/en/home/api_android_apps.json`
             },
             {
                 value: 'app-toolkit-release',
                 label: 'App Toolkit · Release',
-                url: `${GITHUB_PAGES_BASE}/api/app_toolkit/v1/release/en/home/api_android_apps.json`
+                url: `${GITHUB_PAGES_BASE}/api/app_toolkit/v2/release/en/home/api_android_apps.json`
             },
             {
                 value: 'faq-index',
@@ -293,6 +293,19 @@
                 categories = raw.categories;
             } else if (typeof raw.category === 'string') {
                 categories = [raw.category];
+            } else if (raw.category && typeof raw.category === 'object') {
+                const categoryId =
+                    typeof raw.category.category_id === 'string'
+                        ? raw.category.category_id
+                        : typeof raw.category.id === 'string'
+                        ? raw.category.id
+                        : '';
+                const fallbackLabel =
+                    typeof raw.category.label === 'string' ? raw.category.label : '';
+                const resolvedCategory = (categoryId || fallbackLabel || '').trim();
+                if (resolvedCategory) {
+                    categories = [resolvedCategory];
+                }
             }
             return {
                 id: typeof raw.id === 'string' ? raw.id : '',

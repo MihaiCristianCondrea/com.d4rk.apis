@@ -90,7 +90,8 @@
       <ul>
         <li>
           Each app entry must include <strong>name</strong>,
-          <strong>packageName</strong>, <strong>category</strong>, and an
+          <strong>packageName</strong>, a <strong>category</strong> with
+          <code>label</code> and <code>category_id</code>, and an
           <strong>iconLogo</strong> URL.
         </li>
         <li>
@@ -99,7 +100,7 @@
         </li>
         <li>
           When you are done, export the JSON and replace the existing file in
-          <code>api/app_toolkit/v1/[debug|release]/en/home/api_android_apps.json</code>
+          <code>api/app_toolkit/v2/[debug|release]/en/home/api_android_apps.json</code>
           to mirror the production structure.
         </li>
         <li>
@@ -155,7 +156,7 @@
               id="appToolkitFetchInput"
               type="url"
               label="JSON URL"
-              placeholder="https://mihaicristiancondrea.github.io/com.d4rk.apis/api/app_toolkit/v1/debug/en/home/api_android_apps.json"
+              placeholder="https://mihaicristiancondrea.github.io/com.d4rk.apis/api/app_toolkit/v2/debug/en/home/api_android_apps.json"
               spellcheck="false"
               aria-describedby="appToolkitFetchStatus"
             >
@@ -195,7 +196,7 @@
           <span class="builder-remote-presets-label">Quick links</span>
           <md-text-button
             has-icon
-            data-app-toolkit-preset="https://mihaicristiancondrea.github.io/com.d4rk.apis/api/app_toolkit/v1/debug/en/home/api_android_apps.json"
+            data-app-toolkit-preset="https://mihaicristiancondrea.github.io/com.d4rk.apis/api/app_toolkit/v2/debug/en/home/api_android_apps.json"
             id="appToolkitDebugPreset"
           >
             <md-icon slot="icon"
@@ -205,7 +206,7 @@
           </md-text-button>
           <md-text-button
             has-icon
-            data-app-toolkit-preset="https://mihaicristiancondrea.github.io/com.d4rk.apis/api/app_toolkit/v1/release/en/home/api_android_apps.json"
+            data-app-toolkit-preset="https://mihaicristiancondrea.github.io/com.d4rk.apis/api/app_toolkit/v2/release/en/home/api_android_apps.json"
             id="appToolkitReleasePreset"
           >
             <md-icon slot="icon"

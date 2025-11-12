@@ -7,11 +7,11 @@
 
     const DEFAULT_FILENAME = 'api_android_apps.json';
     const GITHUB_CHANNEL_PATHS = {
-        debug: 'api/app_toolkit/v1/debug/en/home/api_android_apps.json',
-        release: 'api/app_toolkit/v1/release/en/home/api_android_apps.json'
+        debug: 'api/app_toolkit/v2/debug/en/home/api_android_apps.json',
+        release: 'api/app_toolkit/v2/release/en/home/api_android_apps.json'
     };
     const MIN_GITHUB_TOKEN_LENGTH = 20;
-    const GOOGLE_PLAY_CATEGORIES = [
+    const GOOGLE_PLAY_CATEGORY_LABELS = [
         'Art & Design',
         'Auto & Vehicles',
         'Beauty',
@@ -45,7 +45,104 @@
         'Video Players & Editors',
         'Weather'
     ];
+    const GOOGLE_PLAY_CATEGORIES = GOOGLE_PLAY_CATEGORY_LABELS.map((label) => ({
+        id: createCategoryId(label),
+        label
+    }));
+    const CATEGORY_BY_ID = new Map(
+        GOOGLE_PLAY_CATEGORIES.map((category) => [category.id.toLowerCase(), category])
+    );
+    const CATEGORY_BY_LABEL = new Map(
+        GOOGLE_PLAY_CATEGORIES.map((category) => [category.label.toLowerCase(), category])
+    );
     const PACKAGE_NAME_PATTERN = /^[a-z][a-z0-9_]*(\.[a-z][a-z0-9_]*)+$/i;
+
+    function createCategoryId(value) {
+        const normalized = utils.trimString(value || '');
+        if (!normalized) {
+            return '';
+        }
+        return normalized
+            .toLowerCase()
+            .replace(/&/g, 'and')
+            .replace(/[^a-z0-9]+/g, '_')
+            .replace(/^_+|_+$/g, '');
+    }
+
+    function createEmptyCategory() {
+        return { label: '', category_id: '' };
+    }
+
+    function formatCategoryLabel(label) {
+        const normalized = utils.trimString(label || '');
+        if (!normalized) {
+            return '';
+        }
+        return normalized
+            .replace(/[_-]+/g, ' ')
+            .split(' ')
+            .filter(Boolean)
+            .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+            .join(' ');
+    }
+
+    function resolveCategoryById(categoryId) {
+        if (!categoryId) {
+            return null;
+        }
+        const trimmed = utils.trimString(categoryId);
+        if (!trimmed) {
+            return null;
+        }
+        const lookup =
+            CATEGORY_BY_ID.get(trimmed.toLowerCase()) ||
+            CATEGORY_BY_ID.get(createCategoryId(trimmed));
+        return lookup ? { label: lookup.label, category_id: lookup.id } : null;
+    }
+
+    function normalizeCategoryInput(input) {
+        if (!input) {
+            return createEmptyCategory();
+        }
+        if (typeof input === 'string') {
+            const trimmed = utils.trimString(input);
+            if (!trimmed) {
+                return createEmptyCategory();
+            }
+            const resolved =
+                resolveCategoryById(trimmed) ||
+                resolveCategoryById(createCategoryId(trimmed));
+            if (resolved) {
+                return resolved;
+            }
+            const fallbackId = createCategoryId(trimmed) || trimmed;
+            return { label: formatCategoryLabel(trimmed), category_id: fallbackId };
+        }
+        if (typeof input === 'object') {
+            const rawLabel =
+                typeof input.label === 'string' ? utils.trimString(input.label) : '';
+            const rawIdCandidate =
+                typeof input.category_id === 'string'
+                    ? utils.trimString(input.category_id)
+                    : typeof input.id === 'string'
+                    ? utils.trimString(input.id)
+                    : '';
+            const resolved = resolveCategoryById(rawIdCandidate) || resolveCategoryById(rawLabel);
+            if (resolved) {
+                return resolved;
+            }
+            const derivedId = createCategoryId(rawIdCandidate || rawLabel);
+            if (!rawLabel && !derivedId) {
+                return createEmptyCategory();
+            }
+            const fallbackLabel = rawLabel || rawIdCandidate || derivedId;
+            return {
+                label: formatCategoryLabel(fallbackLabel),
+                category_id: rawIdCandidate || derivedId || rawLabel
+            };
+        }
+        return createEmptyCategory();
+    }
 
     function initAppToolkitWorkspace() {
         const builderRoot = document.getElementById('appToolkitBuilder');
@@ -185,7 +282,7 @@
             return {
                 name: '',
                 packageName: '',
-                category: '',
+                category: createEmptyCategory(),
                 description: '',
                 iconLogo: '',
                 screenshots: ['']
@@ -440,8 +537,13 @@
             if (name) output.name = name;
             const packageName = trimmed(app.packageName);
             if (packageName) output.packageName = packageName;
-            const category = trimmed(app.category);
-            if (category) output.category = category;
+            const category = normalizeCategoryInput(app.category);
+            if (category.category_id) {
+                output.category = {
+                    label: category.label || category.category_id,
+                    category_id: category.category_id
+                };
+            }
             const description = trimmed(app.description);
             if (description) output.description = description;
             const iconLogo = trimmed(app.iconLogo);
@@ -461,9 +563,11 @@
             const screenshotCount = Array.isArray(sanitized?.screenshots)
                 ? sanitized.screenshots.length
                 : 0;
-            const hasRequired = ['name', 'packageName', 'category', 'iconLogo'].every(
-                (field) => Boolean(sanitized?.[field])
-            );
+            const hasRequired =
+                Boolean(sanitized?.name) &&
+                Boolean(sanitized?.packageName) &&
+                Boolean(sanitized?.iconLogo) &&
+                Boolean(sanitized?.category?.category_id);
             const releaseReady = !isEmpty && hasRequired && screenshotCount >= 3;
             const cohorts = {
                 pendingReleaseReady: !isEmpty && !releaseReady,
@@ -1071,26 +1175,32 @@
             placeholderOption.setAttribute('value', '');
             placeholderOption.textContent = 'Select category';
             categorySelect.appendChild(placeholderOption);
-            const knownValues = new Set();
-            GOOGLE_PLAY_CATEGORIES.forEach((category) => {
+            const knownCategoryIds = new Set();
+            const normalizedCategory = normalizeCategoryInput(app.category);
+            const selectedCategoryId = normalizedCategory.category_id;
+            GOOGLE_PLAY_CATEGORIES.forEach(({ id, label }) => {
                 const option = document.createElement('md-select-option');
-                option.setAttribute('value', category);
-                option.textContent = category;
-                if (category === app.category) {
+                option.setAttribute('value', id);
+                option.textContent = label;
+                if (id === selectedCategoryId) {
                     option.setAttribute('selected', '');
                 }
-                knownValues.add(category);
+                knownCategoryIds.add(id);
                 categorySelect.appendChild(option);
             });
-            if (app.category && !knownValues.has(app.category)) {
+            if (selectedCategoryId && !knownCategoryIds.has(selectedCategoryId)) {
                 const customOption = document.createElement('md-select-option');
-                customOption.setAttribute('value', app.category);
-                customOption.textContent = app.category;
+                customOption.setAttribute('value', selectedCategoryId);
+                customOption.textContent = normalizedCategory.label || selectedCategoryId;
                 customOption.setAttribute('selected', '');
                 categorySelect.appendChild(customOption);
             }
+            categorySelect.value = selectedCategoryId || '';
             categorySelect.addEventListener('change', () => {
-                state.apps[index].category = categorySelect.value || '';
+                const value = utils.trimString(categorySelect.value || '');
+                state.apps[index].category = value
+                    ? normalizeCategoryInput(value)
+                    : createEmptyCategory();
                 touchWorkspace();
                 requestPreviewUpdate();
             });
@@ -1993,7 +2103,7 @@
                 state.apps = appsData.map((raw) => ({
                     name: utils.trimString(raw.name || ''),
                     packageName: utils.trimString(raw.packageName || ''),
-                    category: utils.trimString(raw.category || ''),
+                    category: normalizeCategoryInput(raw.category),
                     description: utils.trimString(raw.description || ''),
                     iconLogo: utils.trimString(raw.iconLogo || ''),
                     screenshots: (() => {
