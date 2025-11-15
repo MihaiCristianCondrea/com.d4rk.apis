@@ -310,6 +310,66 @@
         let githubTokenHandleLoaded = false;
         let githubTokenFallbackFile = null;
 
+        function createEmptyScreenshotEntry() {
+            return { url: '', aspectRatio: '' };
+        }
+
+        function normalizeScreenshotEntry(value, previous = null) {
+            const base = previous && typeof previous === 'object' ? previous : createEmptyScreenshotEntry();
+            const next = { ...createEmptyScreenshotEntry(), aspectRatio: base.aspectRatio || '' };
+            if (typeof value === 'string') {
+                next.url = utils.trimString(value);
+            } else if (value && typeof value === 'object') {
+                next.url = utils.trimString(value.url || '');
+                if (value.aspectRatio != null) {
+                    next.aspectRatio = utils.trimString(String(value.aspectRatio));
+                }
+            } else {
+                next.url = '';
+            }
+            return next;
+        }
+
+        function getScreenshotUrl(entry) {
+            if (typeof entry === 'string') {
+                return utils.trimString(entry);
+            }
+            if (entry && typeof entry === 'object') {
+                return utils.trimString(entry.url || '');
+            }
+            return '';
+        }
+
+        function setScreenshotEntry(appIndex, screenshotIndex, value) {
+            const list = state.apps[appIndex]?.screenshots;
+            if (!Array.isArray(list) || screenshotIndex < 0 || screenshotIndex >= list.length) {
+                return;
+            }
+            list[screenshotIndex] = normalizeScreenshotEntry(value, list[screenshotIndex]);
+        }
+
+        function applyScreenshotAspectRatio(appIndex, screenshotIndex, ratio) {
+            const list = state.apps[appIndex]?.screenshots;
+            if (!Array.isArray(list) || screenshotIndex < 0 || screenshotIndex >= list.length) {
+                return;
+            }
+            const existing = list[screenshotIndex];
+            const entry = normalizeScreenshotEntry(existing);
+            entry.aspectRatio = utils.trimString(ratio || '');
+            list[screenshotIndex] = entry;
+        }
+
+        function ensureScreenshotList(app) {
+            if (!app || !Array.isArray(app.screenshots)) {
+                app.screenshots = [createEmptyScreenshotEntry()];
+                return;
+            }
+            app.screenshots = app.screenshots.map((entry) => normalizeScreenshotEntry(entry));
+            if (!app.screenshots.length) {
+                app.screenshots.push(createEmptyScreenshotEntry());
+            }
+        }
+
         function createEmptyApp() {
             return {
                 name: '',
@@ -317,7 +377,7 @@
                 category: createEmptyCategory(),
                 description: '',
                 iconLogo: '',
-                screenshots: ['']
+                screenshots: [createEmptyScreenshotEntry()]
             };
         }
 
@@ -379,7 +439,7 @@
 
         function getFilledScreenshotCount(appIndex) {
             const screenshots = state.apps[appIndex]?.screenshots || [];
-            return screenshots.reduce((count, value) => (utils.trimString(value) ? count + 1 : count), 0);
+            return screenshots.reduce((count, value) => (getScreenshotUrl(value) ? count + 1 : count), 0);
         }
 
         function normalizeSortString(value) {
@@ -499,8 +559,8 @@
                 return [];
             }
             const additions = values
-                .map((value) => utils.trimString(value))
-                .filter(Boolean);
+                .map((value) => normalizeScreenshotEntry(value))
+                .filter((entry) => Boolean(entry.url));
             if (!additions.length) {
                 return [];
             }
@@ -691,12 +751,42 @@
             if (description) output.description = description;
             const iconLogo = trimmed(app.iconLogo);
             if (iconLogo) output.iconLogo = iconLogo;
+            const validationScreenshots = Array.isArray(app?._validation?.screenshots)
+                ? app._validation.screenshots
+                : [];
             const screenshots = utils
                 .normalizeArray(app.screenshots)
-                .map((url) => trimmed(url))
+                .map((entry, index) => {
+                    const normalizedEntry = normalizeScreenshotEntry(entry);
+                    const url = normalizedEntry.url;
+                    if (!url) {
+                        return null;
+                    }
+                    let aspectRatio = normalizedEntry.aspectRatio || '';
+                    const meta = validationScreenshots[index];
+                    if (!aspectRatio && meta && meta.ratio) {
+                        aspectRatio = utils.trimString(meta.ratio);
+                        if (Array.isArray(app.screenshots)) {
+                            app.screenshots[index] = normalizeScreenshotEntry(
+                                { url, aspectRatio },
+                                normalizedEntry
+                            );
+                        }
+                    }
+                    return { url, aspectRatio: aspectRatio || '' };
+                })
                 .filter(Boolean);
             if (screenshots.length) {
-                output.screenshots = Array.from(new Set(screenshots));
+                const seen = new Set();
+                const unique = [];
+                screenshots.forEach(({ url, aspectRatio }) => {
+                    if (seen.has(url)) {
+                        return;
+                    }
+                    seen.add(url);
+                    unique.push({ url, aspectRatio: aspectRatio || '' });
+                });
+                output.screenshots = unique;
             }
             return output;
         }
@@ -1113,6 +1203,7 @@
             }
             sortAppsInPlace();
             updateSortUi();
+            state.apps.forEach((app) => ensureScreenshotList(app));
             state.apps.forEach((app, index) => {
                 entriesContainer.appendChild(createAppCard(app, index));
             });
@@ -1908,8 +1999,8 @@
             screenshotsList.addEventListener('focus', dismissHint, true);
             screenshotsList.addEventListener('keydown', handleKeydown);
 
-            app.screenshots.forEach((url, screenshotIndex) => {
-                const screenshotItem = createScreenshotField(index, screenshotIndex, url, {
+            app.screenshots.forEach((entry, screenshotIndex) => {
+                const screenshotItem = createScreenshotField(index, screenshotIndex, entry, {
                     onChange: () => updateScreenshotsState()
                 });
                 screenshotItem.setAttribute('role', 'listitem');
@@ -2062,6 +2153,12 @@
                 state.apps[appIndex]?.packageName || state.apps[appIndex]?.name || ''
             );
             const existingMeta = getScreenshotMeta(appIndex, screenshotIndex);
+            const normalizedValue = normalizeScreenshotEntry(
+                value,
+                state.apps[appIndex]?.screenshots?.[screenshotIndex]
+            );
+            setScreenshotEntry(appIndex, screenshotIndex, normalizedValue);
+            const urlValue = normalizedValue.url;
             if (
                 typeof window !== 'undefined' &&
                 window.AppToolkitScreenshotField &&
@@ -2070,10 +2167,14 @@
                 const element = window.AppToolkitScreenshotField.create({
                     appIndex,
                     screenshotIndex,
-                    value,
+                    value: urlValue,
                     appName,
                     onChange: (nextValue) => {
-                        state.apps[appIndex].screenshots[screenshotIndex] = nextValue;
+                        setScreenshotEntry(appIndex, screenshotIndex, {
+                            url: nextValue,
+                            aspectRatio:
+                                state.apps[appIndex]?.screenshots?.[screenshotIndex]?.aspectRatio || ''
+                        });
                         touchWorkspace();
                         requestPreviewUpdate();
                         if (typeof onChange === 'function') {
@@ -2084,7 +2185,7 @@
                         state.apps[appIndex].screenshots.splice(screenshotIndex, 1);
                         removeScreenshotMeta(appIndex, screenshotIndex);
                         if (!state.apps[appIndex].screenshots.length) {
-                            state.apps[appIndex].screenshots.push('');
+                            state.apps[appIndex].screenshots.push(createEmptyScreenshotEntry());
                         }
                         touchWorkspace();
                         render();
@@ -2096,8 +2197,14 @@
                                 height: meta.height,
                                 ratio: meta.ratio || formatAspectRatio(meta.width, meta.height)
                             });
+                            applyScreenshotAspectRatio(
+                                appIndex,
+                                screenshotIndex,
+                                meta.ratio || formatAspectRatio(meta.width, meta.height)
+                            );
                         } else {
                             setScreenshotMeta(appIndex, screenshotIndex, null);
+                            applyScreenshotAspectRatio(appIndex, screenshotIndex, '');
                         }
                     }
                 });
@@ -2106,7 +2213,9 @@
                 }
                 return element;
             }
-            return legacyCreateScreenshotField(appIndex, screenshotIndex, value, { onChange });
+            return legacyCreateScreenshotField(appIndex, screenshotIndex, normalizedValue, {
+                onChange
+            });
         }
 
         function legacyCreateScreenshotField(appIndex, screenshotIndex, value, { onChange } = {}) {
@@ -2137,7 +2246,7 @@
                 state.apps[appIndex].screenshots.splice(screenshotIndex, 1);
                 removeScreenshotMeta(appIndex, screenshotIndex);
                 if (!state.apps[appIndex].screenshots.length) {
-                    state.apps[appIndex].screenshots.push('');
+                    state.apps[appIndex].screenshots.push(createEmptyScreenshotEntry());
                 }
                 touchWorkspace();
                 render();
@@ -2163,10 +2272,14 @@
             const textField = document.createElement('md-outlined-text-field');
             textField.setAttribute('label', `Screenshot ${screenshotIndex + 1}`);
             textField.setAttribute('placeholder', 'https://example.com/screenshot.png');
-            textField.value = value || '';
+            textField.value = getScreenshotUrl(value) || '';
             textField.addEventListener('input', (event) => {
                 const nextValue = event.target.value;
-                state.apps[appIndex].screenshots[screenshotIndex] = nextValue;
+                setScreenshotEntry(appIndex, screenshotIndex, {
+                    url: nextValue,
+                    aspectRatio:
+                        state.apps[appIndex]?.screenshots?.[screenshotIndex]?.aspectRatio || ''
+                });
                 updateThumbnail(nextValue);
                 touchWorkspace();
                 requestPreviewUpdate();
@@ -2199,6 +2312,7 @@
                     thumbnail.removeAttribute('src');
                     thumbnailWrapper.dataset.state = 'empty';
                     setScreenshotMeta(appIndex, screenshotIndex, null);
+                    applyScreenshotAspectRatio(appIndex, screenshotIndex, '');
                     applyMetaInfo(null);
                     return;
                 }
@@ -2213,11 +2327,13 @@
                 const ratio = formatAspectRatio(width, height);
                 const meta = { width, height, ratio };
                 setScreenshotMeta(appIndex, screenshotIndex, meta);
+                applyScreenshotAspectRatio(appIndex, screenshotIndex, ratio);
                 applyMetaInfo(meta);
             });
             thumbnail.addEventListener('error', () => {
                 thumbnailWrapper.dataset.state = 'error';
                 setScreenshotMeta(appIndex, screenshotIndex, null);
+                applyScreenshotAspectRatio(appIndex, screenshotIndex, '');
                 metaInfo.dataset.state = 'error';
                 metaInfo.textContent = 'Preview unavailable — check the link.';
             });
@@ -2245,20 +2361,26 @@
                     alert('No apps found in the imported JSON.');
                     return;
                 }
-                state.apps = appsData.map((raw) => ({
-                    name: utils.trimString(raw.name || ''),
-                    packageName: utils.trimString(raw.packageName || ''),
-                    category: normalizeCategoryInput(raw.category),
-                    description: utils.trimString(raw.description || ''),
-                    iconLogo: utils.trimString(raw.iconLogo || ''),
-                    screenshots: (() => {
-                        const sanitized = utils
-                            .normalizeArray(raw.screenshots)
-                            .map((value) => utils.trimString(String(value ?? '')))
-                            .filter(Boolean);
-                        return sanitized.length ? sanitized : [''];
-                    })()
-                }));
+                state.apps = appsData.map((raw) => {
+                    const app = {
+                        name: utils.trimString(raw.name || ''),
+                        packageName: utils.trimString(raw.packageName || ''),
+                        category: normalizeCategoryInput(raw.category),
+                        description: utils.trimString(raw.description || ''),
+                        iconLogo: utils.trimString(raw.iconLogo || ''),
+                        screenshots: (() => {
+                            const sanitized = utils
+                                .normalizeArray(raw.screenshots)
+                                .map((value) => normalizeScreenshotEntry(value))
+                                .filter((entry) => Boolean(entry.url));
+                            return sanitized.length
+                                ? sanitized.map((entry) => normalizeScreenshotEntry(entry))
+                                : [createEmptyScreenshotEntry()];
+                        })()
+                    };
+                    ensureScreenshotList(app);
+                    return app;
+                });
                 touchWorkspace();
                 render();
             } catch (error) {
