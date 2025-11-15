@@ -8,7 +8,10 @@
     const DEFAULT_FILENAME = 'faq_dataset.json';
     const GITHUB_PAGES_BASE = 'https://mihaicristiancondrea.github.io/com.d4rk.apis';
     const DEFAULT_DATA_URL = `${GITHUB_PAGES_BASE}/api/app_toolkit/v2/debug/en/home/api_android_apps.json`;
-    const ICONS_ENDPOINT = 'https://fonts.google.com/metadata/icons?incomplete=1&icon.set=Material+Symbols';
+    const ICON_CATALOG_ENDPOINTS = [
+        'https://fonts.google.com/metadata/icons?incomplete=1&icon.set=Material+Symbols',
+        'https://raw.githubusercontent.com/google/material-design-icons/master/variablefont/MaterialSymbolsOutlined%5BFILL%2CGRAD%2Copsz%2Cwght%5D.codepoints'
+    ];
     const ICON_PICKER_MAX_RENDER = 400;
     const CUSTOM_PRESET_LABEL = 'Fetch custom URL';
 
@@ -1232,6 +1235,71 @@
             }
         }
 
+        function parseIconCatalog(rawText) {
+            if (typeof rawText !== 'string') {
+                return [];
+            }
+            const sanitized = rawText.replace(/^\)\]\}'\n?/, '');
+            try {
+                const data = JSON.parse(sanitized);
+                if (Array.isArray(data?.icons) && data.icons.length) {
+                    return data.icons
+                        .map((icon) => (typeof icon?.name === 'string' ? icon.name : ''))
+                        .filter(Boolean);
+                }
+            } catch (error) {
+                // Ignore JSON parse errors and fall back to text parsing.
+            }
+            return rawText
+                .split('\n')
+                .map((line) => {
+                    const trimmed = line.trim();
+                    if (!trimmed || trimmed.startsWith('#')) {
+                        return '';
+                    }
+                    const [name] = trimmed.split(/\s+/);
+                    return typeof name === 'string' ? name.trim() : '';
+                })
+                .filter(Boolean);
+        }
+
+        function normalizeIconNames(rawNames = []) {
+            if (!Array.isArray(rawNames)) {
+                return [];
+            }
+            const unique = new Set();
+            rawNames.forEach((name) => {
+                if (typeof name !== 'string') {
+                    return;
+                }
+                const trimmed = utils.trimString(name);
+                if (trimmed) {
+                    unique.add(trimmed);
+                }
+            });
+            return Array.from(unique).sort((a, b) => a.localeCompare(b));
+        }
+
+        async function loadIconCatalog() {
+            for (const endpoint of ICON_CATALOG_ENDPOINTS) {
+                try {
+                    const response = await fetch(endpoint, { cache: 'no-store' });
+                    if (!response.ok) {
+                        throw new Error(`Icon request failed with status ${response.status}`);
+                    }
+                    const text = await response.text();
+                    const names = parseIconCatalog(text);
+                    if (Array.isArray(names) && names.length) {
+                        return names;
+                    }
+                    console.warn('FaqBuilder: Icon catalog source returned no icon names.', endpoint);
+                } catch (error) {
+                    console.warn('FaqBuilder: Failed to load icon catalog source.', endpoint, error);
+                }
+            }
+            throw new Error('All icon catalog sources failed.');
+        }
+
         async function refreshIcons() {
             if (iconsRequested) {
                 return;
@@ -1239,29 +1307,24 @@
             iconsRequested = true;
             setIconStatus('Loading Material Symbols catalog…', 'loading');
             try {
-                const response = await fetch(ICONS_ENDPOINT, { cache: 'no-store' });
-                if (!response.ok) {
-                    throw new Error(`Icon request failed with status ${response.status}`);
-                }
-                const text = await response.text();
-                const sanitized = text.replace(/^\)\]\}'\n?/, '');
-                const data = JSON.parse(sanitized);
-                const names = Array.isArray(data?.icons)
-                    ? data.icons
-                          .map((icon) => (typeof icon?.name === 'string' ? icon.name : ''))
-                          .filter(Boolean)
-                    : [];
-                iconNames = names.sort((a, b) => a.localeCompare(b));
+                const catalogNames = await loadIconCatalog();
+                iconNames = normalizeIconNames(catalogNames);
                 populateIconOptions();
-                renderIconPickerOptions(iconPickerSearch ? iconPickerSearch.value : '');
                 if (iconCountEl) {
                     iconCountEl.textContent = String(iconNames.length);
                 }
                 setIconStatus('Material Symbols catalog loaded.', 'success');
             } catch (error) {
                 console.error('FaqBuilder: Failed to load icon catalog.', error);
+                iconNames = [];
+                populateIconOptions();
+                if (iconCountEl) {
+                    iconCountEl.textContent = '0';
+                }
                 setIconStatus('Failed to load Material Symbols catalog.', 'error');
+                iconsRequested = false;
             }
+            renderIconPickerOptions(iconPickerSearch ? iconPickerSearch.value : '');
         }
 
         function populateIconOptions() {
@@ -1287,9 +1350,10 @@
             utils.clearElement(iconPickerList);
             const searchTerm = typeof query === 'string' ? utils.trimString(query) : '';
             const normalizedQuery = searchTerm.toLowerCase();
+            const isLoadingIcons = iconsRequested && !iconNames.length;
             if (!iconNames.length) {
                 if (iconPickerLoading) {
-                    iconPickerLoading.hidden = false;
+                    iconPickerLoading.hidden = !isLoadingIcons;
                 }
                 if (iconPickerEmpty) {
                     iconPickerEmpty.hidden = true;
