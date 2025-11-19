@@ -42,6 +42,10 @@ function applyAttributes(element, attrs = {}) {
   });
 }
 
+/**
+ * @param {string} tag
+ * @param {{classNames?: string|string[], attrs?: Object<string, any>, text?: string}} [options]
+ */
 export function createElement(tag, { classNames, attrs, text } = {}) {
   const element = document.createElement(tag);
   applyClassNames(element, classNames);

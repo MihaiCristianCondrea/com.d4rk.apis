@@ -19,11 +19,14 @@ body[data-dialog-open='true'] {
   --app-field-shape: 16px;
 }
 
+/* Allow styling custom Material elements throughout this file. */
+/* stylelint-disable selector-type-no-unknown */
+
 :where(
-    md-outlined-text-field, /*FIXME: Selector matches unknown element md-outlined-text-field*/
-    md-filled-text-field, /*FIXME: Selector matches unknown element md-filled-text-field*/
-    md-outlined-select, /*FIXME: Selector matches unknown element md-outlined-select*/
-    md-filled-select /*FIXME: Selector matches unknown element md-filled-select*/
+    md-outlined-text-field, 
+    md-filled-text-field, 
+    md-outlined-select, 
+    md-filled-select 
   ) {
   --md-outlined-text-field-container-shape: var(--app-field-shape);
   --md-filled-text-field-container-shape: var(--app-field-shape);
@@ -34,39 +37,39 @@ body[data-dialog-open='true'] {
 }
 
 :where(
-    md-filled-button, /*FIXME: Selector matches unknown element md-filled-button*/
-    md-filled-tonal-button, /*FIXME: Selector matches unknown element md-filled-tonal-button*/
-    md-outlined-button, /*FIXME: Selector matches unknown element md-outlined-button*/
-    md-text-button, /*FIXME: Selector matches unknown element md-text-button*/
-    md-elevated-button /*FIXME: Selector matches unknown element md-elevated-button*/
+    md-filled-button, 
+    md-filled-tonal-button, 
+    md-outlined-button, 
+    md-text-button, 
+    md-elevated-button 
   ) {
   padding-inline-start: var(--app-button-inline-padding);
   padding-inline-end: var(--app-button-inline-padding);
 }
 
 :where(
-   md-filled-button, /*FIXME: Selector matches unknown element md-filled-button*/
-    md-filled-tonal-button, /*FIXME: Selector matches unknown element md-filled-tonal-button*/
-    md-outlined-button, /*FIXME: Selector matches unknown element md-outlined-button*/
-    md-text-button, /*FIXME: Selector matches unknown element md-text-button*/
-    md-elevated-button /*FIXME: Selector matches unknown element md-elevated-button*/
+   md-filled-button, 
+    md-filled-tonal-button, 
+    md-outlined-button, 
+    md-text-button, 
+    md-elevated-button 
   )[has-icon]:not([trailing-icon]) {
   padding-inline-start: var(--app-button-icon-leading-padding);
   padding-inline-end: var(--app-button-icon-trailing-padding);
 }
 
 :where(
-   md-filled-button, /*FIXME: Selector matches unknown element md-filled-button*/
-    md-filled-tonal-button, /*FIXME: Selector matches unknown element md-filled-tonal-button*/
-    md-outlined-button, /*FIXME: Selector matches unknown element md-outlined-button*/
-    md-text-button, /*FIXME: Selector matches unknown element md-text-button*/
-    md-elevated-button /*FIXME: Selector matches unknown element md-elevated-button*/
+   md-filled-button, 
+    md-filled-tonal-button, 
+    md-outlined-button, 
+    md-text-button, 
+    md-elevated-button 
   )[has-icon][trailing-icon] {
   padding-inline-start: var(--app-button-icon-trailing-padding);
   padding-inline-end: var(--app-button-icon-leading-padding);
 }
 
-md-filled-button { /*FIXME: Selector matches unknown element md-filled-button */
+md-filled-button { 
   --md-filled-button-leading-space: var(--app-button-inline-padding);
   --md-filled-button-trailing-space: var(--app-button-inline-padding);
   --md-filled-button-with-leading-icon-leading-space: var(
@@ -83,7 +86,7 @@ md-filled-button { /*FIXME: Selector matches unknown element md-filled-button */
   );
 }
 
-md-filled-tonal-button { /*FIXME: Selector matches unknown element md-filled-tonal-button*/
+md-filled-tonal-button { 
   --md-filled-tonal-button-leading-space: var(--app-button-inline-padding);
   --md-filled-tonal-button-trailing-space: var(--app-button-inline-padding);
   --md-filled-tonal-button-with-leading-icon-leading-space: var(
@@ -100,7 +103,7 @@ md-filled-tonal-button { /*FIXME: Selector matches unknown element md-filled-ton
   );
 }
 
-md-outlined-button { /*FIXME: Selector matches unknown element md-outlined-button*/
+md-outlined-button { 
   --md-outlined-button-leading-space: var(--app-button-inline-padding);
   --md-outlined-button-trailing-space: var(--app-button-inline-padding);
   --md-outlined-button-with-leading-icon-leading-space: var(
@@ -117,7 +120,7 @@ md-outlined-button { /*FIXME: Selector matches unknown element md-outlined-butto
   );
 }
 
-md-elevated-button { /*FIXME: Selector matches unknown element md-elevated-button*/
+md-elevated-button { 
   --md-elevated-button-leading-space: var(--app-button-inline-padding);
   --md-elevated-button-trailing-space: var(--app-button-inline-padding);
   --md-elevated-button-with-leading-icon-leading-space: var(
@@ -134,7 +137,7 @@ md-elevated-button { /*FIXME: Selector matches unknown element md-elevated-butto
   );
 }
 
-md-text-button { /*FIXME: Selector matches unknown element md-text-button*/
+md-text-button { 
   padding-inline-start: calc(var(--app-button-inline-padding) - 8px);
   padding-inline-end: calc(var(--app-button-inline-padding) - 8px);
   --md-text-button-leading-space: calc(var(--app-button-inline-padding) - 8px);
@@ -153,12 +156,12 @@ md-text-button { /*FIXME: Selector matches unknown element md-text-button*/
   );
 }
 
-md-text-button[has-icon]:not([trailing-icon]) { /*FIXME: Selector matches unknown element md-text-button*/
+md-text-button[has-icon]:not([trailing-icon]) { 
   padding-inline-start: var(--app-button-icon-leading-padding);
   padding-inline-end: calc(var(--app-button-icon-trailing-padding) - 8px);
 }
 
-md-text-button[has-icon][trailing-icon] { /*FIXME: Selector matches unknown element md-text-button*/
+md-text-button[has-icon][trailing-icon] { 
   padding-inline-start: calc(var(--app-button-icon-trailing-padding) - 8px);
   padding-inline-end: var(--app-button-icon-leading-padding);
 }
@@ -174,7 +177,7 @@ md-text-button[has-icon][trailing-icon] { /*FIXME: Selector matches unknown elem
 }
 
 /* --- Top App Bar --- */
-md-top-app-bar { /*FIXME: Selector matches unknown element md-top-app-bar*/
+md-top-app-bar { 
   position: sticky;
   top: 0;
   z-index: 1000;
@@ -196,20 +199,20 @@ md-top-app-bar { /*FIXME: Selector matches unknown element md-top-app-bar*/
       var(--app-motion-ease-standard, cubic-bezier(0, 0, 0.2, 1));
 }
 
-md-top-app-bar.scrolled { /*FIXME: Selector matches unknown element md-top-app-bar */
+md-top-app-bar.scrolled { 
   background-color: var(--md-sys-color-surface-container);
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
   border-bottom-left-radius: 24px;
   border-bottom-right-radius: 24px;
 }
 
-md-top-app-bar [slot='headline'] { /*FIXME: Selector matches unknown element md-top-app-bar */
+md-top-app-bar [slot='headline'] { 
   color: var(--md-sys-color-on-surface);
   font-size: 20px;
   font-weight: 500;
 }
 
-md-top-app-bar .material-symbols-outlined { /*FIXME: Selector matches unknown element md-top-app-bar */
+md-top-app-bar .material-symbols-outlined { 
   font-family: 'Material Symbols SemiBold', 'Material Symbols Outlined', sans-serif;
 }
 
@@ -320,7 +323,7 @@ md-top-app-bar .material-symbols-outlined { /*FIXME: Selector matches unknown el
   gap: 12px;
 }
 
-.theme-button-container md-icon-button { /*FIXME: Selector matches unknown element md-icon-button*/
+.theme-button-container md-icon-button { 
   --md-icon-button-icon-color: var(--app-text-color);
   --md-icon-button-icon-size: 20px;
   border-radius: 50%;
@@ -329,17 +332,17 @@ md-top-app-bar .material-symbols-outlined { /*FIXME: Selector matches unknown el
     var(--app-motion-ease-standard, cubic-bezier(0, 0, 0.2, 1));
 }
 
-.theme-button-container md-icon-button.selected { /*FIXME: Selector matches unknown element md-icon-button*/
+.theme-button-container md-icon-button.selected { 
   background-color: var(--app-theme-button-selected-bg);
   --md-icon-button-icon-color: var(--md-sys-color-primary);
 }
 
-.theme-button-container md-icon-button .material-symbols-outlined { /*FIXME: Selector matches unknown element md-icon-button*/
+.theme-button-container md-icon-button .material-symbols-outlined { 
   font-family:
     'Material Symbols SemiBold', 'Material Symbols Outlined', sans-serif;
 }
 
-.theme-button-container md-icon-button.selected .material-symbols-outlined { /*FIXME: Selector matches unknown element md-icon-button*/
+.theme-button-container md-icon-button.selected .material-symbols-outlined { 
   font-family:
     'Material Symbols Filled', 'Material Symbols Outlined', sans-serif;
 }
@@ -359,7 +362,7 @@ md-top-app-bar .material-symbols-outlined { /*FIXME: Selector matches unknown el
   text-decoration: underline;
 }
 
-md-list { /*FIXME: Selector matches unknown element md-list*/
+md-list { 
   --md-list-container-color: transparent;
   padding: 8px 0;
 }
@@ -373,13 +376,13 @@ md-list-item {
     'Poppins', sans-serif;
 }
 
-.navigation-drawer md-list { /*FIXME: Selector matches unknown element md-list*/
+.navigation-drawer md-list { 
   padding: 0 12px;
   margin: 0;
   --md-list-container-color: transparent;
 }
 
-.navigation-drawer md-divider { /*FIXME: Selector matches unknown element md-divider*/
+.navigation-drawer md-divider { 
   --md-divider-thickness: 1px;
   --md-divider-color: var(--app-border-color);
   margin: 8px 0;
@@ -470,16 +473,16 @@ md-list-item a[slot='headline'] {
   max-height: 600px;
 }
 
-.nested-list md-list { /*FIXME: Selector matches unknown element md-list*/
+.nested-list md-list { 
   padding: 0;
 }
 
-md-list-item[type='button'] md-icon[slot='end'] { /*FIXME: Selector matches unknown element md-icon*/
+md-list-item[type='button'] md-icon[slot='end'] { 
   transition: transform var(--app-motion-duration-medium, 300ms)
     var(--app-motion-ease-standard, cubic-bezier(0, 0, 0.2, 1));
 }
 
-md-list-item[type='button'].expanded md-icon[slot='end'] { /*FIXME: Selector matches unknown element md-icon*/
+md-list-item[type='button'].expanded md-icon[slot='end'] { 
   transform: rotate(180deg);
 }
 
@@ -651,24 +654,24 @@ md-list-item[type='button'].expanded md-icon[slot='end'] { /*FIXME: Selector mat
   align-content: start;
 }
 
-.toolbar-segment md-segmented-button-set, /*FIXME: Selector matches unknown element md-segmented-button-set*/
-.toolbar-filters md-filter-chip-set { /*FIXME: Selector matches unknown element md-segmented-button-set*/
+.toolbar-segment md-segmented-button-set, 
+.toolbar-filters md-filter-chip-set { 
   display: flex;
   flex-wrap: wrap;
   gap: 0.35rem;
 }
 
-.toolbar-segment md-segmented-button-set { /*FIXME: Selector matches unknown element md-segmented-button-set*/
+.toolbar-segment md-segmented-button-set { 
   --md-segmented-button-container-shape: 999px;
   --md-segmented-button-container-height: 36px;
 }
 
-.toolbar-filters md-filter-chip-set { /*FIXME: Selector matches unknown element md-filter-chip-set*/
+.toolbar-filters md-filter-chip-set { 
   --md-filter-chip-container-shape: 999px;
   --md-filter-chip-label-text-size: 0.82rem;
 }
 
-.toolbar-filters md-filter-chip[selected] { /*FIXME: Selector matches unknown element md-filter-chip*/
+.toolbar-filters md-filter-chip[selected] { 
   --md-filter-chip-label-text-color: var(--md-sys-color-primary);
 }
 
@@ -807,11 +810,11 @@ md-list-item[type='button'].expanded md-icon[slot='end'] { /*FIXME: Selector mat
   }
 }
 
-.builder-remote-inline-action md-outlined-text-field { /*FIXME: Selector matches unknown element md-outlined-text-field */
+.builder-remote-inline-action md-outlined-text-field { 
   width: 100%;
 }
 
-.builder-remote-inline-button::part(button) { /*FIXME: Selector matches unknown element md-outlined-button */
+.builder-remote-inline-button::part(button) { 
   min-block-size: var(--control-row-height);
   padding-inline: 1.25rem;
   border-radius: 16px;
@@ -821,7 +824,7 @@ md-list-item[type='button'].expanded md-icon[slot='end'] { /*FIXME: Selector mat
   font-weight: 600;
 }
 
-.builder-remote-inline-button::part(focus-ring) { /*FIXME: Selector matches unknown element md-outlined-button */
+.builder-remote-inline-button::part(focus-ring) { 
   border-radius: 16px;
 }
 
@@ -857,7 +860,7 @@ md-list-item[type='button'].expanded md-icon[slot='end'] { /*FIXME: Selector mat
     gap: 0.5rem;
   }
 
-  .builder-remote-inline-button::part(button) { /*FIXME: Selector matches unknown element md-outlined-button */
+  .builder-remote-inline-button::part(button) { 
     justify-content: center;
   }
 }
@@ -1123,7 +1126,7 @@ md-list-item[type='button'].expanded md-icon[slot='end'] { /*FIXME: Selector mat
   padding: 0 1.6rem 1.6rem;
 }
 
-.faq-icon-picker__footer md-filled-tonal-button { /*FIXME: Selector matches unknown element md-filled-tonal-button */
+.faq-icon-picker__footer md-filled-tonal-button { 
   --md-filled-tonal-button-container-shape: 18px;
 }
 
@@ -1143,7 +1146,7 @@ md-list-item[type='button'].expanded md-icon[slot='end'] { /*FIXME: Selector mat
   }
 }
 
-.builder-remote-controls md-filled-tonal-button::part(button) { /*FIXME: Selector matches unknown element md-filled-tonal-button */
+.builder-remote-controls md-filled-tonal-button::part(button) { 
   height: 100%;
   min-height: 100%;
 }
@@ -1176,7 +1179,7 @@ md-list-item[type='button'].expanded md-icon[slot='end'] { /*FIXME: Selector mat
   color: var(--app-secondary-text-color);
 }
 
-.builder-remote-presets md-text-button { /*FIXME: Selector matches unknown element md-text-button*/
+.builder-remote-presets md-text-button { 
   --md-text-button-container-shape: 999px;
   --md-text-button-label-text-size: 0.85rem;
   --md-text-button-hover-label-text-color: var(--md-sys-color-primary);
@@ -1503,10 +1506,10 @@ md-list-item[type='button'].expanded md-icon[slot='end'] { /*FIXME: Selector mat
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
 }
 
-.builder-card-grid md-filled-text-field, /*FIXME: Selector matches unknown element md-filled-text-field*/
-.builder-card-grid md-outlined-text-field, /*FIXME: Selector matches unknown element md-outlined-text-field*/
-.builder-card-grid md-outlined-select, /*FIXME: Selector matches unknown element md-outlined-select*/
-.builder-card-grid md-assist-chip-set, /*FIXME: Selector matches unknown element md-assist-chip-set*/
+.builder-card-grid md-filled-text-field, 
+.builder-card-grid md-outlined-text-field, 
+.builder-card-grid md-outlined-select, 
+.builder-card-grid md-assist-chip-set, 
 .builder-card-grid .builder-subsection {
   width: 100%;
   box-sizing: border-box;
@@ -1550,11 +1553,11 @@ md-list-item[type='button'].expanded md-icon[slot='end'] { /*FIXME: Selector mat
 }
 
 .builder-field-group > :where(
-    md-filled-text-field, /*FIXME: Selector matches unknown element md-filled-text-field*/
-    md-outlined-text-field, /*FIXME: Selector matches unknown element md-outlined-text-field*/
-    md-outlined-select, /*FIXME: Selector matches unknown element md-outlined-select*/
-    md-filled-select, /*FIXME: Selector matches unknown element md-filled-select*/
-    md-assist-chip-set /*FIXME: Selector matches unknown element md-assist-chip-set*/
+    md-filled-text-field, 
+    md-outlined-text-field, 
+    md-outlined-select, 
+    md-filled-select, 
+    md-assist-chip-set 
   ) {
   width: 100%;
   box-sizing: border-box;
@@ -1719,8 +1722,8 @@ md-list-item[type='button'].expanded md-icon[slot='end'] { /*FIXME: Selector mat
   margin-top: 0.35rem;
 }
 
-.builder-screenshots md-text-button, /*FIXME: Selector matches unknown element md-text-button */
-.builder-screenshots md-outlined-button { /*FIXME: Selector matches unknown element md-outlined-button */
+.builder-screenshots md-text-button, 
+.builder-screenshots md-outlined-button { 
   align-self: start;
 }
 
@@ -1736,7 +1739,7 @@ md-list-item[type='button'].expanded md-icon[slot='end'] { /*FIXME: Selector mat
   --control-row-height: var(--screenshot-action-control-height);
 }
 
-.screenshot-actions md-outlined-text-field { /*FIXME: Selector matches unknown element md-outlined-text-field */
+.screenshot-actions md-outlined-text-field { 
   min-width: min(320px, 100%);
 }
 
@@ -2258,7 +2261,7 @@ md-list-item[type='button'].expanded md-icon[slot='end'] { /*FIXME: Selector mat
   resize: vertical;
 }
 
-.api-field md-outlined-select { /*FIXME: Selector matches unknown element md-outlined-select*/
+.api-field md-outlined-select { 
   width: 100%;
   box-sizing: border-box;
   --md-outlined-select-container-shape: var(--app-field-shape);
@@ -2403,8 +2406,8 @@ md-list-item[type='button'].expanded md-icon[slot='end'] { /*FIXME: Selector mat
 }
 
 /* --- Misc --- */
-.preview-actions md-filled-tonal-button, /*FIXME: Selector matches unknown element md-filled-tonal-button*/
-.preview-actions md-outlined-button { /*FIXME: Selector matches unknown element md-outlined-button*/
+.preview-actions md-filled-tonal-button, 
+.preview-actions md-outlined-button { 
   --md-filled-tonal-button-container-shape: 999px;
   --md-outlined-button-container-shape: 999px;
 }
@@ -2448,7 +2451,7 @@ md-list-item[type='button'].expanded md-icon[slot='end'] { /*FIXME: Selector mat
   --md-list-item-container-shape: 14px;
 }
 
-.hero-visual dotlottie-player { /*FIXME: Selector matches unknown element dotlottie-player */
+.hero-visual dotlottie-player { 
   width: 320px;
   max-width: 100%;
   height: auto;
@@ -2492,3 +2495,5 @@ md-list-item[type='button'].expanded md-icon[slot='end'] { /*FIXME: Selector mat
     grid-template-columns: 1fr;
   }
 }
+
+/* stylelint-enable selector-type-no-unknown */

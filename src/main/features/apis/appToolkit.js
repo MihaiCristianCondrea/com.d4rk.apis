@@ -300,7 +300,7 @@
         const GITHUB_STEPS = ['authenticate', 'target', 'review'];
         let githubStepIndex = 0;
         const supportsFileSystemAccess =
-            typeof window !== 'undefined' && typeof window.showOpenFilePicker === 'function'; /*FIXME: Unresolved variable showOpenFilePicker */
+            typeof window !== 'undefined' && typeof window === 'object' && 'showOpenFilePicker' in window;
         const githubTokenHandleStore = createFileHandleStore({
             dbName: 'AppToolkitGithubToken',
             storeName: 'fileHandles',
@@ -969,8 +969,8 @@
                 return;
             }
 
-            const diffLib = typeof jsondiffpatch !== 'undefined' ? jsondiffpatch : null; /*FIXME: Unresolved variable or type jsondiffpatch */
-            if (!diffLib || typeof diffLib.create !== 'function' || !diffLib.formatters?.html) { /*FIXME: Unresolved variable formatters */
+            const diffLib = typeof window !== 'undefined' && window.jsondiffpatch ? window.jsondiffpatch : null;
+            if (!diffLib || typeof diffLib.create !== 'function' || !diffLib.formatters?.html) {
                 setEmptyState('Diff viewer unavailable. Ensure jsondiffpatch is loaded.');
                 return;
             }
@@ -996,8 +996,8 @@
             const baseline = normalizeList(baselineApps);
             const current = normalizeList(currentApps);
 
-            const differ = diffLib.create({ arrays: { detectMove: false }, textDiff: { minLength: 120 } });
-            const delta = differ.diff(baseline, current); /*FIXME: Unresolved function or method diff() */
+            const differ = diffLib?.create({ arrays: { detectMove: false }, textDiff: { minLength: 120 } });
+            const delta = differ?.diff ? differ.diff(baseline, current) : null;
 
             if (!delta || (typeof delta === 'object' && !Object.keys(delta).length)) {
                 setEmptyState('No differences detected since the last import.');
@@ -1022,20 +1022,14 @@
             baselineHeader.textContent = 'Baseline';
             baselineColumn.appendChild(baselineHeader);
             const cloneDelta = () => JSON.parse(JSON.stringify(delta));
-            baselineColumn.insertAdjacentHTML(
-                'beforeend',
-                diffLib.formatters.html.format(cloneDelta(), baseline) /*FIXME: Unresolved variable formatters */
-            );
+            baselineColumn.insertAdjacentHTML('beforeend', diffLib.formatters.html.format(cloneDelta(), baseline));
 
             const currentColumn = document.createElement('div');
             currentColumn.className = 'diff-view__column diff-view__column--current';
             const currentHeader = document.createElement('h4');
             currentHeader.textContent = 'Workspace';
             currentColumn.appendChild(currentHeader);
-            currentColumn.insertAdjacentHTML(
-                'beforeend',
-                diffLib.formatters.html.format(cloneDelta(), baseline) /*FIXME: Unresolved variable formatters */
-            );
+            currentColumn.insertAdjacentHTML('beforeend', diffLib.formatters.html.format(cloneDelta(), baseline));
 
             body.appendChild(baselineColumn);
             body.appendChild(currentColumn);
@@ -1067,7 +1061,7 @@
                 return;
             }
             activeFilters.clear();
-            const chips = filterChipSet.querySelectorAll('md-filter-chip'); /*FIXME: Selector matches unknown element md-filter-chip*/
+            const chips = filterChipSet.querySelectorAll('md-filter-chip');
             chips.forEach((chip) => {
                 if (chip.hasAttribute('selected')) {
                     const key = chip.dataset.appToolkitFilter;
@@ -1148,7 +1142,7 @@
                 return;
             }
             segmented.value = value;
-            segmented.querySelectorAll('md-segmented-button').forEach((button) => { /*FIXME: Selector matches unknown element md-segmented-button */
+            segmented.querySelectorAll('md-segmented-button').forEach((button) => {
                 const buttonValue =
                     button.getAttribute('value') ||
                     button.dataset.appToolkitMode ||
@@ -1218,9 +1212,9 @@
             card.dataset.pendingReleaseReady = meta.cohorts.pendingReleaseReady ? 'true' : 'false';
             card.dataset.needsScreenshots = meta.cohorts.needsScreenshots ? 'true' : 'false';
 
-            const header = utils.createElement('div', { classNames: 'builder-card-header' }); /*FIXME: Argument type { classNames: string } is not assignable to parameter type { classNames?: [], attrs?: {}, text?: string }  Type string is not assignable to type []    Type string is not assignable to type any[]      Type string is not assignable to type Array<any> */
+            const header = utils.createElement('div', { classNames: ['builder-card-header'] });
             header.appendChild(utils.createElement('h3', { text: `App ${index + 1}` }));
-            const removeButton = utils.createInlineButton({ /*FIXME: Argument type {    label: string,    icon: string,    variant: string,    title: string,    onClick: function(): void} is not assignable to parameter type {    label: any,    icon?: null,    onClick?: function(),    variant?: string,    title?: string}  Type string is not assignable to type null */
+            const removeButton = utils.createInlineButton({ 
                 label: 'Remove',
                 icon: 'delete',
                 variant: 'danger',
@@ -1324,6 +1318,9 @@
                 return { element: helper, setState, reset };
             };
 
+            /**
+             * @param {{label: string, value?: string, placeholder?: string, rows?: number, multiline?: boolean, type?: string, onInput?: (value: string) => void}} options
+             */
             const buildOutlinedTextField = ({
                 label,
                 value = '',
@@ -1334,7 +1331,7 @@
                 onInput = () => {}
             }) => {
                 const field = document.createElement('md-outlined-text-field');
-                field.setAttribute('label', label);
+                field.setAttribute('label', label || '');
                 if (placeholder) {
                     field.setAttribute('placeholder', placeholder);
                 }
@@ -1352,7 +1349,7 @@
                 return field;
             };
 
-            const nameField = buildOutlinedTextField({ /*FIXME: Argument type {    label: string,    value: any,    onInput: function(any): void} is not assignable to parameter type {    label: any,    value?: string,    placeholder?: string,    rows?: number,    multiline?: boolean,    type?: string,    onInput?: function()}  Type function(any): void is not assignable to type function() */
+            const nameField = buildOutlinedTextField({ 
                 label: 'App name',
                 value: app.name,
                 onInput: (value) => {
@@ -1390,7 +1387,7 @@
                 packageField.error = false;
             };
 
-            const packageField = buildOutlinedTextField({ /*FIXME: Argument type {    label: string,    value: string | any,    placeholder: string,    onInput: function(any): void} is not assignable to parameter type {    label: any,    value?: string,    placeholder?: string,    rows?: number,    multiline?: boolean,    type?: string,    onInput?: function()}  Type function(any): void is not assignable to type function() */
+            const packageField = buildOutlinedTextField({ 
                 label: 'Package name',
                 value: app.packageName,
                 placeholder: 'com.example.app',
@@ -1442,7 +1439,7 @@
             });
             createFieldGroup(categorySelect);
 
-            const descriptionField = buildOutlinedTextField({ /*FIXME: Argument type {    label: string,    value: any,    multiline: boolean,    rows: number,    onInput: function(any): void} is not assignable to parameter type {    label: any,    value?: string,    placeholder?: string,    rows?: number,    multiline?: boolean,    type?: string,    onInput?: function()}  Type function(any): void is not assignable to type function() */
+            const descriptionField = buildOutlinedTextField({ 
                 label: 'Description',
                 value: app.description,
                 multiline: true,
@@ -1564,7 +1561,7 @@
                 probe.src = trimmed;
             };
 
-            const iconField = buildOutlinedTextField({ /*FIXME: Argument type {    label: string,    value: string | any,    placeholder: string,    onInput: function(any): void} is not assignable to parameter type {    label: any,    value?: string,    placeholder?: string,    rows?: number,    multiline?: boolean,    type?: string,    onInput?: function()}  Type function(any): void is not assignable to type function() */
+            const iconField = buildOutlinedTextField({ 
                 label: 'Icon URL',
                 value: app.iconLogo,
                 placeholder: 'https://example.com/icon.png',
@@ -2497,9 +2494,13 @@
             try {
                 const response = await fetch(targetUrl, { cache: 'no-store' });
                 if (!response.ok) {
-                    throw new Error( /*FIXME: 'throw' of exception caught locally */
-                        `Request failed: ${response.status} ${response.statusText}`
-                    );
+                    const message = `Request failed: ${response.status} ${response.statusText}`;
+                    console.error('AppToolkit: Remote fetch failed.', message);
+                    if (fetchButton) {
+                        setLoadingState(fetchButton, false);
+                    }
+                    setFetchState('error', message);
+                    return;
                 }
                 const text = await response.text();
                 importJson(text);
@@ -2737,14 +2738,19 @@
             return null;
         }
 
+        /**
+         * @param {FileSystemHandle | null} handle
+         * @param {'read' | 'readwrite'} [mode]
+         */
         async function ensureFileHandlePermission(handle, mode = 'read') {
             if (!handle) {
                 return 'denied';
             }
+            /** @type {{mode: 'read' | 'readwrite'}} */
             const options = { mode };
-            if (typeof handle.queryPermission === 'function') { /*FIXME: Unresolved variable queryPermission */
+            if (typeof handle.queryPermission === 'function') {
                 try {
-                    const status = await handle.queryPermission(options); /*FIXME: Unresolved function or method queryPermission() */
+                    const status = await handle.queryPermission(options);
                     if (status === 'granted' || status === 'denied') {
                         return status;
                     }
@@ -2754,7 +2760,7 @@
             }
             if (typeof handle.requestPermission === 'function') {
                 try {
-                    return await handle.requestPermission(options); /*FIXME: Argument type { mode: string } is not assignable to parameter type NotificationPermissionCallback | undefined  Assigned type doesn't contain call signatures */
+                    return await handle.requestPermission(options);
                 } catch (error) {
                     return 'denied';
                 }
@@ -2825,7 +2831,11 @@
             }
             let handles;
             try {
-                handles = await window.showOpenFilePicker({ /*FIXME: Unresolved function or method showOpenFilePicker() */
+                const openFilePicker = window?.showOpenFilePicker;
+                if (typeof openFilePicker !== 'function') {
+                    return false;
+                }
+                handles = await openFilePicker({
                     multiple: false,
                     excludeAcceptAllOption: false,
                     types: [
@@ -2952,7 +2962,7 @@
                 return btoa(binary);
             }
             if (typeof btoa !== 'undefined') {
-                return btoa(unescape(encodeURIComponent(string))); /*FIXME: Deprecated symbol used, consult docs for better alternative */
+                return btoa(unescape(encodeURIComponent(string))); 
             }
             throw new Error('Base64 encoding is not supported in this environment.');
         }
@@ -3059,7 +3069,7 @@
                         currentSha = payload?.sha;
                     } else if (getResponse.status !== 404) {
                         const message = await readGithubError(getResponse);
-                        throw new Error(message); /*FIXME: 'throw' of exception caught locally */
+                        throw new Error(message); 
                     }
 
                     const commitMessage =
@@ -3084,7 +3094,7 @@
 
                     if (!putResponse.ok) {
                         const message = await readGithubError(putResponse);
-                        throw new Error(message); /*FIXME: 'throw' of exception caught locally */
+                        throw new Error(message); 
                     }
 
                     const putResult = await putResponse.json();
@@ -3156,7 +3166,7 @@
 
         if (fetchButton) {
             fetchButton.addEventListener('click', () => {
-                fetchRemoteJson(); /*FIXME: Promise returned from fetchRemoteJson is ignored && Invalid number of arguments, expected 1..2*/
+                fetchRemoteJson(); 
             });
         }
 
@@ -3164,7 +3174,7 @@
             fetchInput.addEventListener('keydown', (event) => {
                 if (event.key === 'Enter') {
                     event.preventDefault();
-                    fetchRemoteJson(); /*FIXME: Promise returned from fetchRemoteJson is ignored && Invalid number of arguments, expected 1..2*/
+                    fetchRemoteJson(); 
                 }
             });
             fetchInput.addEventListener('input', () => {

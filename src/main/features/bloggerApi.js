@@ -120,11 +120,16 @@ async function fetchBlogPosts() {
     const currentBlogUrl = appConfig.blog.url;
     const currentMaxResults = appConfig.blog.maxResults;
 
-    if (!currentApiKey) {
+    const renderError = (message) => {
+        const suffix = message && message.endsWith('.') ? message : `${message}.`;
         newsStatusElement.style.display = 'flex';
-        newsStatusElement.innerHTML = `<span>Configuration error: API key not available.</span>`;
-        const loader = newsStatusElement.querySelector('md-circular-progress'); /*FIXME: Selector matches unknown element md-circular-progress */
+        newsStatusElement.innerHTML = `<span>Failed to load posts. ${suffix}</span>`;
+        const loader = newsStatusElement.querySelector('md-circular-progress');
         if (loader) loader.remove();
+    };
+
+    if (!currentApiKey) {
+        renderError('Configuration error: API key not available.');
         return;
     }
 
@@ -136,11 +141,15 @@ async function fetchBlogPosts() {
             let errorMsg = `Error fetching blog info: ${blogInfoResponse.status} ${blogInfoResponse.statusText}`;
             if (getNestedValue(errorData, 'error.message')) errorMsg += ` - ${getNestedValue(errorData, 'error.message')}`;
             else if (blogInfoResponse.status === 404) errorMsg += ' - Blog URL not found or incorrect.';
-            throw new Error(errorMsg); /*FIXME: 'throw' of exception caught locally */
+            renderError(errorMsg);
+            return;
         }
         const blogInfo = await blogInfoResponse.json();
         blogId = blogInfo.id;
-        if (!blogId) throw new Error("Could not retrieve Blog ID from URL."); /*FIXME: 'throw' of exception caught locally */
+        if (!blogId) {
+            renderError('Could not retrieve Blog ID from URL.');
+            return;
+        }
 
         const postsUrl = `https://www.googleapis.com/blogger/v3/blogs/${blogId}/posts?key=${currentApiKey}&maxResults=${currentMaxResults}&fetchImages=true&fetchBodies=true`;
         const postsResponse = await fetch(postsUrl);
@@ -148,7 +157,8 @@ async function fetchBlogPosts() {
             const errorData = await postsResponse.json().catch(() => ({}));
             let errorMsg = `Error fetching posts: ${postsResponse.status} ${postsResponse.statusText}`;
             if (getNestedValue(errorData, 'error.message')) errorMsg += ` - ${getNestedValue(errorData, 'error.message')}`;
-            throw new Error(errorMsg); /*FIXME: 'throw' of exception caught locally */
+            renderError(errorMsg);
+            return;
         }
         const postsData = await postsResponse.json();
 

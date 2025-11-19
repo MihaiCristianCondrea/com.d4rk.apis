@@ -17,6 +17,18 @@ let navigationController = null;
 
 let routeLinkHandlerRegistered = false;
 
+async function handlePageLoad(pageId, pushHistory) {
+    try {
+        if (typeof pushHistory === 'undefined') {
+            await loadPageContent(pageId);
+        } else {
+            await loadPageContent(pageId, pushHistory);
+        }
+    } catch (error) {
+        console.error('App.js: Failed to load page content.', error);
+    }
+}
+
 registerGlobalUtilities();
 registerCompatibilityGlobals({
     getDynamicElement,
@@ -73,7 +85,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Handle Initial Page Load & Browser History ---
     const initialPageIdFromHash = window.location.hash || '#home';
-    loadPageContent(initialPageIdFromHash, false).then(r => ); /*FIXME: Promise returned from loadPageContent is ignored */
+    void handlePageLoad(initialPageIdFromHash, false);
 
     window.addEventListener('popstate', (event) => {
         let pageId = '#home';
@@ -82,7 +94,7 @@ document.addEventListener('DOMContentLoaded', () => {
         } else if (window.location.hash) {
             pageId = window.location.hash;
         }
-        loadPageContent(pageId, false).then(r => ); /*FIXME: Promise returned from loadPageContent is ignored */
+        void handlePageLoad(pageId, false);
     });
 
     decoratePanels();
@@ -205,7 +217,7 @@ function setupRouteLinkInterception() {
         }
 
         event.preventDefault();
-        loadPageContent(normalizedId).then(r => ); /*FIXME: Promise returned from loadPageContent is ignored { expected  */
+        void handlePageLoad(normalizedId);
     }, true);
 
     routeLinkHandlerRegistered = true;

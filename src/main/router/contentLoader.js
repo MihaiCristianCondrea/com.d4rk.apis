@@ -46,7 +46,14 @@ async function fetchPageMarkup(pageId, options = {}) {
     try {
         const response = await fetch(routeConfig.path);
         if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status} for ${routeConfig.path}`); /*FIXME: 'throw' of exception caught locally */
+            const errorMessage = `HTTP error! status: ${response.status} for ${routeConfig.path}`;
+            return {
+                status: 'error',
+                title: 'Error',
+                html: createErrorHtml(`Failed to load page: ${pageTitle}. ${errorMessage}`),
+                error: new Error(errorMessage),
+                sourceTitle: pageTitle
+            };
         }
         const html = await response.text();
         return {

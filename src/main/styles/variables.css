@@ -137,19 +137,21 @@
   --md-sys-typescale-display-small-weight: 500;
 }
 
-@supports (animation-timing-function: linear(0, 0.5, 1)) {/* FIXME: Unknown function 'linear'*/
+/* stylelint-disable function-no-unknown */
+@supports (animation-timing-function: linear(0, 0.5, 1)) {
   :root {
-    --app-motion-spring: linear(0, 0.35 20%, 0.72 45%, 1.08 75%, 1); /* FIXME: Unknown function 'linear'*/
-    --app-motion-bounce: linear(0, 0.55 25%, 1.05 60%, 1);/* FIXME: Unknown function 'linear'*/
+    --app-motion-spring: linear(0, 0.35 20%, 0.72 45%, 1.08 75%, 1);
+    --app-motion-bounce: linear(0, 0.55 25%, 1.05 60%, 1);
   }
 }
 
-@supports not (animation-timing-function: linear(0, 0.5, 1)) {/* FIXME: Unknown function 'linear'*/
+@supports not (animation-timing-function: linear(0, 0.5, 1)) {
   :root {
     --app-motion-spring: ease;
     --app-motion-bounce: ease;
   }
 }
+/* stylelint-enable function-no-unknown */
 
 html.dark {
   --md-sys-color-primary: #96dea1;

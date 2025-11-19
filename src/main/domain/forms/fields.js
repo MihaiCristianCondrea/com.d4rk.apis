@@ -91,7 +91,10 @@ export function createSelectField({ label, value = '', options = [], onChange = 
   return { wrapper, select };
 }
 
-export function createInlineButton({ label, icon = null, onClick = noop, variant = 'ghost', title = '' }) {
+/**
+ * @param {{label: string, icon?: string|null, onClick?: () => void, variant?: string, title?: string}} options
+ */
+export function createInlineButton({ label, icon = '', onClick = noop, variant = 'ghost', title = '' }) {
   const button = createElement('button', {
     classNames: ['api-inline-button', `variant-${variant}`],
     attrs: { type: 'button', title },
