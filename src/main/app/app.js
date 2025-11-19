@@ -73,7 +73,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Handle Initial Page Load & Browser History ---
     const initialPageIdFromHash = window.location.hash || '#home';
-    loadPageContent(initialPageIdFromHash, false); /*FIXME: Promise returned from loadPageContent is ignored */
+    loadPageContent(initialPageIdFromHash, false).then(r => ); /*FIXME: Promise returned from loadPageContent is ignored */
 
     window.addEventListener('popstate', (event) => {
         let pageId = '#home';
@@ -82,7 +82,7 @@ document.addEventListener('DOMContentLoaded', () => {
         } else if (window.location.hash) {
             pageId = window.location.hash;
         }
-        loadPageContent(pageId, false); /*FIXME: Promise returned from loadPageContent is ignored */
+        loadPageContent(pageId, false).then(r => ); /*FIXME: Promise returned from loadPageContent is ignored */
     });
 
     decoratePanels();
@@ -205,7 +205,7 @@ function setupRouteLinkInterception() {
         }
 
         event.preventDefault();
-        loadPageContent(normalizedId); /*FIXME: Promise returned from loadPageContent is ignored */
+        loadPageContent(normalizedId).then(r => ); /*FIXME: Promise returned from loadPageContent is ignored { expected  */
     }, true);
 
     routeLinkHandlerRegistered = true;

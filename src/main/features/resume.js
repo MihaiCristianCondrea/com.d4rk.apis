@@ -472,8 +472,8 @@ function ensureResumeStyles() {
     if (!head) {
         return;
     }
-    const resumeHref = resolveStyleUrl('resume', '/css/resume.css');
-    const printHref = resolveStyleUrl('print', '/css/print.css');
+    const resumeHref = resolveStyleUrl('resume', 'assets/css/resume.css');
+    const printHref = resolveStyleUrl('print', 'assets/css/print.css');
 
     if (resumeHref && !document.querySelector('link[data-style="resume"]')) {
         const link = document.createElement('link');

@@ -4,9 +4,9 @@ const path = require('path');
 const {
   getNestedValue,
   extractFirstImageFromHtml
-} = require('../src/domain/utils.js');
+} = require('../src/main/domain/utils.js');
 
-const scriptPath = path.resolve(__dirname, '../src/features/bloggerApi.js');
+const scriptPath = path.resolve(__dirname, '../src/main/features/bloggerApi.js');
 
 let shareBlogPost;
 let fetchBlogPosts;

@@ -1,4 +1,4 @@
-const APP_PATH = '../src/app/app.js';
+const APP_PATH = '../src/main/app/app.js';
 
 const mockUtils = {
   getDynamicElement: jest.fn(),
@@ -7,8 +7,8 @@ const mockUtils = {
   hidePageLoadingOverlay: jest.fn(),
   rafThrottle: (fn) => fn,
 };
-jest.mock('../src/domain/utils.js', () => {
-  const actual = jest.requireActual('../src/domain/utils.js');
+jest.mock('../src/main/domain/utils.js', () => {
+  const actual = jest.requireActual('../src/main/domain/utils.js');
   return {
     __esModule: true,
     ...actual,
@@ -21,7 +21,7 @@ jest.mock('../src/domain/utils.js', () => {
 });
 
 const themeMocks = {};
-jest.mock('../src/services/themeService.js', () => {
+jest.mock('../src/main/services/themeService.js', () => {
   themeMocks.initThemeControls = jest.fn();
   themeMocks.applyTheme = jest.fn();
   return {
@@ -36,7 +36,7 @@ const mockNavigation = {
   NavigationDrawerController: jest.fn(),
   controller: null,
 };
-jest.mock('../src/services/navigationDrawerService.js', () => ({
+jest.mock('../src/main/services/navigationDrawerService.js', () => ({
   __esModule: true,
   initNavigationDrawer: (...args) => mockNavigation.initNavigationDrawer(...args),
   NavigationDrawerController: mockNavigation.NavigationDrawerController,
@@ -48,7 +48,7 @@ const mockRouter = {
   normalizePageId: jest.fn((value) => value),
   updateActiveNavLink: jest.fn(),
 };
-jest.mock('../src/router/index.js', () => ({
+jest.mock('../src/main/router/index.js', () => ({
   __esModule: true,
   default: mockRouter,
   initRouter: (...args) => mockRouter.initRouter(...args),
@@ -62,7 +62,7 @@ const mockRoutesApi = {
   getRoute: jest.fn(),
   PAGE_ROUTES: {},
 };
-jest.mock('../src/router/routes.js', () => ({
+jest.mock('../src/main/router/routes.js', () => ({
   __esModule: true,
   default: mockRoutesApi,
 }));

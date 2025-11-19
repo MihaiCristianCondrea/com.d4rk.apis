@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const resumeScript = fs.readFileSync(path.resolve(__dirname, '../src/features/resume.js'), 'utf8');
+const resumeScript = fs.readFileSync(path.resolve(__dirname, '../src/main/features/resume.js'), 'utf8');
 
 const baseMarkup = `
 <div id="resumePage">
