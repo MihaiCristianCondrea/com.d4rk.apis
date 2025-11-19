@@ -98,13 +98,7 @@
       crossorigin="anonymous"
       referrerpolicy="no-referrer"
     />
-    <link rel="preload" href="./src/main/main.js" as="script" type="module" />
-    <script
-      src="https://cdn.jsdelivr.net/npm/jsondiffpatch@0.7.3/dist/jsondiffpatch.umd.min.js"
-      integrity="sha384-k9hBYqZuhiIeZAdNgw0X29mNq2BdJvNBmlF/CaPEzgPieGEAFFSz9KlOjE7td6d7"
-      crossorigin="anonymous"
-      defer
-    ></script>
+    <link rel="modulepreload" href="../main/main.js" />
   </head>
 
   <body class="bg-surface-container-lowest">
@@ -561,6 +555,6 @@
       <span id="copyright-message"></span>
     </footer>
 
-    <script type="module" src="./src/main/main.js"></script>
+    <script type="module" src="../main/main.js"></script>
   </body>
 </html>

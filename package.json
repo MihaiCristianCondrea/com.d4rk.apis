@@ -31,5 +31,8 @@
     "transform": {
       "^.+\\.js$": "babel-jest"
     }
+  },
+  "dependencies": {
+    "jsondiffpatch": "^0.7.3"
   }
 }

@@ -1,7 +1,9 @@
 const DEFAULT_TIMEOUT = 7000;
 
+const defaultWorkerUrl = new URL('../workers/jsonWorker.js', import.meta.url);
+
 export class JsonWorkerClient {
-  constructor(workerUrl = 'src/workers/jsonWorker.js') {
+  constructor(workerUrl = defaultWorkerUrl) {
     this.workerUrl = workerUrl;
     this.worker = null;
     this.pending = new Map();
