@@ -10,6 +10,11 @@ import './styles/viewport-optimizations.css';
 import resumeStylesAsset from './styles/resume.css?url';
 import resumePrintStylesAsset from './styles/print.css?url';
 
+import * as jsondiffpatchCore from 'jsondiffpatch';
+import * as jsondiffpatchHtmlFormatter from 'jsondiffpatch/formatters/html';
+import * as jsondiffpatchAnnotatedFormatter from 'jsondiffpatch/formatters/annotated';
+import * as jsondiffpatchConsoleFormatter from 'jsondiffpatch/formatters/console';
+
 const globalScope = typeof window !== 'undefined' ? window : globalThis;
 const existingStyleUrls = globalScope.__APP_STYLE_URLS__ || {};
 globalScope.__APP_STYLE_URLS__ = {
@@ -17,6 +22,17 @@ globalScope.__APP_STYLE_URLS__ = {
   resume: resumeStylesAsset,
   print: resumePrintStylesAsset,
 };
+
+if (typeof window !== 'undefined' && !window.jsondiffpatch) {
+  window.jsondiffpatch = {
+    ...jsondiffpatchCore,
+    formatters: {
+      html: jsondiffpatchHtmlFormatter,
+      annotated: jsondiffpatchAnnotatedFormatter,
+      console: jsondiffpatchConsoleFormatter,
+    },
+  };
+}
 
 import './features/dialogs.js';
 import './features/animations.js';

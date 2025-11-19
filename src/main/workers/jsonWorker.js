@@ -1,3 +1,5 @@
+import * as jsondiffpatch from 'jsondiffpatch';
+
 const ACTIONS = {
   PARSE: 'parse',
   STRINGIFY: 'stringify',
@@ -24,9 +26,7 @@ function safeStringify(payload) {
 
 async function computeDiff({ baseline, candidate }) {
   if (typeof self.jsondiffpatch === 'undefined') {
-    if (typeof importScripts === 'function') {
-      importScripts('https://cdn.jsdelivr.net/npm/jsondiffpatch@0.7.3/dist/jsondiffpatch.umd.min.js');
-    }
+    self.jsondiffpatch = jsondiffpatch;
   }
   if (typeof self.jsondiffpatch === 'undefined') {
     throw new Error('jsondiffpatch is not available.');
