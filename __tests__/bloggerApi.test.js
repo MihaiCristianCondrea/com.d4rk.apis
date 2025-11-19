@@ -6,7 +6,7 @@ const {
   extractFirstImageFromHtml
 } = require('../src/domain/utils.js');
 
-const scriptPath = path.resolve(__dirname, '../assets/js/bloggerApi.js');
+const scriptPath = path.resolve(__dirname, '../src/features/bloggerApi.js');
 
 let shareBlogPost;
 let fetchBlogPosts;

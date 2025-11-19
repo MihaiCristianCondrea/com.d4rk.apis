@@ -3,9 +3,10 @@
   "version": "1.0.0",
   "description": "This repository contains the source for a personal profile site built as a small Single Page Application (SPA). The site presents information about Mihai-Cristian Condrea and includes additional pages such as a privacy policy and code of conduct. It is designed as a Progressive Web App using Material Web Components and vanilla JavaScript.",
   "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
     "test": "jest",
-    "build": "npm run build:css",
-    "build:css": "npx tailwindcss -i ./assets/css/tailwind.input.css -o ./assets/css/tailwind.css --minify",
     "verify:seo": "node -e \"['sitemap.xml','robots.txt'].forEach((file)=>require('fs').accessSync(file));\"",
     "deploy": "npm run build && npm run verify:seo"
   },
@@ -21,7 +22,8 @@
     "@tailwindcss/postcss": "^4.1.13",
     "jest": "^30.1.3",
     "jest-environment-jsdom": "30.1.2",
-    "tailwindcss": "^4.1.13"
+    "tailwindcss": "^4.1.13",
+    "vite": "^5.4.11"
   },
   "jest": {
     "testEnvironment": "jsdom",

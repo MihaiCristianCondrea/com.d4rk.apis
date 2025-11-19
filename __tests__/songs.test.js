@@ -25,7 +25,7 @@ describe('songs module', () => {
 
         global.fetch.mockResolvedValue(response);
 
-        const { fetchChannelVideos } = require('../assets/js/songs.js');
+        const { fetchChannelVideos } = require('../src/features/songs.js');
 
         await expect(fetchChannelVideos('channel123')).rejects.toThrow(
             `HTTP error! status: 502, message: ${errorText}`
@@ -56,7 +56,7 @@ describe('songs module', () => {
             json: mockJson
         });
 
-        const { loadSongs } = require('../assets/js/songs.js');
+        const { loadSongs } = require('../src/features/songs.js');
         const status = document.getElementById('songs-status');
         status.style.display = 'block';
 

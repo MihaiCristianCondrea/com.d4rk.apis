@@ -53,7 +53,6 @@
     <link rel="icon" href="assets/icons/favicon.ico" sizes="any" />
     <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png" />
     <link rel="manifest" href="assets/manifest.json" />
-    <link rel="stylesheet" href="assets/css/tailwind.css" />
     <script
       src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.6.2/dist/dotlottie-wc.js"
       type="module"
@@ -99,13 +98,7 @@
       crossorigin="anonymous"
       referrerpolicy="no-referrer"
     />
-    <link rel="stylesheet" href="assets/css/fonts.css" />
-    <link rel="stylesheet" href="assets/css/variables.css" />
-    <link rel="stylesheet" href="assets/css/base.css" />
-    <link rel="stylesheet" href="assets/css/components.css" />
-    <link rel="stylesheet" href="assets/css/pages.css" />
-    <link rel="stylesheet" href="src/styles/layered-panels.css" />
-    <link rel="stylesheet" href="src/styles/viewport-optimizations.css" />
+    <link rel="preload" href="/src/main.js" as="script" type="module" />
     <script
       src="https://cdn.jsdelivr.net/npm/jsondiffpatch@0.7.3/dist/jsondiffpatch.umd.min.js"
       integrity="sha384-k9hBYqZuhiIeZAdNgw0X29mNq2BdJvNBmlF/CaPEzgPieGEAFFSz9KlOjE7td6d7"
@@ -568,16 +561,6 @@
       <span id="copyright-message"></span>
     </footer>
 
-    <script src="assets/js/dialogs.js" defer></script>
-    <script type="module" src="src/app/legacyBridge.js"></script>
-    <script type="module" src="src/workspaces/appToolkit/index.js"></script>
-    <script src="assets/js/apis/appToolkit.js" defer></script>
-    <script src="assets/js/apis/faq.js" defer></script>
-    <script src="assets/js/apis/englishWithLidia.js" defer></script>
-    <script src="assets/js/apis/androidStudioTutorials.js" defer></script>
-    <script src="assets/js/apis/pagers.js" defer></script>
-    <script src="assets/js/animations.js" defer></script>
-    <script src="assets/js/metadataManager.js" defer></script>
-    <script type="module" src="src/app/app.js"></script>
+    <script type="module" src="/src/main.js"></script>
   </body>
 </html>

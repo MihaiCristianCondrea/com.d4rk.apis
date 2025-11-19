@@ -4,7 +4,7 @@ describe('committers helpers', () => {
   beforeAll(() => {
     jest.resetModules();
     // Load the committers script so it attaches helpers to the JSDOM window.
-    require(path.join('..', 'assets', 'js', 'committers.js'));
+    require(path.join('..', 'src', 'features', 'committers.js'));
   });
 
   afterEach(() => {
