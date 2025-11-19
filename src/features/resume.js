@@ -459,19 +459,36 @@ function ensureMarkedLoaded() {
     return markedLoadPromise;
 }
 
+function resolveStyleUrl(key, fallback) {
+    const globalScope = typeof window !== 'undefined' ? window : globalThis;
+    if (globalScope && globalScope.__APP_STYLE_URLS__ && globalScope.__APP_STYLE_URLS__[key]) {
+        return globalScope.__APP_STYLE_URLS__[key];
+    }
+    return fallback;
+}
+
 function ensureResumeStyles() {
     const head = document.head;
-    if (!document.querySelector('link[href="assets/css/resume.css"]')) {
+    if (!head) {
+        return;
+    }
+    const resumeHref = resolveStyleUrl('resume', 'assets/css/resume.css');
+    const printHref = resolveStyleUrl('print', 'assets/css/print.css');
+
+    if (resumeHref && !document.querySelector('link[data-style="resume"]')) {
         const link = document.createElement('link');
         link.rel = 'stylesheet';
-        link.href = 'assets/css/resume.css';
+        link.href = resumeHref;
+        link.dataset.style = 'resume';
         head.appendChild(link);
     }
-    if (!document.querySelector('link[href="assets/css/print.css"]')) {
+
+    if (printHref && !document.querySelector('link[data-style="resume-print"]')) {
         const link = document.createElement('link');
         link.rel = 'stylesheet';
-        link.href = 'assets/css/print.css';
+        link.href = printHref;
         link.media = 'print';
+        link.dataset.style = 'resume-print';
         head.appendChild(link);
     }
 }

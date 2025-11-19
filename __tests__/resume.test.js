@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const resumeScript = fs.readFileSync(path.resolve(__dirname, '../assets/js/resume.js'), 'utf8');
+const resumeScript = fs.readFileSync(path.resolve(__dirname, '../src/features/resume.js'), 'utf8');
 
 const baseMarkup = `
 <div id="resumePage">
@@ -242,13 +242,19 @@ describe('resume.js browser integration', () => {
 
   test('ensures resume styles are appended once and reused on subsequent initialization', async () => {
     await runInitResumePage();
-    expect(document.querySelectorAll('link[href="assets/css/resume.css"]').length).toBe(1);
-    expect(document.querySelectorAll('link[href="assets/css/print.css"]').length).toBe(1);
+
+    const resumeLinks = document.querySelectorAll('link[data-style="resume"]');
+    const printLinks = document.querySelectorAll('link[data-style="resume-print"]');
+
+    expect(resumeLinks).toHaveLength(1);
+    expect(printLinks).toHaveLength(1);
+    expect(resumeLinks[0].getAttribute('href')).toBe('assets/css/resume.css');
+    expect(printLinks[0].getAttribute('href')).toBe('assets/css/print.css');
 
     document.fonts = { ready: Promise.resolve() };
     await runInitResumePage();
-    expect(document.querySelectorAll('link[href="assets/css/resume.css"]').length).toBe(1);
-    expect(document.querySelectorAll('link[href="assets/css/print.css"]').length).toBe(1);
+    expect(document.querySelectorAll('link[data-style="resume"]').length).toBe(1);
+    expect(document.querySelectorAll('link[data-style="resume-print"]').length).toBe(1);
   });
 
   test('toggles edit mode visibility based on the edit query parameter', async () => {
