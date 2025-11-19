@@ -23,6 +23,33 @@ globalScope.__APP_STYLE_URLS__ = {
   print: resumePrintStylesAsset,
 };
 
+if (typeof Element !== 'undefined' && Element.prototype?.animate && !globalScope.__APP_ANIMATE_PATCH__) {
+  const originalAnimate = Element.prototype.animate;
+  const sanitizeKeyframes = (keyframes) => {
+    if (!Array.isArray(keyframes)) {
+      return keyframes;
+    }
+    let mutated = false;
+    const cleaned = keyframes.map((frame) => {
+      if (frame && typeof frame === 'object' && typeof frame.transform === 'string') {
+        const normalizedTransform = frame.transform.replace(/NaN/g, '0');
+        if (normalizedTransform !== frame.transform) {
+          mutated = true;
+          return { ...frame, transform: normalizedTransform };
+        }
+      }
+      return frame;
+    });
+    return mutated ? cleaned : keyframes;
+  };
+
+  Element.prototype.animate = function patchedAnimate(keyframes, options) {
+    return originalAnimate.call(this, sanitizeKeyframes(keyframes), options);
+  };
+
+  globalScope.__APP_ANIMATE_PATCH__ = true;
+}
+
 if (typeof window !== 'undefined' && !window.jsondiffpatch) {
   window.jsondiffpatch = {
     ...jsondiffpatchCore,

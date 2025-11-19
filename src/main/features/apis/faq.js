@@ -6,8 +6,24 @@
     }
 
     const DEFAULT_FILENAME = 'faq_dataset.json';
-    const GITHUB_PAGES_BASE = 'https://mihaicristiancondrea.github.io/com.d4rk.apis';
-    const DEFAULT_DATA_URL = `${GITHUB_PAGES_BASE}/api/app_toolkit/v2/debug/en/home/api_android_apps.json`;
+    const SITE_BASE = (() => {
+        try {
+            const url = new URL('.', window.location.href);
+            return url.href.replace(/\/$/, '');
+        } catch (error) {
+            console.warn('FaqBuilder: Unable to derive site base.', error);
+            return '';
+        }
+    })();
+    const withBase = (path) => {
+        try {
+            return new URL(path.replace(/^\//, ''), `${SITE_BASE}/`).toString();
+        } catch (error) {
+            console.warn('FaqBuilder: Unable to resolve URL for', path, error);
+            return path;
+        }
+    };
+    const DEFAULT_DATA_URL = withBase('api/app_toolkit/v2/debug/en/home/api_android_apps.json');
     const ICON_CATALOG_ENDPOINTS = [
         'https://fonts.google.com/metadata/icons?incomplete=1&icon.set=Material+Symbols',
         'https://raw.githubusercontent.com/google/material-design-icons/master/variablefont/MaterialSymbolsOutlined%5BFILL%2CGRAD%2Copsz%2Cwght%5D.codepoints'
@@ -50,7 +66,7 @@
     const DEFAULT_CATEGORIES = ['general'];
 
     const FAQ_API_PRESET_OPTIONS = (() => {
-        const faqBase = `${GITHUB_PAGES_BASE}/api/faq/v1`;
+        const faqBase = withBase('api/faq/v1');
         const categoryPresets = ALL_CATEGORIES.map((category) => ({
             value: `faq-${category.value}`,
             label: `FAQ · ${category.label}`,
@@ -60,12 +76,12 @@
             {
                 value: 'app-toolkit-debug',
                 label: 'App Toolkit · Debug',
-                url: `${GITHUB_PAGES_BASE}/api/app_toolkit/v2/debug/en/home/api_android_apps.json`
+                url: withBase('api/app_toolkit/v2/debug/en/home/api_android_apps.json')
             },
             {
                 value: 'app-toolkit-release',
                 label: 'App Toolkit · Release',
-                url: `${GITHUB_PAGES_BASE}/api/app_toolkit/v2/release/en/home/api_android_apps.json`
+                url: withBase('api/app_toolkit/v2/release/en/home/api_android_apps.json')
             },
             {
                 value: 'faq-index',
