@@ -28,12 +28,13 @@ import './features/contact.js';
 import './features/songs.js';
 import './features/resume.js';
 
+import './app/legacyBridge.js';
+
 import './features/apis/appToolkit.js';
 import './features/apis/faq.js';
 import './features/apis/englishWithLidia.js';
 import './features/apis/androidStudioTutorials.js';
 import './features/apis/pagers.js';
 
-import './app/legacyBridge.js';
 import './workspaces/appToolkit/index.js';
 import './app/app.js';
