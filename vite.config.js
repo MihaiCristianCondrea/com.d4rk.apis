@@ -4,7 +4,12 @@ import { resolve } from 'path';
 export default defineConfig({
   root: '.',
   base: './',
-  publicDir: false,
+  publicDir: resolve(__dirname, 'src/main/assets'),
+  resolve: {
+    alias: {
+      '@': resolve(__dirname, 'src/main'),
+    },
+  },
   build: {
     outDir: 'assets/dist',
     emptyOutDir: true,

@@ -19,7 +19,7 @@ const appConfig = {
 function createBlogPostCard(post) {
     const card = document.createElement('md-outlined-card');
     card.className = 'news-card';
-    const placeholderImageUrl = `assets/images/placeholder.png`;
+    const placeholderImageUrl = `/images/placeholder.png`;
     const imageUrl = getNestedValue(post, 'images.0.url') || extractFirstImageFromHtml(post.content) || placeholderImageUrl;
     const title = post.title || 'Untitled Post';
     const tempDiv = document.createElement('div');

@@ -30,7 +30,7 @@ async function loadSongs() {
         console.error('Failed to fetch songs list', err);
     }
     for (const track of tracks) {
-        const img = track.image || 'assets/images/placeholder.png';
+        const img = track.image || '/images/placeholder.png';
         const title = track.title;
         const artists = track.artists;
         const link = track.link;
