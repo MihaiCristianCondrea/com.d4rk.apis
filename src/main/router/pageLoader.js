@@ -123,6 +123,7 @@ export class PageLoader {
       newUrlFragment,
       shouldUpdateHistory,
       minHeightApplied: false,
+      routeConfig, // Pass routeConfig to context
     };
 
     let pageAnimationPromise = Promise.resolve();
@@ -199,13 +200,22 @@ export class PageLoader {
   }
 
   applyContent(loadResult, context) {
-    const { contentArea, normalizedPageId } = context;
+    const { contentArea, normalizedPageId, routeConfig } = context;
 
     contentArea.innerHTML = typeof loadResult.html === 'string'
       ? loadResult.html
       : createGenericErrorHtml();
 
     initializeDialogs(contentArea);
+
+    // Call the onLoad function from the routeConfig if it exists
+    if (routeConfig && typeof routeConfig.onLoad === 'function') {
+      try {
+        routeConfig.onLoad();
+      } catch (error) {
+        console.error(`Router: Error calling onLoad for route "${normalizedPageId}":`, error);
+      }
+    }
 
     const handledByInjectedHandlers = this.runtime.runInjectedHandlers(normalizedPageId);
     if (!handledByInjectedHandlers && typeof loadResult.onReady === 'function') {

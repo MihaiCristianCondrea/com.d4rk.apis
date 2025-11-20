@@ -1,45 +1,55 @@
-<div class="page-header">
-    <h1 class="page-title">Git Patch</h1>
-    <p class="page-subtitle">Extract raw .patch files from commits for git apply.</p>
-</div>
+<div class="animate-in fade-in slide-in-from-bottom-4 duration-500 space-y-6">
+    <div class="page-header">
+        <h1 class="text-2xl font-normal text-[#e6e1e5]">Git Patch</h1>
+        <p class="text-sm text-[#cac4d0]">Extract raw .patch files from commits for git apply.</p>
+    </div>
 
-<div class="search-card-container">
     <div class="search-card">
         <form id="gitPatchForm">
-            <div class="search-input-group">
-                <md-filled-text-field label="Commit URL" id="commitUrl" class="search-input" placeholder="https://github.com/..."></md-filled-text-field>
-                <md-filled-text-field label="GitHub Token (Optional)" id="githubToken" class="search-input" placeholder="Enter your token"></md-filled-text-field>
-            </div>
-            <div class="search-actions">
-                <md-filled-button type="submit" id="getPatchButton">
-                    <md-icon slot="icon">difference</md-icon>
-                    Get Patch
-                </md-filled-button>
+            <div class="search-card-content">
+                <div class="search-card-input-container">
+                    <label for="commitUrl" class="search-card-label">Commit URL</label>
+                    <input type="text" id="commitUrl" placeholder="https://github.com/..." class="search-card-input">
+                </div>
+                <div class="search-card-input-container">
+                    <label for="patchToken" class="search-card-label">GitHub Token (Optional)</label>
+                    <input type="text" id="patchToken" placeholder="Enter your token" class="search-card-input">
+                </div>
+                <div class="search-card-actions">
+                    <button type="submit" class="search-card-submit-button">
+                        <span class="material-symbols-outlined">difference</span>
+                        Get Patch
+                    </button>
+                </div>
             </div>
         </form>
     </div>
-</div>
 
-<div id="gitPatchError" class="error-message" style="display: none;"></div>
+    <div id="gitPatchError" class="error-message" style="display: none;"></div>
 
-<div id="gitPatchResult" class="result-container" style="display: none;">
-    <div class="result-header">
-        <div class="status-badge">
-            <md-icon>check</md-icon>
-            Ready to Apply
+    <div id="gitPatchResult" style="display: none;">
+        <div class="result-header">
+            <div class="result-status">
+                <span class="material-symbols-outlined">check</span>
+                Ready to Apply
+            </div>
+            <div class="result-actions">
+                <button id="downloadPatch" class="action-button">
+                    <span class="material-symbols-outlined">download</span>
+                    Download .patch
+                </button>
+                <button id="copyPatch" class="action-button">
+                    <span class="material-symbols-outlined">content_copy</span>
+                    Copy
+                </button>
+            </div>
         </div>
-        <div class="action-buttons">
-            <md-filled-tonal-button id="downloadPatchButton">
-                <md-icon slot="icon">download</md-icon>
-                Download .patch
-            </md-filled-tonal-button>
-            <md-filled-tonal-button id="copyPatchButton">
-                <md-icon slot="icon">content_copy</md-icon>
-                Copy
-            </md-filled-tonal-button>
+        <div class="result-output">
+            <div class="result-output-header">
+                <span class="material-symbols-outlined">integration_instructions</span>
+                PATCH
+            </div>
+            <pre><code id="patchContent"></code></pre>
         </div>
-    </div>
-    <div class="result-content">
-        <pre><code id="patchOutput"></code></pre>
     </div>
 </div>

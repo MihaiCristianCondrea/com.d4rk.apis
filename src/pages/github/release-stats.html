@@ -1,53 +1,61 @@
-<div class="page-header">
-    <h1 class="page-title">Release Stats</h1>
-    <p class="page-subtitle">Visualize download counts and assets for GitHub releases.</p>
-</div>
+<div class="animate-in fade-in slide-in-from-bottom-4 duration-500 space-y-6">
+    <div class="page-header">
+        <h1 class="text-2xl font-normal text-[#e6e1e5]">Release Stats</h1>
+        <p class="text-sm text-[#cac4d0]">Visualize download counts and assets for GitHub releases.</p>
+    </div>
 
-<div class="search-card-container">
     <div class="search-card">
         <form id="releaseStatsForm">
-            <div class="search-input-group">
-                <md-filled-text-field label="Repository URL" id="repoUrl" class="search-input" placeholder="https://github.com/..."></md-filled-text-field>
-                <md-filled-text-field label="GitHub Token (Optional)" id="githubToken" class="search-input" placeholder="Enter your token"></md-filled-text-field>
-            </div>
-            <div class="search-actions">
-                <md-filled-button type="submit" id="analyzeButton">
-                    <md-icon slot="icon">analytics</md-icon>
-                    Analyze
-                </md-filled-button>
+            <div class="search-card-content">
+                <div class="search-card-input-container">
+                    <label for="releaseUrl" class="search-card-label">Repository URL</label>
+                    <input type="text" id="releaseUrl" placeholder="https://github.com/..." class="search-card-input">
+                </div>
+                <div class="search-card-input-container">
+                    <label for="releaseToken" class="search-card-label">GitHub Token (Optional)</label>
+                    <input type="text" id="releaseToken" placeholder="Enter your token" class="search-card-input">
+                </div>
+                <div class="search-card-actions">
+                    <button type="submit" class="search-card-submit-button">
+                        <span class="material-symbols-outlined">analytics</span>
+                        Analyze
+                    </button>
+                </div>
             </div>
         </form>
     </div>
-</div>
 
-<div id="releaseStatsError" class="error-message" style="display: none;"></div>
+    <div id="releaseStatsError" class="error-message" style="display: none;"></div>
 
-<div id="releaseStatsResult" class="result-container" style="display: none;">
-    <div class="grid-container">
-        <div class="grid-item">
-            <div class="card">
-                <div class="card-header">
-                    <p>Selected Release</p>
-                    <h3 id="selectedReleaseName"></h3>
-                    <div id="selectedReleaseMeta"></div>
-                </div>
-                <div class="card-content">
-                    <div id="selectedReleaseDownloads"></div>
-                    <h4>Assets</h4>
-                    <div id="assetList"></div>
-                </div>
+    <div id="releaseStatsResult" class="grid grid-cols-1 lg:grid-cols-2 gap-6" style="display: none;">
+        <div class="release-details-card">
+            <div class="release-details-header">
+                <p class="release-details-eyebrow">Selected Release</p>
+                <h3 id="selectedReleaseName" class="release-details-name"></h3>
+                <div id="selectedReleaseMeta" class="release-details-meta"></div>
+            </div>
+            <div id="selectedReleaseDownloads" class="release-details-downloads"></div>
+            <div class="release-details-assets">
+                <p class="release-details-assets-title">Assets</p>
+                <div id="selectedReleaseAssets" class="release-details-assets-list"></div>
             </div>
         </div>
-        <div class="grid-item">
-            <div class="card">
-                <div class="card-header">
-                    <p>Total Project Downloads</p>
-                    <h3 id="totalDownloads"></h3>
+        <div class="release-overview-card">
+            <div class="release-overview-header">
+                <div>
+                    <p class="release-overview-eyebrow">Total Project Downloads</p>
+                    <h3 id="totalDownloads" class="release-overview-total"></h3>
                 </div>
-                <div class="card-content">
-                    <h4>All Releases</h4>
-                    <div id="releaseList"></div>
+                <div class="release-overview-icon">
+                    <span class="material-symbols-outlined">download</span>
                 </div>
+            </div>
+            <div class="release-overview-list-container">
+                <div class="release-overview-list-header">
+                    <p class="release-overview-list-title">All Releases</p>
+                    <p id="totalReleases" class="release-overview-list-count"></p>
+                </div>
+                <div id="releaseList" class="release-overview-list"></div>
             </div>
         </div>
     </div>
