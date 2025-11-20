@@ -84,7 +84,7 @@ function initProjectsPage() {
         if (typeof SiteAnimations !== 'undefined' && SiteAnimations && typeof SiteAnimations.animateProjectCards === 'function') {
           try {
             const visibleProjects = Array.from(projects).filter(p => p.style.display !== 'none');
-            SiteAnimations.animateProjectCards(visibleProjects);
+            await SiteAnimations.animateProjectCards(visibleProjects);
           } catch (animationError) {
             console.error('Projects: Failed to animate filtered project cards.', animationError);
           }
@@ -214,7 +214,7 @@ function initProjectsPage() {
 
 document.addEventListener('DOMContentLoaded', () => {
   if (document.getElementById('projectsPageContainer')) {
-    initProjectsPage();
+    initProjectsPage(); // FIXME: Promise returned from initProjectsPage is ignored
   }
 });
 

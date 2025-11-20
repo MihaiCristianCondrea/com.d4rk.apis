@@ -1,4 +1,4 @@
-import { createElement } from '../domain/dom/elements.js';
+import { createElement } from '@/domain/dom/elements';
 
 export function downloadJson(filename, jsonString) {
   try {

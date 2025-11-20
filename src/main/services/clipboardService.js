@@ -1,4 +1,4 @@
-import { createElement } from '../domain/dom/elements.js';
+import { createElement } from '@/domain/dom/elements';
 
 function fallbackCopy(text) {
   const textarea = createElement('textarea', {
@@ -8,7 +8,7 @@ function fallbackCopy(text) {
   document.body.appendChild(textarea);
   textarea.select();
   try {
-    document.execCommand('copy');
+    document.execCommand('copy'); // FIXME: Deprecated symbol used, consult docs for better alternative
   } catch (error) {
     console.error('ApiBuilderUtils: copy command failed.', error);
   }

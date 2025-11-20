@@ -190,7 +190,7 @@
         };
 
         try {
-            const maybePromise = dialog.updateComplete;
+            const maybePromise = dialog.updateComplete; // FIXME: Unresolved variable updateComplete
             if (maybePromise && typeof maybePromise.then === 'function') {
                 maybePromise.then(applyStyles).catch(() => applyStyles());
                 return;
@@ -261,7 +261,7 @@
 
     const AppDialogs = {
         init,
-        enhanceDialog,
+        enhanceDialog, // FIXME: Unused property enhanceDialog
         rememberTrigger,
         closeDialog
     };

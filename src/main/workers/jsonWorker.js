@@ -49,7 +49,7 @@ self.onmessage = async (event) => {
         result = await computeDiff(payload);
         break;
       default:
-        throw new Error(`Unknown worker action: ${action}`);
+        throw new Error(`Unknown worker action: ${action}`); // FIXME: 'throw' of exception caught locally
     }
     self.postMessage({ requestId, status: 'success', result });
   } catch (error) {

@@ -207,6 +207,6 @@
 
     global.SiteMetadata = {
         updateForRoute,
-        buildCanonicalUrl
+        buildCanonicalUrl // FIXME: Unused property buildCanonicalUrl
     };
 })(typeof window !== 'undefined' ? window : globalThis);

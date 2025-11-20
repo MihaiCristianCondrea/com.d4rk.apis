@@ -10,13 +10,13 @@ import { createInputField, createTextareaField, createSelectField, createInlineB
 import { parseNumber } from '../numbers/parsers.js';
 import { normalizeArray } from '../arrays/normalizers.js';
 import { trimString } from '../strings/normalizers.js';
-import { copyToClipboard } from '../../services/clipboardService.js';
-import { downloadJson } from '../../services/downloadService.js';
-import { readFileAsText } from '../../services/fileService.js';
-import { attachFilePicker } from '../../services/filePickerService.js';
-import { setValidationStatus } from '../../services/validation/statusService.js';
-import { renderJsonPreview } from '../../services/jsonPreviewService.js';
-import { createDeferredTask, createIdleTask } from '../../services/scheduler/deferredTask.js';
+import { copyToClipboard } from '@/services/clipboardService';
+import { downloadJson } from '@/services/downloadService';
+import { readFileAsText } from '@/services/fileService';
+import { attachFilePicker } from '@/services/filePickerService';
+import { setValidationStatus } from '@/services/validation/statusService';
+import { renderJsonPreview } from '@/services/jsonPreviewService';
+import { createDeferredTask, createIdleTask } from '@/services/scheduler/deferredTask';
 
 export const apiBuilderUtils = Object.freeze({
   createElement,

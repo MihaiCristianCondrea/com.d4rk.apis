@@ -19,7 +19,7 @@ export function extractFirstImageFromHtml(htmlContent) {
   if (imgTagMatch && imgTagMatch[1] && !imgTagMatch[1].startsWith('data:image')) {
     return imgTagMatch[1];
   }
-  const bloggerImageMatch = htmlContent.match(/(https?:\/\/[^\"]+\.googleusercontent\.com\/[^\"]+)/);
+  const bloggerImageMatch = htmlContent.match(/(https?:\/\/[^"]+\.googleusercontent\.com\/[^"]+)/);
   if (bloggerImageMatch && bloggerImageMatch[1]) return bloggerImageMatch[1];
   return null;
 }
@@ -70,7 +70,7 @@ export function rafThrottle(callback) {
   };
 }
 
-export function debounce(callback, delay = 300) {
+export function debounce(callback, delay = 300) { // FIXME: Unused function debounce
   let timeoutId;
   return (...args) => {
     clearTimeout(timeoutId);

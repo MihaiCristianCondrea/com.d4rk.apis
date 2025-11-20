@@ -55,6 +55,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = {
-        initContactPage
+        initContactPage // FIXME: Unused property initContactPage
     };
 }

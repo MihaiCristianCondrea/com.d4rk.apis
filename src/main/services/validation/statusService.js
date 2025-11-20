@@ -1,4 +1,4 @@
-import { createElement } from '../../domain/dom/elements.js';
+import { createElement } from '@/domain/dom/elements';
 
 export function setValidationStatus(element, { status = 'success', message = '' } = {}) {
   if (!element) {

@@ -168,7 +168,7 @@ async function fetchBlogPosts() {
             postsData.items.forEach(post => newsGridElement.appendChild(createBlogPostCard(post)));
             if (typeof SiteAnimations !== 'undefined' && SiteAnimations && typeof SiteAnimations.animateNewsCards === 'function') {
                 try {
-                    SiteAnimations.animateNewsCards(newsGridElement.querySelectorAll('.news-card'));
+                    await SiteAnimations.animateNewsCards(newsGridElement.querySelectorAll('.news-card'));
                 } catch (animationError) {
                     console.error('Blogger API: Failed to animate news cards.', animationError);
                 }
@@ -228,7 +228,7 @@ async function shareBlogPost(postData, feedbackElement) {
                 document.body.appendChild(tempInput);
                 tempInput.focus();
                 tempInput.select();
-                const copied = document.execCommand && document.execCommand('copy');
+                const copied = document.execCommand && document.execCommand('copy'); // FIXME: Deprecated symbol used, consult docs for better alternative
                 document.body.removeChild(tempInput);
                 if (copied) {
                     displayShareFeedback(feedbackElement, 'Link copied to clipboard.');
@@ -272,7 +272,7 @@ async function shareBlogPost(postData, feedbackElement) {
 function displayShareFeedback(feedbackElement, message, isError = false) {
     if (!feedbackElement) return;
 
-    if (feedbackElement._hideTimeoutId) {
+    if (feedbackElement._hideTimeoutId) { // FIXME:  // FIXME: Deprecated symbol used, consult docs for better alternative
         clearTimeout(feedbackElement._hideTimeoutId);
     }
 

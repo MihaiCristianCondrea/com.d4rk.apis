@@ -3069,7 +3069,7 @@
                         currentSha = payload?.sha;
                     } else if (getResponse.status !== 404) {
                         const message = await readGithubError(getResponse);
-                        throw new Error(message); 
+                        throw new Error(message); // FIXME: 'throw' of exception caught locally
                     }
 
                     const commitMessage =
@@ -3094,7 +3094,7 @@
 
                     if (!putResponse.ok) {
                         const message = await readGithubError(putResponse);
-                        throw new Error(message); 
+                        throw new Error(message);  // FIXME: 'throw' of exception caught locally
                     }
 
                     const putResult = await putResponse.json();

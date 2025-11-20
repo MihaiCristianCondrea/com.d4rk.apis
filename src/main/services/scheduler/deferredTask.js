@@ -21,7 +21,7 @@ export function createDeferredTask(task, { delay = 0, idle = false } = {}) {
   }
 
   let hasPendingCall = false;
-  let lastArgs = [];
+  let lastArgs = []; // FIXME: Contents of collection 'lastArgs' are updated, but never queried
   let runningPromise = null;
   let timeoutId = 0;
   let idleId = 0;
@@ -52,7 +52,7 @@ export function createDeferredTask(task, { delay = 0, idle = false } = {}) {
       queueMicro(() => {
         microtaskQueued = false;
         runTask();
-      });
+      }).then(r => ); // FIXME: { expected
     }
   };
 

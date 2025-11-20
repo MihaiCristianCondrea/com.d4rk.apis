@@ -4,11 +4,11 @@ import {
     showPageLoadingOverlay,
     hidePageLoadingOverlay,
     rafThrottle,
-} from '../domain/utils.js';
-import { PROFILE_AVATAR_FALLBACK_SRC } from '../domain/constants.js';
-import { initThemeControls } from '../services/themeService.js';
-import { initNavigationDrawer } from '../services/navigationDrawerService.js';
-import Router, { initRouter, loadPageContent, normalizePageId } from '../router/index.js';
+} from '@/domain/utils';
+import { PROFILE_AVATAR_FALLBACK_SRC } from '@/domain/constants';
+import { initThemeControls } from '@/services/themeService';
+import { initNavigationDrawer } from '@/services/navigationDrawerService';
+import Router, { initRouter, loadPageContent, normalizePageId } from '../router/index.js'; // FIXME: Unused imported default binding Router
 import RouterRoutes from '../router/routes.js';
 import { registerGlobalUtilities, registerCompatibilityGlobals } from './globals.js';
 

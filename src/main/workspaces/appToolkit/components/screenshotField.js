@@ -1,5 +1,5 @@
-import { probeImage } from '../../../services/appToolkit/imageProbeService.js';
-import { formatDimensionLabel, normalizeImageUrl, formatAspectRatio } from '../../../domain/appToolkit/images.js';
+import {probeImage} from '@/services/appToolkit/imageProbeService';
+import {formatAspectRatio, formatDimensionLabel, normalizeImageUrl} from '@/domain/appToolkit/images';
 
 const styleHref = new URL('../../../styles/appToolkit/screenshot-field.css', import.meta.url);
 
@@ -29,7 +29,7 @@ template.innerHTML = `
 `;
 
 export class AppToolkitScreenshotField extends HTMLElement {
-  static get observedAttributes() {
+  static get observedAttributes() { // FIXME: Unused property observedAttributes
     return ['value'];
   }
 
@@ -76,7 +76,7 @@ export class AppToolkitScreenshotField extends HTMLElement {
     this._metaController = null;
   }
 
-  connectedCallback() {
+  connectedCallback() { // FIXME: Unused method connectedCallback
     this.classList.add('screenshot-item');
     this.setAttribute('role', 'listitem');
     if (!this.hasAttribute('tabindex')) {
@@ -92,7 +92,7 @@ export class AppToolkitScreenshotField extends HTMLElement {
     this._syncFromAttributes();
   }
 
-  disconnectedCallback() {
+  disconnectedCallback() { // FIXME: Unused method disconnectedCallback
     if (this._input) {
       this._input.removeEventListener('input', this._handleInput);
     }
@@ -102,7 +102,7 @@ export class AppToolkitScreenshotField extends HTMLElement {
     this._abortMetaProbe();
   }
 
-  attributeChangedCallback(name, oldValue, newValue) {
+  attributeChangedCallback(name, oldValue, newValue) { // FIXME: Unused method attributeChangedCallback
     if (name === 'value' && oldValue !== newValue) {
       this.value = newValue;
     }
@@ -121,10 +121,10 @@ export class AppToolkitScreenshotField extends HTMLElement {
     if (this._input && this._input.value !== normalized) {
       this._input.value = normalized;
     }
-    this._refreshPreview();
+    this._refreshPreview().then(r => ); // FIXME: { expected
   }
 
-  get position() {
+  get position() { // FIXME: Unused property position
     return this._position;
   }
 
@@ -137,7 +137,7 @@ export class AppToolkitScreenshotField extends HTMLElement {
     this._updateLabel();
   }
 
-  get appName() {
+  get appName() { // FIXME: Unused property appName
     return this._appName;
   }
 
@@ -159,8 +159,7 @@ export class AppToolkitScreenshotField extends HTMLElement {
   }
 
   _handleInput = (event) => {
-    const nextValue = event.target.value;
-    this.value = nextValue;
+    this.value = event.target.value;
     this.dispatchEvent(
       new CustomEvent('screenshot-change', {
         detail: { value: this._value },

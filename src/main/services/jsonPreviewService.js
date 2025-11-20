@@ -1,4 +1,4 @@
-import { cloneJson, formatJson } from '../domain/json/operations.js';
+import { cloneJson, formatJson } from '@/domain/json/operations';
 import { setValidationStatus } from './validation/statusService.js';
 import { sharedJsonWorkerClient } from './jsonWorkerClient.js';
 

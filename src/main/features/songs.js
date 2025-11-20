@@ -49,7 +49,7 @@ async function loadSongs() {
 
     if (typeof SiteAnimations !== 'undefined' && SiteAnimations && typeof SiteAnimations.animateSongCards === 'function') {
         try {
-            SiteAnimations.animateSongCards(grid.querySelectorAll('.song-card'));
+            await SiteAnimations.animateSongCards(grid.querySelectorAll('.song-card'));
         } catch (animationError) {
             console.error('Songs: Failed to animate song cards.', animationError);
         }
@@ -60,7 +60,7 @@ async function loadSongs() {
 // When router loads the page dynamically
 document.addEventListener('DOMContentLoaded', () => {
     if (document.getElementById('songsGrid')) {
-        loadSongs();
+        loadSongs().then(r => ); // FIXME: { expected
     }
 });
 

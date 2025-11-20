@@ -74,8 +74,7 @@ async function fetchCommittersRanking() {
         return;
     }
 
-    const defaultRankText = '—';
-    rankElement.textContent = defaultRankText;
+    rankElement.textContent = '—';
     updateCommittersStatus(statusElement, 'Checking latest ranking...', false);
     if (updatedElement) {
         updatedElement.textContent = COMMITTERS_UPDATED_FALLBACK;
@@ -90,7 +89,7 @@ async function fetchCommittersRanking() {
         });
 
         if (!response.ok) {
-            throw new Error(`Network response was not ok (status ${response.status})`);
+            throw new Error(`Network response was not ok (status ${response.status})`); // FIXME: 'throw' of exception caught locally
         }
 
         const data = await response.json();
@@ -132,7 +131,7 @@ if (typeof module !== 'undefined' && module.exports) {
     module.exports = {
         formatOrdinal,
         formatDataAsOf,
-        updateCommittersStatus,
+        updateCommittersStatus, // FIXME: Unused property updateCommittersStatus
         fetchCommittersRanking
     };
 }

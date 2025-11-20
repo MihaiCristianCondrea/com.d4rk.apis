@@ -1,4 +1,4 @@
-import { getDynamicElement, rafThrottle } from '../domain/utils.js';
+import { getDynamicElement, rafThrottle } from '@/domain/utils';
 
 export class NavigationDrawerController {
   constructor({

@@ -272,8 +272,8 @@ function addComplexItem(sectionId, data = {}) {
     updateComplexList(sectionId);
 }
 
-const addWorkItem = (t,c,s,e,d) => addComplexItem('work',{title:t,company:c,start:s,end:e,desc:d});
-const addEducationItem = (d,s,st,e) => addComplexItem('education',{degree:d,school:s,start:st,end:e});
+const addWorkItem = (t,c,s,e,d) => addComplexItem('work',{title:t,company:c,start:s,end:e,desc:d}); // FIXME: Unused constant addWorkItem
+const addEducationItem = (d,s,st,e) => addComplexItem('education',{degree:d,school:s,start:st,end:e}); // FIXME: Unused constant addEducationItem
 
 function removeItem(itemId, sectionId) {
     document.getElementById(itemId).remove();

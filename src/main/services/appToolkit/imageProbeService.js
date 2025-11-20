@@ -42,7 +42,7 @@ function handleWorkerMessage(event) {
 
 function handleWorkerError(error) {
   console.error('AppToolkit: Image probe worker error.', error);
-  for (const [id, entry] of pendingRequests.entries()) {
+  for (const [id, entry] of pendingRequests.entries()) { // FIXME: Unused constant id
     entry.reject(new Error('Image probe worker failed.'));
   }
   pendingRequests.clear();
@@ -152,6 +152,6 @@ export function probeImage(url, { signal } = {}) {
   });
 }
 
-export function clearImageProbeCache() {
+export function clearImageProbeCache() { // FIXME: Unused function clearImageProbeCache
   cache.clear();
 }
