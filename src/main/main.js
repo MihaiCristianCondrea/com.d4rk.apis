@@ -70,6 +70,9 @@ import './features/committers.js';
 import './features/contact.js';
 import './features/songs.js';
 import './features/resume.js';
+import './features/repoMapper.js';
+import './features/releaseStats.js';
+import './features/gitPatch.js';
 
 import './app/legacyBridge.js';
 

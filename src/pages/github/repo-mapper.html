@@ -1,11 +1,47 @@
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Repo Mapper</title>
-</head>
-<body>
-    <div id="repo-mapper-container"></div>
-</body>
-</html>
+<div class="page-header">
+    <h1 class="page-title">Repo Mapper</h1>
+    <p class="page-subtitle">Generate ASCII file trees from public repositories.</p>
+</div>
+
+<div class="search-card-container">
+    <div class="search-card">
+        <form id="repoMapperForm">
+            <div class="search-input-group">
+                <md-filled-text-field label="Repository URL" id="repoUrl" class="search-input" placeholder="https://github.com/..."></md-filled-text-field>
+                <md-filled-text-field label="GitHub Token (Optional)" id="githubToken" class="search-input" placeholder="Enter your token"></md-filled-text-field>
+            </div>
+            <div class="search-actions">
+                <md-filled-button type="submit" id="generateMapButton">
+                    <md-icon slot="icon">terminal</md-icon>
+                    Generate Map
+                </md-filled-button>
+                <div class="format-toggle">
+                    <md-icon-button type="button" id="formatAscii" class="selected">
+                        <md-icon>terminal</md-icon>
+                    </md-icon-button>
+                    <md-icon-button type="button" id="formatPaths">
+                        <md-icon>view_list</md-icon>
+                    </md-icon-button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div id="repoMapperError" class="error-message" style="display: none;"></div>
+
+<div id="repoMapperResult" class="result-container" style="display: none;">
+    <div class="result-header">
+        <div class="stats">
+            <span id="foldersCount"></span>
+            <span id="filesCount"></span>
+        </div>
+        <md-filled-tonal-button id="copyButton">
+            <md-icon slot="icon">content_copy</md-icon>
+            Copy Code
+        </md-filled-tonal-button>
+    </div>
+    <div class="result-content">
+        <pre><code id="treeOutput"></code></pre>
+    </div>
+</div>

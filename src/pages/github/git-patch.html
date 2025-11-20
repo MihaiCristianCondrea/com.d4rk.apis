@@ -1,11 +1,45 @@
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Git Patch</title>
-</head>
-<body>
-    <div id="git-patch-container"></div>
-</body>
-</html>
+<div class="page-header">
+    <h1 class="page-title">Git Patch</h1>
+    <p class="page-subtitle">Extract raw .patch files from commits for git apply.</p>
+</div>
+
+<div class="search-card-container">
+    <div class="search-card">
+        <form id="gitPatchForm">
+            <div class="search-input-group">
+                <md-filled-text-field label="Commit URL" id="commitUrl" class="search-input" placeholder="https://github.com/..."></md-filled-text-field>
+                <md-filled-text-field label="GitHub Token (Optional)" id="githubToken" class="search-input" placeholder="Enter your token"></md-filled-text-field>
+            </div>
+            <div class="search-actions">
+                <md-filled-button type="submit" id="getPatchButton">
+                    <md-icon slot="icon">difference</md-icon>
+                    Get Patch
+                </md-filled-button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div id="gitPatchError" class="error-message" style="display: none;"></div>
+
+<div id="gitPatchResult" class="result-container" style="display: none;">
+    <div class="result-header">
+        <div class="status-badge">
+            <md-icon>check</md-icon>
+            Ready to Apply
+        </div>
+        <div class="action-buttons">
+            <md-filled-tonal-button id="downloadPatchButton">
+                <md-icon slot="icon">download</md-icon>
+                Download .patch
+            </md-filled-tonal-button>
+            <md-filled-tonal-button id="copyPatchButton">
+                <md-icon slot="icon">content_copy</md-icon>
+                Copy
+            </md-filled-tonal-button>
+        </div>
+    </div>
+    <div class="result-content">
+        <pre><code id="patchOutput"></code></pre>
+    </div>
+</div>
