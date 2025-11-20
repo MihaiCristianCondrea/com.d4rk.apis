@@ -214,7 +214,7 @@ function initProjectsPage() {
 
 document.addEventListener('DOMContentLoaded', () => {
   if (document.getElementById('projectsPageContainer')) {
-    initProjectsPage(); // FIXME: Promise returned from initProjectsPage is ignored
+    initProjectsPage().catch(err => console.error('Failed to init projects page', err));
   }
 });
 

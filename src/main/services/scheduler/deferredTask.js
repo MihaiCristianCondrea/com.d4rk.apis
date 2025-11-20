@@ -21,7 +21,6 @@ export function createDeferredTask(task, { delay = 0, idle = false } = {}) {
   }
 
   let hasPendingCall = false;
-  let lastArgs = []; // FIXME: Contents of collection 'lastArgs' are updated, but never queried
   let runningPromise = null;
   let timeoutId = 0;
   let idleId = 0;
@@ -52,7 +51,7 @@ export function createDeferredTask(task, { delay = 0, idle = false } = {}) {
       queueMicro(() => {
         microtaskQueued = false;
         runTask();
-      }).then(r => ); // FIXME: { expected
+      });
     }
   };
 
@@ -70,14 +69,9 @@ export function createDeferredTask(task, { delay = 0, idle = false } = {}) {
     microtaskQueued = false;
   };
 
-  const execute = async () => {
-    while (hasPendingCall) {
-      hasPendingCall = false;
-      const args = lastArgs;
-      lastArgs = [];
-      // eslint-disable-next-line no-await-in-loop
-      await task(...args);
-    }
+  const execute = async (...args) => {
+    hasPendingCall = false;
+    await task(...args);
   };
 
   const runTask = () => {
@@ -101,7 +95,6 @@ export function createDeferredTask(task, { delay = 0, idle = false } = {}) {
 
   return {
     schedule(...args) {
-      lastArgs = args;
       hasPendingCall = true;
       scheduleExecution();
     },
@@ -124,7 +117,6 @@ export function createDeferredTask(task, { delay = 0, idle = false } = {}) {
     },
     cancel() {
       hasPendingCall = false;
-      lastArgs = [];
       resetTimers();
     },
   };

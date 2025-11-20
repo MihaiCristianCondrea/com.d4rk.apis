@@ -29,7 +29,7 @@ template.innerHTML = `
 `;
 
 export class AppToolkitScreenshotField extends HTMLElement {
-  static get observedAttributes() { // FIXME: Unused property observedAttributes
+  static get observedAttributes() {
     return ['value'];
   }
 
@@ -76,7 +76,7 @@ export class AppToolkitScreenshotField extends HTMLElement {
     this._metaController = null;
   }
 
-  connectedCallback() { // FIXME: Unused method connectedCallback
+  connectedCallback() {
     this.classList.add('screenshot-item');
     this.setAttribute('role', 'listitem');
     if (!this.hasAttribute('tabindex')) {
@@ -92,7 +92,7 @@ export class AppToolkitScreenshotField extends HTMLElement {
     this._syncFromAttributes();
   }
 
-  disconnectedCallback() { // FIXME: Unused method disconnectedCallback
+  disconnectedCallback() {
     if (this._input) {
       this._input.removeEventListener('input', this._handleInput);
     }
@@ -102,7 +102,7 @@ export class AppToolkitScreenshotField extends HTMLElement {
     this._abortMetaProbe();
   }
 
-  attributeChangedCallback(name, oldValue, newValue) { // FIXME: Unused method attributeChangedCallback
+  attributeChangedCallback(name, oldValue, newValue) {
     if (name === 'value' && oldValue !== newValue) {
       this.value = newValue;
     }
@@ -121,10 +121,10 @@ export class AppToolkitScreenshotField extends HTMLElement {
     if (this._input && this._input.value !== normalized) {
       this._input.value = normalized;
     }
-    this._refreshPreview().then(r => ); // FIXME: { expected
+    this._refreshPreview();
   }
 
-  get position() { // FIXME: Unused property position
+  get position() {
     return this._position;
   }
 
@@ -137,7 +137,7 @@ export class AppToolkitScreenshotField extends HTMLElement {
     this._updateLabel();
   }
 
-  get appName() { // FIXME: Unused property appName
+  get appName() {
     return this._appName;
   }
 

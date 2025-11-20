@@ -98,10 +98,6 @@ export class JsonWorkerClient {
     }
   }
 
-  parse(payload, options) { // FIXME: Unused method parse
-    return this.request('parse', payload, options);
-  }
-
   stringify(payload, options) {
     return this.request('stringify', payload, options);
   }

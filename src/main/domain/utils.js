@@ -69,11 +69,3 @@ export function rafThrottle(callback) {
     });
   };
 }
-
-export function debounce(callback, delay = 300) { // FIXME: Unused function debounce
-  let timeoutId;
-  return (...args) => {
-    clearTimeout(timeoutId);
-    timeoutId = setTimeout(() => callback(...args), delay);
-  };
-}

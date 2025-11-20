@@ -18,8 +18,6 @@
 
         if (typeof reduceMotionQuery.addEventListener === 'function') {
             reduceMotionQuery.addEventListener('change', updatePreference);
-        } else if (typeof reduceMotionQuery.addListener === 'function') { // FIXME: Deprecated symbol used, consult docs for better alternative
-            reduceMotionQuery.addListener(updatePreference); // FIXME: Deprecated symbol used, consult docs for better alternative
         }
     }
 
@@ -533,13 +531,6 @@
         applyBlur(frames[1], 0);
         return frames;
     }
-
-    const REDUCED_KEYFRAMES = Object.freeze({ // FIXME: Unused constant REDUCED_KEYFRAMES
-        fade: [
-            { opacity: 0 },
-            { opacity: 1 }
-        ]
-    });
 
     const LINEAR_EASINGS = Object.freeze({
         accelerate: 'linear(0, 0.003 3.8%, 0.011 7.7%, 0.025 11.7%, 0.043 15.8%, 0.066 19.9%, 0.092 24.1%, 0.123 28.3%, 0.156 32.5%, 0.193 36.7%, 0.232 40.9%, 0.273 45.1%, 0.316 49.2%, 0.407 57.3%, 0.5 65%, 0.593 72.2%, 0.684 78.9%, 0.768 84.9%, 0.844 90%, 0.957 97.3%, 1)',
@@ -1102,7 +1093,7 @@
             speed: 'fast'
         });
 
-        return Promise.all([ // FIXME: Argument type (Promise<void> | any | Promise<Awaited<void>[]>)[] is not assignable to parameter type Iterable<PromiseLike<void> | void>...  Type () => ArrayIterator<Promise<void> | any | Promise<Awaited<void>[]>> is not assignable to type () => Iterator<PromiseLike<void> | void, any, any>    Type ArrayIterator<Promise<void> | any | Promise<Awaited<void>[]>> is not assignable to type Iterator<PromiseLike<void> | void, any, any>
+        return Promise.all([
             whenAnimationFinished(heroAnimation),
             chipSequence,
             supportingSequence,
@@ -1145,7 +1136,7 @@
             }))
             : Promise.resolve();
 
-        return Promise.all([formPromise, previewPromise, downloadPromise]).then(() => { }); // FIXME: Argument type (Promise<void> | Promise<Awaited<void>[]> | any)[] is not assignable to parameter type Iterable<PromiseLike<void> | void>...  Type () => ArrayIterator<Promise<void> | Promise<Awaited<void>[]> | any> is not assignable to type () => Iterator<PromiseLike<void> | void, any, any>    Type ArrayIterator<Promise<void> | Promise<Awaited<void>[]> | any> is not assignable to type Iterator<PromiseLike<void> | void, any, any>
+        return Promise.all([formPromise, previewPromise, downloadPromise]).then(() => { });
     }
 
     function animateProjects(container) {
@@ -1185,8 +1176,8 @@
 
         const cards = projectsPage.querySelectorAll('.project-entry');
         return headingFinished
-            .then(() => Promise.all([runIntro(), tabsPromise()])) // FIXME: Argument type (Promise<void> | any | Promise<Awaited<void>[]>)[] is not assignable to parameter type Iterable<PromiseLike<void> | void>...  Type () => ArrayIterator<Promise<void> | any | Promise<Awaited<void>[]>> is not assignable to type () => Iterator<PromiseLike<void> | void, any, any>    Type ArrayIterator<Promise<void> | any | Promise<Awaited<void>[]>> is not assignable to type Iterator<PromiseLike<void> | void, any, any>
-            .then(() => animateProjectCards(cards)); // FIXME: Argument type function(): Promise<void> | Promise<Awaited<void>[]> is not assignable to parameter type ((value: Awaited<void>[]) => (PromiseLike<void> | void)) | undefined | null...  Type function(): Promise<void> | Promise<Awaited<void>[]> is not assignable to type (value: Awaited<void>[]) => (PromiseLike<void> | void)    Type Promise<void> | Promise<Awaited<void>[]> is not assignable to type PromiseLike<void> | void
+            .then(() => Promise.all([runIntro(), tabsPromise()]))
+            .then(() => animateProjectCards(cards));
     }
 
     function animateDefault(container) {
@@ -1368,15 +1359,9 @@
         animateSongCards,
         animateProjectCards,
         resolveEasing,
-        setMotionScheme, // FIXME: Unused property setMotionScheme
         getMotionSpec: (meta) => resolveMotionSpec(meta),
-        getMotionScheme, // FIXME: Unused property getMotionScheme
         getMotionContext,
         createPageTransitionKeyframes,
-        animateElement, // FIXME: Unused property animateElement
-        getWindowSizeClass: () => currentWindowSizeClass, // FIXME: Unused property getWindowSizeClass
-        getOrientation: () => currentOrientation, // FIXME: Unused property getOrientation
-        getPointerType: () => currentPointerType, // FIXME: Unused property getPointerType
         schemes: MOTION_SCHEMES,
         shouldReduceMotion,
         canAnimate,

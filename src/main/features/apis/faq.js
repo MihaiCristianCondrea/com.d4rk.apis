@@ -1234,7 +1234,7 @@
             try {
                 const response = await fetch(trimmed, { cache: 'no-store' });
                 if (!response.ok) {
-                    throw new Error(`Request failed with status ${response.status}`); // FIXME: 'throw' of exception caught locally
+                    throw new Error(`Request failed with status ${response.status}`);
                 }
                 const text = await response.text();
                 const parsed = utils.parseJson(text);
@@ -1301,7 +1301,7 @@
                 try {
                     const response = await fetch(endpoint, { cache: 'no-store' });
                     if (!response.ok) {
-                        throw new Error(`Icon request failed with status ${response.status}`); // FIXME: 'throw' of exception caught locally
+                        throw new Error(`Icon request failed with status ${response.status}`);
                     }
                     const text = await response.text();
                     const names = parseIconCatalog(text);

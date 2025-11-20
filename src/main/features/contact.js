@@ -52,9 +52,3 @@ function initContactPage() {
 document.addEventListener('DOMContentLoaded', () => {
     initContactPage();
 });
-
-if (typeof module !== 'undefined' && module.exports) {
-    module.exports = {
-        initContactPage // FIXME: Unused property initContactPage
-    };
-}

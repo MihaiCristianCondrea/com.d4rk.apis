@@ -189,16 +189,6 @@
             });
         };
 
-        try {
-            const maybePromise = dialog.updateComplete; // FIXME: Unresolved variable updateComplete
-            if (maybePromise && typeof maybePromise.then === 'function') {
-                maybePromise.then(applyStyles).catch(() => applyStyles());
-                return;
-            }
-        } catch (error) {
-            // Ignore errors accessing updateComplete and fall back to async styling.
-        }
-
         if (typeof global.requestAnimationFrame === 'function') {
             global.requestAnimationFrame(applyStyles);
         } else {
@@ -261,7 +251,6 @@
 
     const AppDialogs = {
         init,
-        enhanceDialog, // FIXME: Unused property enhanceDialog
         rememberTrigger,
         closeDialog
     };

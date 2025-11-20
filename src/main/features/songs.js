@@ -60,7 +60,7 @@ async function loadSongs() {
 // When router loads the page dynamically
 document.addEventListener('DOMContentLoaded', () => {
     if (document.getElementById('songsGrid')) {
-        loadSongs().then(r => ); // FIXME: { expected
+        loadSongs();
     }
 });
 
