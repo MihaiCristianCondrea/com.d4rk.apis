@@ -1,7 +1,7 @@
 export const parseGithubUrl = (inputUrl) => {
     try {
-        const cleanUrl = inputUrl.replace(/\\/$/, ''); // Remove trailing slash
-        const pattern = /github\\.com\\/([^/]+)\\/([^/]+)/;
+        const cleanUrl = inputUrl.replace(/\/$/, ''); // Remove trailing slash
+        const pattern = /github\.com\/([^/]+)\/([^/]+)/;
         const match = cleanUrl.match(pattern);
         if (match) {
             return { owner: match[1], repo: match[2] };
@@ -14,8 +14,8 @@ export const parseGithubUrl = (inputUrl) => {
 
 export const parseGithubCommitUrl = (inputUrl) => {
     try {
-        const cleanUrl = inputUrl.replace(/\\/$/, '');
-        const pattern = /github\\.com\\/([^/]+)\\/([^/]+)\\/commit\\/([a-fA-F0-9]+)/;
+        const cleanUrl = inputUrl.replace(/\/$/, '');
+        const pattern = /github\.com\/([^/]+)\/([^/]+)\/commit\/([a-fA-F0-9]+)/;
         const match = cleanUrl.match(pattern);
         if (match) {
             return { owner: match[1], repo: match[2], commitSha: match[3] };
@@ -67,7 +67,7 @@ export const generateAsciiTree = (paths, setStats) => {
             const isLast = index === keys.length - 1;
             const connector = isLast ? '└── ' : '├── ';
 
-            output += `${prefix}${connector}${key}\\n`;
+            output += `${prefix}${connector}${key}\n`;
 
             const child = obj[key];
             if (child !== null) {
@@ -90,5 +90,5 @@ export const generatePathList = (paths, setStats) => {
         return p.path;
     });
     setStats({ files: fileCount, folders: folderCount });
-    return lines.join('\\n');
+    return lines.join('\n');
 };
