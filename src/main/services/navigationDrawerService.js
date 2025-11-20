@@ -8,8 +8,10 @@ export class NavigationDrawerController {
     overlayId = 'drawerOverlay',
     aboutToggleId = 'aboutToggle',
     aboutContentId = 'aboutContent',
-    androidToggleId = 'androidAppsToggle',
-    androidContentId = 'androidAppsContent',
+    androidToggleId = 'apiWorkspacesToggle',
+    androidContentId = 'apiWorkspacesContent',
+    githubToggleId = 'githubToolsToggle',
+    githubContentId = 'githubToolsContent',
   } = {}) {
     this.menuButton = getDynamicElement(menuButtonId);
     this.navDrawer = getDynamicElement(navDrawerId);
@@ -19,6 +21,8 @@ export class NavigationDrawerController {
     this.aboutContent = getDynamicElement(aboutContentId);
     this.androidToggle = getDynamicElement(androidToggleId);
     this.androidContent = getDynamicElement(androidContentId);
+    this.githubToggle = getDynamicElement(githubToggleId);
+    this.githubContent = getDynamicElement(githubContentId);
     this.inertTargets = Array.from(
       typeof document !== 'undefined'
         ? document.querySelectorAll('[data-drawer-inert-target]')
@@ -67,6 +71,7 @@ export class NavigationDrawerController {
 
     this.initToggleSection(this.aboutToggle, this.aboutContent);
     this.initToggleSection(this.androidToggle, this.androidContent);
+    this.initToggleSection(this.githubToggle, this.githubContent);
   }
 
   open() {
@@ -98,25 +103,27 @@ export class NavigationDrawerController {
       return;
     }
 
+    const allSections = [
+      { toggle: this.aboutToggle, content: this.aboutContent },
+      { toggle: this.androidToggle, content: this.androidContent },
+      { toggle: this.githubToggle, content: this.githubContent },
+    ];
+
     toggleButton.addEventListener('click', () => {
-      const isExpanded = contentElement.classList.contains('open');
+      const wasExpanded = contentElement.classList.contains('open');
 
-      if (
-        contentElement.id === 'aboutContent' &&
-        this.androidContent?.classList.contains('open')
-      ) {
-        this.collapseSection(this.androidToggle, this.androidContent);
-      } else if (
-        contentElement.id === 'androidAppsContent' &&
-        this.aboutContent?.classList.contains('open')
-      ) {
-        this.collapseSection(this.aboutToggle, this.aboutContent);
+      allSections.forEach(({ toggle, content }) => {
+        if (content) {
+          this.collapseSection(toggle, content);
+        }
+      });
+
+      if (!wasExpanded) {
+        contentElement.classList.add('open');
+        toggleButton.classList.add('expanded');
+        toggleButton.setAttribute('aria-expanded', 'true');
+        contentElement.setAttribute('aria-hidden', 'false');
       }
-
-      contentElement.classList.toggle('open', !isExpanded);
-      toggleButton.classList.toggle('expanded', !isExpanded);
-      toggleButton.setAttribute('aria-expanded', String(!isExpanded));
-      contentElement.setAttribute('aria-hidden', String(isExpanded));
     });
   }
 

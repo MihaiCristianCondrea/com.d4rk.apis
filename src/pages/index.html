@@ -138,8 +138,8 @@
             <md-divider></md-divider>
             <md-list-item
               type="button"
-              id="androidAppsToggle"
-              aria-controls="androidAppsContent"
+              id="apiWorkspacesToggle"
+              aria-controls="apiWorkspacesContent"
               aria-expanded="true"
               class="expanded"
             >
@@ -155,7 +155,7 @@
             </md-list-item>
             <div
               class="nested-list open"
-              id="androidAppsContent"
+              id="apiWorkspacesContent"
               role="group"
               aria-hidden="false"
             >
@@ -178,6 +178,44 @@
                 >
                   <div slot="headline">Android Studio Tutorials</div>
                   <div slot="supporting-text">Compose home & lesson flows</div>
+                </md-list-item>
+              </md-list>
+            </div>
+            <md-divider></md-divider>
+            <md-list-item
+              type="button"
+              id="githubToolsToggle"
+              aria-controls="githubToolsContent"
+              aria-expanded="false"
+            >
+              <md-icon slot="start"
+                ><span class="material-symbols-outlined">code</span></md-icon
+              >
+              <div slot="headline">GitHub Tools</div>
+              <md-icon slot="end"
+                ><span class="material-symbols-outlined"
+                  >expand_more</span
+                ></md-icon
+              >
+            </md-list-item>
+            <div
+              class="nested-list"
+              id="githubToolsContent"
+              role="group"
+              aria-hidden="true"
+            >
+              <md-list>
+                <md-list-item href="#repo-mapper" id="navRepoMapper">
+                  <div slot="headline">Repo Mapper</div>
+                  <div slot="supporting-text">Generate directory trees</div>
+                </md-list-item>
+                <md-list-item href="#release-stats" id="navReleaseStats">
+                  <div slot="headline">Release Stats</div>
+                  <div slot="supporting-text">Visualize download counts</div>
+                </md-list-item>
+                <md-list-item href="#git-patch" id="navGitPatch">
+                  <div slot="headline">Git Patch</div>
+                  <div slot="supporting-text">Extract commit patches</div>
                 </md-list-item>
               </md-list>
             </div>

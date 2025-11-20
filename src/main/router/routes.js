@@ -352,6 +352,63 @@ const defaultRoutes = [
         }
     },
     {
+        id: 'repo-mapper',
+        path: 'pages/github/repo-mapper.html',
+        title: 'Repo Mapper',
+        metadata: {
+            description: 'Generate ASCII directory trees from any public repository. Perfect for documentation and LLM context.',
+            keywords: ['Repo Mapper', 'GitHub', 'ASCII', 'directory tree'],
+            canonicalSlug: 'repo-mapper',
+            openGraph: {
+                title: 'Repo Mapper',
+                description: 'Generate ASCII directory trees from any public repository. Perfect for documentation and LLM context.',
+                type: 'website'
+            },
+            twitter: {
+                title: 'Repo Mapper',
+                description: 'Generate ASCII directory trees from any public repository. Perfect for documentation and LLM context.'
+            }
+        }
+    },
+    {
+        id: 'release-stats',
+        path: 'pages/github/release-stats.html',
+        title: 'Release Stats',
+        metadata: {
+            description: 'Visualize download counts, analyze asset performance, and track version history in real-time.',
+            keywords: ['Release Stats', 'GitHub', 'downloads', 'statistics'],
+            canonicalSlug: 'release-stats',
+            openGraph: {
+                title: 'Release Stats',
+                description: 'Visualize download counts, analyze asset performance, and track version history in real-time.',
+                type: 'website'
+            },
+            twitter: {
+                title: 'Release Stats',
+                description: 'Visualize download counts, analyze asset performance, and track version history in real-time.'
+            }
+        }
+    },
+    {
+        id: 'git-patch',
+        path: 'pages/github/git-patch.html',
+        title: 'Git Patch',
+        metadata: {
+            description: 'Extract raw .patch files from commit URLs. Easily apply changes from one repo to another or perform code reviews.',
+            keywords: ['Git Patch', 'GitHub', 'patch', 'commit'],
+            canonicalSlug: 'git-patch',
+            openGraph: {
+                title: 'Git Patch',
+                description: 'Extract raw .patch files from commit URLs. Easily apply changes from one repo to another or perform code reviews.',
+                type: 'website'
+            },
+            twitter: {
+                title: 'Git Patch',
+                description: 'Extract raw .patch files from commit URLs. Easily apply changes from one repo to another or perform code reviews.'
+            }
+        }
+    },
+    {
         id: 'privacy-policy',
         path: 'pages/drawer/more/privacy-policy.html',
         title: 'Privacy Policy',
