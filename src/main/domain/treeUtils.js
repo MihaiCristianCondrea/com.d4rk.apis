@@ -1,4 +1,4 @@
-export const parseGithubUrl = (inputUrl) => {
+export const parseGithubUrl = (inputUrl) => { // FIXME: Unused constant parseGithubUrl
     try {
         const cleanUrl = inputUrl.replace(/\/$/, ''); // Remove trailing slash
         const pattern = /github\.com\/([^/]+)\/([^/]+)/;
@@ -12,7 +12,7 @@ export const parseGithubUrl = (inputUrl) => {
     }
 };
 
-export const parseGithubCommitUrl = (inputUrl) => {
+export const parseGithubCommitUrl = (inputUrl) => { // FIXME: Unused constant parseGithubCommitUrl
     try {
         const cleanUrl = inputUrl.replace(/\/$/, '');
         const pattern = /github\.com\/([^/]+)\/([^/]+)\/commit\/([a-fA-F0-9]+)/;
@@ -26,7 +26,7 @@ export const parseGithubCommitUrl = (inputUrl) => {
     }
 };
 
-export const generateAsciiTree = (paths, setStats) => {
+export const generateAsciiTree = (paths, setStats) => { // FIXME: Unused constant generateAsciiTree
     const structure = {};
     let fileCount = 0;
     let folderCount = 0;
@@ -81,7 +81,7 @@ export const generateAsciiTree = (paths, setStats) => {
     return output;
 };
 
-export const generatePathList = (paths, setStats) => {
+export const generatePathList = (paths, setStats) => { // FIXME: Unused constant generatePathList
     let fileCount = 0;
     let folderCount = 0;
     const lines = paths.map(p => {

@@ -10,11 +10,11 @@ export const MEDIA_QUERY = Object.freeze({
   prefersDark: '(prefers-color-scheme: dark)',
 });
 
-export const ROUTE_IDS = Object.freeze({
+export const ROUTE_IDS = Object.freeze({ // FIXME: Unused constant ROUTE_IDS
   home: '#home',
 });
 
-export const LAYOUT_CONSTANTS = Object.freeze({
+export const LAYOUT_CONSTANTS = Object.freeze({ // FIXME: Unused constant LAYOUT_CONSTANTS
   virtualizationThreshold: 20,
   idleDelay: 150,
 });
