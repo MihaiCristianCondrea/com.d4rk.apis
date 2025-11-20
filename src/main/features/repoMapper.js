@@ -1,5 +1,5 @@
-import { fetchRepositoryTree } from '../services/githubService';
-import { generateAsciiTree, generatePathList, parseGithubUrl } from '../domain/treeUtils';
+import { fetchRepositoryTree } from '@/services/githubService';
+import { generateAsciiTree, generatePathList, parseGithubUrl } from '@/domain/treeUtils';
 
 export function initRepoMapper() {
     const form = document.getElementById('repoMapperForm');

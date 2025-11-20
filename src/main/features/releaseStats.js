@@ -1,5 +1,5 @@
-import { fetchReleaseStats } from '../services/githubService';
-import { parseGithubUrl } from '../domain/treeUtils';
+import { fetchReleaseStats } from '@/services/githubService';
+import { parseGithubUrl } from '@/domain/treeUtils';
 
 export function initReleaseStats() {
     const form = document.getElementById('releaseStatsForm');

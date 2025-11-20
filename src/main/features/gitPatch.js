@@ -1,5 +1,5 @@
-import { fetchCommitPatch } from '../services/githubService';
-import { parseGithubCommitUrl } from '../domain/treeUtils';
+import { fetchCommitPatch } from '@/services/githubService';
+import { parseGithubCommitUrl } from '@/domain/treeUtils';
 
 export function initGitPatch() {
     const form = document.getElementById('gitPatchForm');
