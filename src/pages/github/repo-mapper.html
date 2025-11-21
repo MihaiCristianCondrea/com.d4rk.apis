@@ -1,60 +1,45 @@
 <div class="animate-in fade-in slide-in-from-bottom-4 duration-500 space-y-6">
     <div class="page-header">
-        <h1 class="text-2xl font-normal text-[#e6e1e5]">RepoMapper</h1>
-        <p class="text-sm text-[#cac4d0]">Generate ASCII file trees from public repositories.</p>
+        <h1>Repo Mapper</h1>
+        <p>Generate ASCII file trees from public repositories.</p>
     </div>
 
-    <div class="search-card">
-        <form id="repoMapperForm">
-            <div class="search-card-content">
-                <div class="search-card-input-container">
-                    <label for="repoUrl" class="search-card-label">Repository URL</label>
-                    <input type="text" id="repoUrl" placeholder="https://github.com/..." class="search-card-input">
-                </div>
-                <div class="search-card-input-container">
-                    <label for="repoToken" class="search-card-label">GitHub Token (Optional)</label>
-                    <input type="text" id="repoToken" placeholder="Enter your token" class="search-card-input">
-                </div>
-                <div class="search-card-actions">
-                    <div class="search-card-extra-controls">
-                        <button type="button" id="formatAscii" class="search-card-extra-control-button active">
-                            <span class="material-symbols-outlined">terminal</span>
-                            ASCII
-                        </button>
-                        <div class="search-card-extra-control-divider"></div>
-                        <button type="button" id="formatPaths" class="search-card-extra-control-button">
-                            <span class="material-symbols-outlined">view_list</span>
-                            Paths
-                        </button>
-                    </div>
-                    <button type="submit" class="search-card-submit-button">
-                        <span class="material-symbols-outlined">terminal</span>
-                        Generate Map
-                    </button>
-                </div>
+    <form id="repoMapperForm" class="search-card">
+        <div class="search-card-field-container">
+            <md-outlined-text-field label="Repository URL" id="repoUrl" required placeholder="https://github.com/owner/repo" class="search-card-input"></md-outlined-text-field>
+            <md-outlined-text-field label="GitHub Token (Optional)" id="repoToken" placeholder="Enter token for private repos" class="search-card-input"></md-outlined-text-field>
+        </div>
+        <div class="search-card-controls">
+             <div class="search-card-extra-controls">
+                <button type="button" id="formatAscii" class="active">
+                    <span class="material-symbols-outlined">terminal</span> ASCII
+                </button>
+                <button type="button" id="formatPaths">
+                    <span class="material-symbols-outlined">view_list</span> Paths
+                </button>
             </div>
-        </form>
-    </div>
+            <md-filled-button type="submit" class="search-card-submit-button" id="repoMapperSubmit">
+                <span slot="icon" class="material-symbols-outlined">terminal</span>
+                Generate Map
+            </md-filled-button>
+        </div>
+    </form>
 
     <div id="repoMapperError" class="error-message" style="display: none;"></div>
 
-    <div id="repoMapperResult" style="display: none;">
+    <div id="repoMapperResult" class="result-container" style="display: none;">
         <div class="result-header">
             <div class="result-stats">
-                <span id="repoMapperFolders" class="result-stat"></span>
-                <span id="repoMapperFiles" class="result-stat"></span>
+                <span id="repoMapperFolders"></span>
+                <span id="repoMapperFiles"></span>
             </div>
-            <button id="copyRepoMapper" class="copy-button">
-                <span class="material-symbols-outlined">content_copy</span>
+            <md-filled-tonal-button id="copyRepoMapper">
+                <span slot="icon" class="material-symbols-outlined">content_copy</span>
                 Copy Code
-            </button>
+            </md-filled-tonal-button>
         </div>
-        <div class="result-output">
-            <div class="result-output-header">
-                <span class="material-symbols-outlined">description</span>
-                OUTPUT
-            </div>
-            <pre><code id="repoMapperOutput"></code></pre>
-        </div>
+        <pre class="result-output-box">
+            <code id="repoMapperOutput"></code>
+        </pre>
     </div>
 </div>

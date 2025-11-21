@@ -1,61 +1,57 @@
 <div class="animate-in fade-in slide-in-from-bottom-4 duration-500 space-y-6">
     <div class="page-header">
-        <h1 class="text-2xl font-normal text-[#e6e1e5]">Release Stats</h1>
-        <p class="text-sm text-[#cac4d0]">Visualize download counts and assets for GitHub releases.</p>
+        <h1>Release Stats</h1>
+        <p>Visualize download counts and assets for GitHub releases.</p>
     </div>
 
-    <div class="search-card">
-        <form id="releaseStatsForm">
-            <div class="search-card-content">
-                <div class="search-card-input-container">
-                    <label for="releaseUrl" class="search-card-label">Repository URL</label>
-                    <input type="text" id="releaseUrl" placeholder="https://github.com/..." class="search-card-input">
-                </div>
-                <div class="search-card-input-container">
-                    <label for="releaseToken" class="search-card-label">GitHub Token (Optional)</label>
-                    <input type="text" id="releaseToken" placeholder="Enter your token" class="search-card-input">
-                </div>
-                <div class="search-card-actions">
-                    <button type="submit" class="search-card-submit-button">
-                        <span class="material-symbols-outlined">analytics</span>
-                        Analyze
-                    </button>
-                </div>
-            </div>
-        </form>
-    </div>
+    <form id="releaseStatsForm" class="search-card">
+        <div class="search-card-field-container">
+            <md-outlined-text-field label="Repository URL" id="releaseUrl" required placeholder="https://github.com/owner/repo" class="search-card-input"></md-outlined-text-field>
+            <md-outlined-text-field label="GitHub Token (Optional)" id="releaseToken" placeholder="Enter token for private repos" class="search-card-input"></md-outlined-text-field>
+        </div>
+        <md-filled-button type="submit" class="search-card-submit-button" id="releaseStatsSubmit">
+            <span slot="icon" class="material-symbols-outlined">analytics</span>
+            Analyze
+        </md-filled-button>
+    </form>
 
     <div id="releaseStatsError" class="error-message" style="display: none;"></div>
 
     <div id="releaseStatsResult" class="grid grid-cols-1 lg:grid-cols-2 gap-6" style="display: none;">
-        <div class="release-details-card">
-            <div class="release-details-header">
-                <p class="release-details-eyebrow">Selected Release</p>
-                <h3 id="selectedReleaseName" class="release-details-name"></h3>
-                <div id="selectedReleaseMeta" class="release-details-meta"></div>
+        <!-- Left Column: Selected Release Details -->
+        <div class="bg-surface-container rounded-3xl p-6 flex flex-col gap-6">
+            <div class="space-y-1">
+                <p class="text-xs uppercase tracking-widest font-bold">Selected Release</p>
+                <h3 id="selectedReleaseName" class="text-2xl font-bold break-all"></h3>
+                <div id="selectedReleaseMeta" class="flex items-center gap-2 text-sm"></div>
             </div>
-            <div id="selectedReleaseDownloads" class="release-details-downloads"></div>
-            <div class="release-details-assets">
-                <p class="release-details-assets-title">Assets</p>
-                <div id="selectedReleaseAssets" class="release-details-assets-list"></div>
+
+            <div id="selectedReleaseDownloads" class="p-4 bg-surface-container-high rounded-2xl flex items-center justify-between"></div>
+
+            <div class="flex-1 space-y-4">
+                <p class="text-xs uppercase tracking-widest font-bold">Assets</p>
+                <div id="selectedReleaseAssets" class="space-y-3 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar"></div>
             </div>
         </div>
-        <div class="release-overview-card">
-            <div class="release-overview-header">
-                <div>
-                    <p class="release-overview-eyebrow">Total Project Downloads</p>
-                    <h3 id="totalDownloads" class="release-overview-total"></h3>
+
+        <!-- Right Column: Release List Overview -->
+        <div class="bg-surface-container rounded-3xl p-6 flex flex-col gap-6">
+            <div class="flex items-center justify-between">
+                <div class="space-y-1">
+                    <p class="text-xs uppercase tracking-widest font-bold">Total Project Downloads</p>
+                    <h3 id="totalDownloads" class="text-4xl font-bold"></h3>
                 </div>
-                <div class="release-overview-icon">
+                <div class="p-3 bg-surface-container-high rounded-full">
                     <span class="material-symbols-outlined">download</span>
                 </div>
             </div>
-            <div class="release-overview-list-container">
-                <div class="release-overview-list-header">
-                    <p class="release-overview-list-title">All Releases</p>
-                    <p id="totalReleases" class="release-overview-list-count"></p>
+
+            <div class="flex-1 space-y-4">
+                <div class="flex items-center justify-between">
+                    <p class="text-xs uppercase tracking-widest font-bold">All Releases</p>
+                    <p id="totalReleases" class="text-xs"></p>
                 </div>
-                <div id="releaseList" class="release-overview-list"></div>
+                <div id="releaseList" class="space-y-2 max-h-[500px] overflow-y-auto pr-2 custom-scrollbar"></div>
             </div>
         </div>
     </div>

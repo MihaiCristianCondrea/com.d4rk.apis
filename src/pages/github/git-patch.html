@@ -1,55 +1,49 @@
 <div class="animate-in fade-in slide-in-from-bottom-4 duration-500 space-y-6">
     <div class="page-header">
-        <h1 class="text-2xl font-normal text-[#e6e1e5]">Git Patch</h1>
-        <p class="text-sm text-[#cac4d0]">Extract raw .patch files from commits for git apply.</p>
+        <h1>Git Patch</h1>
+        <p>Extract raw .patch files from commits for git apply.</p>
     </div>
 
-    <div class="search-card">
-        <form id="gitPatchForm">
-            <div class="search-card-content">
-                <div class="search-card-input-container">
-                    <label for="commitUrl" class="search-card-label">Commit URL</label>
-                    <input type="text" id="commitUrl" placeholder="https://github.com/..." class="search-card-input">
-                </div>
-                <div class="search-card-input-container">
-                    <label for="patchToken" class="search-card-label">GitHub Token (Optional)</label>
-                    <input type="text" id="patchToken" placeholder="Enter your token" class="search-card-input">
-                </div>
-                <div class="search-card-actions">
-                    <button type="submit" class="search-card-submit-button">
-                        <span class="material-symbols-outlined">difference</span>
-                        Get Patch
-                    </button>
-                </div>
-            </div>
-        </form>
-    </div>
+    <form id="gitPatchForm" class="search-card">
+        <div class="search-card-field-container">
+            <md-outlined-text-field label="Commit URL" id="commitUrl" required placeholder="https://github.com/owner/repo/commit/sha" class="search-card-input"></md-outlined-text-field>
+            <md-outlined-text-field label="GitHub Token (Optional)" id="patchToken" placeholder="Enter token for private repos" class="search-card-input"></md-outlined-text-field>
+        </div>
+        <md-filled-button type="submit" class="search-card-submit-button" id="gitPatchSubmit">
+            <span slot="icon" class="material-symbols-outlined">difference</span>
+            Get Patch
+        </md-filled-button>
+    </form>
 
     <div id="gitPatchError" class="error-message" style="display: none;"></div>
 
-    <div id="gitPatchResult" style="display: none;">
+    <div id="gitPatchResult" class="result-container" style="display: none;">
         <div class="result-header">
-            <div class="result-status">
-                <span class="material-symbols-outlined">check</span>
-                Ready to Apply
+            <div class="result-stats">
+                 <span class="bg-surface-container-high px-3 py-1 rounded-md border text-color-primary flex items-center gap-2">
+                     <span class="material-symbols-outlined">check</span>
+                     Ready to Apply
+                 </span>
             </div>
-            <div class="result-actions">
-                <button id="downloadPatch" class="action-button">
-                    <span class="material-symbols-outlined">download</span>
+            <div class="flex gap-2">
+                 <md-filled-tonal-button id="downloadPatch">
+                    <span slot="icon" class="material-symbols-outlined">download</span>
                     Download .patch
-                </button>
-                <button id="copyPatch" class="action-button">
-                    <span class="material-symbols-outlined">content_copy</span>
+                </md-filled-tonal-button>
+                <md-filled-tonal-button id="copyPatch">
+                    <span slot="icon" class="material-symbols-outlined">content_copy</span>
                     Copy
-                </button>
+                </md-filled-tonal-button>
             </div>
         </div>
-        <div class="result-output">
-            <div class="result-output-header">
-                <span class="material-symbols-outlined">integration_instructions</span>
-                PATCH
+        <div class="relative rounded-xl overflow-hidden bg-surface-container shadow-xl border">
+            <div class="absolute top-0 left-0 right-0 h-10 bg-surface-container-high flex items-center px-4 gap-2 border-b">
+                <span class="material-symbols-outlined text-color-secondary">integration_instructions</span>
+                <span class="text-xs font-mono text-color-secondary tracking-wide">PATCH</span>
             </div>
-            <pre><code id="patchContent"></code></pre>
+            <div class="pt-10">
+                <pre class="p-6 overflow-auto max-h-[60vh] text-xs sm:text-sm font-mono leading-[1.6] text-color-primary selection:bg-primary-container whitespace-pre-wrap"><code id="patchContent"></code></pre>
+            </div>
         </div>
     </div>
 </div>

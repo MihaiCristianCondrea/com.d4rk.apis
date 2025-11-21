@@ -1,6 +1,6 @@
 import { getDynamicElement } from '../domain/utils';
 import { fetchRepositoryTree, fetchReleaseStats, fetchCommitPatch } from '../services/githubService';
-import { generateAsciiTree, generatePathList, parseGithubUrl, parseGithubCommitUrl } from '../utils/treeUtils';
+import { generateAsciiTree, generatePathList, parseGithubUrl, parseGithubCommitUrl } from '../domain/utils.js';
 
 // Helper to show/hide elements and manage loading/error states
 function updateUIState(elementId, show, content = '', isError = false) {
