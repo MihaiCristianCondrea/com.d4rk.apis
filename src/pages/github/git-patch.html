@@ -41,7 +41,7 @@
 
     <div id="gitPatchError" class="error-message" style="display: none;"></div>
 
-    <div id="gitPatchResult" class="result-container" style="display: none;">
+    <div id="gitPatchResult" class="result-container patch-result" style="display: none;">
         <div class="result-header">
             <div class="result-stats">
                  <span class="result-chip">
@@ -49,7 +49,7 @@
                      Ready to Apply
                  </span>
             </div>
-            <div class="flex gap-2">
+            <div class="result-actions">
                  <md-filled-tonal-button id="downloadPatch">
                     <span slot="icon" class="material-symbols-outlined">download</span>
                     Download .patch
@@ -60,13 +60,13 @@
                 </md-filled-tonal-button>
             </div>
         </div>
-        <div class="relative rounded-xl overflow-hidden bg-surface-container shadow-xl border">
-            <div class="absolute top-0 left-0 right-0 h-10 bg-surface-container-high flex items-center px-4 gap-2 border-b">
-                <span class="material-symbols-outlined text-color-secondary">integration_instructions</span>
-                <span class="text-xs font-mono text-color-secondary tracking-wide">PATCH</span>
+        <div class="code-output patch-output">
+            <div class="output-header">
+                <span class="material-symbols-outlined">integration_instructions</span>
+                <span class="text-xs font-mono">PATCH</span>
             </div>
-            <div class="pt-10">
-                <pre class="p-6 overflow-auto max-h-[60vh] text-xs sm:text-sm font-mono leading-[1.6] text-color-primary selection:bg-primary-container whitespace-pre-wrap"><code id="patchContent"></code></pre>
+            <div class="output-body">
+                <pre><code id="patchContent"></code></pre>
             </div>
         </div>
     </div>

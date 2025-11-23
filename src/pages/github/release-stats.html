@@ -52,41 +52,54 @@
 
     <div id="releaseStatsError" class="error-message" style="display: none;"></div>
 
-    <div id="releaseStatsResult" class="grid grid-cols-1 lg:grid-cols-2 gap-6" style="display: none;">
-        <!-- Left Column: Selected Release Details -->
-        <div class="bg-surface-container rounded-3xl p-6 flex flex-col gap-6">
-            <div class="space-y-1">
-                <p class="text-xs uppercase tracking-widest font-bold">Selected Release</p>
-                <h3 id="selectedReleaseName" class="text-2xl font-bold break-all"></h3>
-                <div id="selectedReleaseMeta" class="flex items-center gap-2 text-sm"></div>
+    <div id="releaseStatsResult" class="github-result release-result" style="display: none;">
+        <div class="release-meta-bar">
+            <div class="summary-chip" id="releaseRepoChip" aria-live="polite">
+                <span class="material-symbols-outlined">folder_open</span>
+                <span class="chip-text"></span>
             </div>
-
-            <div id="selectedReleaseDownloads" class="p-4 bg-surface-container-high rounded-2xl flex items-center justify-between"></div>
-
-            <div class="flex-1 space-y-4">
-                <p class="text-xs uppercase tracking-widest font-bold">Assets</p>
-                <div id="selectedReleaseAssets" class="space-y-3 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar"></div>
+            <div class="summary-chip subtle" id="releaseDownloadsChip" aria-live="polite">
+                <span class="material-symbols-outlined">download</span>
+                <span class="chip-text"></span>
             </div>
         </div>
 
-        <!-- Right Column: Release List Overview -->
-        <div class="bg-surface-container rounded-3xl p-6 flex flex-col gap-6">
-            <div class="flex items-center justify-between">
+        <div class="release-grid">
+            <!-- Left Column: Selected Release Details -->
+            <div class="release-card">
                 <div class="space-y-1">
-                    <p class="text-xs uppercase tracking-widest font-bold">Total Project Downloads</p>
-                    <h3 id="totalDownloads" class="text-4xl font-bold"></h3>
+                    <p class="text-xs uppercase tracking-widest font-bold">Selected Release</p>
+                    <h3 id="selectedReleaseName" class="text-2xl font-bold break-all"></h3>
+                    <div id="selectedReleaseMeta" class="flex items-center gap-2 text-sm"></div>
                 </div>
-                <div class="p-3 bg-surface-container-high rounded-full">
-                    <span class="material-symbols-outlined">download</span>
+
+                <div id="selectedReleaseDownloads" class="p-4 bg-surface-container-high rounded-2xl flex items-center justify-between"></div>
+
+                <div class="flex-1 space-y-4">
+                    <p class="text-xs uppercase tracking-widest font-bold">Assets</p>
+                    <div id="selectedReleaseAssets" class="space-y-3 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar"></div>
                 </div>
             </div>
 
-            <div class="flex-1 space-y-4">
+            <!-- Right Column: Release List Overview -->
+            <div class="release-card">
                 <div class="flex items-center justify-between">
-                    <p class="text-xs uppercase tracking-widest font-bold">All Releases</p>
-                    <p id="totalReleases" class="text-xs"></p>
+                    <div class="space-y-1">
+                        <p class="text-xs uppercase tracking-widest font-bold">Total Project Downloads</p>
+                        <h3 id="totalDownloads" class="text-4xl font-bold"></h3>
+                    </div>
+                    <div class="p-3 bg-surface-container-high rounded-full">
+                        <span class="material-symbols-outlined">download</span>
+                    </div>
                 </div>
-                <div id="releaseList" class="space-y-2 max-h-[500px] overflow-y-auto pr-2 custom-scrollbar"></div>
+
+                <div class="flex-1 space-y-4">
+                    <div class="flex items-center justify-between">
+                        <p class="text-xs uppercase tracking-widest font-bold">All Releases</p>
+                        <p id="totalReleases" class="text-xs"></p>
+                    </div>
+                    <div id="releaseList" class="space-y-2 max-h-[500px] overflow-y-auto pr-2 custom-scrollbar"></div>
+                </div>
             </div>
         </div>
     </div>
