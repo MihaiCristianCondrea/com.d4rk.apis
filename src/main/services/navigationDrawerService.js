@@ -19,8 +19,12 @@ export class NavigationDrawerController {
     this.drawerOverlay = getDynamicElement(overlayId);
     this.aboutToggle = getDynamicElement(aboutToggleId);
     this.aboutContent = getDynamicElement(aboutContentId);
-    this.androidToggle = getDynamicElement(androidToggleId);
-    this.androidContent = getDynamicElement(androidContentId);
+    this.androidToggle =
+      getDynamicElement(androidToggleId) ||
+      getDynamicElement('androidAppsToggle');
+    this.androidContent =
+      getDynamicElement(androidContentId) ||
+      getDynamicElement('androidAppsContent');
     this.githubToggle = getDynamicElement(githubToggleId);
     this.githubContent = getDynamicElement(githubContentId);
     this.inertTargets = Array.from(
