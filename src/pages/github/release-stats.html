@@ -1,108 +1,121 @@
-<div class="animate-in fade-in slide-in-from-bottom-4 duration-500 space-y-6">
-    <div class="github-tools-header">
-        <h1>Release Stats</h1>
-        <p>Visualize download counts and assets for GitHub releases.</p>
-    </div>
+<style>
+  .gh-view { display: grid; gap: 1.5rem; }
+  .gh-card { background: var(--md-sys-color-surface-container); color: var(--app-text-color); border: 1px solid color-mix(in srgb, var(--md-sys-color-outline) 35%, transparent); border-radius: 24px; padding: clamp(1rem, 3vw, 1.5rem); box-shadow: 0 16px 48px -28px rgba(0, 0, 0, 0.55); }
+  .gh-title { display: grid; gap: 0.35rem; }
+  .gh-title h1 { margin: 0; font-size: clamp(1.75rem, 2vw + 1rem, 2.35rem); }
+  .gh-title p { margin: 0; color: var(--app-secondary-text-color); }
+  .gh-field { position: relative; background: var(--md-sys-color-surface-container-high); border-radius: 18px 18px 4px 4px; border-bottom: 1px solid color-mix(in srgb, var(--md-sys-color-outline) 45%, transparent); display: flex; align-items: center; }
+  .gh-field input { width: 100%; padding: 1.2rem 1rem 0.5rem 1rem; background: transparent; border: none; color: var(--app-text-color); font-size: 1rem; }
+  .gh-field input:focus { outline: none; }
+  .gh-field label { position: absolute; left: 1rem; top: 0.95rem; color: var(--app-secondary-text-color); font-size: 0.9rem; pointer-events: none; transition: all 160ms ease; }
+  .gh-field input:focus + label, .gh-field input:not(:placeholder-shown) + label { top: 0.35rem; font-size: 0.8rem; color: var(--md-sys-color-primary); }
+  .gh-actions, .gh-row { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.75rem; }
+  .gh-pill-button { border-radius: 999px; border: 1px solid color-mix(in srgb, var(--md-sys-color-outline) 55%, transparent); padding: 0.55rem 0.85rem; display: inline-flex; align-items: center; gap: 0.35rem; background: var(--md-sys-color-surface-container-highest); cursor: pointer; }
+  .gh-pill-button[disabled] { opacity: 0.55; cursor: not-allowed; }
+  .gh-pill-button.is-active { color: var(--md-sys-color-primary); border-color: color-mix(in srgb, var(--md-sys-color-primary) 50%, var(--md-sys-color-outline)); }
+  .gh-token { overflow: hidden; margin-top: 0.35rem; }
+  .gh-token input { width: 100%; padding: 1.05rem 1rem 0.65rem 1rem; background: var(--md-sys-color-surface-container-high); border: none; border-bottom: 1px solid color-mix(in srgb, var(--md-sys-color-outline) 35%, transparent); border-radius: 16px 16px 4px 4px; color: var(--app-text-color); }
+  .gh-token label { position: absolute; left: 1rem; top: 0.85rem; font-size: 0.9rem; color: var(--app-secondary-text-color); transition: all 160ms ease; }
+  .gh-token input:focus + label, .gh-token input:not(:placeholder-shown) + label { top: 0.25rem; font-size: 0.8rem; color: var(--md-sys-color-primary); }
+  .gh-error { display: none; background: color-mix(in srgb, var(--md-sys-color-error) 12%, transparent); border: 1px solid color-mix(in srgb, var(--md-sys-color-error) 40%, transparent); color: var(--md-sys-color-on-error-container); border-radius: 14px; padding: 0.9rem 1rem; }
+  .gh-grid { display: grid; grid-template-columns: 1fr; gap: 1rem; }
+  @media (min-width: 1024px) { .gh-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  .gh-panel { background: var(--md-sys-color-surface-container); border: 1px solid color-mix(in srgb, var(--md-sys-color-outline) 35%, transparent); border-radius: 20px; box-shadow: 0 18px 50px -28px rgba(0, 0, 0, 0.55); padding: clamp(1rem, 3vw, 1.25rem); display: grid; gap: 1rem; }
+  .gh-subtitle { color: var(--app-secondary-text-color); text-transform: uppercase; letter-spacing: 0.12em; font-weight: 700; font-size: 0.75rem; margin: 0; }
+  .gh-asset { display: grid; gap: 0.35rem; }
+  .gh-asset-bar { height: 8px; background: color-mix(in srgb, var(--md-sys-color-outline) 20%, transparent); border-radius: 999px; overflow: hidden; }
+  .gh-asset-bar span { display: block; height: 100%; background: var(--md-sys-color-primary); }
+  .gh-list { display: grid; gap: 0.5rem; }
+  .gh-release-button { width: 100%; text-align: left; border: 1px solid transparent; border-radius: 14px; padding: 0.85rem; background: transparent; cursor: pointer; transition: background 140ms ease, border-color 140ms ease; }
+  .gh-release-button.active { background: var(--md-sys-color-primary); border-color: var(--md-sys-color-primary); color: var(--md-sys-color-on-primary); }
+  .gh-release-button:not(.active) { color: var(--app-secondary-text-color); }
+  .gh-release-bar { height: 6px; border-radius: 999px; overflow: hidden; margin-top: 0.35rem; background: color-mix(in srgb, var(--md-sys-color-outline) 25%, transparent); }
+  .gh-release-bar span { display: block; height: 100%; background: currentColor; }
+  .gh-meta { display: inline-flex; gap: 0.35rem; align-items: center; color: var(--app-secondary-text-color); font-size: 0.95rem; flex-wrap: wrap; }
+</style>
+<div class="gh-view">
+  <div class="gh-title">
+    <h1>Release Stats</h1>
+    <p>Visualize download counts and assets for GitHub releases.</p>
+  </div>
 
-    <form id="releaseStatsForm" class="search-card">
-        <div class="search-card-field-container">
-            <md-outlined-text-field
-                label="Repository URL"
-                id="releaseUrl"
-                required
-                placeholder="https://github.com/owner/repo"
-                list="releaseUrlSuggestions"
-                class="search-card-input"
-            ></md-outlined-text-field>
-            <datalist id="releaseUrlSuggestions"></datalist>
-            <div class="token-toggle">
-                <button
-                    type="button"
-                    class="token-toggle-button"
-                    id="releaseTokenToggle"
-                    aria-controls="releaseTokenContainer"
-                    data-label="Add GitHub token (optional)"
-                    data-open-label="Hide token field"
-                >
-                    <span class="material-symbols-outlined">key_vertical</span>
-                    <span class="token-toggle-label">Add GitHub token (optional)</span>
-                    <span class="material-symbols-outlined token-toggle-chevron">expand_more</span>
-                </button>
-                <div class="token-input" id="releaseTokenContainer" hidden>
-                    <md-outlined-text-field
-                        label="GitHub Token (Optional)"
-                        id="releaseToken"
-                        placeholder="Enter token for private repos"
-                        class="search-card-input"
-                    ></md-outlined-text-field>
-                </div>
-            </div>
+  <div class="gh-card">
+    <form id="releases-form" class="space-y-4">
+      <div class="gh-field">
+        <input id="releases-url" type="text" placeholder="https://github.com/..." list="releases-datalist" autocomplete="off" />
+        <label for="releases-url">Repository URL</label>
+        <datalist id="releases-datalist"></datalist>
+        <button type="button" id="releases-fav-btn" class="gh-pill-button" title="Toggle Favorite" style="margin-right: 0.35rem;">
+          <span class="material-symbols-outlined">star</span>
+          <span class="favorite-label">Favorite</span>
+        </button>
+      </div>
+
+      <div class="gh-row">
+        <button type="button" id="releases-token-toggle" class="gh-pill-button" aria-expanded="false">
+          <span class="material-symbols-outlined">key_vertical</span>
+          <span class="token-toggle-label">Token Settings</span>
+        </button>
+        <div style="flex: 1"></div>
+      </div>
+
+      <div id="releases-token-container" class="gh-token" hidden>
+        <div style="position: relative;">
+          <input type="password" id="releases-token" placeholder="github_pat_..." />
+          <label for="releases-token">Access Token (Optional)</label>
         </div>
-        <div class="search-card-controls">
-            <div class="search-card-actions">
-                <button type="button" id="releaseFavoriteButton" class="favorite-button" aria-live="polite" disabled>
-                    <span class="material-symbols-outlined">star_border</span>
-                    <span class="favorite-label">Favorite</span>
-                </button>
-                <md-filled-button type="submit" class="search-card-submit-button" id="releaseStatsSubmit" disabled>
-                    <span slot="icon" class="material-symbols-outlined">analytics</span>
-                    Analyze
-                </md-filled-button>
-            </div>
-        </div>
+      </div>
+
+      <div class="gh-actions" style="justify-content: flex-end;">
+        <md-filled-button id="releases-submit" type="submit">
+          <span slot="icon" class="material-symbols-outlined">analytics</span>
+          Analyze
+        </md-filled-button>
+      </div>
     </form>
+  </div>
 
-    <div id="releaseStatsError" class="error-message" style="display: none;"></div>
+  <div id="releases-error" class="gh-error"></div>
 
-    <div id="releaseStatsResult" class="github-result release-result" style="display: none;">
-        <div class="release-meta-bar">
-            <div class="summary-chip" id="releaseRepoChip" aria-live="polite">
-                <span class="material-symbols-outlined">folder_open</span>
-                <span class="chip-text"></span>
-            </div>
-            <div class="summary-chip subtle" id="releaseDownloadsChip" aria-live="polite">
-                <span class="material-symbols-outlined">download</span>
-                <span class="chip-text"></span>
-            </div>
+  <div id="releases-result" class="gh-grid" hidden>
+    <div class="gh-panel">
+      <div>
+        <p class="gh-subtitle">Selected Release</p>
+        <h2 id="rel-detail-name" style="margin: 0;"></h2>
+        <div class="gh-meta">
+          <span class="material-symbols-outlined">label</span>
+          <span id="rel-detail-tag"></span>
+          <span>•</span>
+          <span id="rel-detail-date"></span>
         </div>
-
-        <div class="release-grid">
-            <!-- Left Column: Selected Release Details -->
-            <div class="release-card">
-                <div class="space-y-1">
-                    <p class="text-xs uppercase tracking-widest font-bold">Selected Release</p>
-                    <h3 id="selectedReleaseName" class="text-2xl font-bold break-all"></h3>
-                    <div id="selectedReleaseMeta" class="flex items-center gap-2 text-sm"></div>
-                </div>
-
-                <div id="selectedReleaseDownloads" class="p-4 bg-surface-container-high rounded-2xl flex items-center justify-between"></div>
-
-                <div class="flex-1 space-y-4">
-                    <p class="text-xs uppercase tracking-widest font-bold">Assets</p>
-                    <div id="selectedReleaseAssets" class="space-y-3 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar"></div>
-                </div>
-            </div>
-
-            <!-- Right Column: Release List Overview -->
-            <div class="release-card">
-                <div class="flex items-center justify-between">
-                    <div class="space-y-1">
-                        <p class="text-xs uppercase tracking-widest font-bold">Total Project Downloads</p>
-                        <h3 id="totalDownloads" class="text-4xl font-bold"></h3>
-                    </div>
-                    <div class="p-3 bg-surface-container-high rounded-full">
-                        <span class="material-symbols-outlined">download</span>
-                    </div>
-                </div>
-
-                <div class="flex-1 space-y-4">
-                    <div class="flex items-center justify-between">
-                        <p class="text-xs uppercase tracking-widest font-bold">All Releases</p>
-                        <p id="totalReleases" class="text-xs"></p>
-                    </div>
-                    <div id="releaseList" class="space-y-2 max-h-[500px] overflow-y-auto pr-2 custom-scrollbar"></div>
-                </div>
-            </div>
+      </div>
+      <div class="gh-card" style="box-shadow: none; padding: 1rem; border-radius: 16px;">
+        <div class="gh-row" style="justify-content: space-between; align-items: center;">
+          <span class="gh-subtitle" style="color: var(--app-text-color);">Downloads</span>
+          <span id="rel-detail-downloads" style="font-size: 1.8rem; font-weight: 700;"></span>
         </div>
+      </div>
+      <div>
+        <p class="gh-subtitle">Assets</p>
+        <div id="rel-assets-list" class="gh-list"></div>
+      </div>
     </div>
+
+    <div class="gh-panel">
+      <div class="gh-row" style="justify-content: space-between; align-items: center;">
+        <div>
+          <p class="gh-subtitle">Total Project Downloads</p>
+          <h2 id="rel-total-downloads" style="margin: 0;"></h2>
+        </div>
+        <div class="gh-pill-button" aria-hidden="true">
+          <span class="material-symbols-outlined">download</span>
+        </div>
+      </div>
+      <div class="gh-row" style="justify-content: space-between; align-items: center;">
+        <p class="gh-subtitle">All Releases</p>
+        <p id="rel-count" class="gh-subtitle" style="color: var(--app-secondary-text-color);"></p>
+      </div>
+      <div id="rel-list" class="gh-list"></div>
+    </div>
+  </div>
 </div>
