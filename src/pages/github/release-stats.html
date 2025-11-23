@@ -1,18 +1,45 @@
 <div class="animate-in fade-in slide-in-from-bottom-4 duration-500 space-y-6">
-    <div class="page-header">
+    <div class="github-tools-header">
         <h1>Release Stats</h1>
         <p>Visualize download counts and assets for GitHub releases.</p>
     </div>
 
     <form id="releaseStatsForm" class="search-card">
         <div class="search-card-field-container">
-            <md-outlined-text-field label="Repository URL" id="releaseUrl" required placeholder="https://github.com/owner/repo" class="search-card-input"></md-outlined-text-field>
-            <md-outlined-text-field label="GitHub Token (Optional)" id="releaseToken" placeholder="Enter token for private repos" class="search-card-input"></md-outlined-text-field>
+            <md-outlined-text-field 
+                label="Repository URL" 
+                id="releaseUrl" 
+                required 
+                placeholder="https://github.com/owner/repo" 
+                class="search-card-input"
+            ></md-outlined-text-field>
+            <details class="github-tools-surface" style="padding: 0.75rem 1rem;">
+                <summary class="flex items-center gap-2 cursor-pointer">
+                    <span class="material-symbols-outlined">key_vertical</span>
+                    Token Settings
+                </summary>
+                <div class="mt-3">
+                    <md-outlined-text-field 
+                        label="GitHub Token (Optional)" 
+                        id="releaseToken" 
+                        placeholder="Enter token for private repos" 
+                        class="search-card-input"
+                    ></md-outlined-text-field>
+                </div>
+            </details>
         </div>
-        <md-filled-button type="submit" class="search-card-submit-button" id="releaseStatsSubmit">
-            <span slot="icon" class="material-symbols-outlined">analytics</span>
-            Analyze
-        </md-filled-button>
+        <div class="search-card-controls">
+            <div class="search-card-actions">
+                <button type="button" id="releaseFavoriteButton" class="favorite-button" aria-live="polite">
+                    <span class="material-symbols-outlined">star</span>
+                    <span class="favorite-label">Favorite</span>
+                </button>
+                <md-filled-button type="submit" class="search-card-submit-button" id="releaseStatsSubmit">
+                    <span slot="icon" class="material-symbols-outlined">analytics</span>
+                    Analyze
+                </md-filled-button>
+            </div>
+        </div>
     </form>
 
     <div id="releaseStatsError" class="error-message" style="display: none;"></div>

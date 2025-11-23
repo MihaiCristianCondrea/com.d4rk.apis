@@ -1,27 +1,57 @@
 <div class="animate-in fade-in slide-in-from-bottom-4 duration-500 space-y-6">
-    <div class="page-header">
+    <div class="github-tools-header">
         <h1>Repo Mapper</h1>
         <p>Generate ASCII file trees from public repositories.</p>
     </div>
 
     <form id="repoMapperForm" class="search-card">
         <div class="search-card-field-container">
-            <md-outlined-text-field label="Repository URL" id="repoUrl" required placeholder="https://github.com/owner/repo" class="search-card-input"></md-outlined-text-field>
-            <md-outlined-text-field label="GitHub Token (Optional)" id="repoToken" placeholder="Enter token for private repos" class="search-card-input"></md-outlined-text-field>
+            <md-outlined-text-field 
+                label="Repository URL" 
+                id="repoUrl" 
+                required 
+                placeholder="https://github.com/owner/repo" 
+                class="search-card-input"
+            ></md-outlined-text-field>
+
+            <details class="github-tools-surface" style="padding: 0.75rem 1rem;">
+                <summary class="flex items-center gap-2 cursor-pointer">
+                    <span class="material-symbols-outlined">key_vertical</span>
+                    Token Settings
+                </summary>
+                <div class="mt-3">
+                    <md-outlined-text-field 
+                        label="GitHub Token (Optional)" 
+                        id="repoToken" 
+                        placeholder="Enter token for private repos" 
+                        class="search-card-input"
+                    ></md-outlined-text-field>
+                </div>
+            </details>
         </div>
+
         <div class="search-card-controls">
-             <div class="search-card-extra-controls">
+            <div class="search-card-extra-controls">
                 <button type="button" id="formatAscii" class="active">
-                    <span class="material-symbols-outlined">terminal</span> ASCII
+                    <span class="material-symbols-outlined">terminal</span>
+                    ASCII
                 </button>
                 <button type="button" id="formatPaths">
-                    <span class="material-symbols-outlined">view_list</span> Paths
+                    <span class="material-symbols-outlined">view_list</span>
+                    Paths
                 </button>
             </div>
-            <md-filled-button type="submit" class="search-card-submit-button" id="repoMapperSubmit">
-                <span slot="icon" class="material-symbols-outlined">terminal</span>
-                Generate Map
-            </md-filled-button>
+
+            <div class="search-card-actions">
+                <button type="button" id="repoFavoriteButton" class="favorite-button" aria-live="polite">
+                    <span class="material-symbols-outlined">star</span>
+                    <span class="favorite-label">Favorite</span>
+                </button>
+                <md-filled-button type="submit" class="search-card-submit-button" id="repoMapperSubmit">
+                    <span slot="icon" class="material-symbols-outlined">terminal</span>
+                    Generate Map
+                </md-filled-button>
+            </div>
         </div>
     </form>
 
@@ -30,8 +60,8 @@
     <div id="repoMapperResult" class="result-container" style="display: none;">
         <div class="result-header">
             <div class="result-stats">
-                <span id="repoMapperFolders"></span>
-                <span id="repoMapperFiles"></span>
+                <span id="repoMapperFolders" class="result-chip"></span>
+                <span id="repoMapperFiles" class="result-chip"></span>
             </div>
             <md-filled-tonal-button id="copyRepoMapper">
                 <span slot="icon" class="material-symbols-outlined">content_copy</span>

@@ -2,6 +2,136 @@ import { getDynamicElement } from '../domain/utils';
 import { fetchRepositoryTree, fetchReleaseStats, fetchCommitPatch } from '../services/githubService';
 import { generateAsciiTree, generatePathList, parseGithubUrl, parseGithubCommitUrl } from '../domain/utils.js';
 
+const FAVORITES_KEY = 'repomapper_favorites';
+const INTENT_KEY = 'github_tools_intent';
+
+function loadFavorites() {
+    try {
+        const stored = localStorage.getItem(FAVORITES_KEY);
+        return stored ? JSON.parse(stored) : [];
+    } catch (e) {
+        return [];
+    }
+}
+
+function saveFavorites(list) {
+    localStorage.setItem(FAVORITES_KEY, JSON.stringify(list));
+}
+
+function isFavorite(owner, repo) {
+    return loadFavorites().some((f) => f.owner.toLowerCase() === owner.toLowerCase() && f.repo.toLowerCase() === repo.toLowerCase());
+}
+
+function toggleFavorite(owner, repo) {
+    const favorites = loadFavorites();
+    const existsIndex = favorites.findIndex(
+        (f) => f.owner.toLowerCase() === owner.toLowerCase() && f.repo.toLowerCase() === repo.toLowerCase(),
+    );
+
+    if (existsIndex >= 0) {
+        favorites.splice(existsIndex, 1);
+    } else {
+        favorites.unshift({ owner, repo, timestamp: Date.now() });
+    }
+
+    saveFavorites(favorites);
+    return favorites;
+}
+
+function setFavoriteButtonState(button, isActive, label = 'Favorite') {
+    if (!button) return;
+    button.classList.toggle('is-active', Boolean(isActive));
+    const icon = button.querySelector('.material-symbols-outlined');
+    const labelNode = button.querySelector('.favorite-label');
+    if (icon) {
+        icon.textContent = isActive ? 'star' : 'star';
+    }
+    if (labelNode) {
+        labelNode.textContent = isActive ? 'Favorited' : label;
+    }
+}
+
+function setNavigationIntent(target, url) {
+    localStorage.setItem(INTENT_KEY, JSON.stringify({ target, url }));
+}
+
+function consumeNavigationIntent() {
+    try {
+        const stored = localStorage.getItem(INTENT_KEY);
+        if (!stored) return null;
+        localStorage.removeItem(INTENT_KEY);
+        return JSON.parse(stored);
+    } catch (e) {
+        return null;
+    }
+}
+
+function renderFavoritesGrid(listElement, emptyElement, onNavigate) {
+    const favorites = loadFavorites();
+    if (!listElement || !emptyElement) return;
+
+    if (favorites.length === 0) {
+        listElement.innerHTML = '';
+        emptyElement.style.display = 'grid';
+        return;
+    }
+
+    emptyElement.style.display = 'none';
+    listElement.innerHTML = '';
+
+    favorites.forEach((repo) => {
+        const card = document.createElement('div');
+        card.className = 'github-favorite-card';
+        card.innerHTML = `
+            <header>
+                <div>
+                    <div class="meta">
+                        <span class="material-symbols-outlined" aria-hidden="true">folder_open</span>
+                        <span>${repo.owner}</span>
+                    </div>
+                    <h3 title="${repo.repo}">${repo.repo}</h3>
+                </div>
+                <button type="button" class="favorite-button is-active" aria-label="Remove favorite">
+                    <span class="material-symbols-outlined">star</span>
+                    <span class="favorite-label">Favorited</span>
+                </button>
+            </header>
+            <div class="actions">
+                <md-filled-tonal-button class="favorite-map" data-url="https://github.com/${repo.owner}/${repo.repo}">
+                    <span slot="icon" class="material-symbols-outlined">terminal</span>
+                    Map
+                </md-filled-tonal-button>
+                <md-filled-tonal-button class="favorite-stats" data-url="https://github.com/${repo.owner}/${repo.repo}">
+                    <span slot="icon" class="material-symbols-outlined">bar_chart</span>
+                    Stats
+                </md-filled-tonal-button>
+            </div>
+        `;
+
+        const removeButton = card.querySelector('button.favorite-button');
+        removeButton?.addEventListener('click', () => {
+            toggleFavorite(repo.owner, repo.repo);
+            renderFavoritesGrid(listElement, emptyElement, onNavigate);
+        });
+
+        const mapButton = card.querySelector('md-filled-tonal-button.favorite-map');
+        mapButton?.addEventListener('click', () => onNavigate('repo-mapper', mapButton.dataset.url));
+
+        const statsButton = card.querySelector('md-filled-tonal-button.favorite-stats');
+        statsButton?.addEventListener('click', () => onNavigate('release-stats', statsButton.dataset.url));
+
+        listElement.appendChild(card);
+    });
+}
+
+function handleFavoriteToggle(button, parsedRepo, label = 'Favorite') {
+    if (!button || !parsedRepo) return;
+    const nextFavorites = toggleFavorite(parsedRepo.owner, parsedRepo.repo);
+    const newState = isFavorite(parsedRepo.owner, parsedRepo.repo);
+    setFavoriteButtonState(button, newState, label);
+    return nextFavorites;
+}
+
 // Helper to show/hide elements and manage loading/error states
 function updateUIState(elementId, show, content = '', isError = false) {
     const element = getDynamicElement(elementId);
@@ -50,10 +180,12 @@ export function initRepoMapper() {
     const formatAsciiButton = getDynamicElement('formatAscii');
     const formatPathsButton = getDynamicElement('formatPaths');
     const submitButton = form.querySelector('.search-card-submit-button');
+    const favoriteButton = getDynamicElement('repoFavoriteButton');
 
     let rawPaths = [];
     let currentFormat = 'ascii';
     let stats = { files: 0, folders: 0 };
+    let parsedRepo = null;
 
     const setStats = (newStats) => {
         stats = newStats;
@@ -91,6 +223,9 @@ export function initRepoMapper() {
             setLoading(submitButton.id, false, 'Generate Map');
             return;
         }
+
+        parsedRepo = parsed;
+        setFavoriteButtonState(favoriteButton, isFavorite(parsed.owner, parsed.repo));
 
         try {
             const data = await fetchRepositoryTree(parsed, token);
@@ -131,6 +266,29 @@ export function initRepoMapper() {
             });
         }
     });
+
+    urlInput?.addEventListener('input', () => {
+        parsedRepo = parseGithubUrl(urlInput.value);
+        if (parsedRepo) {
+            setFavoriteButtonState(favoriteButton, isFavorite(parsedRepo.owner, parsedRepo.repo));
+        } else {
+            setFavoriteButtonState(favoriteButton, false);
+        }
+    });
+
+    favoriteButton?.addEventListener('click', () => {
+        if (!parsedRepo) return;
+        handleFavoriteToggle(favoriteButton, parsedRepo);
+        renderQuickFavoritesPanel();
+    });
+
+    const intent = consumeNavigationIntent();
+    if (intent?.target === 'repo-mapper' && intent.url && urlInput) {
+        urlInput.value = intent.url;
+        parsedRepo = parseGithubUrl(intent.url);
+        setFavoriteButtonState(favoriteButton, parsedRepo ? isFavorite(parsedRepo.owner, parsedRepo.repo) : false);
+        setTimeout(() => form.requestSubmit(), 50);
+    }
 }
 
 // --- Release Stats ---
@@ -143,6 +301,7 @@ export function initReleaseStats() {
     const resultDiv = getDynamicElement('releaseStatsResult');
     const errorDiv = getDynamicElement('releaseStatsError');
     const submitButton = form.querySelector('.search-card-submit-button');
+    const favoriteButton = getDynamicElement('releaseFavoriteButton');
 
     const selectedReleaseName = getDynamicElement('selectedReleaseName');
     const selectedReleaseMeta = getDynamicElement('selectedReleaseMeta');
@@ -154,6 +313,7 @@ export function initReleaseStats() {
 
     let currentData = null;
     let selectedReleaseIndex = 0;
+    let parsedRepo = null;
 
     const renderReleaseDetails = () => {
         if (!currentData || !currentData.releases || currentData.releases.length === 0) return;
@@ -264,6 +424,9 @@ export function initReleaseStats() {
             return;
         }
 
+        parsedRepo = parsed;
+        setFavoriteButtonState(favoriteButton, isFavorite(parsedRepo.owner, parsedRepo.repo));
+
         try {
             currentData = await fetchReleaseStats(parsed, token);
             selectedReleaseIndex = 0; // Reset to latest
@@ -276,6 +439,29 @@ export function initReleaseStats() {
             setLoading(submitButton.id, false, 'Analyze');
         }
     });
+
+    urlInput?.addEventListener('input', () => {
+        parsedRepo = parseGithubUrl(urlInput.value);
+        setFavoriteButtonState(
+            favoriteButton,
+            parsedRepo ? isFavorite(parsedRepo.owner, parsedRepo.repo) : false,
+            'Favorite',
+        );
+    });
+
+    favoriteButton?.addEventListener('click', () => {
+        if (!parsedRepo) return;
+        handleFavoriteToggle(favoriteButton, parsedRepo);
+        renderQuickFavoritesPanel();
+    });
+
+    const intent = consumeNavigationIntent();
+    if (intent?.target === 'release-stats' && intent.url && urlInput) {
+        urlInput.value = intent.url;
+        parsedRepo = parseGithubUrl(intent.url);
+        setFavoriteButtonState(favoriteButton, parsedRepo ? isFavorite(parsedRepo.owner, parsedRepo.repo) : false);
+        setTimeout(() => form.requestSubmit(), 50);
+    }
 }
 
 // --- Git Patch ---
@@ -347,5 +533,72 @@ export function initGitPatch() {
         link.click();
         document.body.removeChild(link);
         URL.revokeObjectURL(href);
+    });
+}
+
+export function initGithubFavorites() {
+    const listEl = getDynamicElement('githubFavoritesList');
+    const emptyEl = getDynamicElement('githubFavoritesEmpty');
+    if (!listEl || !emptyEl) return;
+
+    renderFavoritesGrid(listEl, emptyEl, (target, url) => {
+        setNavigationIntent(target, url);
+        window.location.hash = `#${target}`;
+    });
+}
+
+export function initGithubToolsHome() {
+    renderQuickFavoritesPanel();
+}
+
+function renderQuickFavoritesPanel() {
+    const quickContainer = getDynamicElement('githubQuickFavorites');
+    const quickList = getDynamicElement('githubQuickFavoritesList');
+    const quickEmpty = getDynamicElement('githubQuickFavoritesEmpty');
+
+    if (!quickContainer || !quickList || !quickEmpty) return;
+
+    const favorites = loadFavorites();
+    if (favorites.length === 0) {
+        quickList.innerHTML = '';
+        quickEmpty.style.display = 'grid';
+        return;
+    }
+
+    quickEmpty.style.display = 'none';
+    quickList.innerHTML = '';
+
+    favorites.slice(0, 4).forEach((repo) => {
+        const card = document.createElement('div');
+        card.className = 'github-favorite-card';
+        card.innerHTML = `
+            <div class="meta">
+                <span class="material-symbols-outlined" aria-hidden="true">folder_open</span>
+                <span>${repo.owner}</span>
+            </div>
+            <h3 title="${repo.repo}">${repo.repo}</h3>
+            <div class="actions">
+                <md-filled-tonal-button class="favorite-map" data-url="https://github.com/${repo.owner}/${repo.repo}">
+                    <span slot="icon" class="material-symbols-outlined">terminal</span>
+                    Map
+                </md-filled-tonal-button>
+                <md-filled-tonal-button class="favorite-stats" data-url="https://github.com/${repo.owner}/${repo.repo}">
+                    <span slot="icon" class="material-symbols-outlined">bar_chart</span>
+                    Stats
+                </md-filled-tonal-button>
+            </div>
+        `;
+
+        card.querySelector('.favorite-map')?.addEventListener('click', () => {
+            setNavigationIntent('repo-mapper', `https://github.com/${repo.owner}/${repo.repo}`);
+            window.location.hash = '#repo-mapper';
+        });
+
+        card.querySelector('.favorite-stats')?.addEventListener('click', () => {
+            setNavigationIntent('release-stats', `https://github.com/${repo.owner}/${repo.repo}`);
+            window.location.hash = '#release-stats';
+        });
+
+        quickList.appendChild(card);
     });
 }
