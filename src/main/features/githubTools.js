@@ -328,7 +328,6 @@ export function initRepoMapper() {
     favoriteButton?.addEventListener('click', () => {
         if (!parsedRepo || favoriteButton.disabled) return;
         handleFavoriteToggle(favoriteButton, parsedRepo);
-        renderQuickFavoritesPanel();
     });
 
     const intent = consumeNavigationIntent();
@@ -511,7 +510,6 @@ export function initReleaseStats() {
     favoriteButton?.addEventListener('click', () => {
         if (!parsedRepo || favoriteButton.disabled) return;
         handleFavoriteToggle(favoriteButton, parsedRepo);
-        renderQuickFavoritesPanel();
     });
 
     const intent = consumeNavigationIntent();
@@ -618,64 +616,5 @@ export function initGithubFavorites() {
     renderFavoritesGrid(listEl, emptyEl, (target, url) => {
         setNavigationIntent(target, url);
         window.location.hash = `#${target}`;
-    });
-}
-
-export function initGithubToolsHome() {
-    const quickContainer = getDynamicElement('githubQuickFavorites');
-    if (quickContainer) {
-        quickContainer.style.display = 'none';
-    }
-}
-
-function renderQuickFavoritesPanel() {
-    const quickContainer = getDynamicElement('githubQuickFavorites');
-    const quickList = getDynamicElement('githubQuickFavoritesList');
-    const quickEmpty = getDynamicElement('githubQuickFavoritesEmpty');
-
-    if (!quickContainer || !quickList || !quickEmpty) return;
-
-    const favorites = loadFavorites();
-    if (favorites.length === 0) {
-        quickList.innerHTML = '';
-        quickEmpty.style.display = 'grid';
-        return;
-    }
-
-    quickEmpty.style.display = 'none';
-    quickList.innerHTML = '';
-
-    favorites.slice(0, 4).forEach((repo) => {
-        const card = document.createElement('div');
-        card.className = 'github-favorite-card';
-        card.innerHTML = `
-            <div class="meta">
-                <span class="material-symbols-outlined" aria-hidden="true">folder_open</span>
-                <span>${repo.owner}</span>
-            </div>
-            <h3 title="${repo.repo}">${repo.repo}</h3>
-            <div class="actions">
-                <md-filled-tonal-button class="favorite-map" data-url="https://github.com/${repo.owner}/${repo.repo}">
-                    <span slot="icon" class="material-symbols-outlined">terminal</span>
-                    Map
-                </md-filled-tonal-button>
-                <md-filled-tonal-button class="favorite-stats" data-url="https://github.com/${repo.owner}/${repo.repo}">
-                    <span slot="icon" class="material-symbols-outlined">bar_chart</span>
-                    Stats
-                </md-filled-tonal-button>
-            </div>
-        `;
-
-        card.querySelector('.favorite-map')?.addEventListener('click', () => {
-            setNavigationIntent('repo-mapper', `https://github.com/${repo.owner}/${repo.repo}`);
-            window.location.hash = '#repo-mapper';
-        });
-
-        card.querySelector('.favorite-stats')?.addEventListener('click', () => {
-            setNavigationIntent('release-stats', `https://github.com/${repo.owner}/${repo.repo}`);
-            window.location.hash = '#release-stats';
-        });
-
-        quickList.appendChild(card);
     });
 }
