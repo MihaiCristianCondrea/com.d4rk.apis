@@ -2635,11 +2635,21 @@ md-list-item[type='button'].expanded md-icon[slot='end'] {
   color: var(--md-sys-color-on-primary);
   box-shadow: 0 10px 30px -18px rgba(0, 0, 0, 0.7);
   transform: translateY(-1px);
+  animation: toggleBump 200ms ease;
 }
 
 .search-card-extra-controls button:not(.active):hover {
   background: color-mix(in srgb, var(--md-sys-color-surface-tint) 16%, transparent);
   transform: translateY(-1px);
+}
+
+@keyframes toggleBump {
+  from {
+    transform: translateY(0) scale(0.98);
+  }
+  to {
+    transform: translateY(-1px) scale(1);
+  }
 }
 
 .search-card-actions .favorite-button {
@@ -2668,6 +2678,10 @@ md-list-item[type='button'].expanded md-icon[slot='end'] {
   pointer-events: none;
 }
 
+.favorite-button .material-symbols-outlined.is-filled {
+  font-variation-settings: 'FILL' 1;
+}
+
 .token-toggle {
   border: 1px solid color-mix(in srgb, var(--md-sys-color-outline) 45%, transparent);
   border-radius: 18px;
@@ -2688,12 +2702,19 @@ md-list-item[type='button'].expanded md-icon[slot='end'] {
   color: var(--app-text-color);
   font-weight: 600;
   cursor: pointer;
-  padding: 0.25rem 0;
-  transition: color 150ms ease;
+  padding: 0.5rem 0.75rem;
+  border-radius: 12px;
+  transition: color 150ms ease, background 150ms ease, box-shadow 150ms ease;
 }
 
 .token-toggle-button:hover {
   color: var(--md-sys-color-primary);
+}
+
+.token-toggle-button.is-open {
+  background: color-mix(in srgb, var(--md-sys-color-primary) 8%, transparent);
+  color: var(--md-sys-color-primary);
+  box-shadow: 0 10px 35px -26px rgba(0, 0, 0, 0.5);
 }
 
 .token-toggle-chevron {

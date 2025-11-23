@@ -72,7 +72,7 @@ export function rafThrottle(callback) {
 
 export const parseGithubUrl = (inputUrl) => {
   try {
-    const cleanUrl = inputUrl.replace(/\/$/, ''); // Remove trailing slash
+    const cleanUrl = inputUrl.trim().replace(/\/$/, ''); // Remove trailing slash
     const pattern = /github\.com\/([^/]+)\/([^/]+)/;
     const match = cleanUrl.match(pattern);
     if (match) {
@@ -86,7 +86,7 @@ export const parseGithubUrl = (inputUrl) => {
 
 export const parseGithubCommitUrl = (inputUrl) => {
   try {
-    const cleanUrl = inputUrl.replace(/\/$/, '');
+    const cleanUrl = inputUrl.trim().replace(/\/$/, '');
     // Matches .../owner/repo/commit/sha
     const pattern = /github\.com\/([^/]+)\/([^/]+)\/commit\/([a-fA-F0-9]+)/;
     const match = cleanUrl.match(pattern);

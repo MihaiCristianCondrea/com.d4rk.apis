@@ -44,11 +44,16 @@ function setFavoriteButtonState(button, isActive, label = 'Favorite', isDisabled
     button.classList.toggle('is-disabled', Boolean(isDisabled));
     button.disabled = Boolean(isDisabled);
     button.setAttribute('aria-disabled', isDisabled ? 'true' : 'false');
+    button.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+
     const icon = button.querySelector('.material-symbols-outlined');
     const labelNode = button.querySelector('.favorite-label');
+
     if (icon) {
-        icon.textContent = isActive ? 'star' : 'star';
+        icon.textContent = isActive ? 'star' : 'star_border';
+        icon.classList.toggle('is-filled', Boolean(isActive));
     }
+
     if (labelNode) {
         labelNode.textContent = isActive ? 'Favorited' : label;
     }
@@ -60,10 +65,18 @@ function initTokenToggle(buttonId, sectionId, inputId) {
     const input = getDynamicElement(inputId);
     if (!toggleButton || !section) return;
 
+    const labelNode = toggleButton.querySelector('.token-toggle-label');
+    const defaultLabel = toggleButton.dataset?.label || 'Token Settings';
+    const openLabel = toggleButton.dataset?.openLabel || 'Hide token field';
+
     let isOpen = false;
     const syncState = () => {
         section.hidden = !isOpen;
         toggleButton.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+        toggleButton.classList.toggle('is-open', isOpen);
+        if (labelNode) {
+            labelNode.textContent = isOpen ? openLabel : defaultLabel;
+        }
     };
 
     toggleButton.addEventListener('click', () => {
@@ -222,11 +235,14 @@ export function initRepoMapper() {
     };
 
     const updateRepoControls = () => {
-        parsedRepo = urlInput ? parseGithubUrl(urlInput.value) : null;
+        parsedRepo = urlInput ? parseGithubUrl(urlInput.value.trim()) : null;
         const hasValidRepo = Boolean(parsedRepo);
         const isRepoFavorite = hasValidRepo && isFavorite(parsedRepo.owner, parsedRepo.repo);
         setFavoriteButtonState(favoriteButton, isRepoFavorite, 'Favorite', !hasValidRepo);
-        if (submitButton) submitButton.disabled = !hasValidRepo;
+        if (submitButton) {
+            submitButton.disabled = !hasValidRepo;
+            submitButton.setAttribute('aria-disabled', !hasValidRepo ? 'true' : 'false');
+        }
     };
 
     const updateOutput = () => {
@@ -252,7 +268,7 @@ export function initRepoMapper() {
         updateUIState('repoMapperResult', false);
         setLoading(submitButton.id, true, 'Generate Map');
 
-        const url = urlInput.value;
+        const url = urlInput.value.trim();
         const token = tokenInput.value;
         const parsed = parseGithubUrl(url);
 
@@ -351,11 +367,14 @@ export function initReleaseStats() {
     initTokenToggle('releaseTokenToggle', 'releaseTokenContainer', 'releaseToken');
 
     const updateReleaseControls = () => {
-        parsedRepo = urlInput ? parseGithubUrl(urlInput.value) : null;
+        parsedRepo = urlInput ? parseGithubUrl(urlInput.value.trim()) : null;
         const hasValidRepo = Boolean(parsedRepo);
         const isRepoFavorite = hasValidRepo && isFavorite(parsedRepo.owner, parsedRepo.repo);
         setFavoriteButtonState(favoriteButton, isRepoFavorite, 'Favorite', !hasValidRepo);
-        if (submitButton) submitButton.disabled = !hasValidRepo;
+        if (submitButton) {
+            submitButton.disabled = !hasValidRepo;
+            submitButton.setAttribute('aria-disabled', !hasValidRepo ? 'true' : 'false');
+        }
     };
 
     const renderReleaseDetails = () => {
@@ -459,7 +478,7 @@ export function initReleaseStats() {
         updateUIState('releaseStatsResult', false);
         setLoading(submitButton.id, true, 'Analyze');
 
-        const url = urlInput.value;
+        const url = urlInput.value.trim();
         const token = tokenInput.value;
         const parsed = parseGithubUrl(url);
 
@@ -518,6 +537,19 @@ export function initGitPatch() {
     const downloadButton = getDynamicElement('downloadPatch');
     const submitButton = form.querySelector('.search-card-submit-button');
 
+    initTokenToggle('gitPatchTokenToggle', 'gitPatchTokenContainer', 'patchToken');
+
+    const updatePatchControls = () => {
+        const parsed = urlInput ? parseGithubCommitUrl(urlInput.value.trim()) : null;
+        const hasValidCommit = Boolean(parsed);
+        if (submitButton) {
+            submitButton.disabled = !hasValidCommit;
+            submitButton.setAttribute('aria-disabled', !hasValidCommit ? 'true' : 'false');
+        }
+    };
+
+    updatePatchControls();
+
     let patchContent = '';
 
     form.addEventListener('submit', async (e) => {
@@ -526,7 +558,7 @@ export function initGitPatch() {
         updateUIState('gitPatchResult', false);
         setLoading(submitButton.id, true, 'Get Patch');
 
-        const url = urlInput.value;
+        const url = urlInput.value.trim();
         const token = tokenInput.value;
         const parsed = parseGithubCommitUrl(url);
 
@@ -546,6 +578,8 @@ export function initGitPatch() {
             setLoading(submitButton.id, false, 'Get Patch');
         }
     });
+
+    urlInput?.addEventListener('input', updatePatchControls);
 
     copyButton.addEventListener('click', () => {
         if (patchContent) {
@@ -588,7 +622,10 @@ export function initGithubFavorites() {
 }
 
 export function initGithubToolsHome() {
-    renderQuickFavoritesPanel();
+    const quickContainer = getDynamicElement('githubQuickFavorites');
+    if (quickContainer) {
+        quickContainer.style.display = 'none';
+    }
 }
 
 function renderQuickFavoritesPanel() {
