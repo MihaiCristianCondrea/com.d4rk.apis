@@ -1,74 +1,88 @@
-<div class="animate-in fade-in slide-in-from-bottom-4 duration-500 space-y-6">
-    <div class="github-tools-header">
-        <h1>Git Patch</h1>
-        <p>Extract raw .patch files from commits for git apply.</p>
-    </div>
+<style>
+  .gh-view { display: grid; gap: 1.5rem; }
+  .gh-card { background: var(--md-sys-color-surface-container); color: var(--app-text-color); border: 1px solid color-mix(in srgb, var(--md-sys-color-outline) 35%, transparent); border-radius: 24px; padding: clamp(1rem, 3vw, 1.5rem); box-shadow: 0 16px 48px -28px rgba(0, 0, 0, 0.55); }
+  .gh-title { display: grid; gap: 0.35rem; }
+  .gh-title h1 { margin: 0; font-size: clamp(1.75rem, 2vw + 1rem, 2.35rem); }
+  .gh-title p { margin: 0; color: var(--app-secondary-text-color); }
+  .gh-field { position: relative; background: var(--md-sys-color-surface-container-high); border-radius: 18px 18px 4px 4px; border-bottom: 1px solid color-mix(in srgb, var(--md-sys-color-outline) 45%, transparent); display: flex; align-items: center; }
+  .gh-field input { width: 100%; padding: 1.2rem 1rem 0.5rem 1rem; background: transparent; border: none; color: var(--app-text-color); font-size: 1rem; }
+  .gh-field input:focus { outline: none; }
+  .gh-field label { position: absolute; left: 1rem; top: 0.95rem; color: var(--app-secondary-text-color); font-size: 0.9rem; pointer-events: none; transition: all 160ms ease; }
+  .gh-field input:focus + label, .gh-field input:not(:placeholder-shown) + label { top: 0.35rem; font-size: 0.8rem; color: var(--md-sys-color-primary); }
+  .gh-actions, .gh-row { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.75rem; }
+  .gh-pill-button { border-radius: 999px; border: 1px solid color-mix(in srgb, var(--md-sys-color-outline) 55%, transparent); padding: 0.55rem 0.85rem; display: inline-flex; align-items: center; gap: 0.35rem; background: var(--md-sys-color-surface-container-highest); cursor: pointer; }
+  .gh-pill-button[disabled] { opacity: 0.55; cursor: not-allowed; }
+  .gh-pill-button.is-active { color: var(--md-sys-color-primary); border-color: color-mix(in srgb, var(--md-sys-color-primary) 50%, var(--md-sys-color-outline)); }
+  .gh-token { overflow: hidden; margin-top: 0.35rem; }
+  .gh-token input { width: 100%; padding: 1.05rem 1rem 0.65rem 1rem; background: var(--md-sys-color-surface-container-high); border: none; border-bottom: 1px solid color-mix(in srgb, var(--md-sys-color-outline) 35%, transparent); border-radius: 16px 16px 4px 4px; color: var(--app-text-color); }
+  .gh-token label { position: absolute; left: 1rem; top: 0.85rem; font-size: 0.9rem; color: var(--app-secondary-text-color); transition: all 160ms ease; }
+  .gh-token input:focus + label, .gh-token input:not(:placeholder-shown) + label { top: 0.25rem; font-size: 0.8rem; color: var(--md-sys-color-primary); }
+  .gh-error { display: none; background: color-mix(in srgb, var(--md-sys-color-error) 12%, transparent); border: 1px solid color-mix(in srgb, var(--md-sys-color-error) 40%, transparent); color: var(--md-sys-color-on-error-container); border-radius: 14px; padding: 0.9rem 1rem; }
+  .gh-result { background: var(--md-sys-color-surface-container); border-radius: 20px; border: 1px solid color-mix(in srgb, var(--md-sys-color-outline) 35%, transparent); box-shadow: 0 18px 50px -28px rgba(0, 0, 0, 0.55); padding: clamp(1rem, 3vw, 1.25rem); display: grid; gap: 1rem; }
+  .gh-toolbar { display: flex; justify-content: space-between; align-items: center; gap: 0.75rem; flex-wrap: wrap; }
+  .gh-result pre { max-height: 60vh; overflow: auto; background: var(--md-sys-color-surface-container-high); border-radius: 16px; padding: 1rem; margin: 0; color: var(--app-text-color); white-space: pre-wrap; }
+</style>
+<div class="gh-view">
+  <div class="gh-title">
+    <h1>Git Patch</h1>
+    <p>Extract raw .patch files from commits for git apply.</p>
+  </div>
 
-    <form id="gitPatchForm" class="search-card">
-        <div class="search-card-field-container">
-            <md-outlined-text-field label="Commit URL" id="commitUrl" required placeholder="https://github.com/owner/repo/commit/sha" list="commitUrlSuggestions" class="search-card-input"></md-outlined-text-field>
-            <datalist id="commitUrlSuggestions"></datalist>
-            <div class="token-toggle">
-                <button
-                    type="button"
-                    class="token-toggle-button"
-                    id="gitPatchTokenToggle"
-                    aria-controls="gitPatchTokenContainer"
-                    data-label="Add GitHub token (optional)"
-                    data-open-label="Hide token field"
-                >
-                    <span class="material-symbols-outlined">key_vertical</span>
-                    <span class="token-toggle-label">Add GitHub token (optional)</span>
-                    <span class="material-symbols-outlined token-toggle-chevron">expand_more</span>
-                </button>
-                <div class="token-input" id="gitPatchTokenContainer" hidden>
-                    <md-outlined-text-field label="GitHub Token (Optional)" id="patchToken" placeholder="Enter token for private repos" class="search-card-input"></md-outlined-text-field>
-                </div>
-            </div>
+  <div class="gh-card">
+    <form id="patch-form" class="space-y-4">
+      <div class="gh-field">
+        <input id="patch-url" type="text" placeholder="https://github.com/..." list="patch-datalist" autocomplete="off" />
+        <label for="patch-url">Commit URL</label>
+        <datalist id="patch-datalist"></datalist>
+        <button type="button" id="patch-fav-btn" class="gh-pill-button" title="Toggle Favorite" style="margin-right: 0.35rem;">
+          <span class="material-symbols-outlined">star</span>
+          <span class="favorite-label">Favorite</span>
+        </button>
+      </div>
+
+      <div class="gh-row">
+        <button type="button" id="patch-token-toggle" class="gh-pill-button" aria-expanded="false">
+          <span class="material-symbols-outlined">key_vertical</span>
+          <span class="token-toggle-label">Token Settings</span>
+        </button>
+        <div style="flex: 1"></div>
+      </div>
+
+      <div id="patch-token-container" class="gh-token" hidden>
+        <div style="position: relative;">
+          <input type="password" id="patch-token" placeholder="github_pat_..." />
+          <label for="patch-token">Access Token (Optional)</label>
         </div>
-        <div class="search-card-controls">
-            <div class="search-card-actions">
-                <button type="button" id="gitPatchFavoriteButton" class="favorite-button" aria-live="polite" disabled>
-                    <span class="material-symbols-outlined">star_border</span>
-                    <span class="favorite-label">Favorite</span>
-                </button>
-                <md-filled-button type="submit" class="search-card-submit-button" id="gitPatchSubmit" disabled>
-                    <span slot="icon" class="material-symbols-outlined">difference</span>
-                    Get Patch
-                </md-filled-button>
-            </div>
-        </div>
+      </div>
+
+      <div class="gh-actions" style="justify-content: flex-end;">
+        <md-filled-button id="patch-submit" type="submit">
+          <span slot="icon" class="material-symbols-outlined">difference</span>
+          Get Patch
+        </md-filled-button>
+      </div>
     </form>
+  </div>
 
-    <div id="gitPatchError" class="error-message" style="display: none;"></div>
+  <div id="patch-error" class="gh-error"></div>
 
-    <div id="gitPatchResult" class="result-container patch-result" style="display: none;">
-        <div class="result-header">
-            <div class="result-stats">
-                 <span class="result-chip">
-                     <span class="material-symbols-outlined">check</span>
-                     Ready to Apply
-                 </span>
-            </div>
-            <div class="result-actions">
-                 <md-filled-tonal-button id="downloadPatch">
-                    <span slot="icon" class="material-symbols-outlined">download</span>
-                    Download .patch
-                </md-filled-tonal-button>
-                <md-filled-tonal-button id="copyPatch">
-                    <span slot="icon" class="material-symbols-outlined">content_copy</span>
-                    Copy
-                </md-filled-tonal-button>
-            </div>
-        </div>
-        <div class="code-output patch-output">
-            <div class="output-header">
-                <span class="material-symbols-outlined">integration_instructions</span>
-                <span class="text-xs font-mono">PATCH</span>
-            </div>
-            <div class="output-body">
-                <pre><code id="patchContent"></code></pre>
-            </div>
-        </div>
+  <div id="patch-result" class="gh-result" hidden>
+    <div class="gh-toolbar">
+      <div class="gh-pill-button" aria-hidden="true">
+        <span class="material-symbols-outlined">check</span>
+        Ready to Apply
+      </div>
+      <div class="gh-actions" style="justify-content: flex-end;">
+        <button id="patch-download-btn" class="gh-pill-button" type="button">
+          <span class="material-symbols-outlined">download</span>
+          <span>Download</span>
+        </button>
+        <button id="patch-copy-btn" class="gh-pill-button" type="button">
+          <span class="material-symbols-outlined">content_copy</span>
+          <span>Copy</span>
+        </button>
+      </div>
     </div>
+    <pre><code id="patch-code"></code></pre>
+  </div>
 </div>

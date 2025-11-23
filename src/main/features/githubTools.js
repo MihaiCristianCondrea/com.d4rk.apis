@@ -1,865 +1,547 @@
-import { getDynamicElement } from '../domain/utils';
-import { fetchRepositoryTree, fetchReleaseStats, fetchCommitPatch } from '../services/githubService';
-import { generateAsciiTree, generatePathList, parseGithubUrl, parseGithubCommitUrl } from '../domain/utils.js';
+import { fetchCommitPatch, fetchReleaseStats, fetchRepositoryTree } from '../services/githubService';
+import { generateAsciiTree, generatePathList, parseGithubCommitUrl, parseGithubUrl } from '../domain/utils.js';
 
 const FAVORITES_KEY = 'repomapper_favorites';
-let inMemoryFavorites = [];
-const INTENT_KEY = 'github_tools_intent';
-const favoriteSubscribers = new Set();
 
-const ROUTE_TO_VIEW = {
-    'github-favorites': 'favorites',
-    'repo-mapper': 'mapper',
-    'release-stats': 'releases',
-    'git-patch': 'gitpatch',
+const state = {
+  favorites: [],
+  mapper: {
+    rawPaths: [],
+    format: 'ascii',
+    parsedRepo: null,
+  },
+  releases: {
+    data: null,
+    selectedIndex: 0,
+    parsedRepo: null,
+  },
+  patch: {
+    content: '',
+    filename: '',
+    parsedRepo: null,
+  },
 };
 
 function loadFavorites() {
-    try {
-        const stored = localStorage.getItem(FAVORITES_KEY);
-        const parsed = stored ? JSON.parse(stored) : [];
-        inMemoryFavorites = Array.isArray(parsed) ? parsed : [];
-        return [...inMemoryFavorites];
-    } catch (e) {
-        return [...inMemoryFavorites];
-    }
+  try {
+    const stored = localStorage.getItem(FAVORITES_KEY);
+    const parsed = stored ? JSON.parse(stored) : [];
+    state.favorites = Array.isArray(parsed) ? parsed : [];
+  } catch (error) {
+    state.favorites = state.favorites || [];
+  }
+  return [...state.favorites];
 }
 
 function saveFavorites(list) {
-    inMemoryFavorites = [...list];
-    try {
-        localStorage.setItem(FAVORITES_KEY, JSON.stringify(list));
-    } catch (e) {
-        // Fallback to in-memory storage when localStorage is unavailable
-    }
-    notifyFavoritesUpdate(list);
-}
-
-function isFavorite(owner, repo) {
-    return loadFavorites().some((f) => f.owner.toLowerCase() === owner.toLowerCase() && f.repo.toLowerCase() === repo.toLowerCase());
+  state.favorites = [...list];
+  try {
+    localStorage.setItem(FAVORITES_KEY, JSON.stringify(list));
+  } catch (error) {
+    // ignore storage issues
+  }
 }
 
 function toggleFavorite(owner, repo) {
-    const favorites = loadFavorites();
-    const existsIndex = favorites.findIndex(
-        (f) => f.owner.toLowerCase() === owner.toLowerCase() && f.repo.toLowerCase() === repo.toLowerCase(),
-    );
+  const current = loadFavorites();
+  const existingIndex = current.findIndex(
+    (fav) => fav.owner.toLowerCase() === owner.toLowerCase() && fav.repo.toLowerCase() === repo.toLowerCase(),
+  );
 
-    if (existsIndex >= 0) {
-        favorites.splice(existsIndex, 1);
-    } else {
-        favorites.unshift({ owner, repo, timestamp: Date.now() });
-    }
+  if (existingIndex >= 0) {
+    current.splice(existingIndex, 1);
+  } else {
+    current.unshift({ owner, repo, timestamp: Date.now() });
+  }
 
-    saveFavorites(favorites);
-    return favorites;
+  saveFavorites(current);
+  renderFavoritesGrid();
+  hydrateDatalists();
+  return current;
 }
 
-function subscribeToFavorites(callback) {
-    if (typeof callback !== 'function') return () => {};
-    favoriteSubscribers.add(callback);
-    return () => favoriteSubscribers.delete(callback);
+function setFavoriteButtonState(button, parsedRepo) {
+  if (!button) return;
+  const icon = button.querySelector('.material-symbols-outlined');
+  const label = button.querySelector('.favorite-label');
+  const isValid = Boolean(parsedRepo);
+  const isFav = parsedRepo && state.favorites.some(
+    (fav) => fav.owner.toLowerCase() === parsedRepo.owner.toLowerCase() && fav.repo.toLowerCase() === parsedRepo.repo.toLowerCase(),
+  );
+
+  button.hidden = !isValid;
+  button.disabled = !isValid;
+  button.classList.toggle('is-active', Boolean(isFav));
+
+  if (icon) {
+    icon.textContent = isFav ? 'star' : 'star_border';
+  }
+  if (label) {
+    label.textContent = isFav ? 'Favorited' : 'Favorite';
+  }
 }
 
-function notifyFavoritesUpdate(favorites = []) {
-    favoriteSubscribers.forEach((callback) => {
-        try {
-            callback([...favorites]);
-        } catch (error) {
-            console.error('Failed to notify favorites subscriber', error);
-        }
-    });
+function hydrateDatalist(listId, suffix = '') {
+  const list = document.getElementById(listId);
+  if (!list) return;
+  list.innerHTML = '';
+  loadFavorites().forEach((fav) => {
+    const option = document.createElement('option');
+    option.value = `https://github.com/${fav.owner}/${fav.repo}${suffix}`;
+    list.appendChild(option);
+  });
 }
 
-function getViewFromRoute(routeId = '') {
-    return ROUTE_TO_VIEW[routeId.replace('#', '')] || 'home';
+function hydrateDatalists() {
+  hydrateDatalist('mapper-datalist');
+  hydrateDatalist('releases-datalist');
+  hydrateDatalist('patch-datalist', '/commit/');
 }
 
-function hydrateSuggestionList(listId, favorites, suffix = '') {
-    const datalist = getDynamicElement(listId);
-    if (!datalist) return;
-    datalist.innerHTML = '';
+function toggleToken(buttonId, containerId) {
+  const button = document.getElementById(buttonId);
+  const container = document.getElementById(containerId);
+  if (!button || !container) return;
 
-    favorites.forEach((fav) => {
-        const option = document.createElement('option');
-        option.value = `https://github.com/${fav.owner}/${fav.repo}${suffix}`;
-        datalist.appendChild(option);
-    });
+  const labelNode = button.querySelector('.token-toggle-label');
+  const isOpen = button.getAttribute('aria-expanded') === 'true';
+  const nextState = !isOpen;
+
+  button.setAttribute('aria-expanded', nextState ? 'true' : 'false');
+  container.hidden = !nextState;
+  if (labelNode) {
+    labelNode.textContent = nextState ? 'Hide Settings' : 'Token Settings';
+  }
 }
 
-function renderQuickFavorites(chipContainer, emptyState, onSelect) {
-    if (!chipContainer || !emptyState) return;
-    const favorites = loadFavorites();
-
-    chipContainer.innerHTML = '';
-    if (!favorites.length) {
-        emptyState.style.display = 'grid';
-        return;
-    }
-
-    emptyState.style.display = 'none';
-    favorites.slice(0, 8).forEach((fav) => {
-        const button = document.createElement('button');
-        button.type = 'button';
-        button.className = 'favorite-pill';
-        button.innerHTML = `
-            <span class="material-symbols-outlined">star</span>
-            <span>${fav.owner}/${fav.repo}</span>
-        `;
-        button.addEventListener('click', () => onSelect?.(fav));
-        chipContainer.appendChild(button);
-    });
+function showError(elementId, message) {
+  const el = document.getElementById(elementId);
+  if (!el) return;
+  el.textContent = message;
+  el.style.display = 'block';
 }
 
-function setActiveGithubView(targetView = 'home') {
-    const normalized = targetView || 'home';
-    const shell = document.querySelector('.github-tools-shell');
-    if (shell) {
-        shell.dataset.activeView = normalized;
-    }
-
-    document.querySelectorAll('[data-view-section]').forEach((section) => {
-        const isMatch = section.dataset.viewSection === normalized;
-        section.toggleAttribute('hidden', !isMatch);
-    });
-
-    document.querySelectorAll('[data-view-target]').forEach((button) => {
-        button.classList.toggle('is-active', button.dataset.viewTarget === normalized);
-    });
+function hideError(elementId) {
+  const el = document.getElementById(elementId);
+  if (!el) return;
+  el.style.display = 'none';
 }
 
-function setupGithubViewNavigation() {
-    const hashView = getViewFromRoute(window.location.hash || '');
-    setActiveGithubView(hashView);
-
-    document.querySelectorAll('[data-view-target]').forEach((button) => {
-        button.addEventListener('click', () => {
-            const view = button.dataset.viewTarget;
-            if (!view) return;
-            setActiveGithubView(view);
-        });
-    });
-
-    return setActiveGithubView;
+function setButtonLoading(button, isLoading, label, loadingLabel) {
+  if (!button) return;
+  if (isLoading) {
+    button.setAttribute('data-original-label', label);
+    button.disabled = true;
+    button.innerHTML = `<span slot="icon" class="material-symbols-outlined rotating">progress_activity</span>${loadingLabel}`;
+  } else {
+    button.disabled = false;
+    button.innerHTML = button.getAttribute('data-original-label') || label;
+  }
 }
 
-function setFavoriteButtonState(button, isActive, label = 'Favorite', isDisabled = false) {
-    if (!button) return;
-    button.classList.toggle('is-active', Boolean(isActive));
-    button.classList.toggle('is-disabled', Boolean(isDisabled));
-    button.disabled = Boolean(isDisabled);
-    button.setAttribute('aria-disabled', isDisabled ? 'true' : 'false');
-    button.setAttribute('aria-pressed', isActive ? 'true' : 'false');
-
-    const icon = button.querySelector('.material-symbols-outlined');
-    const labelNode = button.querySelector('.favorite-label');
-
-    if (icon) {
-        icon.textContent = isActive ? 'star' : 'star_border';
-        icon.classList.toggle('is-filled', Boolean(isActive));
-    }
-
-    if (labelNode) {
-        labelNode.textContent = isActive ? 'Favorited' : label;
-    }
+function copyWithFeedback(buttonId, text) {
+  const button = document.getElementById(buttonId);
+  if (!button) return;
+  const original = button.innerHTML;
+  navigator.clipboard.writeText(text || '');
+  button.innerHTML = '<span class="material-symbols-outlined">check_circle</span>Copied';
+  setTimeout(() => {
+    button.innerHTML = original;
+  }, 1800);
 }
 
-function updateFavoriteButtonState(button, parsedRepo, label = 'Favorite') {
-    const isDisabled = !parsedRepo;
-    const isFav = parsedRepo && isFavorite(parsedRepo.owner, parsedRepo.repo);
-    setFavoriteButtonState(button, Boolean(isFav), label, isDisabled);
-    return isFav;
-}
+function renderFavoritesGrid() {
+  const grid = document.getElementById('favorites-grid');
+  const empty = document.getElementById('favorites-empty');
+  if (!grid || !empty) return;
 
-function validateInput(url, buttons = [], parser = parseGithubUrl) {
-    const parsed = parser ? parser(url.trim()) : null;
-    const isValid = Boolean(parsed);
-    buttons.forEach((btn) => {
-        if (!btn) return;
-        btn.disabled = !isValid;
-        btn.setAttribute('aria-disabled', !isValid ? 'true' : 'false');
-    });
-    return { parsed, isValid };
-}
+  const favorites = loadFavorites();
+  grid.innerHTML = '';
 
-function initTokenToggle(buttonId, sectionId, inputId) {
-    const toggleButton = getDynamicElement(buttonId);
-    const section = getDynamicElement(sectionId);
-    const input = getDynamicElement(inputId);
-    if (!toggleButton || !section) return;
+  if (!favorites.length) {
+    empty.style.display = 'flex';
+    return;
+  }
 
-    const labelNode = toggleButton.querySelector('.token-toggle-label');
-    const defaultLabel = toggleButton.dataset?.label || 'Token Settings';
-    const openLabel = toggleButton.dataset?.openLabel || 'Hide token field';
+  empty.style.display = 'none';
 
-    let isOpen = false;
-    const syncState = () => {
-        section.hidden = !isOpen;
-        toggleButton.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
-        toggleButton.classList.toggle('is-open', isOpen);
-        if (labelNode) {
-            labelNode.textContent = isOpen ? openLabel : defaultLabel;
-        }
-    };
+  favorites.forEach((fav) => {
+    const card = document.createElement('div');
+    card.className = 'gh-card';
+    card.innerHTML = `
+      <header>
+        <div>
+          <div class="gh-meta">
+            <span class="material-symbols-outlined">folder_open</span>
+            <span>${fav.owner}</span>
+          </div>
+          <h3 title="${fav.repo}">${fav.repo}</h3>
+        </div>
+        <button type="button" class="gh-pill-button" aria-label="Remove favorite">
+          <span class="material-symbols-outlined">star</span>
+          <span class="favorite-label">Favorited</span>
+        </button>
+      </header>
+      <div class="gh-actions">
+        <md-filled-tonal-button class="favorite-map" data-url="https://github.com/${fav.owner}/${fav.repo}">
+          <span slot="icon" class="material-symbols-outlined">terminal</span>
+          Map
+        </md-filled-tonal-button>
+        <md-filled-tonal-button class="favorite-stats" data-url="https://github.com/${fav.owner}/${fav.repo}">
+          <span slot="icon" class="material-symbols-outlined">bar_chart</span>
+          Stats
+        </md-filled-tonal-button>
+      </div>
+    `;
 
-    toggleButton.addEventListener('click', () => {
-        isOpen = !isOpen;
-        syncState();
-        if (isOpen && input && typeof input.focus === 'function') {
-            setTimeout(() => input.focus(), 50);
-        }
+    const removeBtn = card.querySelector('button');
+    removeBtn?.addEventListener('click', () => {
+      toggleFavorite(fav.owner, fav.repo);
     });
 
-    syncState();
-}
-
-function setNavigationIntent(target, url) {
-    localStorage.setItem(INTENT_KEY, JSON.stringify({ target, url }));
-}
-
-function consumeNavigationIntent() {
-    try {
-        const stored = localStorage.getItem(INTENT_KEY);
-        if (!stored) return null;
-        localStorage.removeItem(INTENT_KEY);
-        return JSON.parse(stored);
-    } catch (e) {
-        return null;
-    }
-}
-
-function prefillToolInput(target, url) {
-    const inputMap = {
-        'repo-mapper': 'repoUrl',
-        'release-stats': 'releaseUrl',
-        'git-patch': 'commitUrl',
-    };
-
-    const inputId = inputMap[target];
-    if (!inputId || !url) return;
-
-    const input = getDynamicElement(inputId);
-    if (input) {
-        input.value = url;
-        input.dispatchEvent(new Event('input', { bubbles: true }));
-    }
-}
-
-function submitToolForm(target) {
-    const formMap = {
-        'repo-mapper': 'repoMapperForm',
-        'release-stats': 'releaseStatsForm',
-        'git-patch': 'gitPatchForm',
-    };
-
-    const formId = formMap[target];
-    const form = formId ? getDynamicElement(formId) : null;
-    if (form && typeof form.requestSubmit === 'function') {
-        setTimeout(() => form.requestSubmit(), 80);
-    }
-}
-
-function renderFavoritesGrid(listElement, emptyElement, onNavigate) {
-    const favorites = loadFavorites();
-    if (!listElement || !emptyElement) return;
-
-    if (favorites.length === 0) {
-        listElement.innerHTML = '';
-        emptyElement.style.display = 'grid';
-        return;
-    }
-
-    emptyElement.style.display = 'none';
-    listElement.innerHTML = '';
-
-    favorites.forEach((repo) => {
-        const card = document.createElement('div');
-        card.className = 'github-favorite-card';
-        card.innerHTML = `
-            <header>
-                <div>
-                    <div class="meta">
-                        <span class="material-symbols-outlined" aria-hidden="true">folder_open</span>
-                        <span>${repo.owner}</span>
-                    </div>
-                    <h3 title="${repo.repo}">${repo.repo}</h3>
-                </div>
-                <button type="button" class="favorite-button is-active" aria-label="Remove favorite">
-                    <span class="material-symbols-outlined">star</span>
-                    <span class="favorite-label">Favorited</span>
-                </button>
-            </header>
-            <div class="actions">
-                <md-filled-tonal-button class="favorite-map" data-url="https://github.com/${repo.owner}/${repo.repo}">
-                    <span slot="icon" class="material-symbols-outlined">terminal</span>
-                    Map
-                </md-filled-tonal-button>
-                <md-filled-tonal-button class="favorite-stats" data-url="https://github.com/${repo.owner}/${repo.repo}">
-                    <span slot="icon" class="material-symbols-outlined">bar_chart</span>
-                    Stats
-                </md-filled-tonal-button>
-            </div>
-        `;
-
-        const removeButton = card.querySelector('button.favorite-button');
-        removeButton?.addEventListener('click', () => {
-            toggleFavorite(repo.owner, repo.repo);
-            renderFavoritesGrid(listElement, emptyElement, onNavigate);
-        });
-
-        const mapButton = card.querySelector('md-filled-tonal-button.favorite-map');
-        mapButton?.addEventListener('click', () => onNavigate('repo-mapper', mapButton.dataset.url));
-
-        const statsButton = card.querySelector('md-filled-tonal-button.favorite-stats');
-        statsButton?.addEventListener('click', () => onNavigate('release-stats', statsButton.dataset.url));
-
-        listElement.appendChild(card);
+    const mapBtn = card.querySelector('.favorite-map');
+    mapBtn?.addEventListener('click', () => {
+      window.location.href = '#repo-mapper';
+      const mapperInput = document.getElementById('mapper-url');
+      if (mapperInput) {
+        mapperInput.value = mapBtn.dataset.url;
+        mapperInput.dispatchEvent(new Event('input'));
+      }
     });
+
+    const statsBtn = card.querySelector('.favorite-stats');
+    statsBtn?.addEventListener('click', () => {
+      window.location.href = '#release-stats';
+      const releaseInput = document.getElementById('releases-url');
+      if (releaseInput) {
+        releaseInput.value = statsBtn.dataset.url;
+        releaseInput.dispatchEvent(new Event('input'));
+      }
+    });
+
+    grid.appendChild(card);
+  });
 }
 
-function handleFavoriteToggle(button, parsedRepo, label = 'Favorite') {
-    if (!button || !parsedRepo) return;
-    const nextFavorites = toggleFavorite(parsedRepo.owner, parsedRepo.repo);
-    const newState = isFavorite(parsedRepo.owner, parsedRepo.repo);
-    setFavoriteButtonState(button, newState, label);
-    return nextFavorites;
+function handleFavoriteToggle(buttonId, parsedRepo) {
+  const button = document.getElementById(buttonId);
+  if (!button || !parsedRepo) return;
+  toggleFavorite(parsedRepo.owner, parsedRepo.repo);
+  setFavoriteButtonState(button, parsedRepo);
 }
 
-// Helper to show/hide elements and manage loading/error states
-function updateUIState(elementId, show, content = '', isError = false) {
-    const element = getDynamicElement(elementId);
-    if (element) {
-        element.style.display = show ? 'block' : 'none';
-        if (content) {
-            if (isError) {
-                element.classList.add('error-message');
-                element.classList.remove('success-message');
-            } else {
-                element.classList.remove('error-message');
-                element.classList.add('success-message');
-            }
-            element.innerHTML = content;
-        }
-    }
-}
-
-function setLoading(buttonId, isLoading, originalText, loadingText = 'Loading...') {
-    const button = getDynamicElement(buttonId);
-    if (button) {
-        if (isLoading) {
-            button.setAttribute('data-original-text', originalText);
-            button.innerHTML = `<span class="material-symbols-outlined rotating">progress_activity</span> ${loadingText}`;
-            button.disabled = true;
-        } else {
-            button.innerHTML = button.getAttribute('data-original-text') || originalText;
-            button.disabled = false;
-        }
-    }
-}
-
-// --- Repo Mapper ---
 export function initRepoMapper() {
-    const form = getDynamicElement('repoMapperForm');
-    if (!form) return;
+  const form = document.getElementById('mapper-form');
+  if (!form) return;
 
-    const urlInput = getDynamicElement('repoUrl');
-    const tokenInput = getDynamicElement('repoToken');
-    const resultDiv = getDynamicElement('repoMapperResult');
-    const outputCode = getDynamicElement('repoMapperOutput');
-    const errorDiv = getDynamicElement('repoMapperError');
-    const foldersSpan = getDynamicElement('repoMapperFolders');
-    const filesSpan = getDynamicElement('repoMapperFiles');
-    const copyButton = getDynamicElement('copyRepoMapper');
-    const formatAsciiButton = getDynamicElement('formatAscii');
-    const formatPathsButton = getDynamicElement('formatPaths');
-    const submitButton = form.querySelector('.search-card-submit-button');
-    const favoriteButton = getDynamicElement('repoFavoriteButton');
+  loadFavorites();
+  hydrateDatalists();
 
-    const syncSuggestions = (favorites = loadFavorites()) => {
-        hydrateSuggestionList('repoUrlSuggestions', favorites);
+  const urlInput = document.getElementById('mapper-url');
+  const tokenInput = document.getElementById('mapper-token');
+  const tokenToggle = document.getElementById('mapper-token-toggle');
+  const favoriteButton = document.getElementById('mapper-fav-btn');
+  const errorEl = document.getElementById('mapper-error');
+  const resultEl = document.getElementById('mapper-result');
+  const codeEl = document.getElementById('mapper-code');
+  const foldersEl = document.getElementById('mapper-stats-folders');
+  const filesEl = document.getElementById('mapper-stats-files');
+  const copyBtn = document.getElementById('mapper-copy-btn');
+  const asciiBtn = document.getElementById('btn-format-ascii');
+  const pathsBtn = document.getElementById('btn-format-paths');
+  const submitBtn = document.getElementById('mapper-submit');
+
+  const updateStateFromInput = () => {
+    const parsed = parseGithubUrl(urlInput?.value || '');
+    state.mapper.parsedRepo = parsed;
+    setFavoriteButtonState(favoriteButton, parsed);
+    return parsed;
+  };
+
+  urlInput?.addEventListener('input', updateStateFromInput);
+
+  favoriteButton?.addEventListener('click', () => {
+    const parsed = updateStateFromInput();
+    if (parsed) handleFavoriteToggle('mapper-fav-btn', parsed);
+  });
+
+  tokenToggle?.addEventListener('click', () => toggleToken('mapper-token-toggle', 'mapper-token-container'));
+
+  const setFormat = (format) => {
+    state.mapper.format = format;
+    asciiBtn?.classList.toggle('active', format === 'ascii');
+    pathsBtn?.classList.toggle('active', format === 'paths');
+    if (state.mapper.rawPaths.length) renderMapperOutput();
+  };
+
+  asciiBtn?.addEventListener('click', () => setFormat('ascii'));
+  pathsBtn?.addEventListener('click', () => setFormat('paths'));
+
+  const renderMapperOutput = () => {
+    const setStats = ({ files, folders }) => {
+      if (filesEl) filesEl.textContent = files;
+      if (foldersEl) foldersEl.textContent = folders;
     };
 
-    let rawPaths = [];
-    let currentFormat = 'ascii';
-    let stats = { files: 0, folders: 0 };
-    let parsedRepo = null;
+    const output = state.mapper.format === 'paths'
+      ? generatePathList(state.mapper.rawPaths, setStats)
+      : generateAsciiTree(state.mapper.rawPaths, setStats);
 
-    initTokenToggle('repoTokenToggle', 'repoTokenContainer', 'repoToken');
+    if (codeEl) codeEl.textContent = output;
+    resultEl?.removeAttribute('hidden');
+  };
 
-    const setStats = (newStats) => {
-        stats = newStats;
-        if (foldersSpan) foldersSpan.textContent = `${stats.folders} Folders`;
-        if (filesSpan) filesSpan.textContent = `${stats.files} Files`;
-    };
+  copyBtn?.addEventListener('click', () => copyWithFeedback('mapper-copy-btn', codeEl?.textContent || ''));
 
-    const updateRepoControls = () => {
-        const { parsed, isValid } = validateInput(urlInput?.value || '', [submitButton]);
-        parsedRepo = parsed;
-        updateFavoriteButtonState(favoriteButton, parsedRepo, 'Favorite');
-        if (formatAsciiButton && formatPathsButton) {
-            const disabledClass = 'is-disabled';
-            [formatAsciiButton, formatPathsButton].forEach((btn) => {
-                btn.classList.toggle(disabledClass, !isValid);
-                btn.disabled = !isValid && btn.tagName === 'BUTTON';
-            });
-        }
-    };
-
-    const updateOutput = () => {
-        if (rawPaths.length > 0) {
-            let output = '';
-            if (currentFormat === 'ascii') {
-                output = generateAsciiTree(rawPaths, setStats);
-            } else {
-                output = generatePathList(rawPaths, setStats);
-            }
-            if (outputCode) outputCode.textContent = output;
-            updateUIState('repoMapperResult', true);
-        } else {
-            updateUIState('repoMapperResult', false);
-        }
-    };
-
-    updateRepoControls();
-    syncSuggestions();
-    subscribeToFavorites(syncSuggestions);
-
-    form.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        updateUIState('repoMapperError', false);
-        updateUIState('repoMapperResult', false);
-        setLoading(submitButton.id, true, 'Generate Map');
-
-        const url = urlInput.value.trim();
-        const token = tokenInput.value;
-        const parsed = parseGithubUrl(url);
-
-        if (!parsed) {
-            updateUIState('repoMapperError', true, 'Invalid GitHub URL. Expected format: https://github.com/owner/repo', true);
-            setLoading(submitButton.id, false, 'Generate Map');
-            updateRepoControls();
-            return;
-        }
-
-        parsedRepo = parsed;
-        updateRepoControls();
-
-        try {
-            const data = await fetchRepositoryTree(parsed, token);
-            rawPaths = data.tree;
-            if (data.truncated) {
-                updateUIState('repoMapperError', true, 'Warning: The repository is massive. Output truncated by GitHub API.', false);
-            }
-            updateOutput();
-        } catch (err) {
-            updateUIState('repoMapperError', true, err.message, true);
-        } finally {
-            setLoading(submitButton.id, false, 'Generate Map');
-            updateRepoControls();
-        }
-    });
-
-    formatAsciiButton.addEventListener('click', () => {
-        currentFormat = 'ascii';
-        formatAsciiButton.classList.add('active');
-        formatPathsButton.classList.remove('active');
-        updateOutput();
-    });
-
-    formatPathsButton.addEventListener('click', () => {
-        currentFormat = 'paths';
-        formatPathsButton.classList.add('active');
-        formatAsciiButton.classList.remove('active');
-        updateOutput();
-    });
-
-    copyButton.addEventListener('click', () => {
-        if (outputCode && outputCode.textContent) {
-            navigator.clipboard.writeText(outputCode.textContent).then(() => {
-                const originalText = copyButton.innerHTML;
-                copyButton.innerHTML = '<span class="material-symbols-outlined check_circle">check_circle</span> Copied';
-                setTimeout(() => {
-                    copyButton.innerHTML = originalText;
-                }, 2000);
-            });
-        }
-    });
-
-    urlInput?.addEventListener('input', updateRepoControls);
-
-    favoriteButton?.addEventListener('click', () => {
-        if (!parsedRepo || favoriteButton.disabled) return;
-        handleFavoriteToggle(favoriteButton, parsedRepo);
-    });
-
-    const intent = consumeNavigationIntent();
-    if (intent?.target === 'repo-mapper' && intent.url && urlInput) {
-        urlInput.value = intent.url;
-        parsedRepo = parseGithubUrl(intent.url);
-        updateRepoControls();
-        setTimeout(() => form.requestSubmit(), 50);
+  form.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    const parsed = updateStateFromInput();
+    if (!parsed) {
+      showError('mapper-error', 'Invalid GitHub URL');
+      return;
     }
+
+    hideError('mapper-error');
+    resultEl?.setAttribute('hidden', 'hidden');
+
+    setButtonLoading(submitBtn, true, 'Generate Map', 'Processing...');
+
+    try {
+      const { tree, truncated } = await fetchRepositoryTree(parsed, tokenInput?.value || '');
+      state.mapper.rawPaths = tree || [];
+      if (truncated) {
+        showError('mapper-error', 'Repo is large, output may be truncated.');
+      }
+      renderMapperOutput();
+    } catch (error) {
+      showError('mapper-error', error.message || 'Failed to fetch repository.');
+    } finally {
+      setButtonLoading(submitBtn, false, 'Generate Map');
+    }
+  });
+
+  updateStateFromInput();
 }
 
-// --- Release Stats ---
 export function initReleaseStats() {
-    const form = getDynamicElement('releaseStatsForm');
-    if (!form) return;
+  const form = document.getElementById('releases-form');
+  if (!form) return;
 
-    const urlInput = getDynamicElement('releaseUrl');
-    const tokenInput = getDynamicElement('releaseToken');
-    const resultDiv = getDynamicElement('releaseStatsResult');
-    const errorDiv = getDynamicElement('releaseStatsError');
-    const submitButton = form.querySelector('.search-card-submit-button');
-    const favoriteButton = getDynamicElement('releaseFavoriteButton');
-    const releaseRepoChip = getDynamicElement('releaseRepoChip');
-    const releaseDownloadsChip = getDynamicElement('releaseDownloadsChip');
+  loadFavorites();
+  hydrateDatalists();
 
-    const syncSuggestions = (favorites = loadFavorites()) => {
-        hydrateSuggestionList('releaseUrlSuggestions', favorites);
-    };
+  const urlInput = document.getElementById('releases-url');
+  const tokenInput = document.getElementById('releases-token');
+  const tokenToggle = document.getElementById('releases-token-toggle');
+  const favoriteButton = document.getElementById('releases-fav-btn');
+  const errorEl = document.getElementById('releases-error');
+  const resultEl = document.getElementById('releases-result');
+  const totalDownloadsEl = document.getElementById('rel-total-downloads');
+  const relCountEl = document.getElementById('rel-count');
+  const listEl = document.getElementById('rel-list');
+  const assetsEl = document.getElementById('rel-assets-list');
+  const detailNameEl = document.getElementById('rel-detail-name');
+  const detailTagEl = document.getElementById('rel-detail-tag');
+  const detailDateEl = document.getElementById('rel-detail-date');
+  const detailDownloadsEl = document.getElementById('rel-detail-downloads');
+  const submitBtn = document.getElementById('releases-submit');
 
-    const selectedReleaseName = getDynamicElement('selectedReleaseName');
-    const selectedReleaseMeta = getDynamicElement('selectedReleaseMeta');
-    const selectedReleaseDownloads = getDynamicElement('selectedReleaseDownloads');
-    const selectedReleaseAssets = getDynamicElement('selectedReleaseAssets');
-    const totalDownloads = getDynamicElement('totalDownloads');
-    const totalReleases = getDynamicElement('totalReleases');
-    const releaseList = getDynamicElement('releaseList');
+  const updateStateFromInput = () => {
+    const parsed = parseGithubUrl(urlInput?.value || '');
+    state.releases.parsedRepo = parsed;
+    setFavoriteButtonState(favoriteButton, parsed);
+    return parsed;
+  };
 
-    let currentData = null;
-    let selectedReleaseIndex = 0;
-    let parsedRepo = null;
+  urlInput?.addEventListener('input', updateStateFromInput);
 
-    initTokenToggle('releaseTokenToggle', 'releaseTokenContainer', 'releaseToken');
+  favoriteButton?.addEventListener('click', () => {
+    const parsed = updateStateFromInput();
+    if (parsed) handleFavoriteToggle('releases-fav-btn', parsed);
+  });
 
-    const syncReleaseSummary = () => {
-        if (releaseRepoChip) {
-            const text = releaseRepoChip.querySelector('.chip-text');
-            if (text) {
-                text.textContent = parsedRepo ? `${parsedRepo.owner}/${parsedRepo.repo}` : 'Repository';
-            }
-        }
-        if (releaseDownloadsChip) {
-            const text = releaseDownloadsChip.querySelector('.chip-text');
-            if (text) {
-                const downloads = currentData ? currentData.totalDownloads.toLocaleString() : '—';
-                text.textContent = currentData ? `${downloads} downloads` : 'Awaiting data';
-            }
-        }
-    };
+  tokenToggle?.addEventListener('click', () => toggleToken('releases-token-toggle', 'releases-token-container'));
 
-    const updateReleaseControls = () => {
-        const { parsed, isValid } = validateInput(urlInput?.value || '', [submitButton]);
-        parsedRepo = parsed;
-        updateFavoriteButtonState(favoriteButton, parsedRepo, 'Favorite');
-        syncReleaseSummary();
-    };
-
-    const renderReleaseDetails = () => {
-        if (!currentData || !currentData.releases || currentData.releases.length === 0) return;
-
-        const activeRelease = currentData.releases[selectedReleaseIndex];
-        if (!activeRelease) return;
-
-        if (selectedReleaseName) selectedReleaseName.textContent = activeRelease.name || activeRelease.tagName;
-        if (selectedReleaseMeta) {
-            selectedReleaseMeta.innerHTML = `
-                <span class="material-symbols-outlined">label</span>
-                <span>${activeRelease.tagName}</span>
-                <span>•</span>
-                <span>${new Date(activeRelease.publishedAt).toLocaleDateString()}</span>
-            `;
-        }
-        if (selectedReleaseDownloads) {
-            selectedReleaseDownloads.innerHTML = `
-                <span class="text-[#cac4d0] font-medium">Downloads</span>
-                <span class="text-2xl font-bold text-[#e6e1e5]">${activeRelease.totalDownloads.toLocaleString()}</span>
-            `;
-        }
-
-        if (selectedReleaseAssets) {
-            selectedReleaseAssets.innerHTML = '';
-            if (activeRelease.assets.length === 0) {
-                selectedReleaseAssets.innerHTML = '<div class="text-center py-8 text-[#cac4d0] italic">No assets in this release.</div>';
-            } else {
-                const maxAssetDownloads = Math.max(...activeRelease.assets.map(a => a.downloads));
-                activeRelease.assets.forEach(asset => {
-                    const assetDiv = document.createElement('div');
-                    assetDiv.className = 'group';
-                    assetDiv.innerHTML = `
-                        <div class="flex justify-between text-sm mb-1.5">
-                            <span class="text-[#e6e1e5] font-medium truncate max-w-[70%]">${asset.name}</span>
-                            <span class="text-[#cac4d0]">${asset.downloads.toLocaleString()}</span>
-                        </div>
-                        <div class="h-2 w-full bg-[#49454f]/40 rounded-full overflow-hidden">
-                            <div 
-                                class="h-full bg-[#e6e1e5] rounded-full"
-                                style="width: ${maxAssetDownloads > 0 ? (asset.downloads / maxAssetDownloads) * 100 : 0}%"
-                            ></div>
-                        </div>
-                    `;
-                    selectedReleaseAssets.appendChild(assetDiv);
-                });
-            }
-        }
-    };
-
-    const renderReleaseList = () => {
-        if (!currentData || !currentData.releases || currentData.releases.length === 0) return;
-
-        if (totalDownloads) totalDownloads.textContent = currentData.totalDownloads.toLocaleString();
-        if (totalReleases) totalReleases.textContent = `${currentData.releases.length} Found`;
-        syncReleaseSummary();
-
-        if (releaseList) {
-            releaseList.innerHTML = '';
-            const maxReleaseDownloads = Math.max(...currentData.releases.map(r => r.totalDownloads));
-
-            currentData.releases.forEach((release, idx) => {
-                const isSelected = idx === selectedReleaseIndex;
-                const button = document.createElement('button');
-                button.className = `w-full text-left p-3 rounded-xl transition-all border ${
-                    isSelected 
-                        ? 'bg-[#e6e1e5] border-[#e6e1e5] text-[#141218]' 
-                        : 'bg-transparent border-transparent hover:bg-[#2b2930] text-[#cac4d0]'
-                }`;
-                button.innerHTML = `
-                    <div class="flex justify-between items-center mb-2">
-                        <span class="font-medium truncate max-w-[60%] ${isSelected ? 'text-black' : 'text-[#e6e1e5]'}">
-                            ${release.name || release.tagName}
-                        </span>
-                        <span class="text-sm ${isSelected ? 'text-black/70' : 'text-[#cac4d0]'}">
-                            ${release.totalDownloads.toLocaleString()}
-                        </span>
-                    </div>
-                    <div class="h-1 w-full rounded-full overflow-hidden ${isSelected ? 'bg-black/10' : 'bg-[#49454f]/40'}">
-                        <div 
-                            class="h-full rounded-full ${isSelected ? 'bg-black' : 'bg-[#cac4d0]'}"
-                            style="width: ${maxReleaseDownloads > 0 ? (release.totalDownloads / maxReleaseDownloads) * 100 : 0}%"
-                        ></div>
-                    </div>
-                `;
-                button.addEventListener('click', () => {
-                    selectedReleaseIndex = idx;
-                    renderReleaseList();
-                    renderReleaseDetails();
-                });
-                releaseList.appendChild(button);
-            });
-        }
-    };
-
-    updateReleaseControls();
-    syncSuggestions();
-    subscribeToFavorites(syncSuggestions);
-
-    form.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        updateUIState('releaseStatsError', false);
-        updateUIState('releaseStatsResult', false);
-        setLoading(submitButton.id, true, 'Analyze');
-
-        const url = urlInput.value.trim();
-        const token = tokenInput.value;
-        const parsed = parseGithubUrl(url);
-
-        if (!parsed) {
-            updateUIState('releaseStatsError', true, 'Invalid GitHub URL. Format: https://github.com/owner/repo', true);
-            setLoading(submitButton.id, false, 'Analyze');
-            updateReleaseControls();
-            return;
-        }
-
-        parsedRepo = parsed;
-        updateReleaseControls();
-
-        try {
-            currentData = await fetchReleaseStats(parsed, token);
-            selectedReleaseIndex = 0; // Reset to latest
-            renderReleaseList();
-            renderReleaseDetails();
-            updateUIState('releaseStatsResult', true);
-            syncReleaseSummary();
-        } catch (err) {
-            updateUIState('releaseStatsError', true, err.message, true);
-        } finally {
-            setLoading(submitButton.id, false, 'Analyze');
-            updateReleaseControls();
-        }
-    });
-
-    urlInput?.addEventListener('input', updateReleaseControls);
-
-    favoriteButton?.addEventListener('click', () => {
-        if (!parsedRepo || favoriteButton.disabled) return;
-        handleFavoriteToggle(favoriteButton, parsedRepo);
-    });
-
-    const intent = consumeNavigationIntent();
-    if (intent?.target === 'release-stats' && intent.url && urlInput) {
-        urlInput.value = intent.url;
-        parsedRepo = parseGithubUrl(intent.url);
-        updateReleaseControls();
-        setTimeout(() => form.requestSubmit(), 50);
+  const renderAssets = (assets) => {
+    if (!assetsEl) return;
+    if (!assets.length) {
+      assetsEl.innerHTML = '<div class="gh-meta">No assets.</div>';
+      return;
     }
+    const maxAsset = Math.max(...assets.map((a) => a.downloads));
+    assetsEl.innerHTML = assets
+      .map(
+        (asset) => `
+          <div class="gh-asset">
+            <div class="gh-row" style="justify-content: space-between; align-items: center; gap: 0.5rem;">
+              <span style="font-weight: 600;">${asset.name}</span>
+              <span class="gh-meta">${asset.downloads.toLocaleString()}</span>
+            </div>
+            <div class="gh-asset-bar"><span style="width: ${maxAsset > 0 ? (asset.downloads / maxAsset) * 100 : 0}%"></span></div>
+          </div>
+        `,
+      )
+      .join('');
+  };
+
+  const renderReleaseList = () => {
+    if (!state.releases.data || !listEl) return;
+    const { releases } = state.releases.data;
+    const maxDownloads = Math.max(...releases.map((r) => r.totalDownloads));
+
+    listEl.innerHTML = releases
+      .map((release, idx) => {
+        const isActive = idx === state.releases.selectedIndex;
+        const percent = maxDownloads > 0 ? (release.totalDownloads / maxDownloads) * 100 : 0;
+        return `
+          <button type="button" class="gh-release-button ${isActive ? 'active' : ''}" data-index="${idx}">
+            <div class="gh-row" style="justify-content: space-between; align-items: center;">
+              <span style="font-weight: 600;" class="${isActive ? '' : 'gh-meta'}">${release.name}</span>
+              <span class="gh-meta" style="color: ${isActive ? 'inherit' : 'var(--app-secondary-text-color)'}">${release.totalDownloads.toLocaleString()}</span>
+            </div>
+            <div class="gh-release-bar"><span style="width:${percent}%;"></span></div>
+          </button>`;
+      })
+      .join('');
+
+    listEl.querySelectorAll('button[data-index]').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        state.releases.selectedIndex = Number(btn.dataset.index);
+        renderReleaseDetails();
+      });
+    });
+  };
+
+  const renderReleaseDetails = () => {
+    if (!state.releases.data) return;
+    const { releases } = state.releases.data;
+    const active = releases[state.releases.selectedIndex];
+    if (!active) return;
+
+    detailNameEl.textContent = active.name;
+    detailTagEl.textContent = active.tagName;
+    detailDateEl.textContent = new Date(active.publishedAt).toLocaleDateString();
+    detailDownloadsEl.textContent = active.totalDownloads.toLocaleString();
+
+    renderAssets(active.assets);
+    renderReleaseList();
+  };
+
+  const renderOverview = () => {
+    if (!state.releases.data) return;
+    const { totalDownloads, releases } = state.releases.data;
+    totalDownloadsEl.textContent = totalDownloads.toLocaleString();
+    relCountEl.textContent = `${releases.length} Found`;
+    renderReleaseDetails();
+  };
+
+  form.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    const parsed = updateStateFromInput();
+    if (!parsed) {
+      showError('releases-error', 'Invalid GitHub URL');
+      return;
+    }
+
+    hideError('releases-error');
+    resultEl?.setAttribute('hidden', 'hidden');
+    setButtonLoading(submitBtn, true, 'Analyze', 'Processing...');
+
+    try {
+      const data = await fetchReleaseStats(parsed, tokenInput?.value || '');
+      state.releases.data = data;
+      state.releases.selectedIndex = 0;
+      renderOverview();
+      resultEl?.removeAttribute('hidden');
+    } catch (error) {
+      showError('releases-error', error.message || 'Failed to fetch releases.');
+    } finally {
+      setButtonLoading(submitBtn, false, 'Analyze');
+    }
+  });
+
+  updateStateFromInput();
 }
 
-// --- Git Patch ---
 export function initGitPatch() {
-    const form = getDynamicElement('gitPatchForm');
-    if (!form) return;
+  const form = document.getElementById('patch-form');
+  if (!form) return;
 
-    const urlInput = getDynamicElement('commitUrl');
-    const tokenInput = getDynamicElement('patchToken');
-    const resultDiv = getDynamicElement('gitPatchResult');
-    const outputCode = getDynamicElement('patchContent');
-    const errorDiv = getDynamicElement('gitPatchError');
-    const copyButton = getDynamicElement('copyPatch');
-    const downloadButton = getDynamicElement('downloadPatch');
-    const submitButton = form.querySelector('.search-card-submit-button');
-    const favoriteButton = getDynamicElement('gitPatchFavoriteButton');
+  loadFavorites();
+  hydrateDatalists();
 
-    const syncSuggestions = (favorites = loadFavorites()) => {
-        hydrateSuggestionList('commitUrlSuggestions', favorites, '/commit/');
-    };
+  const urlInput = document.getElementById('patch-url');
+  const tokenInput = document.getElementById('patch-token');
+  const tokenToggle = document.getElementById('patch-token-toggle');
+  const favoriteButton = document.getElementById('patch-fav-btn');
+  const errorEl = document.getElementById('patch-error');
+  const resultEl = document.getElementById('patch-result');
+  const codeEl = document.getElementById('patch-code');
+  const copyBtn = document.getElementById('patch-copy-btn');
+  const downloadBtn = document.getElementById('patch-download-btn');
+  const submitBtn = document.getElementById('patch-submit');
 
-    initTokenToggle('gitPatchTokenToggle', 'gitPatchTokenContainer', 'patchToken');
+  const updateStateFromInput = () => {
+    const parsed = parseGithubCommitUrl(urlInput?.value || '');
+    state.patch.parsedRepo = parsed;
+    setFavoriteButtonState(favoriteButton, parsed);
+    return parsed;
+  };
 
-    let parsedRepo = null;
+  urlInput?.addEventListener('input', updateStateFromInput);
 
-    const updatePatchControls = () => {
-        const { parsed, isValid } = validateInput(urlInput?.value || '', [submitButton], parseGithubCommitUrl);
-        parsedRepo = parsed ? { owner: parsed.owner, repo: parsed.repo } : null;
-        updateFavoriteButtonState(favoriteButton, parsedRepo, 'Favorite');
-    };
+  favoriteButton?.addEventListener('click', () => {
+    const parsed = updateStateFromInput();
+    if (parsed) handleFavoriteToggle('patch-fav-btn', parsed);
+  });
 
-    updatePatchControls();
-    syncSuggestions();
-    subscribeToFavorites(syncSuggestions);
+  tokenToggle?.addEventListener('click', () => toggleToken('patch-token-toggle', 'patch-token-container'));
 
-    let patchContent = '';
+  copyBtn?.addEventListener('click', () => copyWithFeedback('patch-copy-btn', state.patch.content));
 
-    form.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        updateUIState('gitPatchError', false);
-        updateUIState('gitPatchResult', false);
-        setLoading(submitButton.id, true, 'Get Patch');
+  downloadBtn?.addEventListener('click', () => {
+    if (!state.patch.content) return;
+    const blob = new Blob([state.patch.content], { type: 'text/plain' });
+    const href = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = href;
+    link.download = state.patch.filename || 'git.patch';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(href);
+  });
 
-        const url = urlInput.value.trim();
-        const token = tokenInput.value;
-        const parsed = parseGithubCommitUrl(url);
+  form.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    const parsed = updateStateFromInput();
+    if (!parsed) {
+      showError('patch-error', 'Invalid Commit URL');
+      return;
+    }
 
-        if (!parsed) {
-            updateUIState('gitPatchError', true, 'Invalid Commit URL. Format: https://github.com/owner/repo/commit/sha', true);
-            setLoading(submitButton.id, false, 'Get Patch');
-            return;
-        }
+    hideError('patch-error');
+    resultEl?.setAttribute('hidden', 'hidden');
+    setButtonLoading(submitBtn, true, 'Get Patch', 'Fetching...');
 
-        parsedRepo = { owner: parsed.owner, repo: parsed.repo };
-        updatePatchControls();
+    try {
+      const patch = await fetchCommitPatch(parsed, tokenInput?.value || '');
+      state.patch.content = patch;
+      state.patch.filename = `${parsed.repo}-${parsed.commitSha.slice(0, 7)}.patch`;
+      if (codeEl) codeEl.textContent = patch;
+      resultEl?.removeAttribute('hidden');
+    } catch (error) {
+      showError('patch-error', error.message || 'Failed to fetch patch.');
+    } finally {
+      setButtonLoading(submitBtn, false, 'Get Patch');
+    }
+  });
 
-        try {
-            patchContent = await fetchCommitPatch(parsed, token);
-            if (outputCode) outputCode.textContent = patchContent;
-            updateUIState('gitPatchResult', true);
-        } catch (err) {
-            updateUIState('gitPatchError', true, err.message, true);
-        } finally {
-            setLoading(submitButton.id, false, 'Get Patch');
-        }
-    });
-
-    urlInput?.addEventListener('input', updatePatchControls);
-
-    favoriteButton?.addEventListener('click', () => {
-        if (!parsedRepo || favoriteButton.disabled) return;
-        handleFavoriteToggle(favoriteButton, parsedRepo);
-    });
-
-    copyButton.addEventListener('click', () => {
-        if (patchContent) {
-            navigator.clipboard.writeText(patchContent).then(() => {
-                const originalText = copyButton.innerHTML;
-                copyButton.innerHTML = '<span class="material-symbols-outlined check_circle">check_circle</span> Copied';
-                setTimeout(() => {
-                    copyButton.innerHTML = originalText;
-                }, 2000);
-            });
-        }
-    });
-
-    downloadButton.addEventListener('click', () => {
-        if (!patchContent) return;
-        const blob = new Blob([patchContent], { type: 'text/plain' });
-        const href = URL.createObjectURL(blob);
-        const link = document.createElement('a');
-        link.href = href;
-        const parsed = parseGithubCommitUrl(urlInput.value);
-        const filename = parsed ? `${parsed.repo}-${parsed.commitSha.substring(0, 7)}.patch` : 'git-patch.patch';
-        
-        link.download = filename;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        URL.revokeObjectURL(href);
-    });
+  updateStateFromInput();
 }
 
-export function initGithubFavorites(options = {}) {
-    const listEl = getDynamicElement('githubFavoritesList');
-    const emptyEl = getDynamicElement('githubFavoritesEmpty');
-    if (!listEl || !emptyEl) return;
-
-    const onNavigate = typeof options.onNavigate === 'function'
-        ? options.onNavigate
-        : (target, url) => {
-              setNavigationIntent(target, url);
-              window.location.hash = `#${target}`;
-          };
-
-    renderFavoritesGrid(listEl, emptyEl, onNavigate);
-}
-
-export function initGithubTools() {
-    const setView = setupGithubViewNavigation();
-
-    const quickFavoritesContainer = getDynamicElement('homeFavoritesChips');
-    const quickFavoritesEmpty = getDynamicElement('homeFavoritesEmpty');
-
-    const refreshFavoriteDrivenUI = (favorites = loadFavorites()) => {
-        renderQuickFavorites(quickFavoritesContainer, quickFavoritesEmpty, (fav) => {
-            const url = `https://github.com/${fav.owner}/${fav.repo}`;
-            setNavigationIntent('repo-mapper', url);
-            setView('mapper');
-            prefillToolInput('repo-mapper', url);
-            submitToolForm('repo-mapper');
-        });
-
-        hydrateSuggestionList('repoUrlSuggestions', favorites);
-        hydrateSuggestionList('releaseUrlSuggestions', favorites);
-        hydrateSuggestionList('commitUrlSuggestions', favorites, '/commit/');
-    };
-
-    refreshFavoriteDrivenUI();
-    subscribeToFavorites(refreshFavoriteDrivenUI);
-
-    initRepoMapper();
-    initReleaseStats();
-    initGitPatch();
-
-    initGithubFavorites({
-        onNavigate: (target, url) => {
-            const view = getViewFromRoute(target);
-            setView(view);
-            if (url) {
-                setNavigationIntent(target, url);
-                prefillToolInput(target, url);
-                submitToolForm(target);
-            }
-        },
-    });
-
-    const initialView = getViewFromRoute(window.location.hash || '');
-    setView(initialView);
+export function initGithubFavorites() {
+  loadFavorites();
+  hydrateDatalists();
+  renderFavoritesGrid();
 }
