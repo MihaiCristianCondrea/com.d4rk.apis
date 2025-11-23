@@ -7,17 +7,25 @@
     <form id="gitPatchForm" class="search-card">
         <div class="search-card-field-container">
             <md-outlined-text-field label="Commit URL" id="commitUrl" required placeholder="https://github.com/owner/repo/commit/sha" class="search-card-input"></md-outlined-text-field>
-            <details class="github-tools-surface" style="padding: 0.75rem 1rem;">
-                <summary class="flex items-center gap-2 cursor-pointer">
+            <div class="token-toggle">
+                <button
+                    type="button"
+                    class="token-toggle-button"
+                    id="gitPatchTokenToggle"
+                    aria-controls="gitPatchTokenContainer"
+                    data-label="Add GitHub token (optional)"
+                    data-open-label="Hide token field"
+                >
                     <span class="material-symbols-outlined">key_vertical</span>
-                    Token Settings
-                </summary>
-                <div class="mt-3">
+                    <span class="token-toggle-label">Add GitHub token (optional)</span>
+                    <span class="material-symbols-outlined token-toggle-chevron">expand_more</span>
+                </button>
+                <div class="token-input" id="gitPatchTokenContainer" hidden>
                     <md-outlined-text-field label="GitHub Token (Optional)" id="patchToken" placeholder="Enter token for private repos" class="search-card-input"></md-outlined-text-field>
                 </div>
-            </details>
+            </div>
         </div>
-        <md-filled-button type="submit" class="search-card-submit-button" id="gitPatchSubmit">
+        <md-filled-button type="submit" class="search-card-submit-button" id="gitPatchSubmit" disabled>
             <span slot="icon" class="material-symbols-outlined">difference</span>
             Get Patch
         </md-filled-button>

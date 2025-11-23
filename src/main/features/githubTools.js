@@ -44,11 +44,16 @@ function setFavoriteButtonState(button, isActive, label = 'Favorite', isDisabled
     button.classList.toggle('is-disabled', Boolean(isDisabled));
     button.disabled = Boolean(isDisabled);
     button.setAttribute('aria-disabled', isDisabled ? 'true' : 'false');
+    button.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+
     const icon = button.querySelector('.material-symbols-outlined');
     const labelNode = button.querySelector('.favorite-label');
+
     if (icon) {
-        icon.textContent = isActive ? 'star' : 'star';
+        icon.textContent = isActive ? 'star' : 'star_border';
+        icon.classList.toggle('is-filled', Boolean(isActive));
     }
+
     if (labelNode) {
         labelNode.textContent = isActive ? 'Favorited' : label;
     }
@@ -60,10 +65,18 @@ function initTokenToggle(buttonId, sectionId, inputId) {
     const input = getDynamicElement(inputId);
     if (!toggleButton || !section) return;
 
+    const labelNode = toggleButton.querySelector('.token-toggle-label');
+    const defaultLabel = toggleButton.dataset?.label || 'Token Settings';
+    const openLabel = toggleButton.dataset?.openLabel || 'Hide token field';
+
     let isOpen = false;
     const syncState = () => {
         section.hidden = !isOpen;
         toggleButton.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+        toggleButton.classList.toggle('is-open', isOpen);
+        if (labelNode) {
+            labelNode.textContent = isOpen ? openLabel : defaultLabel;
+        }
     };
 
     toggleButton.addEventListener('click', () => {
@@ -222,11 +235,14 @@ export function initRepoMapper() {
     };
 
     const updateRepoControls = () => {
-        parsedRepo = urlInput ? parseGithubUrl(urlInput.value) : null;
+        parsedRepo = urlInput ? parseGithubUrl(urlInput.value.trim()) : null;
         const hasValidRepo = Boolean(parsedRepo);
         const isRepoFavorite = hasValidRepo && isFavorite(parsedRepo.owner, parsedRepo.repo);
         setFavoriteButtonState(favoriteButton, isRepoFavorite, 'Favorite', !hasValidRepo);
-        if (submitButton) submitButton.disabled = !hasValidRepo;
+        if (submitButton) {
+            submitButton.disabled = !hasValidRepo;
+            submitButton.setAttribute('aria-disabled', !hasValidRepo ? 'true' : 'false');
+        }
     };
 
     const updateOutput = () => {
@@ -252,7 +268,7 @@ export function initRepoMapper() {
         updateUIState('repoMapperResult', false);
         setLoading(submitButton.id, true, 'Generate Map');
 
-        const url = urlInput.value;
+        const url = urlInput.value.trim();
         const token = tokenInput.value;
         const parsed = parseGithubUrl(url);
 
@@ -312,7 +328,6 @@ export function initRepoMapper() {
     favoriteButton?.addEventListener('click', () => {
         if (!parsedRepo || favoriteButton.disabled) return;
         handleFavoriteToggle(favoriteButton, parsedRepo);
-        renderQuickFavoritesPanel();
     });
 
     const intent = consumeNavigationIntent();
@@ -351,11 +366,14 @@ export function initReleaseStats() {
     initTokenToggle('releaseTokenToggle', 'releaseTokenContainer', 'releaseToken');
 
     const updateReleaseControls = () => {
-        parsedRepo = urlInput ? parseGithubUrl(urlInput.value) : null;
+        parsedRepo = urlInput ? parseGithubUrl(urlInput.value.trim()) : null;
         const hasValidRepo = Boolean(parsedRepo);
         const isRepoFavorite = hasValidRepo && isFavorite(parsedRepo.owner, parsedRepo.repo);
         setFavoriteButtonState(favoriteButton, isRepoFavorite, 'Favorite', !hasValidRepo);
-        if (submitButton) submitButton.disabled = !hasValidRepo;
+        if (submitButton) {
+            submitButton.disabled = !hasValidRepo;
+            submitButton.setAttribute('aria-disabled', !hasValidRepo ? 'true' : 'false');
+        }
     };
 
     const renderReleaseDetails = () => {
@@ -459,7 +477,7 @@ export function initReleaseStats() {
         updateUIState('releaseStatsResult', false);
         setLoading(submitButton.id, true, 'Analyze');
 
-        const url = urlInput.value;
+        const url = urlInput.value.trim();
         const token = tokenInput.value;
         const parsed = parseGithubUrl(url);
 
@@ -492,7 +510,6 @@ export function initReleaseStats() {
     favoriteButton?.addEventListener('click', () => {
         if (!parsedRepo || favoriteButton.disabled) return;
         handleFavoriteToggle(favoriteButton, parsedRepo);
-        renderQuickFavoritesPanel();
     });
 
     const intent = consumeNavigationIntent();
@@ -518,6 +535,19 @@ export function initGitPatch() {
     const downloadButton = getDynamicElement('downloadPatch');
     const submitButton = form.querySelector('.search-card-submit-button');
 
+    initTokenToggle('gitPatchTokenToggle', 'gitPatchTokenContainer', 'patchToken');
+
+    const updatePatchControls = () => {
+        const parsed = urlInput ? parseGithubCommitUrl(urlInput.value.trim()) : null;
+        const hasValidCommit = Boolean(parsed);
+        if (submitButton) {
+            submitButton.disabled = !hasValidCommit;
+            submitButton.setAttribute('aria-disabled', !hasValidCommit ? 'true' : 'false');
+        }
+    };
+
+    updatePatchControls();
+
     let patchContent = '';
 
     form.addEventListener('submit', async (e) => {
@@ -526,7 +556,7 @@ export function initGitPatch() {
         updateUIState('gitPatchResult', false);
         setLoading(submitButton.id, true, 'Get Patch');
 
-        const url = urlInput.value;
+        const url = urlInput.value.trim();
         const token = tokenInput.value;
         const parsed = parseGithubCommitUrl(url);
 
@@ -546,6 +576,8 @@ export function initGitPatch() {
             setLoading(submitButton.id, false, 'Get Patch');
         }
     });
+
+    urlInput?.addEventListener('input', updatePatchControls);
 
     copyButton.addEventListener('click', () => {
         if (patchContent) {
@@ -584,61 +616,5 @@ export function initGithubFavorites() {
     renderFavoritesGrid(listEl, emptyEl, (target, url) => {
         setNavigationIntent(target, url);
         window.location.hash = `#${target}`;
-    });
-}
-
-export function initGithubToolsHome() {
-    renderQuickFavoritesPanel();
-}
-
-function renderQuickFavoritesPanel() {
-    const quickContainer = getDynamicElement('githubQuickFavorites');
-    const quickList = getDynamicElement('githubQuickFavoritesList');
-    const quickEmpty = getDynamicElement('githubQuickFavoritesEmpty');
-
-    if (!quickContainer || !quickList || !quickEmpty) return;
-
-    const favorites = loadFavorites();
-    if (favorites.length === 0) {
-        quickList.innerHTML = '';
-        quickEmpty.style.display = 'grid';
-        return;
-    }
-
-    quickEmpty.style.display = 'none';
-    quickList.innerHTML = '';
-
-    favorites.slice(0, 4).forEach((repo) => {
-        const card = document.createElement('div');
-        card.className = 'github-favorite-card';
-        card.innerHTML = `
-            <div class="meta">
-                <span class="material-symbols-outlined" aria-hidden="true">folder_open</span>
-                <span>${repo.owner}</span>
-            </div>
-            <h3 title="${repo.repo}">${repo.repo}</h3>
-            <div class="actions">
-                <md-filled-tonal-button class="favorite-map" data-url="https://github.com/${repo.owner}/${repo.repo}">
-                    <span slot="icon" class="material-symbols-outlined">terminal</span>
-                    Map
-                </md-filled-tonal-button>
-                <md-filled-tonal-button class="favorite-stats" data-url="https://github.com/${repo.owner}/${repo.repo}">
-                    <span slot="icon" class="material-symbols-outlined">bar_chart</span>
-                    Stats
-                </md-filled-tonal-button>
-            </div>
-        `;
-
-        card.querySelector('.favorite-map')?.addEventListener('click', () => {
-            setNavigationIntent('repo-mapper', `https://github.com/${repo.owner}/${repo.repo}`);
-            window.location.hash = '#repo-mapper';
-        });
-
-        card.querySelector('.favorite-stats')?.addEventListener('click', () => {
-            setNavigationIntent('release-stats', `https://github.com/${repo.owner}/${repo.repo}`);
-            window.location.hash = '#release-stats';
-        });
-
-        quickList.appendChild(card);
     });
 }

@@ -14,9 +14,16 @@
                 class="search-card-input"
             ></md-outlined-text-field>
             <div class="token-toggle">
-                <button type="button" class="token-toggle-button" id="releaseTokenToggle">
+                <button
+                    type="button"
+                    class="token-toggle-button"
+                    id="releaseTokenToggle"
+                    aria-controls="releaseTokenContainer"
+                    data-label="Add GitHub token (optional)"
+                    data-open-label="Hide token field"
+                >
                     <span class="material-symbols-outlined">key_vertical</span>
-                    <span class="token-toggle-label">Token Settings</span>
+                    <span class="token-toggle-label">Add GitHub token (optional)</span>
                     <span class="material-symbols-outlined token-toggle-chevron">expand_more</span>
                 </button>
                 <div class="token-input" id="releaseTokenContainer" hidden>
@@ -31,11 +38,11 @@
         </div>
         <div class="search-card-controls">
             <div class="search-card-actions">
-                <button type="button" id="releaseFavoriteButton" class="favorite-button" aria-live="polite">
-                    <span class="material-symbols-outlined">star</span>
+                <button type="button" id="releaseFavoriteButton" class="favorite-button" aria-live="polite" disabled>
+                    <span class="material-symbols-outlined">star_border</span>
                     <span class="favorite-label">Favorite</span>
                 </button>
-                <md-filled-button type="submit" class="search-card-submit-button" id="releaseStatsSubmit">
+                <md-filled-button type="submit" class="search-card-submit-button" id="releaseStatsSubmit" disabled>
                     <span slot="icon" class="material-symbols-outlined">analytics</span>
                     Analyze
                 </md-filled-button>
