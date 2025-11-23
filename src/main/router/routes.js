@@ -1,4 +1,4 @@
-import { initRepoMapper, initReleaseStats, initGitPatch } from '../features/githubTools.js';
+import { initRepoMapper, initReleaseStats, initGitPatch, initGithubFavorites, initGithubToolsHome } from '../features/githubTools.js';
 
 const DEFAULT_ROUTE_TITLE = 'API Console';
 const DEFAULT_METADATA_DESCRIPTION = 'Explore Mihai-Cristian Condrea\'s Android developer portfolio featuring Jetpack Compose apps, Material Design systems, and open-source tools.';
@@ -350,6 +350,46 @@ const defaultRoutes = [
             twitter: {
                 title: 'Android Studio Tutorials API workspace',
                 description: 'Design home feed cards and Compose-ready lesson content for Android Studio Tutorials.'
+            }
+        }
+    },
+    {
+        id: 'github-tools',
+        path: 'pages/github/github-tools.html',
+        title: 'Developer Tools',
+        onLoad: initGithubToolsHome,
+        metadata: {
+            description: 'Minimalist utilities for GitHub repositories: Repo Mapper, Release Stats, and Git Patch.',
+            keywords: ['GitHub tools', 'Repo Mapper', 'Release Stats', 'Git Patch'],
+            canonicalSlug: 'github-tools',
+            openGraph: {
+                title: 'Developer Tools',
+                description: 'Minimalist utilities for GitHub repositories: Repo Mapper, Release Stats, and Git Patch.',
+                type: 'website'
+            },
+            twitter: {
+                title: 'Developer Tools',
+                description: 'Minimalist utilities for GitHub repositories: Repo Mapper, Release Stats, and Git Patch.'
+            }
+        }
+    },
+    {
+        id: 'github-favorites',
+        path: 'pages/github/github-favorites.html',
+        title: 'Favorites',
+        onLoad: initGithubFavorites,
+        metadata: {
+            description: 'Quick access to repositories saved from Repo Mapper and Release Stats.',
+            keywords: ['favorites', 'GitHub tools'],
+            canonicalSlug: 'github-favorites',
+            openGraph: {
+                title: 'Favorites',
+                description: 'Quick access to repositories saved from Repo Mapper and Release Stats.',
+                type: 'website'
+            },
+            twitter: {
+                title: 'Favorites',
+                description: 'Quick access to repositories saved from Repo Mapper and Release Stats.'
             }
         }
     },
