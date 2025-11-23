@@ -6,28 +6,29 @@
 
     <form id="repoMapperForm" class="search-card">
         <div class="search-card-field-container">
-            <md-outlined-text-field 
-                label="Repository URL" 
-                id="repoUrl" 
-                required 
-                placeholder="https://github.com/owner/repo" 
+            <md-outlined-text-field
+                label="Repository URL"
+                id="repoUrl"
+                required
+                placeholder="https://github.com/owner/repo"
                 class="search-card-input"
             ></md-outlined-text-field>
 
-            <details class="github-tools-surface" style="padding: 0.75rem 1rem;">
-                <summary class="flex items-center gap-2 cursor-pointer">
+            <div class="token-toggle">
+                <button type="button" class="token-toggle-button" id="repoTokenToggle">
                     <span class="material-symbols-outlined">key_vertical</span>
-                    Token Settings
-                </summary>
-                <div class="mt-3">
-                    <md-outlined-text-field 
-                        label="GitHub Token (Optional)" 
-                        id="repoToken" 
-                        placeholder="Enter token for private repos" 
+                    <span class="token-toggle-label">Token Settings</span>
+                    <span class="material-symbols-outlined token-toggle-chevron">expand_more</span>
+                </button>
+                <div class="token-input" id="repoTokenContainer" hidden>
+                    <md-outlined-text-field
+                        label="GitHub Token (Optional)"
+                        id="repoToken"
+                        placeholder="Enter token for private repos"
                         class="search-card-input"
                     ></md-outlined-text-field>
                 </div>
-            </details>
+            </div>
         </div>
 
         <div class="search-card-controls">

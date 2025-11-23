@@ -2527,7 +2527,7 @@ md-list-item[type='button'].expanded md-icon[slot='end'] {
 .tool-card-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 1rem;
+  gap: clamp(1rem, 2vw, 1.5rem);
 }
 
 .tool-card {
@@ -2627,12 +2627,19 @@ md-list-item[type='button'].expanded md-icon[slot='end'] {
   align-items: center;
   cursor: pointer;
   font-weight: 600;
+  transition: background 160ms ease, color 160ms ease, transform 160ms ease, box-shadow 160ms ease;
 }
 
 .search-card-extra-controls button.active {
   background: var(--md-sys-color-primary);
   color: var(--md-sys-color-on-primary);
   box-shadow: 0 10px 30px -18px rgba(0, 0, 0, 0.7);
+  transform: translateY(-1px);
+}
+
+.search-card-extra-controls button:not(.active):hover {
+  background: color-mix(in srgb, var(--md-sys-color-surface-tint) 16%, transparent);
+  transform: translateY(-1px);
 }
 
 .search-card-actions .favorite-button {
@@ -2652,6 +2659,66 @@ md-list-item[type='button'].expanded md-icon[slot='end'] {
   background: color-mix(in srgb, var(--md-sys-color-primary) 18%, transparent);
   border-color: var(--md-sys-color-primary);
   color: var(--md-sys-color-primary);
+}
+
+.search-card-actions .favorite-button.is-disabled,
+.search-card-actions .favorite-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.token-toggle {
+  border: 1px solid color-mix(in srgb, var(--md-sys-color-outline) 45%, transparent);
+  border-radius: 18px;
+  background: var(--md-sys-color-surface-container-high);
+  padding: 0.75rem 1rem;
+  display: grid;
+  gap: 0.5rem;
+}
+
+.token-toggle-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6rem;
+  width: 100%;
+  border: none;
+  background: transparent;
+  color: var(--app-text-color);
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0.25rem 0;
+  transition: color 150ms ease;
+}
+
+.token-toggle-button:hover {
+  color: var(--md-sys-color-primary);
+}
+
+.token-toggle-chevron {
+  margin-left: auto;
+  transition: transform 180ms ease;
+}
+
+.token-toggle-button[aria-expanded="true"] .token-toggle-chevron {
+  transform: rotate(180deg);
+}
+
+.token-input {
+  overflow: hidden;
+  animation: tokenSlideDown 200ms ease;
+}
+
+@keyframes tokenSlideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .result-container {
