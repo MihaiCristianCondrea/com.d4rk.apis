@@ -2985,3 +2985,149 @@ md-list-item[type='button'].expanded md-icon[slot='end'] {
   background: color-mix(in srgb, var(--md-sys-color-primary) 12%, transparent);
   color: var(--md-sys-color-primary);
 }
+
+.github-tools-shell {
+  display: grid;
+  gap: clamp(1.25rem, 2vw, 1.75rem);
+  color: var(--app-text-color);
+}
+
+.github-tools-hero {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  background: var(--md-sys-color-surface-container);
+  border-radius: 24px;
+  border: 1px solid color-mix(in srgb, var(--md-sys-color-outline) 40%, transparent);
+  padding: clamp(1.25rem, 3vw, 1.75rem);
+  box-shadow: 0 24px 60px -32px rgba(0, 0, 0, 0.35);
+}
+
+.github-tools-hero .hero-content h1 {
+  margin: 0.15rem 0;
+  font-size: clamp(2rem, 2vw + 1rem, 2.6rem);
+}
+
+.github-tools-hero .subtitle {
+  color: var(--app-secondary-text-color);
+  margin: 0;
+}
+
+.github-tools-hero .hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.github-tools-hero .chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.65rem 0.9rem;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--md-sys-color-outline) 35%, transparent);
+  background: var(--md-sys-color-surface-container-high);
+  color: var(--app-text-color);
+  cursor: pointer;
+  transition: background var(--app-motion-duration-short) var(--app-motion-ease-standard),
+    transform var(--app-motion-duration-short) var(--app-motion-ease-standard);
+}
+
+.github-tools-hero .chip:hover {
+  background: var(--md-sys-color-surface-container-highest);
+  transform: translateY(-1px);
+}
+
+.github-tools-hero .hero-pane .pane-body {
+  background: var(--md-sys-color-surface-container-high);
+  border-radius: 18px;
+  padding: 1rem;
+  border: 1px solid color-mix(in srgb, var(--md-sys-color-outline) 35%, transparent);
+  display: grid;
+  gap: 0.65rem;
+}
+
+.github-tools-hero .hero-pane .hero-footnote {
+  color: var(--app-secondary-text-color);
+  font-size: 0.9rem;
+}
+
+.eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-weight: 700;
+  font-size: 0.75rem;
+  color: var(--app-secondary-text-color);
+  margin: 0;
+}
+
+.quick-favorites {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 0.5rem;
+}
+
+.favorite-pill {
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--md-sys-color-outline) 30%, transparent);
+  background: var(--md-sys-color-surface-container-highest);
+  color: var(--app-text-color);
+  padding: 0.45rem 0.75rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  cursor: pointer;
+  transition: background var(--app-motion-duration-short) var(--app-motion-ease-standard),
+    transform var(--app-motion-duration-short) var(--app-motion-ease-standard);
+}
+
+.favorite-pill:hover {
+  background: color-mix(in srgb, var(--md-sys-color-primary) 10%, var(--md-sys-color-surface-container-highest));
+  transform: translateY(-1px);
+}
+
+.empty-quick-favorites {
+  display: grid;
+  gap: 0.5rem;
+  align-content: start;
+  color: var(--app-secondary-text-color);
+}
+
+.empty-quick-favorites .material-symbols-outlined {
+  color: var(--md-sys-color-primary);
+}
+
+.github-tools-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  background: var(--md-sys-color-surface-container);
+  border: 1px solid color-mix(in srgb, var(--md-sys-color-outline) 35%, transparent);
+  border-radius: 999px;
+  padding: 0.5rem;
+}
+
+.github-tools-nav .nav-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.55rem 0.95rem;
+  border-radius: 999px;
+  border: none;
+  background: transparent;
+  color: var(--app-secondary-text-color);
+  cursor: pointer;
+  transition: background var(--app-motion-duration-short) var(--app-motion-ease-standard),
+    color var(--app-motion-duration-short) var(--app-motion-ease-standard);
+}
+
+.github-tools-nav .nav-chip.is-active {
+  background: color-mix(in srgb, var(--md-sys-color-primary) 16%, var(--md-sys-color-surface-container));
+  color: var(--app-text-color);
+}
+
+.github-view {
+  display: grid;
+  gap: 1.25rem;
+}

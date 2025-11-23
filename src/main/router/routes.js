@@ -1,4 +1,4 @@
-import { initRepoMapper, initReleaseStats, initGitPatch, initGithubFavorites } from '../features/githubTools.js';
+import { initGithubFavorites, initGitPatch, initReleaseStats, initRepoMapper } from '../features/githubTools.js';
 
 const DEFAULT_ROUTE_TITLE = 'API Console';
 const DEFAULT_METADATA_DESCRIPTION = 'Explore Mihai-Cristian Condrea\'s Android developer portfolio featuring Jetpack Compose apps, Material Design systems, and open-source tools.';

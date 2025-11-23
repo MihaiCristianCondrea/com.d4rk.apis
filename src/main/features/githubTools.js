@@ -5,6 +5,14 @@ import { generateAsciiTree, generatePathList, parseGithubUrl, parseGithubCommitU
 const FAVORITES_KEY = 'repomapper_favorites';
 let inMemoryFavorites = [];
 const INTENT_KEY = 'github_tools_intent';
+const favoriteSubscribers = new Set();
+
+const ROUTE_TO_VIEW = {
+    'github-favorites': 'favorites',
+    'repo-mapper': 'mapper',
+    'release-stats': 'releases',
+    'git-patch': 'gitpatch',
+};
 
 function loadFavorites() {
     try {
@@ -24,6 +32,7 @@ function saveFavorites(list) {
     } catch (e) {
         // Fallback to in-memory storage when localStorage is unavailable
     }
+    notifyFavoritesUpdate(list);
 }
 
 function isFavorite(owner, repo) {
@@ -44,6 +53,94 @@ function toggleFavorite(owner, repo) {
 
     saveFavorites(favorites);
     return favorites;
+}
+
+function subscribeToFavorites(callback) {
+    if (typeof callback !== 'function') return () => {};
+    favoriteSubscribers.add(callback);
+    return () => favoriteSubscribers.delete(callback);
+}
+
+function notifyFavoritesUpdate(favorites = []) {
+    favoriteSubscribers.forEach((callback) => {
+        try {
+            callback([...favorites]);
+        } catch (error) {
+            console.error('Failed to notify favorites subscriber', error);
+        }
+    });
+}
+
+function getViewFromRoute(routeId = '') {
+    return ROUTE_TO_VIEW[routeId.replace('#', '')] || 'home';
+}
+
+function hydrateSuggestionList(listId, favorites, suffix = '') {
+    const datalist = getDynamicElement(listId);
+    if (!datalist) return;
+    datalist.innerHTML = '';
+
+    favorites.forEach((fav) => {
+        const option = document.createElement('option');
+        option.value = `https://github.com/${fav.owner}/${fav.repo}${suffix}`;
+        datalist.appendChild(option);
+    });
+}
+
+function renderQuickFavorites(chipContainer, emptyState, onSelect) {
+    if (!chipContainer || !emptyState) return;
+    const favorites = loadFavorites();
+
+    chipContainer.innerHTML = '';
+    if (!favorites.length) {
+        emptyState.style.display = 'grid';
+        return;
+    }
+
+    emptyState.style.display = 'none';
+    favorites.slice(0, 8).forEach((fav) => {
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'favorite-pill';
+        button.innerHTML = `
+            <span class="material-symbols-outlined">star</span>
+            <span>${fav.owner}/${fav.repo}</span>
+        `;
+        button.addEventListener('click', () => onSelect?.(fav));
+        chipContainer.appendChild(button);
+    });
+}
+
+function setActiveGithubView(targetView = 'home') {
+    const normalized = targetView || 'home';
+    const shell = document.querySelector('.github-tools-shell');
+    if (shell) {
+        shell.dataset.activeView = normalized;
+    }
+
+    document.querySelectorAll('[data-view-section]').forEach((section) => {
+        const isMatch = section.dataset.viewSection === normalized;
+        section.toggleAttribute('hidden', !isMatch);
+    });
+
+    document.querySelectorAll('[data-view-target]').forEach((button) => {
+        button.classList.toggle('is-active', button.dataset.viewTarget === normalized);
+    });
+}
+
+function setupGithubViewNavigation() {
+    const hashView = getViewFromRoute(window.location.hash || '');
+    setActiveGithubView(hashView);
+
+    document.querySelectorAll('[data-view-target]').forEach((button) => {
+        button.addEventListener('click', () => {
+            const view = button.dataset.viewTarget;
+            if (!view) return;
+            setActiveGithubView(view);
+        });
+    });
+
+    return setActiveGithubView;
 }
 
 function setFavoriteButtonState(button, isActive, label = 'Favorite', isDisabled = false) {
@@ -128,6 +225,37 @@ function consumeNavigationIntent() {
         return JSON.parse(stored);
     } catch (e) {
         return null;
+    }
+}
+
+function prefillToolInput(target, url) {
+    const inputMap = {
+        'repo-mapper': 'repoUrl',
+        'release-stats': 'releaseUrl',
+        'git-patch': 'commitUrl',
+    };
+
+    const inputId = inputMap[target];
+    if (!inputId || !url) return;
+
+    const input = getDynamicElement(inputId);
+    if (input) {
+        input.value = url;
+        input.dispatchEvent(new Event('input', { bubbles: true }));
+    }
+}
+
+function submitToolForm(target) {
+    const formMap = {
+        'repo-mapper': 'repoMapperForm',
+        'release-stats': 'releaseStatsForm',
+        'git-patch': 'gitPatchForm',
+    };
+
+    const formId = formMap[target];
+    const form = formId ? getDynamicElement(formId) : null;
+    if (form && typeof form.requestSubmit === 'function') {
+        setTimeout(() => form.requestSubmit(), 80);
     }
 }
 
@@ -247,6 +375,10 @@ export function initRepoMapper() {
     const submitButton = form.querySelector('.search-card-submit-button');
     const favoriteButton = getDynamicElement('repoFavoriteButton');
 
+    const syncSuggestions = (favorites = loadFavorites()) => {
+        hydrateSuggestionList('repoUrlSuggestions', favorites);
+    };
+
     let rawPaths = [];
     let currentFormat = 'ascii';
     let stats = { files: 0, folders: 0 };
@@ -289,6 +421,8 @@ export function initRepoMapper() {
     };
 
     updateRepoControls();
+    syncSuggestions();
+    subscribeToFavorites(syncSuggestions);
 
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
@@ -380,6 +514,10 @@ export function initReleaseStats() {
     const favoriteButton = getDynamicElement('releaseFavoriteButton');
     const releaseRepoChip = getDynamicElement('releaseRepoChip');
     const releaseDownloadsChip = getDynamicElement('releaseDownloadsChip');
+
+    const syncSuggestions = (favorites = loadFavorites()) => {
+        hydrateSuggestionList('releaseUrlSuggestions', favorites);
+    };
 
     const selectedReleaseName = getDynamicElement('selectedReleaseName');
     const selectedReleaseMeta = getDynamicElement('selectedReleaseMeta');
@@ -513,6 +651,8 @@ export function initReleaseStats() {
     };
 
     updateReleaseControls();
+    syncSuggestions();
+    subscribeToFavorites(syncSuggestions);
 
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
@@ -580,6 +720,10 @@ export function initGitPatch() {
     const submitButton = form.querySelector('.search-card-submit-button');
     const favoriteButton = getDynamicElement('gitPatchFavoriteButton');
 
+    const syncSuggestions = (favorites = loadFavorites()) => {
+        hydrateSuggestionList('commitUrlSuggestions', favorites, '/commit/');
+    };
+
     initTokenToggle('gitPatchTokenToggle', 'gitPatchTokenContainer', 'patchToken');
 
     let parsedRepo = null;
@@ -591,6 +735,8 @@ export function initGitPatch() {
     };
 
     updatePatchControls();
+    syncSuggestions();
+    subscribeToFavorites(syncSuggestions);
 
     let patchContent = '';
 
@@ -660,13 +806,60 @@ export function initGitPatch() {
     });
 }
 
-export function initGithubFavorites() {
+export function initGithubFavorites(options = {}) {
     const listEl = getDynamicElement('githubFavoritesList');
     const emptyEl = getDynamicElement('githubFavoritesEmpty');
     if (!listEl || !emptyEl) return;
 
-    renderFavoritesGrid(listEl, emptyEl, (target, url) => {
-        setNavigationIntent(target, url);
-        window.location.hash = `#${target}`;
+    const onNavigate = typeof options.onNavigate === 'function'
+        ? options.onNavigate
+        : (target, url) => {
+              setNavigationIntent(target, url);
+              window.location.hash = `#${target}`;
+          };
+
+    renderFavoritesGrid(listEl, emptyEl, onNavigate);
+}
+
+export function initGithubTools() {
+    const setView = setupGithubViewNavigation();
+
+    const quickFavoritesContainer = getDynamicElement('homeFavoritesChips');
+    const quickFavoritesEmpty = getDynamicElement('homeFavoritesEmpty');
+
+    const refreshFavoriteDrivenUI = (favorites = loadFavorites()) => {
+        renderQuickFavorites(quickFavoritesContainer, quickFavoritesEmpty, (fav) => {
+            const url = `https://github.com/${fav.owner}/${fav.repo}`;
+            setNavigationIntent('repo-mapper', url);
+            setView('mapper');
+            prefillToolInput('repo-mapper', url);
+            submitToolForm('repo-mapper');
+        });
+
+        hydrateSuggestionList('repoUrlSuggestions', favorites);
+        hydrateSuggestionList('releaseUrlSuggestions', favorites);
+        hydrateSuggestionList('commitUrlSuggestions', favorites, '/commit/');
+    };
+
+    refreshFavoriteDrivenUI();
+    subscribeToFavorites(refreshFavoriteDrivenUI);
+
+    initRepoMapper();
+    initReleaseStats();
+    initGitPatch();
+
+    initGithubFavorites({
+        onNavigate: (target, url) => {
+            const view = getViewFromRoute(target);
+            setView(view);
+            if (url) {
+                setNavigationIntent(target, url);
+                prefillToolInput(target, url);
+                submitToolForm(target);
+            }
+        },
     });
+
+    const initialView = getViewFromRoute(window.location.hash || '');
+    setView(initialView);
 }
