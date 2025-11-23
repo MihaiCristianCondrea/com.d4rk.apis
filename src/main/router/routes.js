@@ -1,4 +1,4 @@
-import { initGithubTools } from '../features/githubTools.js';
+import { initGithubFavorites, initGitPatch, initReleaseStats, initRepoMapper } from '../features/githubTools.js';
 
 const DEFAULT_ROUTE_TITLE = 'API Console';
 const DEFAULT_METADATA_DESCRIPTION = 'Explore Mihai-Cristian Condrea\'s Android developer portfolio featuring Jetpack Compose apps, Material Design systems, and open-source tools.';
@@ -355,9 +355,9 @@ const defaultRoutes = [
     },
     {
         id: 'github-favorites',
-        path: 'pages/github/github-tools.html',
+        path: 'pages/github/github-favorites.html',
         title: 'Favorites',
-        onLoad: initGithubTools,
+        onLoad: initGithubFavorites,
         metadata: {
             description: 'Quick access to repositories saved from Repo Mapper and Release Stats.',
             keywords: ['favorites', 'GitHub tools'],
@@ -375,9 +375,9 @@ const defaultRoutes = [
     },
     {
         id: 'repo-mapper',
-        path: 'pages/github/github-tools.html',
+        path: 'pages/github/repo-mapper.html',
         title: 'Repo Mapper',
-        onLoad: initGithubTools,
+        onLoad: initRepoMapper,
         metadata: {
             description: 'Generate ASCII directory trees from any public repository. Perfect for documentation and LLM context.',
             keywords: ['Repo Mapper', 'GitHub', 'ASCII', 'directory tree'],
@@ -395,9 +395,9 @@ const defaultRoutes = [
     },
     {
         id: 'release-stats',
-        path: 'pages/github/github-tools.html',
+        path: 'pages/github/release-stats.html',
         title: 'Release Stats',
-        onLoad: initGithubTools,
+        onLoad: initReleaseStats,
         metadata: {
             description: 'Visualize download counts, analyze asset performance, and track version history in real-time.',
             keywords: ['Release Stats', 'GitHub', 'downloads', 'statistics'],
@@ -415,9 +415,9 @@ const defaultRoutes = [
     },
     {
         id: 'git-patch',
-        path: 'pages/github/github-tools.html',
+        path: 'pages/github/git-patch.html',
         title: 'Git Patch',
-        onLoad: initGithubTools,
+        onLoad: initGitPatch,
         metadata: {
             description: 'Extract raw .patch files from commit URLs. Easily apply changes from one repo to another or perform code reviews.',
             keywords: ['Git Patch', 'GitHub', 'patch', 'commit'],

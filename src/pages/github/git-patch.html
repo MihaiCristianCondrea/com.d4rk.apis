@@ -6,7 +6,8 @@
 
     <form id="gitPatchForm" class="search-card">
         <div class="search-card-field-container">
-            <md-outlined-text-field label="Commit URL" id="commitUrl" required placeholder="https://github.com/owner/repo/commit/sha" class="search-card-input"></md-outlined-text-field>
+            <md-outlined-text-field label="Commit URL" id="commitUrl" required placeholder="https://github.com/owner/repo/commit/sha" list="commitUrlSuggestions" class="search-card-input"></md-outlined-text-field>
+            <datalist id="commitUrlSuggestions"></datalist>
             <div class="token-toggle">
                 <button
                     type="button"

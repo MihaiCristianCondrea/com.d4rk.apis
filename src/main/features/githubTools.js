@@ -12,7 +12,6 @@ const ROUTE_TO_VIEW = {
     'repo-mapper': 'mapper',
     'release-stats': 'releases',
     'git-patch': 'gitpatch',
-    'github-tools': 'home',
 };
 
 function loadFavorites() {
@@ -376,6 +375,10 @@ export function initRepoMapper() {
     const submitButton = form.querySelector('.search-card-submit-button');
     const favoriteButton = getDynamicElement('repoFavoriteButton');
 
+    const syncSuggestions = (favorites = loadFavorites()) => {
+        hydrateSuggestionList('repoUrlSuggestions', favorites);
+    };
+
     let rawPaths = [];
     let currentFormat = 'ascii';
     let stats = { files: 0, folders: 0 };
@@ -418,6 +421,8 @@ export function initRepoMapper() {
     };
 
     updateRepoControls();
+    syncSuggestions();
+    subscribeToFavorites(syncSuggestions);
 
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
@@ -509,6 +514,10 @@ export function initReleaseStats() {
     const favoriteButton = getDynamicElement('releaseFavoriteButton');
     const releaseRepoChip = getDynamicElement('releaseRepoChip');
     const releaseDownloadsChip = getDynamicElement('releaseDownloadsChip');
+
+    const syncSuggestions = (favorites = loadFavorites()) => {
+        hydrateSuggestionList('releaseUrlSuggestions', favorites);
+    };
 
     const selectedReleaseName = getDynamicElement('selectedReleaseName');
     const selectedReleaseMeta = getDynamicElement('selectedReleaseMeta');
@@ -642,6 +651,8 @@ export function initReleaseStats() {
     };
 
     updateReleaseControls();
+    syncSuggestions();
+    subscribeToFavorites(syncSuggestions);
 
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
@@ -709,6 +720,10 @@ export function initGitPatch() {
     const submitButton = form.querySelector('.search-card-submit-button');
     const favoriteButton = getDynamicElement('gitPatchFavoriteButton');
 
+    const syncSuggestions = (favorites = loadFavorites()) => {
+        hydrateSuggestionList('commitUrlSuggestions', favorites, '/commit/');
+    };
+
     initTokenToggle('gitPatchTokenToggle', 'gitPatchTokenContainer', 'patchToken');
 
     let parsedRepo = null;
@@ -720,6 +735,8 @@ export function initGitPatch() {
     };
 
     updatePatchControls();
+    syncSuggestions();
+    subscribeToFavorites(syncSuggestions);
 
     let patchContent = '';
 
