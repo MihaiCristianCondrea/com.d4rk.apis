@@ -125,7 +125,7 @@ export const generateAsciiTree = (paths, setStats) => {
 
   setStats({ files: fileCount, folders: folderCount });
 
-  let output = '';
+  const lines = [];
   
   const buildString = (obj, prefix = '') => {
     const keys = Object.keys(obj).sort((a, b) => {
@@ -141,7 +141,7 @@ export const generateAsciiTree = (paths, setStats) => {
       const isLast = index === keys.length - 1;
       const connector = isLast ? '└── ' : '├── ';
       
-      output += `${prefix}${connector}${key}\n`;
+      lines.push(`${prefix}${connector}${key}`);
       
       const child = obj[key];
       if (child !== null) {
@@ -152,7 +152,7 @@ export const generateAsciiTree = (paths, setStats) => {
   };
 
   buildString(structure);
-  return output;
+  return lines.join('\n');
 };
 
 export const generatePathList = (paths, setStats) => {
