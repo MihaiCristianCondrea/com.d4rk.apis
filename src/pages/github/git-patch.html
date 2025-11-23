@@ -25,10 +25,18 @@
                 </div>
             </div>
         </div>
-        <md-filled-button type="submit" class="search-card-submit-button" id="gitPatchSubmit" disabled>
-            <span slot="icon" class="material-symbols-outlined">difference</span>
-            Get Patch
-        </md-filled-button>
+        <div class="search-card-controls">
+            <div class="search-card-actions">
+                <button type="button" id="gitPatchFavoriteButton" class="favorite-button" aria-live="polite" disabled>
+                    <span class="material-symbols-outlined">star_border</span>
+                    <span class="favorite-label">Favorite</span>
+                </button>
+                <md-filled-button type="submit" class="search-card-submit-button" id="gitPatchSubmit" disabled>
+                    <span slot="icon" class="material-symbols-outlined">difference</span>
+                    Get Patch
+                </md-filled-button>
+            </div>
+        </div>
     </form>
 
     <div id="gitPatchError" class="error-message" style="display: none;"></div>

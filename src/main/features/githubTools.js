@@ -3,19 +3,27 @@ import { fetchRepositoryTree, fetchReleaseStats, fetchCommitPatch } from '../ser
 import { generateAsciiTree, generatePathList, parseGithubUrl, parseGithubCommitUrl } from '../domain/utils.js';
 
 const FAVORITES_KEY = 'repomapper_favorites';
+let inMemoryFavorites = [];
 const INTENT_KEY = 'github_tools_intent';
 
 function loadFavorites() {
     try {
         const stored = localStorage.getItem(FAVORITES_KEY);
-        return stored ? JSON.parse(stored) : [];
+        const parsed = stored ? JSON.parse(stored) : [];
+        inMemoryFavorites = Array.isArray(parsed) ? parsed : [];
+        return [...inMemoryFavorites];
     } catch (e) {
-        return [];
+        return [...inMemoryFavorites];
     }
 }
 
 function saveFavorites(list) {
-    localStorage.setItem(FAVORITES_KEY, JSON.stringify(list));
+    inMemoryFavorites = [...list];
+    try {
+        localStorage.setItem(FAVORITES_KEY, JSON.stringify(list));
+    } catch (e) {
+        // Fallback to in-memory storage when localStorage is unavailable
+    }
 }
 
 function isFavorite(owner, repo) {
@@ -534,15 +542,24 @@ export function initGitPatch() {
     const copyButton = getDynamicElement('copyPatch');
     const downloadButton = getDynamicElement('downloadPatch');
     const submitButton = form.querySelector('.search-card-submit-button');
+    const favoriteButton = getDynamicElement('gitPatchFavoriteButton');
 
     initTokenToggle('gitPatchTokenToggle', 'gitPatchTokenContainer', 'patchToken');
 
+    let parsedRepo = null;
+
     const updatePatchControls = () => {
         const parsed = urlInput ? parseGithubCommitUrl(urlInput.value.trim()) : null;
+        parsedRepo = parsed ? { owner: parsed.owner, repo: parsed.repo } : null;
         const hasValidCommit = Boolean(parsed);
         if (submitButton) {
             submitButton.disabled = !hasValidCommit;
             submitButton.setAttribute('aria-disabled', !hasValidCommit ? 'true' : 'false');
+        }
+
+        if (favoriteButton) {
+            const isRepoFavorite = Boolean(parsedRepo) && isFavorite(parsedRepo.owner, parsedRepo.repo);
+            setFavoriteButtonState(favoriteButton, isRepoFavorite, 'Favorite', !parsedRepo);
         }
     };
 
@@ -566,6 +583,9 @@ export function initGitPatch() {
             return;
         }
 
+        parsedRepo = { owner: parsed.owner, repo: parsed.repo };
+        updatePatchControls();
+
         try {
             patchContent = await fetchCommitPatch(parsed, token);
             if (outputCode) outputCode.textContent = patchContent;
@@ -578,6 +598,11 @@ export function initGitPatch() {
     });
 
     urlInput?.addEventListener('input', updatePatchControls);
+
+    favoriteButton?.addEventListener('click', () => {
+        if (!parsedRepo || favoriteButton.disabled) return;
+        handleFavoriteToggle(favoriteButton, parsedRepo);
+    });
 
     copyButton.addEventListener('click', () => {
         if (patchContent) {
