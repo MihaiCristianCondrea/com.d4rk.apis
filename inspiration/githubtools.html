@@ -1,0 +1,1013 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>RepoMapper</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    colors: {
+                        neutral: {
+                            850: '#1f1f1f',
+                            900: '#1c1b1f',
+                            950: '#0a0a0a',
+                        }
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.5s ease-out forwards',
+                        'slide-up': 'slideUp 0.5s ease-out forwards',
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' },
+                        },
+                        slideUp: {
+                            '0%': { opacity: '0', transform: 'translateY(20px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        :root {
+            --bg-color: #141218;
+            --text-color: #e6e1e5;
+            --surface-color: #1d1b20;
+            --surface-variant: #2b2930;
+            --outline: #49454f;
+            --error-container: #601410;
+            --on-error-container: #f2b8b5;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #49454f; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #79747e; }
+
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            user-select: none;
+        }
+        .filled-icon {
+            font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+
+        /* View Switching logic */
+        .view-section { display: none; }
+        .view-section.active { display: block; animation: fadeIn 0.5s ease-out; }
+
+        /* Floating Label Logic */
+        .floating-input:placeholder-shown + label {
+            top: 1rem;
+            font-size: 1rem;
+        }
+        .floating-input:focus + label,
+        .floating-input:not(:placeholder-shown) + label {
+            top: 0.375rem;
+            font-size: 0.75rem;
+            color: #e6e1e5;
+        }
+    </style>
+    <script type="importmap">
+        {
+          "imports": {
+            "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
+            "react/": "https://aistudiocdn.com/react@^19.2.0/",
+            "react": "https://aistudiocdn.com/react@^19.2.0",
+            "lucide-react": "https://aistudiocdn.com/lucide-react@^0.554.0"
+          }
+        }
+    </script>
+</head>
+<body class="antialiased transition-colors duration-300 overflow-hidden flex flex-col min-h-screen">
+
+<!-- Navigation Drawer Scrim -->
+<div id="drawer-scrim" class="fixed inset-0 bg-black/50 z-40 opacity-0 pointer-events-none transition-opacity duration-300" onclick="toggleDrawer()"></div>
+
+<!-- Navigation Drawer -->
+<nav id="drawer" class="fixed top-0 left-0 bottom-0 w-[320px] bg-[#1c1b1f] text-[#e6e1e5] z-50 flex flex-col shadow-2xl transition-transform duration-300 ease-in-out -translate-x-full rounded-r-2xl">
+    <div class="px-4 h-16 flex items-center justify-between shrink-0">
+        <h1 class="text-xl font-bold tracking-normal ml-2">Menu</h1>
+        <button onclick="toggleDrawer()" class="p-2 rounded-full hover:bg-[#e6e1e5]/10 transition-colors">
+            <span class="material-symbols-outlined">close</span>
+        </button>
+    </div>
+    <div class="flex-1 overflow-y-auto py-2">
+        <div class="px-3 space-y-1">
+            <button onclick="navigateTo('home')" id="nav-home" class="nav-item w-full flex items-center gap-4 px-4 py-3.5 rounded-full text-sm font-medium transition-colors text-[#cac4d0] hover:bg-[#e6e1e5]/5">
+                <span class="material-symbols-outlined">home</span><span>Home</span>
+            </button>
+            <button onclick="navigateTo('favorites')" id="nav-favorites" class="nav-item w-full flex items-center gap-4 px-4 py-3.5 rounded-full text-sm font-medium transition-colors text-[#cac4d0] hover:bg-[#e6e1e5]/5">
+                <span class="material-symbols-outlined">star</span><span>Favorites</span>
+            </button>
+            <button onclick="navigateTo('mapper')" id="nav-mapper" class="nav-item w-full flex items-center gap-4 px-4 py-3.5 rounded-full text-sm font-medium transition-colors text-[#cac4d0] hover:bg-[#e6e1e5]/5">
+                <span class="material-symbols-outlined">terminal</span><span>Repo Mapper</span>
+            </button>
+            <button onclick="navigateTo('releases')" id="nav-releases" class="nav-item w-full flex items-center gap-4 px-4 py-3.5 rounded-full text-sm font-medium transition-colors text-[#cac4d0] hover:bg-[#e6e1e5]/5">
+                <span class="material-symbols-outlined">bar_chart</span><span>Release Stats</span>
+            </button>
+            <button onclick="navigateTo('gitpatch')" id="nav-gitpatch" class="nav-item w-full flex items-center gap-4 px-4 py-3.5 rounded-full text-sm font-medium transition-colors text-[#cac4d0] hover:bg-[#e6e1e5]/5">
+                <span class="material-symbols-outlined">difference</span><span>Git Patch</span>
+            </button>
+        </div>
+    </div>
+</nav>
+
+<!-- Top App Bar -->
+<header class="h-16 px-4 flex items-center justify-between bg-[#141218] text-[#e6e1e5] sticky top-0 z-30 border-b border-[#49454f]/30">
+    <div class="flex items-center gap-4">
+        <button onclick="toggleDrawer()" class="p-2 -ml-2 rounded-full hover:bg-[#e6e1e5]/10 transition-colors text-[#e6e1e5]">
+            <span class="material-symbols-outlined">menu</span>
+        </button>
+        <h1 class="text-[22px] font-normal leading-7">RepoMapper</h1>
+    </div>
+</header>
+
+<!-- Main Content -->
+<main class="flex-grow px-4 py-6 md:py-8 overflow-x-hidden overflow-y-auto">
+    <div class="max-w-5xl mx-auto">
+
+        <!-- HOME VIEW -->
+        <div id="view-home" class="view-section active space-y-10 py-8">
+            <div class="text-center space-y-4">
+                <h2 class="text-4xl font-normal tracking-tight text-[var(--text-color)]">Developer Tools</h2>
+                <p class="text-[#cac4d0] max-w-md mx-auto">Minimalist, high-contrast utilities for GitHub repositories. Select a tool to begin.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Cards -->
+                <button onclick="navigateTo('mapper')" class="group relative bg-[var(--surface-color)] hover:bg-[var(--surface-variant)] border border-[var(--outline)]/30 rounded-3xl p-8 text-left transition-all hover:shadow-2xl hover:-translate-y-1">
+                    <div class="mb-6 inline-flex p-4 bg-[#e6e1e5] text-black rounded-2xl shadow-sm">
+                        <span class="material-symbols-outlined" style="font-size:32px">terminal</span>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-2">Repo Mapper</h3>
+                    <p class="text-[#cac4d0] mb-8">Generate ASCII directory trees from any public repository.</p>
+                    <div class="flex items-center font-medium group-hover:underline underline-offset-4">
+                        Launch Tool <span class="material-symbols-outlined ml-1" style="font-size:18px">arrow_forward</span>
+                    </div>
+                </button>
+
+                <button onclick="navigateTo('releases')" class="group relative bg-[var(--surface-color)] hover:bg-[var(--surface-variant)] border border-[var(--outline)]/30 rounded-3xl p-8 text-left transition-all hover:shadow-2xl hover:-translate-y-1">
+                    <div class="mb-6 inline-flex p-4 bg-[#e6e1e5] text-black rounded-2xl shadow-sm">
+                        <span class="material-symbols-outlined" style="font-size:32px">bar_chart</span>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-2">Release Stats</h3>
+                    <p class="text-[#cac4d0] mb-8">Visualize download counts and asset performance.</p>
+                    <div class="flex items-center font-medium group-hover:underline underline-offset-4">
+                        Launch Tool <span class="material-symbols-outlined ml-1" style="font-size:18px">arrow_forward</span>
+                    </div>
+                </button>
+
+                <button onclick="navigateTo('gitpatch')" class="group relative bg-[var(--surface-color)] hover:bg-[var(--surface-variant)] border border-[var(--outline)]/30 rounded-3xl p-8 text-left transition-all hover:shadow-2xl hover:-translate-y-1 md:col-span-2">
+                    <div class="flex items-start justify-between">
+                        <div>
+                            <div class="mb-6 inline-flex p-4 bg-[#e6e1e5] text-black rounded-2xl shadow-sm">
+                                <span class="material-symbols-outlined" style="font-size:32px">difference</span>
+                            </div>
+                            <h3 class="text-2xl font-bold mb-2">Git Patch</h3>
+                            <p class="text-[#cac4d0] mb-4 max-w-lg">Extract raw .patch files from commit URLs.</p>
+                        </div>
+                        <span class="material-symbols-outlined text-[var(--outline)]/20 hidden md:block" style="font-size:128px">integration_instructions</span>
+                    </div>
+                    <div class="flex items-center font-medium group-hover:underline underline-offset-4">
+                        Launch Tool <span class="material-symbols-outlined ml-1" style="font-size:18px">arrow_forward</span>
+                    </div>
+                </button>
+            </div>
+
+            <!-- Quick Access Favorites -->
+            <div id="home-favorites-section" class="pt-6 border-t border-[#49454f]/30 hidden">
+                <h4 class="text-sm font-medium text-[#cac4d0] mb-4 uppercase tracking-wider">Quick Access Favorites</h4>
+                <div id="home-favorites-list" class="flex flex-wrap gap-3"></div>
+            </div>
+        </div>
+
+        <!-- REPO MAPPER VIEW -->
+        <div id="view-mapper" class="view-section space-y-6">
+            <div class="space-y-2">
+                <h2 class="text-2xl font-normal text-[#e6e1e5]">RepoMapper</h2>
+                <p class="text-[#cac4d0] text-sm">Generate ASCII file trees from public repositories.</p>
+            </div>
+
+            <!-- Search Card -->
+            <div class="bg-[#1d1b20] rounded-3xl p-5 md:p-6 shadow-lg border border-[#49454f]/30">
+                <form onsubmit="handleMapperSubmit(event)" class="space-y-6">
+                    <div class="relative group bg-[#2b2930] rounded-t-xl border-b border-[#938f99] hover:bg-[#36343b] transition-colors flex items-center">
+                        <div class="flex-grow relative">
+                            <input type="text" id="mapper-url" oninput="handleUrlInput('mapper')" class="floating-input peer block w-full px-4 pb-2.5 pt-6 bg-transparent border-none text-[#e6e1e5] focus:ring-0 placeholder-transparent focus:placeholder-[#938f99]" placeholder="https://github.com/...">
+                            <label for="mapper-url" class="absolute left-4 top-4 text-[#cac4d0] text-xs transition-all pointer-events-none">Repository URL</label>
+                            <datalist id="mapper-datalist"></datalist>
+                        </div>
+                        <button type="button" id="mapper-fav-btn" onclick="toggleFavoriteCurrent('mapper')" class="mr-2 p-2 rounded-full hover:bg-[#e6e1e5]/10 transition-colors hidden" title="Toggle Favorite">
+                            <span class="material-symbols-outlined text-[#cac4d0]">star</span>
+                        </button>
+                        <div class="absolute bottom-[-1px] left-0 right-0 h-[2px] bg-[#e6e1e5] scale-x-0 transition-transform peer-focus-within:scale-x-100"></div>
+                    </div>
+
+                    <!-- Settings & Format -->
+                    <div class="flex flex-col gap-4">
+                        <div class="flex items-center justify-between flex-wrap gap-4">
+                            <button type="button" onclick="toggleToken('mapper')" class="text-[#e6e1e5] text-sm font-medium flex items-center gap-2 hover:bg-[#ffffff]/10 px-3 py-1.5 rounded-full transition-colors">
+                                <span class="material-symbols-outlined" style="font-size:18px">settings</span>
+                                <span id="mapper-token-label">Token Settings</span>
+                            </button>
+                            <div class="flex bg-[#2b2930] rounded-full border border-[#49454f] overflow-hidden">
+                                <button type="button" onclick="setMapperFormat('ascii')" id="btn-format-ascii" class="flex items-center gap-2 px-4 py-2 text-xs font-medium bg-[#4a4458] text-[#e8def8]">
+                                    <span class="material-symbols-outlined" style="font-size:16px">terminal</span> ASCII
+                                </button>
+                                <div class="w-px bg-[#49454f]"></div>
+                                <button type="button" onclick="setMapperFormat('paths')" id="btn-format-paths" class="flex items-center gap-2 px-4 py-2 text-xs font-medium text-[#cac4d0] hover:bg-[#49454f]">
+                                    <span class="material-symbols-outlined" style="font-size:16px">view_list</span> Paths
+                                </button>
+                            </div>
+                        </div>
+                        <div id="mapper-token-container" class="hidden relative bg-[#2b2930] rounded-t-xl border-b border-[#938f99] animate-fade-in">
+                            <input type="password" id="mapper-token" class="floating-input peer block w-full px-4 pb-2.5 pt-6 bg-transparent border-none text-[#e6e1e5] focus:ring-0 placeholder-transparent focus:placeholder-[#938f99]" placeholder="github_pat_...">
+                            <label for="mapper-token" class="absolute left-4 top-4 text-[#cac4d0] text-xs transition-all pointer-events-none">Access Token (Optional)</label>
+                            <div class="absolute bottom-[-1px] left-0 right-0 h-[2px] bg-[#e6e1e5] scale-x-0 transition-transform peer-focus:scale-x-100"></div>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-end">
+                        <button type="submit" id="mapper-submit" class="bg-[#e6e1e5] hover:bg-[#ffffff] text-[#141218] font-semibold px-6 py-3 rounded-full transition-all shadow-md flex items-center gap-2">
+                            <span class="material-symbols-outlined" style="font-size:20px">terminal</span>
+                            <span>Generate Map</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Mapper Results -->
+            <div id="mapper-error" class="hidden bg-[#601410]/40 border border-[#8c1d18] rounded-xl p-4 flex gap-3 items-start text-[#f2b8b5]">
+                <span class="material-symbols-outlined" style="font-size:20px">error</span>
+                <span class="text-sm font-medium" id="mapper-error-text"></span>
+            </div>
+
+            <div id="mapper-result" class="hidden space-y-4 pb-12 animate-slide-up">
+                <div class="flex items-center justify-between px-2">
+                    <div class="flex gap-4 text-sm font-medium text-[#cac4d0]">
+                        <span class="bg-[#2b2930] px-3 py-1 rounded-md border border-[#49454f] text-[#e6e1e5]"><span id="mapper-stats-folders">0</span> Folders</span>
+                        <span class="bg-[#2b2930] px-3 py-1 rounded-md border border-[#49454f] text-[#e6e1e5]"><span id="mapper-stats-files">0</span> Files</span>
+                    </div>
+                    <button onclick="copyMapperOutput()" id="mapper-copy-btn" class="flex items-center gap-2 px-4 py-2 rounded-full bg-[#2b2930] hover:bg-[#4a4458] text-[#e6e1e5] transition-all text-sm font-medium shadow-sm">
+                        <span class="material-symbols-outlined" style="font-size:18px">content_copy</span><span>Copy Code</span>
+                    </button>
+                </div>
+                <div class="relative rounded-xl overflow-hidden bg-[#1d1b20] shadow-xl border border-[#49454f]">
+                    <div class="absolute top-0 left-0 right-0 h-10 bg-[#2b2930] flex items-center px-4 gap-2 border-b border-[#49454f]/50">
+                        <span class="material-symbols-outlined text-[#cac4d0]" style="font-size:18px">description</span>
+                        <span class="text-xs font-mono text-[#cac4d0] tracking-wide">OUTPUT</span>
+                    </div>
+                    <div class="pt-10">
+                        <pre class="p-6 overflow-auto max-h-[60vh] text-xs sm:text-sm font-mono leading-[1.6] text-[#e6e1e5] selection:bg-[#4a4458]"><code id="mapper-code"></code></pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- RELEASE STATS VIEW -->
+        <div id="view-releases" class="view-section space-y-6">
+            <div class="space-y-2">
+                <h2 class="text-2xl font-normal text-[#e6e1e5]">Release Stats</h2>
+                <p class="text-[#cac4d0] text-sm">Visualize download counts and assets for GitHub releases.</p>
+            </div>
+
+            <div class="bg-[#1d1b20] rounded-3xl p-5 md:p-6 shadow-lg border border-[#49454f]/30">
+                <form onsubmit="handleReleasesSubmit(event)" class="space-y-6">
+                    <div class="relative group bg-[#2b2930] rounded-t-xl border-b border-[#938f99] hover:bg-[#36343b] transition-colors flex items-center">
+                        <div class="flex-grow relative">
+                            <input type="text" id="releases-url" oninput="handleUrlInput('releases')" class="floating-input peer block w-full px-4 pb-2.5 pt-6 bg-transparent border-none text-[#e6e1e5] focus:ring-0 placeholder-transparent focus:placeholder-[#938f99]" placeholder="https://github.com/...">
+                            <label for="releases-url" class="absolute left-4 top-4 text-[#cac4d0] text-xs transition-all pointer-events-none">Repository URL</label>
+                            <datalist id="releases-datalist"></datalist>
+                        </div>
+                        <button type="button" id="releases-fav-btn" onclick="toggleFavoriteCurrent('releases')" class="mr-2 p-2 rounded-full hover:bg-[#e6e1e5]/10 transition-colors hidden" title="Toggle Favorite">
+                            <span class="material-symbols-outlined text-[#cac4d0]">star</span>
+                        </button>
+                        <div class="absolute bottom-[-1px] left-0 right-0 h-[2px] bg-[#e6e1e5] scale-x-0 transition-transform peer-focus-within:scale-x-100"></div>
+                    </div>
+
+                    <div class="flex flex-col gap-4">
+                        <div class="flex items-center justify-between flex-wrap gap-4">
+                            <button type="button" onclick="toggleToken('releases')" class="text-[#e6e1e5] text-sm font-medium flex items-center gap-2 hover:bg-[#ffffff]/10 px-3 py-1.5 rounded-full transition-colors">
+                                <span class="material-symbols-outlined" style="font-size:18px">settings</span>
+                                <span id="releases-token-label">Token Settings</span>
+                            </button>
+                        </div>
+                        <div id="releases-token-container" class="hidden relative bg-[#2b2930] rounded-t-xl border-b border-[#938f99] animate-fade-in">
+                            <input type="password" id="releases-token" class="floating-input peer block w-full px-4 pb-2.5 pt-6 bg-transparent border-none text-[#e6e1e5] focus:ring-0 placeholder-transparent focus:placeholder-[#938f99]" placeholder="github_pat_...">
+                            <label for="releases-token" class="absolute left-4 top-4 text-[#cac4d0] text-xs transition-all pointer-events-none">Access Token (Optional)</label>
+                            <div class="absolute bottom-[-1px] left-0 right-0 h-[2px] bg-[#e6e1e5] scale-x-0 transition-transform peer-focus:scale-x-100"></div>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-end">
+                        <button type="submit" id="releases-submit" class="bg-[#e6e1e5] hover:bg-[#ffffff] text-[#141218] font-semibold px-6 py-3 rounded-full transition-all shadow-md flex items-center gap-2">
+                            <span class="material-symbols-outlined" style="font-size:20px">analytics</span>
+                            <span>Analyze</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <div id="releases-error" class="hidden bg-[#601410]/40 border border-[#8c1d18] rounded-xl p-4 flex gap-3 items-start text-[#f2b8b5]">
+                <span class="material-symbols-outlined" style="font-size:20px">error</span>
+                <span class="text-sm font-medium" id="releases-error-text"></span>
+            </div>
+
+            <div id="releases-result" class="hidden grid grid-cols-1 lg:grid-cols-2 gap-6 animate-slide-up pb-12">
+                <!-- Left: Details -->
+                <div class="bg-[#1d1b20] rounded-3xl p-6 shadow-lg border border-[#49454f]/30 flex flex-col gap-6">
+                    <div class="space-y-1">
+                        <p class="text-[#cac4d0] text-xs uppercase tracking-widest font-bold">Selected Release</p>
+                        <h3 id="rel-detail-name" class="text-2xl font-bold text-[#e6e1e5] break-all"></h3>
+                        <div class="flex items-center gap-2 text-[#cac4d0] text-sm">
+                            <span class="material-symbols-outlined" style="font-size:16px">label</span>
+                            <span id="rel-detail-tag"></span>
+                            <span>•</span>
+                            <span id="rel-detail-date"></span>
+                        </div>
+                    </div>
+                    <div class="p-4 bg-[#2b2930] rounded-2xl border border-[#49454f]/50 flex items-center justify-between">
+                        <span class="text-[#cac4d0] font-medium">Downloads</span>
+                        <span id="rel-detail-downloads" class="text-2xl font-bold text-[#e6e1e5]"></span>
+                    </div>
+                    <div class="flex-1 space-y-4">
+                        <p class="text-[#cac4d0] text-xs uppercase tracking-widest font-bold">Assets</p>
+                        <div id="rel-assets-list" class="space-y-3 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar"></div>
+                    </div>
+                </div>
+                <!-- Right: Overview -->
+                <div class="bg-[#1d1b20] rounded-3xl p-6 shadow-lg border border-[#49454f]/30 flex flex-col gap-6">
+                    <div class="flex items-center justify-between">
+                        <div class="space-y-1">
+                            <p class="text-[#cac4d0] text-xs uppercase tracking-widest font-bold">Total Project Downloads</p>
+                            <h3 id="rel-total-downloads" class="text-4xl font-bold text-[#e6e1e5]"></h3>
+                        </div>
+                        <div class="p-3 bg-[#2b2930] rounded-full">
+                            <span class="material-symbols-outlined text-[#e6e1e5]">download</span>
+                        </div>
+                    </div>
+                    <div class="flex-1 space-y-4">
+                        <div class="flex items-center justify-between">
+                            <p class="text-[#cac4d0] text-xs uppercase tracking-widest font-bold">All Releases</p>
+                            <p id="rel-count" class="text-[#cac4d0] text-xs"></p>
+                        </div>
+                        <div id="rel-list" class="space-y-2 max-h-[500px] overflow-y-auto pr-2 custom-scrollbar"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- GIT PATCH VIEW -->
+        <div id="view-gitpatch" class="view-section space-y-6">
+            <div class="space-y-2">
+                <h2 class="text-2xl font-normal text-[#e6e1e5]">Git Patch</h2>
+                <p class="text-[#cac4d0] text-sm">Extract raw .patch files from commits for git apply.</p>
+            </div>
+
+            <div class="bg-[#1d1b20] rounded-3xl p-5 md:p-6 shadow-lg border border-[#49454f]/30">
+                <form onsubmit="handlePatchSubmit(event)" class="space-y-6">
+                    <div class="relative group bg-[#2b2930] rounded-t-xl border-b border-[#938f99] hover:bg-[#36343b] transition-colors flex items-center">
+                        <div class="flex-grow relative">
+                            <input type="text" id="patch-url" class="floating-input peer block w-full px-4 pb-2.5 pt-6 bg-transparent border-none text-[#e6e1e5] focus:ring-0 placeholder-transparent focus:placeholder-[#938f99]" placeholder="https://github.com/...">
+                            <label for="patch-url" class="absolute left-4 top-4 text-[#cac4d0] text-xs transition-all pointer-events-none">Commit URL</label>
+                        </div>
+                        <div class="absolute bottom-[-1px] left-0 right-0 h-[2px] bg-[#e6e1e5] scale-x-0 transition-transform peer-focus-within:scale-x-100"></div>
+                    </div>
+                    <div class="flex justify-end">
+                        <button type="submit" id="patch-submit" class="bg-[#e6e1e5] hover:bg-[#ffffff] text-[#141218] font-semibold px-6 py-3 rounded-full transition-all shadow-md flex items-center gap-2">
+                            <span class="material-symbols-outlined" style="font-size:20px">difference</span>
+                            <span>Get Patch</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <div id="patch-error" class="hidden bg-[#601410]/40 border border-[#8c1d18] rounded-xl p-4 flex gap-3 items-start text-[#f2b8b5]">
+                <span class="material-symbols-outlined" style="font-size:20px">error</span>
+                <span class="text-sm font-medium" id="patch-error-text"></span>
+            </div>
+
+            <div id="patch-result" class="hidden space-y-4 pb-12 animate-slide-up">
+                <div class="flex items-center justify-between px-2">
+                    <div class="text-sm font-medium text-[#cac4d0]">
+                            <span class="bg-[#2b2930] px-3 py-1 rounded-md border border-[#49454f] text-[#e6e1e5] flex items-center gap-2">
+                                <span class="material-symbols-outlined" style="font-size:16px">check</span> Ready to Apply
+                            </span>
+                    </div>
+                    <div class="flex gap-2">
+                        <button onclick="downloadPatch()" class="flex items-center gap-2 px-4 py-2 rounded-full bg-[#2b2930] hover:bg-[#4a4458] text-[#e6e1e5] transition-all text-sm font-medium shadow-sm">
+                            <span class="material-symbols-outlined" style="font-size:18px">download</span> Download
+                        </button>
+                        <button onclick="copyPatchOutput()" id="patch-copy-btn" class="flex items-center gap-2 px-4 py-2 rounded-full bg-[#2b2930] hover:bg-[#4a4458] text-[#e6e1e5] transition-all text-sm font-medium shadow-sm">
+                            <span class="material-symbols-outlined" style="font-size:18px">content_copy</span><span>Copy</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="relative rounded-xl overflow-hidden bg-[#1d1b20] shadow-xl border border-[#49454f]">
+                    <div class="absolute top-0 left-0 right-0 h-10 bg-[#2b2930] flex items-center px-4 gap-2 border-b border-[#49454f]/50">
+                        <span class="material-symbols-outlined text-[#cac4d0]" style="font-size:18px">integration_instructions</span>
+                        <span class="text-xs font-mono text-[#cac4d0] tracking-wide">PATCH</span>
+                    </div>
+                    <div class="pt-10">
+                        <pre class="p-6 overflow-auto max-h-[60vh] text-xs sm:text-sm font-mono leading-[1.6] text-[#e6e1e5] selection:bg-[#4a4458] whitespace-pre-wrap"><code id="patch-code"></code></pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- FAVORITES VIEW -->
+        <div id="view-favorites" class="view-section space-y-6">
+            <div class="space-y-2">
+                <h2 class="text-2xl font-normal text-[#e6e1e5]">Favorites</h2>
+                <p class="text-[#cac4d0] text-sm">Quick access to your saved repositories.</p>
+            </div>
+            <div id="favorites-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 pb-12"></div>
+            <div id="favorites-empty" class="hidden flex flex-col items-center justify-center h-[50vh] text-center space-y-4">
+                <div class="p-6 bg-[#1d1b20] rounded-full border border-[#49454f]/30">
+                    <span class="material-symbols-outlined text-[#cac4d0]" style="font-size:48px">star_border</span>
+                </div>
+                <h2 class="text-2xl font-normal text-[#e6e1e5]">No favorites yet</h2>
+                <p class="text-[#cac4d0] max-w-sm">Star repositories in RepoMapper or Release Stats to save them here.</p>
+            </div>
+        </div>
+
+    </div>
+</main>
+
+<script>
+    // --- State Management ---
+    const state = {
+        currentView: 'home',
+        favorites: [],
+        mapper: {
+            format: 'ascii',
+            rawPaths: [],
+            parsedRepo: null
+        },
+        releases: {
+            data: null,
+            selectedIndex: 0,
+            parsedRepo: null
+        },
+        patch: {
+            content: ''
+        }
+    };
+
+    const STORAGE_KEY = 'repomapper_favorites';
+
+    // --- Init ---
+    document.addEventListener('DOMContentLoaded', () => {
+        loadFavorites();
+        renderFavorites();
+        renderHomeFavorites();
+        setupDatalists();
+    });
+
+    // --- Navigation ---
+    function toggleDrawer() {
+        const drawer = document.getElementById('drawer');
+        const scrim = document.getElementById('drawer-scrim');
+        const isOpen = !drawer.classList.contains('-translate-x-full');
+
+        if (isOpen) {
+            drawer.classList.add('-translate-x-full');
+            scrim.classList.remove('opacity-100', 'pointer-events-auto');
+            scrim.classList.add('opacity-0', 'pointer-events-none');
+        } else {
+            drawer.classList.remove('-translate-x-full');
+            scrim.classList.add('opacity-100', 'pointer-events-auto');
+            scrim.classList.remove('opacity-0', 'pointer-events-none');
+        }
+    }
+
+    function navigateTo(viewId, url = '') {
+        state.currentView = viewId;
+
+        // Hide all views
+        document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
+        // Show selected view
+        document.getElementById(`view-${viewId}`).classList.add('active');
+
+        // Update Nav Styles
+        document.querySelectorAll('.nav-item').forEach(el => {
+            el.classList.remove('bg-[#333136]', 'text-[#e6e1e5]');
+            el.classList.add('text-[#cac4d0]');
+            el.querySelector('.material-symbols-outlined').classList.remove('filled-icon');
+        });
+        const activeNav = document.getElementById(`nav-${viewId}`);
+        if(activeNav) {
+            activeNav.classList.add('bg-[#333136]', 'text-[#e6e1e5]');
+            activeNav.classList.remove('text-[#cac4d0]');
+            activeNav.querySelector('.material-symbols-outlined').classList.add('filled-icon');
+        }
+
+        // Handle pre-filled URL
+        if (url) {
+            if (viewId === 'mapper') {
+                const input = document.getElementById('mapper-url');
+                input.value = url;
+                handleUrlInput('mapper');
+            } else if (viewId === 'releases') {
+                const input = document.getElementById('releases-url');
+                input.value = url;
+                handleUrlInput('releases');
+            }
+        }
+
+        // Close drawer if open
+        const drawer = document.getElementById('drawer');
+        if (!drawer.classList.contains('-translate-x-full')) {
+            toggleDrawer();
+        }
+    }
+
+    // --- Favorites Logic ---
+    function loadFavorites() {
+        const stored = localStorage.getItem(STORAGE_KEY);
+        if (stored) {
+            try {
+                state.favorites = JSON.parse(stored);
+            } catch (e) {
+                console.error("Parse error", e);
+            }
+        }
+    }
+
+    function saveFavorites() {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state.favorites));
+        renderFavorites();
+        renderHomeFavorites();
+        setupDatalists();
+        // Update icons if visible
+        if (state.currentView === 'mapper') handleUrlInput('mapper');
+        if (state.currentView === 'releases') handleUrlInput('releases');
+    }
+
+    function isFavorite(owner, repo) {
+        return state.favorites.some(f => f.owner.toLowerCase() === owner.toLowerCase() && f.repo.toLowerCase() === repo.toLowerCase());
+    }
+
+    function toggleFavoriteCurrent(view) {
+        let parsed = view === 'mapper' ? state.mapper.parsedRepo : state.releases.parsedRepo;
+        if (!parsed) return;
+
+        if (isFavorite(parsed.owner, parsed.repo)) {
+            state.favorites = state.favorites.filter(f => !(f.owner.toLowerCase() === parsed.owner.toLowerCase() && f.repo.toLowerCase() === parsed.repo.toLowerCase()));
+        } else {
+            state.favorites = [{ owner: parsed.owner, repo: parsed.repo, timestamp: Date.now() }, ...state.favorites];
+        }
+        saveFavorites();
+    }
+
+    function renderFavorites() {
+        const grid = document.getElementById('favorites-grid');
+        const empty = document.getElementById('favorites-empty');
+
+        if (state.favorites.length === 0) {
+            grid.innerHTML = '';
+            empty.classList.remove('hidden');
+            return;
+        }
+
+        empty.classList.add('hidden');
+        grid.innerHTML = state.favorites.map(f => `
+                <div class="group bg-[#1d1b20] hover:bg-[#2b2930] border border-[#49454f]/50 rounded-2xl p-5 transition-all duration-200 hover:shadow-lg flex flex-col">
+                    <div class="flex justify-between items-start mb-4">
+                        <div class="overflow-hidden">
+                            <div class="flex items-center gap-2 text-[#cac4d0] text-xs mb-1">
+                                <span class="material-symbols-outlined" style="font-size:16px">folder_open</span>
+                                <span>${f.owner}</span>
+                            </div>
+                            <h3 class="text-lg font-bold text-[#e6e1e5] truncate">${f.repo}</h3>
+                        </div>
+                        <button onclick="state.favorites = state.favorites.filter(x => x.repo !== '${f.repo}'); saveFavorites();" class="p-2 -mr-2 -mt-2 rounded-full text-[#e6e1e5] hover:bg-[#e6e1e5]/10 transition-colors">
+                            <span class="material-symbols-outlined filled-icon text-[#e6e1e5]">star</span>
+                        </button>
+                    </div>
+                    <div class="mt-auto flex gap-2 pt-4 border-t border-[#49454f]/30">
+                        <button onclick="navigateTo('mapper', 'https://github.com/${f.owner}/${f.repo}')" class="flex-1 flex items-center justify-center gap-2 px-3 py-2 rounded-lg bg-[#333136] hover:bg-[#4a4458] text-[#e6e1e5] text-xs font-medium transition-colors">
+                            <span class="material-symbols-outlined" style="font-size:16px">terminal</span> Map
+                        </button>
+                        <button onclick="navigateTo('releases', 'https://github.com/${f.owner}/${f.repo}')" class="flex-1 flex items-center justify-center gap-2 px-3 py-2 rounded-lg bg-[#333136] hover:bg-[#4a4458] text-[#e6e1e5] text-xs font-medium transition-colors">
+                            <span class="material-symbols-outlined" style="font-size:16px">bar_chart</span> Stats
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+    }
+
+    function renderHomeFavorites() {
+        const section = document.getElementById('home-favorites-section');
+        const list = document.getElementById('home-favorites-list');
+
+        if (state.favorites.length === 0) {
+            section.classList.add('hidden');
+            return;
+        }
+
+        section.classList.remove('hidden');
+        list.innerHTML = state.favorites.slice(0, 5).map(f => `
+                <button onclick="navigateTo('releases', 'https://github.com/${f.owner}/${f.repo}')" class="flex items-center gap-2 bg-[var(--surface-color)] hover:bg-[var(--surface-variant)] border border-[var(--outline)]/50 rounded-full px-4 py-2 transition-colors text-sm text-[var(--text-color)]">
+                    <span class="material-symbols-outlined filled-icon text-[#e6e1e5]" style="font-size:16px">star</span>
+                    <span>${f.repo}</span>
+                </button>
+            `).join('') + `
+                <button onclick="navigateTo('favorites')" class="flex items-center gap-1 px-3 py-2 text-sm text-[#cac4d0] hover:text-[var(--text-color)] transition-colors">
+                    See all <span class="material-symbols-outlined" style="font-size:14px">arrow_forward</span>
+                </button>
+            `;
+    }
+
+    function setupDatalists() {
+        const options = state.favorites.map(f => `<option value="https://github.com/${f.owner}/${f.repo}">`).join('');
+        document.getElementById('mapper-datalist').innerHTML = options;
+        document.getElementById('releases-datalist').innerHTML = options;
+    }
+
+    // --- Common Utils ---
+    function parseGithubUrl(inputUrl) {
+        try {
+            const cleanUrl = inputUrl.replace(/\/$/, '');
+            const pattern = /github\.com\/([^/]+)\/([^/]+)/;
+            const match = cleanUrl.match(pattern);
+            if (match) return { owner: match[1], repo: match[2] };
+            return null;
+        } catch (e) { return null; }
+    }
+
+    function handleUrlInput(view) {
+        const input = document.getElementById(`${view}-url`);
+        const btn = document.getElementById(`${view}-fav-btn`);
+        const parsed = parseGithubUrl(input.value);
+
+        if (view === 'mapper') state.mapper.parsedRepo = parsed;
+        if (view === 'releases') state.releases.parsedRepo = parsed;
+
+        if (parsed) {
+            btn.classList.remove('hidden');
+            const icon = btn.querySelector('.material-symbols-outlined');
+            if (isFavorite(parsed.owner, parsed.repo)) {
+                icon.classList.add('filled-icon', 'text-[#e6e1e5]');
+                icon.classList.remove('text-[#cac4d0]');
+            } else {
+                icon.classList.remove('filled-icon', 'text-[#e6e1e5]');
+                icon.classList.add('text-[#cac4d0]');
+            }
+        } else {
+            btn.classList.add('hidden');
+        }
+    }
+
+    function toggleToken(view) {
+        const container = document.getElementById(`${view}-token-container`);
+        const label = document.getElementById(`${view}-token-label`);
+        if (container.classList.contains('hidden')) {
+            container.classList.remove('hidden');
+            label.innerText = 'Hide Settings';
+        } else {
+            container.classList.add('hidden');
+            label.innerText = 'Token Settings';
+        }
+    }
+
+    // --- Repo Mapper Logic ---
+    function setMapperFormat(format) {
+        state.mapper.format = format;
+        document.getElementById('btn-format-ascii').className = format === 'ascii'
+            ? 'flex items-center gap-2 px-4 py-2 text-xs font-medium bg-[#4a4458] text-[#e8def8]'
+            : 'flex items-center gap-2 px-4 py-2 text-xs font-medium text-[#cac4d0] hover:bg-[#49454f]';
+        document.getElementById('btn-format-paths').className = format === 'paths'
+            ? 'flex items-center gap-2 px-4 py-2 text-xs font-medium bg-[#4a4458] text-[#e8def8]'
+            : 'flex items-center gap-2 px-4 py-2 text-xs font-medium text-[#cac4d0] hover:bg-[#49454f]';
+
+        if (state.mapper.rawPaths.length > 0) {
+            renderMapperOutput();
+        }
+    }
+
+    async function handleMapperSubmit(e) {
+        e.preventDefault();
+        const url = document.getElementById('mapper-url').value;
+        const token = document.getElementById('mapper-token').value;
+        const errorDiv = document.getElementById('mapper-error');
+        const resultDiv = document.getElementById('mapper-result');
+        const btn = document.getElementById('mapper-submit');
+        const btnText = btn.querySelector('span:last-child');
+        const btnIcon = btn.querySelector('.material-symbols-outlined');
+
+        errorDiv.classList.add('hidden');
+        resultDiv.classList.add('hidden');
+        btn.disabled = true;
+        btnText.innerText = 'Processing...';
+        btnIcon.innerText = 'progress_activity';
+        btnIcon.classList.add('animate-spin');
+
+        const parsed = parseGithubUrl(url);
+        if (!parsed) {
+            showError('mapper', 'Invalid GitHub URL');
+            resetBtn();
+            return;
+        }
+
+        try {
+            const headers = { 'Accept': 'application/vnd.github.v3+json' };
+            if (token) headers['Authorization'] = `token ${token}`;
+
+            const repoRes = await fetch(`https://api.github.com/repos/${parsed.owner}/${parsed.repo}`, { headers });
+            if (!repoRes.ok) throw new Error(repoRes.status === 404 ? 'Repo not found' : 'API Error');
+
+            const repoData = await repoRes.json();
+            const treeRes = await fetch(`https://api.github.com/repos/${parsed.owner}/${parsed.repo}/git/trees/${repoData.default_branch}?recursive=1`, { headers });
+            if (!treeRes.ok) throw new Error('Failed to fetch tree');
+
+            const treeData = await treeRes.json();
+            state.mapper.rawPaths = treeData.tree;
+            if(treeData.truncated) showError('mapper', 'Repo is massive, output truncated.');
+
+            renderMapperOutput();
+            resultDiv.classList.remove('hidden');
+
+        } catch (err) {
+            showError('mapper', err.message);
+        } finally {
+            resetBtn();
+        }
+
+        function resetBtn() {
+            btn.disabled = false;
+            btnText.innerText = 'Generate Map';
+            btnIcon.innerText = 'terminal';
+            btnIcon.classList.remove('animate-spin');
+        }
+    }
+
+    function renderMapperOutput() {
+        const paths = state.mapper.rawPaths;
+        let output = '';
+        let files = 0, folders = 0;
+
+        if (state.mapper.format === 'ascii') {
+            // Generate ASCII
+            const structure = {};
+            paths.forEach(item => {
+                if (item.type === 'blob') files++;
+                if (item.type === 'tree') folders++;
+                const parts = item.path.split('/');
+                let current = structure;
+                parts.forEach((part, index) => {
+                    if (!current[part]) current[part] = index === parts.length - 1 ? (item.type === 'blob' ? null : {}) : {};
+                    if (current[part] !== null) current = current[part];
+                });
+            });
+
+            const buildString = (obj, prefix = '') => {
+                const keys = Object.keys(obj).sort((a, b) => {
+                    const aIsFolder = obj[a] !== null, bIsFolder = obj[b] !== null;
+                    if (aIsFolder && !bIsFolder) return -1;
+                    if (!aIsFolder && bIsFolder) return 1;
+                    return a.localeCompare(b);
+                });
+                keys.forEach((key, index) => {
+                    const isLast = index === keys.length - 1;
+                    output += `${prefix}${isLast ? '└── ' : '├── '}${key}\n`;
+                    if (obj[key] !== null) buildString(obj[key], prefix + (isLast ? '    ' : '│   '));
+                });
+            };
+            buildString(structure);
+        } else {
+            // Paths
+            paths.forEach(p => {
+                if (p.type === 'blob') files++;
+                if (p.type === 'tree') folders++;
+            });
+            output = paths.map(p => p.path).join('\n');
+        }
+
+        document.getElementById('mapper-code').innerText = output;
+        document.getElementById('mapper-stats-files').innerText = files;
+        document.getElementById('mapper-stats-folders').innerText = folders;
+    }
+
+    function copyMapperOutput() {
+        const text = document.getElementById('mapper-code').innerText;
+        navigator.clipboard.writeText(text);
+        const btn = document.getElementById('mapper-copy-btn');
+        const originalHtml = btn.innerHTML;
+        btn.innerHTML = `<span class="material-symbols-outlined text-emerald-400" style="font-size:18px">check_circle</span><span class="text-emerald-400">Copied</span>`;
+        setTimeout(() => btn.innerHTML = originalHtml, 2000);
+    }
+
+    // --- Release Stats Logic ---
+    async function handleReleasesSubmit(e) {
+        e.preventDefault();
+        const url = document.getElementById('releases-url').value;
+        const token = document.getElementById('releases-token').value;
+        const errorDiv = document.getElementById('releases-error');
+        const resultDiv = document.getElementById('releases-result');
+        const btn = document.getElementById('releases-submit');
+        const btnText = btn.querySelector('span:last-child');
+        const btnIcon = btn.querySelector('.material-symbols-outlined');
+
+        errorDiv.classList.add('hidden');
+        resultDiv.classList.add('hidden');
+        btn.disabled = true;
+        btnText.innerText = 'Processing...';
+        btnIcon.innerText = 'progress_activity';
+        btnIcon.classList.add('animate-spin');
+
+        const parsed = parseGithubUrl(url);
+        if (!parsed) {
+            showError('releases', 'Invalid GitHub URL');
+            resetBtn();
+            return;
+        }
+
+        try {
+            const headers = { 'Accept': 'application/vnd.github.v3+json' };
+            if (token) headers['Authorization'] = `token ${token}`;
+
+            const res = await fetch(`https://api.github.com/repos/${parsed.owner}/${parsed.repo}/releases?per_page=100`, { headers });
+            if (!res.ok) throw new Error(res.status === 404 ? 'Repo not found' : 'API Error');
+
+            const releases = await res.json();
+            if (!releases.length) throw new Error('No releases found');
+
+            let total = 0;
+            const processed = releases.map(r => {
+                const dl = r.assets.reduce((sum, a) => sum + a.download_count, 0);
+                total += dl;
+                return {
+                    name: r.name || r.tag_name,
+                    tagName: r.tag_name,
+                    date: r.published_at,
+                    downloads: dl,
+                    assets: r.assets.map(a => ({ name: a.name, downloads: a.download_count })).sort((a,b) => b.downloads - a.downloads)
+                };
+            });
+
+            state.releases.data = { total, releases: processed };
+            state.releases.selectedIndex = 0;
+
+            renderReleases();
+            resultDiv.classList.remove('hidden');
+
+        } catch (err) {
+            showError('releases', err.message);
+        } finally {
+            resetBtn();
+        }
+
+        function resetBtn() {
+            btn.disabled = false;
+            btnText.innerText = 'Analyze';
+            btnIcon.innerText = 'analytics';
+            btnIcon.classList.remove('animate-spin');
+        }
+    }
+
+    function renderReleases() {
+        const { total, releases } = state.releases.data;
+        const active = releases[state.releases.selectedIndex];
+        const maxDl = Math.max(...releases.map(r => r.downloads));
+        const maxAsset = active.assets.length ? Math.max(...active.assets.map(a => a.downloads)) : 0;
+
+        // Details
+        document.getElementById('rel-detail-name').innerText = active.name;
+        document.getElementById('rel-detail-tag').innerText = active.tagName;
+        document.getElementById('rel-detail-date').innerText = new Date(active.date).toLocaleDateString();
+        document.getElementById('rel-detail-downloads').innerText = active.downloads.toLocaleString();
+
+        const assetList = document.getElementById('rel-assets-list');
+        if (active.assets.length === 0) {
+            assetList.innerHTML = '<div class="text-center py-8 text-[#cac4d0] italic">No assets.</div>';
+        } else {
+            assetList.innerHTML = active.assets.map(a => `
+                    <div class="group">
+                        <div class="flex justify-between text-sm mb-1.5">
+                            <span class="text-[#e6e1e5] font-medium truncate max-w-[70%]">${a.name}</span>
+                            <span class="text-[#cac4d0]">${a.downloads.toLocaleString()}</span>
+                        </div>
+                        <div class="h-2 w-full bg-[#49454f]/40 rounded-full overflow-hidden">
+                            <div class="h-full bg-[#e6e1e5] rounded-full" style="width: ${maxAsset > 0 ? (a.downloads / maxAsset) * 100 : 0}%"></div>
+                        </div>
+                    </div>
+                `).join('');
+        }
+
+        // Overview List
+        document.getElementById('rel-total-downloads').innerText = total.toLocaleString();
+        document.getElementById('rel-count').innerText = `${releases.length} Found`;
+
+        document.getElementById('rel-list').innerHTML = releases.map((r, idx) => {
+            const isSelected = idx === state.releases.selectedIndex;
+            return `
+                    <button onclick="state.releases.selectedIndex=${idx}; renderReleases();" class="w-full text-left p-3 rounded-xl transition-all border ${isSelected ? 'bg-[#e6e1e5] border-[#e6e1e5] text-[#141218]' : 'bg-transparent border-transparent hover:bg-[#2b2930] text-[#cac4d0]'}">
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="font-medium truncate max-w-[60%] ${isSelected ? 'text-black' : 'text-[#e6e1e5]'}">${r.name}</span>
+                            <span class="text-sm ${isSelected ? 'text-black/70' : 'text-[#cac4d0]'}">${r.downloads.toLocaleString()}</span>
+                        </div>
+                        <div class="h-1 w-full rounded-full overflow-hidden ${isSelected ? 'bg-black/10' : 'bg-[#49454f]/40'}">
+                            <div class="h-full rounded-full ${isSelected ? 'bg-black' : 'bg-[#cac4d0]'}" style="width: ${maxDl > 0 ? (r.downloads / maxDl) * 100 : 0}%"></div>
+                        </div>
+                    </button>
+                `;
+        }).join('');
+    }
+
+    // --- Git Patch Logic ---
+    async function handlePatchSubmit(e) {
+        e.preventDefault();
+        const url = document.getElementById('patch-url').value;
+        const errorDiv = document.getElementById('patch-error');
+        const resultDiv = document.getElementById('patch-result');
+        const btn = document.getElementById('patch-submit');
+        const btnText = btn.querySelector('span:last-child');
+        const btnIcon = btn.querySelector('.material-symbols-outlined');
+
+        errorDiv.classList.add('hidden');
+        resultDiv.classList.add('hidden');
+        btn.disabled = true;
+        btnText.innerText = 'Fetching...';
+        btnIcon.innerText = 'progress_activity';
+        btnIcon.classList.add('animate-spin');
+
+        try {
+            const cleanUrl = url.replace(/\/$/, '');
+            const pattern = /github\.com\/([^/]+)\/([^/]+)\/commit\/([a-fA-F0-9]+)/;
+            const match = cleanUrl.match(pattern);
+
+            if (!match) throw new Error('Invalid Commit URL');
+
+            const [_, owner, repo, sha] = match;
+            const res = await fetch(`https://api.github.com/repos/${owner}/${repo}/commits/${sha}`, {
+                headers: { 'Accept': 'application/vnd.github.v3.patch' }
+            });
+
+            if (!res.ok) throw new Error('Failed to fetch patch');
+
+            state.patch.content = await res.text();
+            state.patch.filename = `${repo}-${sha.substring(0, 7)}.patch`;
+
+            document.getElementById('patch-code').innerText = state.patch.content;
+            resultDiv.classList.remove('hidden');
+
+        } catch (err) {
+            showError('patch', err.message);
+        } finally {
+            btn.disabled = false;
+            btnText.innerText = 'Get Patch';
+            btnIcon.innerText = 'difference';
+            btnIcon.classList.remove('animate-spin');
+        }
+    }
+
+    function copyPatchOutput() {
+        navigator.clipboard.writeText(state.patch.content);
+        const btn = document.getElementById('patch-copy-btn');
+        const originalHtml = btn.innerHTML;
+        btn.innerHTML = `<span class="material-symbols-outlined text-emerald-400" style="font-size:18px">check_circle</span><span class="text-emerald-400">Copied</span>`;
+        setTimeout(() => btn.innerHTML = originalHtml, 2000);
+    }
+
+    function downloadPatch() {
+        const blob = new Blob([state.patch.content], { type: 'text/plain' });
+        const href = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = href;
+        link.download = state.patch.filename || 'git.patch';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(href);
+    }
+
+    function showError(view, msg) {
+        document.getElementById(`${view}-error`).classList.remove('hidden');
+        document.getElementById(`${view}-error-text`).innerText = msg;
+    }
+</script>
+</body>
+</html>
