@@ -38,9 +38,12 @@ function toggleFavorite(owner, repo) {
     return favorites;
 }
 
-function setFavoriteButtonState(button, isActive, label = 'Favorite') {
+function setFavoriteButtonState(button, isActive, label = 'Favorite', isDisabled = false) {
     if (!button) return;
     button.classList.toggle('is-active', Boolean(isActive));
+    button.classList.toggle('is-disabled', Boolean(isDisabled));
+    button.disabled = Boolean(isDisabled);
+    button.setAttribute('aria-disabled', isDisabled ? 'true' : 'false');
     const icon = button.querySelector('.material-symbols-outlined');
     const labelNode = button.querySelector('.favorite-label');
     if (icon) {
@@ -49,6 +52,29 @@ function setFavoriteButtonState(button, isActive, label = 'Favorite') {
     if (labelNode) {
         labelNode.textContent = isActive ? 'Favorited' : label;
     }
+}
+
+function initTokenToggle(buttonId, sectionId, inputId) {
+    const toggleButton = getDynamicElement(buttonId);
+    const section = getDynamicElement(sectionId);
+    const input = getDynamicElement(inputId);
+    if (!toggleButton || !section) return;
+
+    let isOpen = false;
+    const syncState = () => {
+        section.hidden = !isOpen;
+        toggleButton.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    };
+
+    toggleButton.addEventListener('click', () => {
+        isOpen = !isOpen;
+        syncState();
+        if (isOpen && input && typeof input.focus === 'function') {
+            setTimeout(() => input.focus(), 50);
+        }
+    });
+
+    syncState();
 }
 
 function setNavigationIntent(target, url) {
@@ -187,10 +213,20 @@ export function initRepoMapper() {
     let stats = { files: 0, folders: 0 };
     let parsedRepo = null;
 
+    initTokenToggle('repoTokenToggle', 'repoTokenContainer', 'repoToken');
+
     const setStats = (newStats) => {
         stats = newStats;
         if (foldersSpan) foldersSpan.textContent = `${stats.folders} Folders`;
         if (filesSpan) filesSpan.textContent = `${stats.files} Files`;
+    };
+
+    const updateRepoControls = () => {
+        parsedRepo = urlInput ? parseGithubUrl(urlInput.value) : null;
+        const hasValidRepo = Boolean(parsedRepo);
+        const isRepoFavorite = hasValidRepo && isFavorite(parsedRepo.owner, parsedRepo.repo);
+        setFavoriteButtonState(favoriteButton, isRepoFavorite, 'Favorite', !hasValidRepo);
+        if (submitButton) submitButton.disabled = !hasValidRepo;
     };
 
     const updateOutput = () => {
@@ -208,6 +244,8 @@ export function initRepoMapper() {
         }
     };
 
+    updateRepoControls();
+
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
         updateUIState('repoMapperError', false);
@@ -221,11 +259,12 @@ export function initRepoMapper() {
         if (!parsed) {
             updateUIState('repoMapperError', true, 'Invalid GitHub URL. Expected format: https://github.com/owner/repo', true);
             setLoading(submitButton.id, false, 'Generate Map');
+            updateRepoControls();
             return;
         }
 
         parsedRepo = parsed;
-        setFavoriteButtonState(favoriteButton, isFavorite(parsed.owner, parsed.repo));
+        updateRepoControls();
 
         try {
             const data = await fetchRepositoryTree(parsed, token);
@@ -238,6 +277,7 @@ export function initRepoMapper() {
             updateUIState('repoMapperError', true, err.message, true);
         } finally {
             setLoading(submitButton.id, false, 'Generate Map');
+            updateRepoControls();
         }
     });
 
@@ -267,17 +307,10 @@ export function initRepoMapper() {
         }
     });
 
-    urlInput?.addEventListener('input', () => {
-        parsedRepo = parseGithubUrl(urlInput.value);
-        if (parsedRepo) {
-            setFavoriteButtonState(favoriteButton, isFavorite(parsedRepo.owner, parsedRepo.repo));
-        } else {
-            setFavoriteButtonState(favoriteButton, false);
-        }
-    });
+    urlInput?.addEventListener('input', updateRepoControls);
 
     favoriteButton?.addEventListener('click', () => {
-        if (!parsedRepo) return;
+        if (!parsedRepo || favoriteButton.disabled) return;
         handleFavoriteToggle(favoriteButton, parsedRepo);
         renderQuickFavoritesPanel();
     });
@@ -286,7 +319,7 @@ export function initRepoMapper() {
     if (intent?.target === 'repo-mapper' && intent.url && urlInput) {
         urlInput.value = intent.url;
         parsedRepo = parseGithubUrl(intent.url);
-        setFavoriteButtonState(favoriteButton, parsedRepo ? isFavorite(parsedRepo.owner, parsedRepo.repo) : false);
+        updateRepoControls();
         setTimeout(() => form.requestSubmit(), 50);
     }
 }
@@ -314,6 +347,16 @@ export function initReleaseStats() {
     let currentData = null;
     let selectedReleaseIndex = 0;
     let parsedRepo = null;
+
+    initTokenToggle('releaseTokenToggle', 'releaseTokenContainer', 'releaseToken');
+
+    const updateReleaseControls = () => {
+        parsedRepo = urlInput ? parseGithubUrl(urlInput.value) : null;
+        const hasValidRepo = Boolean(parsedRepo);
+        const isRepoFavorite = hasValidRepo && isFavorite(parsedRepo.owner, parsedRepo.repo);
+        setFavoriteButtonState(favoriteButton, isRepoFavorite, 'Favorite', !hasValidRepo);
+        if (submitButton) submitButton.disabled = !hasValidRepo;
+    };
 
     const renderReleaseDetails = () => {
         if (!currentData || !currentData.releases || currentData.releases.length === 0) return;
@@ -408,6 +451,8 @@ export function initReleaseStats() {
         }
     };
 
+    updateReleaseControls();
+
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
         updateUIState('releaseStatsError', false);
@@ -421,11 +466,12 @@ export function initReleaseStats() {
         if (!parsed) {
             updateUIState('releaseStatsError', true, 'Invalid GitHub URL. Format: https://github.com/owner/repo', true);
             setLoading(submitButton.id, false, 'Analyze');
+            updateReleaseControls();
             return;
         }
 
         parsedRepo = parsed;
-        setFavoriteButtonState(favoriteButton, isFavorite(parsedRepo.owner, parsedRepo.repo));
+        updateReleaseControls();
 
         try {
             currentData = await fetchReleaseStats(parsed, token);
@@ -437,20 +483,14 @@ export function initReleaseStats() {
             updateUIState('releaseStatsError', true, err.message, true);
         } finally {
             setLoading(submitButton.id, false, 'Analyze');
+            updateReleaseControls();
         }
     });
 
-    urlInput?.addEventListener('input', () => {
-        parsedRepo = parseGithubUrl(urlInput.value);
-        setFavoriteButtonState(
-            favoriteButton,
-            parsedRepo ? isFavorite(parsedRepo.owner, parsedRepo.repo) : false,
-            'Favorite',
-        );
-    });
+    urlInput?.addEventListener('input', updateReleaseControls);
 
     favoriteButton?.addEventListener('click', () => {
-        if (!parsedRepo) return;
+        if (!parsedRepo || favoriteButton.disabled) return;
         handleFavoriteToggle(favoriteButton, parsedRepo);
         renderQuickFavoritesPanel();
     });
@@ -459,7 +499,7 @@ export function initReleaseStats() {
     if (intent?.target === 'release-stats' && intent.url && urlInput) {
         urlInput.value = intent.url;
         parsedRepo = parseGithubUrl(intent.url);
-        setFavoriteButtonState(favoriteButton, parsedRepo ? isFavorite(parsedRepo.owner, parsedRepo.repo) : false);
+        updateReleaseControls();
         setTimeout(() => form.requestSubmit(), 50);
     }
 }
