@@ -3,11 +3,11 @@
     <h1>FAQ API workspace</h1>
     <p>
       Publish a structured FAQ feed for app and web surfaces. The builder keeps
-      questions, multi-category assignments, featured flags, and HTML answers
-      aligned with the GitHub Pages datasets, including
-      <code>./api/app_toolkit/v2/debug/en/home/api_android_apps.json</code>
-      and the FAQ category endpoints. Use the preset picker below to jump
-      between them while you iterate.
+      questions, categories, featured flags, search tags, and HTML answers
+      aligned with the GitHub Pages datasets defined in
+      <code>./api/faq/v1/debug/catalog.json</code>. Use the catalog picker to
+      merge multiple question sources for a product or fetch a single JSON file
+      when iterating locally.
     </p>
   </header>
 
@@ -81,10 +81,9 @@
           </div>
           <ul class="release-tips">
             <li>
-              Assign one or more categories per FAQ. General stays selected
-              unless you remove it.
+              Assign one or more categories per FAQ when it helps with grouping.
             </li>
-            <li>Featured answers should include a shorter home answer snippet.</li>
+            <li>Feature the answers that deserve extra visibility in app hubs.</li>
             <li>Icon symbols use Google&apos;s Material Symbols catalog.</li>
           </ul>
         </div>
@@ -98,15 +97,16 @@
       <ul>
         <li>
           Required fields include <strong>id</strong>, <strong>question</strong>,
-          and <strong>answerHtml</strong>. The builder enforces export readiness.
+          and <strong>answer</strong>. The builder enforces export readiness.
         </li>
         <li>
           Use the <strong>Categories</strong> dropdown to tag FAQs across
-          General topics and individual apps as needed.
+          General topics and individual apps as needed. Leave it blank when the
+          entry is universal.
         </li>
         <li>
-          <strong>homeAnswerHtml</strong> should be a condensed summary for cards
-          that appear on the API Console home page or Android app hubs.
+          Add <strong>tags</strong> for quick search and filtering in the web
+          workspace.
         </li>
         <li>
           Use <strong>Import JSON</strong> to iterate on the existing payload or
@@ -127,48 +127,74 @@
           </p>
         </div>
       </div>
-      <div class="builder-remote-controls">
-        <md-outlined-text-field
-          id="faqFetchInput"
-          type="url"
-          label="JSON URL"
-          placeholder="./api/app_toolkit/v2/debug/en/home/api_android_apps.json"
-          supporting-text="Paste the live GitHub Pages payload URL or select one of the presets"
-          spellcheck="false"
-        >
-          <md-icon slot="leading-icon"
-            ><span class="material-symbols-outlined">link</span></md-icon
-          >
-        </md-outlined-text-field>
-        <md-filled-tonal-button id="faqFetchButton" has-icon>
-          <md-icon slot="icon"
-            ><span class="material-symbols-outlined">cloud_download</span></md-icon
-          >
-          Fetch from URL
-        </md-filled-tonal-button>
-      </div>
-      <div
-        class="builder-remote-presets builder-remote-picker"
-        aria-label="Preset API selector"
+    <div class="builder-remote-controls">
+      <md-outlined-text-field
+        id="faqFetchInput"
+        type="url"
+        label="JSON URL"
+        placeholder="./api/faq/v1/debug/en/questions/general/general.json"
+        supporting-text="Paste the live GitHub Pages payload URL or select one of the presets"
+        spellcheck="false"
       >
-        <span class="builder-remote-presets-label">Preset APIs</span>
-        <div id="faqPresetSelect" class="builder-remote-picker-select"></div>
-        <md-text-button
-          has-icon
-          id="faqPresetButton"
-          data-faq-preset="./api/app_toolkit/v2/debug/en/home/api_android_apps.json"
+        <md-icon slot="leading-icon"
+          ><span class="material-symbols-outlined">link</span></md-icon
         >
-          <md-icon slot="icon"
-            ><span class="material-symbols-outlined">download</span></md-icon
-          >
-          <span id="faqPresetButtonLabel">Fetch App Toolkit · Debug</span>
-        </md-text-button>
-      </div>
-      <p id="faqFetchStatus" class="builder-remote-status" role="status">
-        Ready to fetch.
-      </p>
+      </md-outlined-text-field>
+      <md-filled-tonal-button id="faqFetchButton" has-icon>
+        <md-icon slot="icon"
+          ><span class="material-symbols-outlined">cloud_download</span></md-icon
+        >
+        Fetch single JSON
+      </md-filled-tonal-button>
     </div>
-  </md-filled-card>
+    <div
+      class="builder-remote-presets builder-remote-picker"
+      aria-label="Preset API selector"
+    >
+      <span class="builder-remote-presets-label">Preset APIs</span>
+      <div id="faqPresetSelect" class="builder-remote-picker-select"></div>
+      <md-text-button
+        has-icon
+        id="faqPresetButton"
+        data-faq-preset="./api/faq/v1/debug/en/questions/general/general.json"
+      >
+        <md-icon slot="icon"
+          ><span class="material-symbols-outlined">download</span></md-icon
+        >
+        <span id="faqPresetButtonLabel">Fetch preset</span>
+      </md-text-button>
+    </div>
+    <div
+      class="builder-remote-presets builder-remote-picker"
+      aria-label="Catalog selector"
+    >
+      <span class="builder-remote-presets-label">Catalog products</span>
+      <div id="faqCatalogSelect" class="builder-remote-picker-select"></div>
+      <md-filled-tonal-button
+        id="faqCatalogFetchButton"
+        has-icon
+        data-faq-product=""
+      >
+        <md-icon slot="icon"
+          ><span class="material-symbols-outlined">fact_check</span></md-icon
+        >
+        <span id="faqCatalogButtonLabel">Fetch selected product</span>
+      </md-filled-tonal-button>
+      <md-text-button id="faqCatalogRefresh" has-icon>
+        <md-icon slot="icon"
+          ><span class="material-symbols-outlined">refresh</span></md-icon
+        >
+        Refresh catalog
+      </md-text-button>
+    </div>
+    <p id="faqFetchStatus" class="builder-remote-status" role="status">
+      Ready to fetch.
+    </p>
+    <p id="faqCatalogStatus" class="builder-remote-status" role="status">
+      Loading catalog…
+    </p>
+  </div>
+</md-filled-card>
 
   <md-filled-card class="builder-remote-card" id="faqIconsCard">
     <div class="card-body">
