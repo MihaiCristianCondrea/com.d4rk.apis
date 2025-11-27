@@ -1,1 +1,74 @@
-[]
+[
+  {
+    "id": "toolkit-what-is",
+    "categories": ["product", "overview"],
+    "icon": "apps",
+    "question": "What is App Toolkit?",
+    "answer": "<p>App Toolkit is a showcase app for projects built with my AppToolkit library. It gives you a single place to browse, discover, and explore my Android apps without having to search the store manually.</p><p>Think of it as a catalog and launcher for my ecosystem of apps.</p>",
+    "featured": true,
+    "tags": ["app_toolkit", "showcase", "library", "catalog"]
+  },
+  {
+    "id": "toolkit-access-apps",
+    "categories": ["product", "usage"],
+    "icon": "open_in_new",
+    "question": "How do I access the different apps shown in App Toolkit?",
+    "answer": "<p>Each card in App Toolkit represents one of my apps. Tapping a card opens a detail view where you can read more and follow a link to the Google Play Store or another official source.</p><p>From there, you can install or open the app just like any other Android app.</p>",
+    "featured": false,
+    "tags": ["usage", "navigation", "app_list"]
+  },
+  {
+    "id": "toolkit-pricing",
+    "categories": ["product", "pricing"],
+    "icon": "attach_money",
+    "question": "Are the apps featured in App Toolkit free?",
+    "answer": "<p>Most apps listed in App Toolkit offer a free version with core features. Some may include optional in-app purchases or plus-style upgrades for advanced functionality.</p><p>Pricing and details are always shown on each app's official store page.</p>",
+    "featured": false,
+    "tags": ["pricing", "free", "in_app_purchases"]
+  },
+  {
+    "id": "toolkit-learn-more",
+    "categories": ["product", "usage"],
+    "icon": "info",
+    "question": "How can I learn more about a specific app listed?",
+    "answer": "<p>Tap the app inside App Toolkit to see its description and quick details, then follow the link to its Google Play or official listing.</p><p>The store page contains full information: screenshots, changelog, reviews, and permissions.</p>",
+    "featured": false,
+    "tags": ["details", "store_page", "information"]
+  },
+  {
+    "id": "toolkit-support-apps",
+    "categories": ["product", "support"],
+    "icon": "support",
+    "question": "Where can I find help or support for one of the listed apps?",
+    "answer": "<p>App Toolkit is just the directory. Each app has its own support options, usually linked on its Play Store page or inside the app itself.</p><p>For app-specific issues, use that app's contact, help, or feedback section rather than App Toolkit.</p>",
+    "featured": false,
+    "tags": ["support", "help", "contact"]
+  },
+  {
+    "id": "toolkit-update-frequency",
+    "categories": ["product", "updates"],
+    "icon": "update",
+    "question": "How often is the list of apps updated in App Toolkit?",
+    "answer": "<p>The list is refreshed whenever I add new projects or publish major updates to existing ones. App Toolkit fetches the latest configuration from my APIs so you always see the current lineup.</p><p>You do not need to reinstall the app just to see new entries.</p>",
+    "featured": false,
+    "tags": ["updates", "refresh", "api_config"]
+  },
+  {
+    "id": "toolkit-permissions",
+    "categories": ["product", "permissions"],
+    "icon": "wifi",
+    "question": "Why does App Toolkit need Internet access?",
+    "answer": "<p>Internet access is used to fetch the latest app list, metadata, and links so the catalog stays up to date.</p><p>App Toolkit does not request invasive permissions like contacts, SMS, or location just to show you the app catalog.</p>",
+    "featured": false,
+    "tags": ["permissions", "internet", "network"]
+  },
+  {
+    "id": "toolkit-privacy",
+    "categories": ["product", "privacy"],
+    "icon": "shield",
+    "question": "Is my data safe when using App Toolkit to find your other apps?",
+    "answer": "<p>App Toolkit primarily works with publicly available information about my apps, such as names, icons, and store links.</p><p>When you install or use a specific app, that app's own Privacy Policy applies. App Toolkit's data handling is explained in its dedicated Privacy Policy, which you can review from inside the app.</p>",
+    "featured": false,
+    "tags": ["privacy", "data", "public_metadata"]
+  }
+]

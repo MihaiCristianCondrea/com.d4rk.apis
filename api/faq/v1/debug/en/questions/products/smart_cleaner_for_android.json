@@ -1,87 +1,83 @@
-{
-  "schemaVersion": 2,
-  "language": "en",
-  "generatedAt": "2025-11-27T06:43:13Z",
-  "entries": [
-    {
-      "id": "faq-analytics",
-      "question": "Why do you use analytics and ads at all?",
-      "iconSymbol": "insights",
-      "topics": [
-        "general",
-        "privacy_data",
-        "ads_monetization"
-      ],
-      "products": [
-        "global"
-      ],
-      "featured": true,
-      "weight": 100,
-      "answerHtml": "\n                <p>\n                  Independent development involves recurring costs: domain renewals, build\n                  tooling, Firebase quotas, music licensing, and a growing fleet of test\n                  devices. Anonymous analytics and respectful advertising make it possible to\n                  keep the apps free while still covering those expenses.\n                </p>\n                <p>\n                  Metrics such as screen load time, crash frequency, and feature usage help\n                  me prioritize fixes and improvements. Ads are placed sparingly and follow\n                  Google’s content policies so they remain as unobtrusive as possible.\n                </p>\n            ",
-      "homeAnswerHtml": "\n                <p>\n                  Building and maintaining apps involves hosting, testing devices,\n                  and tool licenses. Ads and anonymous analytics keep projects\n                  funded while revealing crashes or slowdowns before they affect\n                  everyone.\n                </p>\n                <p>\n                  I keep placements minimal and respectful so the experience stays\n                  focused on utility—not interruptions.\n                </p>\n            ",
-      "extraKeywords": [
-        "funding",
-        "firebase",
-        "admob"
-      ]
-    },
-    {
-      "id": "faq-support",
-      "question": "How can I support your work without ads?",
-      "iconSymbol": "volunteer_activism",
-      "topics": [
-        "general",
-        "ads_monetization"
-      ],
-      "products": [
-        "global"
-      ],
-      "featured": false,
-      "weight": 90,
-      "answerHtml": "\n                <p>\n                  If you prefer ad-free support, here are the most impactful options:\n                </p>\n                <ul>\n                  <li>Leave a positive review or rating on the Google Play Store.</li>\n                  <li>Share the apps with friends, family, or communities that may benefit.</li>\n                  <li>Explore my music and creative projects released under <strong>D4rK Rekords</strong>.</li>\n                </ul>\n                <p>\n                  Every signal of support fuels future updates and allows me to experiment\n                  with new ideas that benefit the entire community.\n                </p>\n            "
-    },
-    {
-      "id": "faq-privacy",
-      "question": "Do you collect personal data?",
-      "iconSymbol": "shield_person",
-      "topics": [
-        "general",
-        "privacy_data"
-      ],
-      "products": [
-        "global"
-      ],
-      "featured": true,
-      "weight": 80,
-      "answerHtml": "\n                <p>\n                  I do not personally collect, store, or sell any individual user data. All\n                  analytics and advertising are handled by Google’s SDKs under their\n                  <a href=\"https://policies.google.com/privacy\" target=\"_blank\" rel=\"noopener noreferrer\">Privacy Policy</a>.\n                </p>\n                <p>\n                  The dashboards I see only include aggregated, anonymous information—for\n                  example, how many people opened the app this week or which device model is\n                  crashing after a new release. You can always review the\n                  <a href=\"#privacy-policy\">website privacy policy</a> for the full breakdown\n                  of how data is processed and how you can opt out.\n                </p>\n            ",
-      "homeAnswerHtml": "\n                <p>\n                  I don’t sell or personally collect user data. Google’s SDKs handle\n                  analytics and ads according to their privacy policy, while I only\n                  review aggregated trends like active installs or crash types.\n                </p>\n                <p>\n                  Read the full details in my\n                  <a href=\"#privacy-policy\">Privacy Policy</a> for transparency on\n                  data processing.\n                </p>\n            ",
-      "extraKeywords": [
-        "data",
-        "anonymized",
-        "privacy policy"
-      ]
-    },
-    {
-      "id": "faq-gms",
-      "question": "Why do your apps require Google Play Services?",
-      "iconSymbol": "support_agent",
-      "topics": [
-        "general",
-        "distribution_stores"
-      ],
-      "products": [
-        "global"
-      ],
-      "featured": true,
-      "weight": 70,
-      "answerHtml": "\n                <p>\n                  My apps integrate several components from Google Play Services because they\n                  provide reliable, well-maintained solutions for everyday needs:\n                </p>\n                <ul>\n                  <li><strong>Firebase Analytics, Performance, and Crashlytics</strong> keep me informed about stability issues and feature adoption.</li>\n                  <li><strong>Google Ads / AdMob</strong> offsets the costs of hosting, design tools, and test devices.</li>\n                  <li><strong>In-App Reviews & Play In-App Updates</strong> help deliver a polished experience without forcing manual store checks.</li>\n                </ul>\n                <p>\n                  Removing these SDKs would mean rewriting entire systems from scratch and\n                  losing the telemetry that keeps the apps healthy. For now, the Play Store\n                  build remains the most sustainable option for both me and the people using\n                  the apps every day.\n                </p>\n            ",
-      "homeAnswerHtml": "\n                <p>\n                  My apps rely on Firebase tools, Google Ads / AdMob, in-app updates,\n                  and in-app reviews to deliver analytics, crash reporting, and\n                  monetization features that keep development sustainable.\n                </p>\n                <p>\n                  Without Play Services, ads, update prompts, or performance\n                  telemetry would stop working, so the Play Store build remains the\n                  most stable way to ship new features.\n                </p>\n            ",
-      "extraKeywords": [
-        "firebase",
-        "admob",
-        "reviews",
-        "updates"
-      ]
-    }
-  ]
-}
+[
+  {
+    "id": "cleaner-what-is",
+    "categories": ["product", "features"],
+    "icon": "cleaning_services",
+    "question": "What is Cleaner?",
+    "answer": "<p>Cleaner is a free and open-source Android app designed to help improve your device's performance and free up storage. It scans for unnecessary files, old caches, temporary data, and other junk that accumulates over time.</p><p>You stay in full control of what gets removed.</p>",
+    "featured": true,
+    "tags": ["cleaner", "performance", "storage", "cache"]
+  },
+  {
+    "id": "cleaner-safe",
+    "categories": ["product", "safety"],
+    "icon": "verified_user",
+    "question": "Is Cleaner safe to use?",
+    "answer": "<p>Yes, Cleaner is safe to use. It only targets files that are safe to remove and never touches personal data, media, or important system files.</p><p>The scanning logic is intentionally conservative to avoid deleting anything essential.</p>",
+    "featured": true,
+    "tags": ["safety", "security", "safe_to_use"]
+  },
+  {
+    "id": "cleaner-how-to-use",
+    "categories": ["product", "usage"],
+    "icon": "play_circle",
+    "question": "How do I use Cleaner?",
+    "answer": "<p>Install Cleaner from the Google Play Store or from GitHub Releases, open the app, and start a scan. Cleaner will identify unnecessary files and show you a preview before anything is removed.</p><p>You can fine-tune what types of files should be detected inside the app's Settings section.</p>",
+    "featured": false,
+    "tags": ["how_to", "tutorial", "usage"]
+  },
+  {
+    "id": "cleaner-cache",
+    "categories": ["product", "cache"],
+    "icon": "layers_clear",
+    "question": "Can Cleaner delete app cache?",
+    "answer": "<p>Yes, Cleaner can delete app cache. Clearing cache may temporarily make some apps load slower the first time you reopen them, but it frees valuable storage space.</p>",
+    "featured": false,
+    "tags": ["cache", "storage", "cleanup"]
+  },
+  {
+    "id": "cleaner-root",
+    "categories": ["product", "compatibility"],
+    "icon": "security",
+    "question": "Does Cleaner require root access?",
+    "answer": "<p>No, Cleaner does not require root. All features are built around Android's standard APIs, which means Cleaner works safely on any supported device without elevated permissions.</p>",
+    "featured": false,
+    "tags": ["root", "permissions", "compatibility"]
+  },
+  {
+    "id": "cleaner-ios",
+    "categories": ["product", "availability"],
+    "icon": "phone_android",
+    "question": "Is Cleaner available for iOS?",
+    "answer": "<p>No, Cleaner is currently available only for Android devices. There are no active plans for an iOS version.</p>",
+    "featured": false,
+    "tags": ["ios", "availability", "platforms"]
+  },
+  {
+    "id": "cleaner-battery",
+    "categories": ["product", "performance"],
+    "icon": "battery_saver",
+    "question": "Does Cleaner improve battery life?",
+    "answer": "<p>Cleaner may indirectly improve battery life by removing cached data and junk from apps that frequently run background processes. Results vary depending on your device, installed apps, and usage habits.</p>",
+    "featured": false,
+    "tags": ["battery", "performance"]
+  },
+  {
+    "id": "cleaner-frequency",
+    "categories": ["product", "usage"],
+    "icon": "schedule",
+    "question": "How often should I use Cleaner?",
+    "answer": "<p>There is no fixed schedule. Some people run Cleaner weekly, others only once a month. It depends on how often you install apps, browse the web, or use social and media-heavy apps that generate large caches.</p>",
+    "featured": false,
+    "tags": ["usage", "maintenance", "frequency"]
+  },
+  {
+    "id": "cleaner-compatibility",
+    "categories": ["product", "compatibility"],
+    "icon": "devices",
+    "question": "Is Cleaner compatible with all Android devices?",
+    "answer": "<p>Cleaner is compatible with most Android devices that meet the minimum system requirements. Check the Google Play listing or GitHub Releases page to confirm compatibility for your device.</p><p>If you encounter issues, you can open a ticket via GitHub Issues for assistance.</p>",
+    "featured": false,
+    "tags": ["compatibility", "android", "devices"]
+  }
+]
