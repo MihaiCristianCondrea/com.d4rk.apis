@@ -1,14 +1,24 @@
 {
   "schemaVersion": 1,
-
+  "defaultLanguage": "en",
+  "defaultBuild": "release",
   "languages": [
     {
       "code": "en",
       "label": "English",
-      "path": "release/en/entries.json"
+      "builds": {
+        "release": "release/en/entries.json",
+        "debug": "debug/en/entries.json"
+      }
+    },
+    {
+      "code": "ro",
+      "label": "Română",
+      "builds": {
+        "release": "release/ro/entries.json"
+      }
     }
   ],
-
   "topics": [
     {
       "code": "general",
@@ -32,11 +42,10 @@
     },
     {
       "code": "design_ux",
-      "label": "Design & UX",
+      "label": "Design & UX (Material 3)",
       "group": "General"
     }
   ],
-
   "products": [
     {
       "code": "global",
