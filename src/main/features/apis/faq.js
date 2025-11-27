@@ -5,7 +5,7 @@
         return;
     }
 
-    const DEFAULT_FILENAME = 'faq_dataset.json';
+    const DEFAULT_FILENAME = 'faq_questions.json';
     const SITE_BASE = (() => {
         try {
             const url = new URL('.', window.location.href);
@@ -23,7 +23,9 @@
             return path;
         }
     };
-    const DEFAULT_DATA_URL = withBase('api/app_toolkit/v2/debug/en/home/api_android_apps.json');
+    const DEFAULT_DATA_URL = withBase('api/faq/v1/debug/en/questions/general/general.json');
+    const DEFAULT_CATALOG_URL = withBase('api/faq/v1/debug/catalog.json');
+    const DEFAULT_PRODUCT_KEY = 'api_workspace';
     const ICON_CATALOG_ENDPOINTS = [
         'https://fonts.google.com/metadata/icons?incomplete=1&icon.set=Material+Symbols',
         'https://raw.githubusercontent.com/google/material-design-icons/master/variablefont/MaterialSymbolsOutlined%5BFILL%2CGRAD%2Copsz%2Cwght%5D.codepoints'
@@ -63,32 +65,26 @@
     );
     const CATEGORY_LOOKUP = new Map(ALL_CATEGORIES.map((item) => [item.value, item]));
     const CATEGORY_ORDER = new Map(ALL_CATEGORIES.map((item, index) => [item.value, index]));
-    const DEFAULT_CATEGORIES = ['general'];
+    const DEFAULT_CATEGORIES = [];
 
     const FAQ_API_PRESET_OPTIONS = (() => {
-        const faqBase = withBase('api/faq/v1');
-        const categoryPresets = ALL_CATEGORIES.map((category) => ({
-            value: `faq-${category.value}`,
-            label: `FAQ · ${category.label}`,
-            url: `${faqBase}/${category.value}.json`
-        }));
+        const faqBase = withBase('api/faq/v1/debug/en/questions');
         return [
             {
-                value: 'app-toolkit-debug',
-                label: 'App Toolkit · Debug',
-                url: withBase('api/app_toolkit/v2/debug/en/home/api_android_apps.json')
+                value: 'faq-general-debug',
+                label: 'General FAQs · Debug',
+                url: `${faqBase}/general/general.json`
             },
             {
-                value: 'app-toolkit-release',
-                label: 'App Toolkit · Release',
-                url: withBase('api/app_toolkit/v2/release/en/home/api_android_apps.json')
+                value: 'faq-ads-debug',
+                label: 'Ads & Monetization · Debug',
+                url: `${faqBase}/general/ads_monetization.json`
             },
             {
-                value: 'faq-index',
-                label: 'FAQ · Index (all categories)',
-                url: `${faqBase}/index.json`
-            },
-            ...categoryPresets
+                value: 'faq-catalog-debug',
+                label: 'FAQ Catalog · Debug',
+                url: DEFAULT_CATALOG_URL
+            }
         ];
     })();
 
@@ -106,6 +102,11 @@
         const fetchButton = document.getElementById('faqFetchButton');
         const fetchInput = document.getElementById('faqFetchInput');
         const fetchStatus = document.getElementById('faqFetchStatus');
+        const catalogStatus = document.getElementById('faqCatalogStatus');
+        const catalogButton = document.getElementById('faqCatalogFetchButton');
+        const catalogButtonLabel = document.getElementById('faqCatalogButtonLabel');
+        const catalogRefreshButton = document.getElementById('faqCatalogRefresh');
+        const catalogSelectRoot = document.getElementById('faqCatalogSelect');
         const presetButton = document.getElementById('faqPresetButton');
         const presetSelectRoot = document.getElementById('faqPresetSelect');
         const presetButtonLabel = document.getElementById('faqPresetButtonLabel');
@@ -152,6 +153,9 @@
             null;
         let activePreset = defaultPreset;
         let presetSelectEl = null;
+        const catalogState = { products: [], loaded: false };
+        let catalogSelectEl = null;
+        catalogState.selectedKey = DEFAULT_PRODUCT_KEY;
 
         builderRoot.dataset.initialized = 'true';
 
@@ -182,20 +186,34 @@
                 if (!trimmed || seen.has(trimmed)) {
                     return;
                 }
-                if (!CATEGORY_LOOKUP.has(trimmed)) {
-                    return;
-                }
                 seen.add(trimmed);
                 normalized.push(trimmed);
             });
-            if (!normalized.length) {
-                return [...DEFAULT_CATEGORIES];
-            }
             return normalized.sort((a, b) => {
                 const orderA = CATEGORY_ORDER.get(a) ?? Number.MAX_SAFE_INTEGER;
                 const orderB = CATEGORY_ORDER.get(b) ?? Number.MAX_SAFE_INTEGER;
+                if (orderA === orderB) {
+                    return a.localeCompare(b);
+                }
                 return orderA - orderB;
             });
+        }
+
+        function normalizeTags(values = []) {
+            const seen = new Set();
+            const tags = [];
+            if (!Array.isArray(values)) {
+                return tags;
+            }
+            values.forEach((value) => {
+                const trimmed = utils.trimString(value);
+                if (!trimmed || seen.has(trimmed)) {
+                    return;
+                }
+                seen.add(trimmed);
+                tags.push(trimmed);
+            });
+            return tags;
         }
 
         function formatCategorySummary(values = []) {
@@ -281,11 +299,11 @@
             return {
                 id: '',
                 question: '',
-                iconSymbol: '',
+                icon: '',
                 categories: [...DEFAULT_CATEGORIES],
                 featured: false,
-                homeAnswerHtml: '',
-                answerHtml: ''
+                answer: '',
+                tags: []
             };
         }
 
@@ -293,13 +311,13 @@
             return {
                 id: entry.id || '',
                 question: entry.question || '',
-                iconSymbol: entry.iconSymbol || '',
+                icon: entry.icon || '',
                 categories: Array.isArray(entry.categories)
                     ? [...entry.categories]
                     : [...DEFAULT_CATEGORIES],
                 featured: Boolean(entry.featured),
-                homeAnswerHtml: typeof entry.homeAnswerHtml === 'string' ? entry.homeAnswerHtml : '',
-                answerHtml: typeof entry.answerHtml === 'string' ? entry.answerHtml : ''
+                answer: typeof entry.answer === 'string' ? entry.answer : '',
+                tags: Array.isArray(entry.tags) ? [...entry.tags] : []
             };
         }
 
@@ -310,30 +328,31 @@
             let categories = [];
             if (Array.isArray(raw.categories)) {
                 categories = raw.categories;
-            } else if (typeof raw.category === 'string') {
-                categories = [raw.category];
-            } else if (raw.category && typeof raw.category === 'object') {
-                const categoryId =
-                    typeof raw.category.category_id === 'string'
-                        ? raw.category.category_id
-                        : typeof raw.category.id === 'string'
-                        ? raw.category.id
-                        : '';
-                const fallbackLabel =
-                    typeof raw.category.label === 'string' ? raw.category.label : '';
-                const resolvedCategory = (categoryId || fallbackLabel || '').trim();
-                if (resolvedCategory) {
-                    categories = [resolvedCategory];
-                }
+            } else if (Array.isArray(raw.topics)) {
+                categories = raw.topics;
             }
+            const tags = Array.isArray(raw.tags)
+                ? raw.tags
+                : Array.isArray(raw.keywords)
+                ? raw.keywords
+                : [];
             return {
                 id: typeof raw.id === 'string' ? raw.id : '',
                 question: typeof raw.question === 'string' ? raw.question : '',
-                iconSymbol: typeof raw.iconSymbol === 'string' ? raw.iconSymbol : '',
+                icon: typeof raw.icon === 'string'
+                    ? raw.icon
+                    : typeof raw.iconSymbol === 'string'
+                    ? raw.iconSymbol
+                    : '',
                 categories: sortCategories(categories),
                 featured: Boolean(raw.featured),
-                homeAnswerHtml: typeof raw.homeAnswerHtml === 'string' ? raw.homeAnswerHtml : '',
-                answerHtml: typeof raw.answerHtml === 'string' ? raw.answerHtml : ''
+                answer:
+                    typeof raw.answer === 'string'
+                        ? raw.answer
+                        : typeof raw.answerHtml === 'string'
+                        ? raw.answerHtml
+                        : '',
+                tags: normalizeTags(tags)
             };
         }
 
@@ -504,11 +523,11 @@
 
             const iconField = utils.createInputField({
                 label: 'Icon symbol',
-                value: entry.iconSymbol,
+                value: entry.icon,
                 helperText: 'Material Symbols name. Browse or type to filter.',
                 onInput: (value) => {
                     const normalized = utils.trimString(value);
-                    state.entries[index].iconSymbol = normalized;
+                    state.entries[index].icon = normalized;
                     syncIconPreview(normalized);
                     if (activeIconContext && activeIconContext.index === index) {
                         updateIconPickerSelection(normalized);
@@ -523,9 +542,9 @@
             }
             const iconPreview = utils.createElement('span', {
                 classNames: ['material-symbols-outlined', 'faq-icon-preview'],
-                text: entry.iconSymbol || 'help'
+                text: entry.icon || 'help'
             });
-            iconPreview.dataset.empty = entry.iconSymbol ? 'false' : 'true';
+            iconPreview.dataset.empty = entry.icon ? 'false' : 'true';
             const syncIconPreview = (value) => {
                 const symbol = value ? value : 'help';
                 iconPreview.textContent = symbol;
@@ -548,7 +567,7 @@
                 icon: 'backspace',
                 label: 'Clear icon',
                 onClick: () => {
-                    state.entries[index].iconSymbol = '';
+                    state.entries[index].icon = '';
                     if (iconField.input) {
                         iconField.input.value = '';
                     }
@@ -677,7 +696,7 @@
             categoryField.appendChild(
                 utils.createElement('span', {
                     classNames: 'api-field-helper',
-                    text: 'Select every category that applies. General remains selected by default.'
+                    text: 'Select every category that applies (optional).'
                 })
             );
             fields.appendChild(categoryField);
@@ -696,28 +715,26 @@
             });
             fields.appendChild(featuredField.wrapper);
 
-            const homeAnswerField = utils.createTextareaField({
-                label: 'Home answer HTML (optional)',
-                value: entry.homeAnswerHtml,
-                rows: 4,
-                placeholder: '<p>Short summary for cards...</p>',
-                helperText: 'Shortened copy for home surfaces. Leave blank to omit.',
+            const tagsField = utils.createInputField({
+                label: 'Tags (comma-separated)',
+                value: entry.tags.join(', '),
+                helperText: 'Used for search and grouping in the web workspace.',
                 onInput: (value) => {
-                    state.entries[index].homeAnswerHtml = value;
+                    state.entries[index].tags = normalizeTags(value.split(','));
                     requestPreviewUpdate();
                 }
             });
-            fields.appendChild(homeAnswerField.wrapper);
+            fields.appendChild(tagsField.wrapper);
 
             let renderAnswerPreview = () => {};
             const answerField = utils.createTextareaField({
-                label: 'Full answer HTML',
-                value: entry.answerHtml,
+                label: 'Answer HTML',
+                value: entry.answer,
                 rows: 6,
                 placeholder: '<p>Rich answer with paragraphs and lists...</p>',
-                helperText: 'Provide complete context. HTML is preserved as typed.',
+                helperText: 'Provide the full response with HTML preserved as typed.',
                 onInput: (value) => {
-                    state.entries[index].answerHtml = value;
+                    state.entries[index].answer = value;
                     renderAnswerPreview();
                     requestPreviewUpdate();
                 }
@@ -741,7 +758,7 @@
                 attrs: { 'data-empty': 'true' }
             });
             renderAnswerPreview = () => {
-                const sanitized = utils.sanitizeHtml(state.entries[index].answerHtml || '');
+                const sanitized = utils.sanitizeHtml(state.entries[index].answer || '');
                 if (sanitized) {
                     htmlPreview.innerHTML = sanitized;
                     htmlPreview.dataset.empty = 'false';
@@ -754,11 +771,11 @@
                 icon: 'format_indent_increase',
                 label: 'Format HTML',
                 onClick: () => {
-                    const formatted = utils.prettifyHtmlFragment(state.entries[index].answerHtml || '');
-                    const nextValue = formatted || utils.trimString(state.entries[index].answerHtml || '');
-                    state.entries[index].answerHtml = nextValue || '';
+                    const formatted = utils.prettifyHtmlFragment(state.entries[index].answer || '');
+                    const nextValue = formatted || utils.trimString(state.entries[index].answer || '');
+                    state.entries[index].answer = nextValue || '';
                     if (answerField.textarea) {
-                        answerField.textarea.value = state.entries[index].answerHtml;
+                        answerField.textarea.value = state.entries[index].answer;
                     }
                     renderAnswerPreview();
                     requestPreviewUpdate();
@@ -793,87 +810,33 @@
                       .map((entry) => {
                           const id = utils.trimString(entry.id);
                           const question = utils.trimString(entry.question);
-                          const answerHtml = typeof entry.answerHtml === 'string' ? entry.answerHtml : '';
-                          if (!id || !question || !answerHtml.trim()) {
+                          const answer = typeof entry.answer === 'string' ? entry.answer : '';
+                          if (!id || !question || !answer.trim()) {
                               return null;
                           }
                           const categories = sortCategories(entry.categories || []);
-                          const iconSymbol = utils.trimString(entry.iconSymbol);
-                          const homeAnswer = typeof entry.homeAnswerHtml === 'string' ? entry.homeAnswerHtml : '';
+                          const icon = utils.trimString(entry.icon);
+                          const tags = normalizeTags(entry.tags || []);
                           const payloadEntry = {
                               id,
                               question,
-                              categories,
-                              answerHtml
+                              answer: answer
                           };
-                          if (iconSymbol) {
-                              payloadEntry.iconSymbol = iconSymbol;
+                          if (categories.length) {
+                              payloadEntry.categories = categories;
                           }
-                          if (entry.featured) {
-                              payloadEntry.featured = true;
+                          payloadEntry.featured = Boolean(entry.featured);
+                          if (icon) {
+                              payloadEntry.icon = icon;
                           }
-                          if (homeAnswer && homeAnswer.trim()) {
-                              payloadEntry.homeAnswerHtml = homeAnswer;
+                          if (tags.length) {
+                              payloadEntry.tags = tags;
                           }
                           return payloadEntry;
                       })
                       .filter(Boolean)
                 : [];
-            return {
-                index: buildIndexPayload(normalizedEntries),
-                catalog: buildCatalogPayload(normalizedEntries)
-            };
-        }
-
-        function buildIndexPayload(entries) {
-            const categories = ALL_CATEGORIES.map((category) => {
-                const count = entries.filter((entry) => entry.categories.includes(category.value)).length;
-                return {
-                    code: category.value,
-                    label: category.label,
-                    group: category.group,
-                    path: `${category.value}.json`,
-                    count
-                };
-            });
-            return {
-                schemaVersion: 1,
-                totalEntries: entries.length,
-                categories
-            };
-        }
-
-        function buildCatalogPayload(entries) {
-            const catalog = {};
-            ALL_CATEGORIES.forEach((category) => {
-                catalog[category.value] = [];
-            });
-            entries.forEach((entry) => {
-                const categories = Array.isArray(entry.categories) ? entry.categories : [...DEFAULT_CATEGORIES];
-                const categoryList = sortCategories(categories);
-                categoryList.forEach((code) => {
-                    if (!catalog[code]) {
-                        catalog[code] = [];
-                    }
-                    const record = {
-                        id: entry.id,
-                        question: entry.question,
-                        categories: [...categoryList],
-                        answerHtml: entry.answerHtml
-                    };
-                    if (entry.iconSymbol) {
-                        record.iconSymbol = entry.iconSymbol;
-                    }
-                    if (entry.featured) {
-                        record.featured = true;
-                    }
-                    if (entry.homeAnswerHtml) {
-                        record.homeAnswerHtml = entry.homeAnswerHtml;
-                    }
-                    catalog[code].push(record);
-                });
-            });
-            return catalog;
+            return normalizedEntries;
         }
 
         function mergeEntryRecords(target, source) {
@@ -886,10 +849,10 @@
             if (incoming.question) {
                 merged.question = incoming.question;
             }
-            merged.iconSymbol = incoming.iconSymbol || merged.iconSymbol || '';
+            merged.icon = incoming.icon || merged.icon || '';
             merged.featured = Boolean(incoming.featured || merged.featured);
-            merged.homeAnswerHtml = incoming.homeAnswerHtml || merged.homeAnswerHtml || '';
-            merged.answerHtml = incoming.answerHtml || merged.answerHtml || '';
+            merged.answer = incoming.answer || merged.answer || '';
+            merged.tags = normalizeTags([...(base.tags || []), ...(incoming.tags || [])]);
             merged.categories = sortCategories([...(base.categories || []), ...(incoming.categories || [])]);
             return merged;
         }
@@ -1037,7 +1000,7 @@
             state.entries.forEach((entry, index) => {
                 const id = utils.trimString(entry.id);
                 const question = utils.trimString(entry.question);
-                const answer = typeof entry.answerHtml === 'string' ? entry.answerHtml.trim() : '';
+                const answer = typeof entry.answer === 'string' ? entry.answer.trim() : '';
                 const isBlank = !id && !question && !answer;
                 if (isBlank) {
                     return;
@@ -1158,7 +1121,7 @@
         function updateMetrics(payload) {
             const total = state.entries.length;
             const featured = state.entries.filter((entry) => Boolean(entry.featured)).length;
-            const withIcons = state.entries.filter((entry) => Boolean(utils.trimString(entry.iconSymbol))).length;
+            const withIcons = state.entries.filter((entry) => Boolean(utils.trimString(entry.icon))).length;
             if (totalCountEl) {
                 totalCountEl.textContent = String(total);
             }
@@ -1210,6 +1173,170 @@
             }
             fetchStatus.textContent = message;
             fetchStatus.dataset.status = status;
+        }
+
+        function setCatalogStatus(message, status = 'info') {
+            if (!catalogStatus) {
+                return;
+            }
+            catalogStatus.textContent = message;
+            catalogStatus.dataset.status = status;
+        }
+
+        function mapCatalogProducts(payload) {
+            if (!payload || typeof payload !== 'object') {
+                return [];
+            }
+            const products = Array.isArray(payload.products) ? payload.products : [];
+            return products
+                .map((product) => {
+                    const key = typeof product.key === 'string' ? product.key : typeof product.productId === 'string' ? product.productId : '';
+                    const sources = Array.isArray(product.questionSources)
+                        ? product.questionSources.filter((source) => typeof source?.url === 'string')
+                        : [];
+                    return {
+                        name: typeof product.name === 'string' ? product.name : key,
+                        key,
+                        productId: typeof product.productId === 'string' ? product.productId : key,
+                        questionSources: sources
+                    };
+                })
+                .filter((product) => Boolean(product.key || product.productId));
+        }
+
+        function findCatalogProduct(identifier) {
+            const lookup = utils.trimString(identifier);
+            if (!lookup) {
+                return null;
+            }
+            return (
+                catalogState.products.find((product) => product.key === lookup) ||
+                catalogState.products.find((product) => product.productId === lookup) ||
+                null
+            );
+        }
+
+        function updateCatalogButton(product) {
+            const key = product ? product.key || product.productId : '';
+            catalogState.selectedKey = key;
+            if (catalogButton) {
+                catalogButton.dataset.faqProduct = key;
+                catalogButton.disabled = !key;
+            }
+            if (catalogButtonLabel) {
+                catalogButtonLabel.textContent = product ? `Fetch ${product.name}` : 'Fetch selected product';
+            }
+        }
+
+        function renderCatalogPicker(products = []) {
+            if (!catalogSelectRoot) {
+                return;
+            }
+            utils.clearElement(catalogSelectRoot);
+            if (!products.length) {
+                catalogSelectEl = null;
+                updateCatalogButton(null);
+                return;
+            }
+            const options = products.map((product) => ({
+                value: product.key || product.productId,
+                label: product.name || product.key
+            }));
+            const preferred = findCatalogProduct(catalogState.selectedKey || DEFAULT_PRODUCT_KEY) || products[0];
+            const selectField = utils.createSelectField({
+                label: 'Select product',
+                value: preferred ? preferred.key || preferred.productId : '',
+                options,
+                onChange: (value) => {
+                    const product = findCatalogProduct(value);
+                    updateCatalogButton(product);
+                }
+            });
+            catalogSelectEl = selectField.select;
+            catalogSelectRoot.appendChild(selectField.wrapper);
+            updateCatalogButton(preferred);
+        }
+
+        async function fetchCatalog(url = DEFAULT_CATALOG_URL, { silent = false } = {}) {
+            const resolved = utils.trimString(url) || DEFAULT_CATALOG_URL;
+            if (!silent) {
+                setCatalogStatus('Loading catalog…', 'loading');
+            }
+            try {
+                const response = await fetch(resolved, { cache: 'no-store' });
+                if (!response.ok) {
+                    throw new Error(`Request failed with status ${response.status}`);
+                }
+                const text = await response.text();
+                const parsed = utils.parseJson(text);
+                const products = mapCatalogProducts(parsed);
+                catalogState.products = products;
+                catalogState.loaded = true;
+                renderCatalogPicker(products);
+                if (!silent) {
+                    const helper = products.length
+                        ? 'Select a product and fetch its merged FAQ modules.'
+                        : 'Catalog loaded, but no products were found.';
+                    setCatalogStatus(helper, products.length ? 'success' : 'warning');
+                }
+            } catch (error) {
+                console.error('FaqBuilder: Failed to load FAQ catalog.', error);
+                catalogState.loaded = false;
+                if (!silent) {
+                    setCatalogStatus('Unable to load the FAQ catalog. Check the URL and try again.', 'error');
+                }
+            }
+        }
+
+        async function fetchCatalogProduct(identifier, { silent = false } = {}) {
+            const product = findCatalogProduct(identifier || catalogState.selectedKey || DEFAULT_PRODUCT_KEY);
+            if (!product) {
+                setCatalogStatus('Select a product from the catalog to fetch FAQs.', 'warning');
+                return;
+            }
+            const sources = Array.isArray(product.questionSources)
+                ? product.questionSources.filter((source) => typeof source?.url === 'string')
+                : [];
+            if (!sources.length) {
+                setCatalogStatus('The selected product has no question sources yet.', 'warning');
+                return;
+            }
+            if (!silent) {
+                setCatalogStatus(`Fetching FAQs for ${product.name}…`, 'loading');
+            }
+            const aggregated = [];
+            for (const source of sources) {
+                try {
+                    const response = await fetch(source.url, { cache: 'no-store' });
+                    if (!response.ok) {
+                        console.warn('FaqBuilder: Failed to fetch FAQ module', source.url, response.status);
+                        continue;
+                    }
+                    const text = await response.text();
+                    const parsed = utils.parseJson(text);
+                    let entries = await resolveEntriesFromDataset(parsed, response.url || source.url, { allowIndex: false });
+                    if (source.category && Array.isArray(entries)) {
+                        entries = entries.map((entry) => {
+                            const normalized = normalizeEntry(entry);
+                            if (!normalized.categories.length) {
+                                normalized.categories = sortCategories([source.category]);
+                            } else if (!normalized.categories.includes(source.category)) {
+                                normalized.categories = sortCategories([...(normalized.categories || []), source.category]);
+                            }
+                            return normalized;
+                        });
+                    }
+                    aggregated.push(...entries);
+                } catch (error) {
+                    console.error('FaqBuilder: Unable to fetch FAQ module.', error);
+                }
+            }
+            if (!aggregated.length) {
+                setCatalogStatus('No FAQs were returned for the selected product.', 'warning');
+                return;
+            }
+            applyFaqEntries(mergeEntries(aggregated));
+            setCatalogStatus(`Loaded ${aggregated.length} FAQs for ${product.name}.`, 'success');
         }
 
         function setIconStatus(message, status = 'info') {
@@ -1500,7 +1627,7 @@
             const normalized = typeof name === 'string' ? utils.trimString(name) : '';
             const entry = state.entries[activeIconContext.index];
             if (entry) {
-                entry.iconSymbol = normalized;
+                entry.icon = normalized;
             }
             if (activeIconContext.input) {
                 activeIconContext.input.value = normalized;
@@ -1551,6 +1678,19 @@
 
         if (fetchButton && fetchInput) {
             fetchButton.addEventListener('click', () => fetchFromUrl(fetchInput.value));
+        }
+
+        if (catalogButton) {
+            catalogButton.addEventListener('click', () => {
+                const selectedKey = catalogButton.dataset.faqProduct || catalogState.selectedKey || '';
+                fetchCatalogProduct(selectedKey);
+            });
+        }
+
+        if (catalogRefreshButton) {
+            catalogRefreshButton.addEventListener('click', () => {
+                fetchCatalog(DEFAULT_CATALOG_URL);
+            });
         }
 
         if (presetButton) {
@@ -1621,6 +1761,12 @@
 
         render();
         refreshIcons();
+        fetchCatalog(DEFAULT_CATALOG_URL).then(() => {
+            const product = findCatalogProduct(DEFAULT_PRODUCT_KEY);
+            if (product) {
+                fetchCatalogProduct(product.key || product.productId, { silent: true });
+            }
+        });
         fetchFromUrl(DEFAULT_DATA_URL, { silent: true });
     }
 
