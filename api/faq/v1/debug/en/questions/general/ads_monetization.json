@@ -1,7 +1,6 @@
 [
   {
     "id": "faq-analytics-why-ads",
-    "categories": ["general", "privacy_data", "ads_monetization"],
     "icon": "insights",
     "question": "Why do you use analytics and ads at all?",
     "answer": "<p>Independent development involves recurring costs: domain renewals, build tooling, Firebase quotas, music licensing, and a growing fleet of test devices. Anonymous analytics and respectful advertising make it possible to keep the apps free while still covering those expenses.</p><p>Metrics such as screen load time, crash frequency, and feature usage help me prioritize fixes and improvements. Ads are placed sparingly and follow Google’s content policies so they remain as unobtrusive as possible.</p>",
@@ -10,7 +9,6 @@
   },
   {
     "id": "faq-support-without-ads",
-    "categories": ["general", "ads_monetization"],
     "icon": "volunteer_activism",
     "question": "How can I support your work without ads?",
     "answer": "<p>If you prefer ad-free support, here are a few impactful options:</p><ul><li>Leave a positive review or rating on the Google Play Store.</li><li>Share the apps with friends, family, or communities that may benefit.</li><li>Explore my music and creative projects released under <strong>D4rK Rekords</strong>.</li></ul><p>Every signal of support fuels future updates and allows me to experiment with new ideas that benefit the entire community.</p>",
