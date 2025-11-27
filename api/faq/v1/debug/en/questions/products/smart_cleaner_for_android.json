@@ -5,7 +5,7 @@
     "icon": "cleaning_services",
     "question": "What is Cleaner?",
     "answer": "<p>Cleaner is a free and open-source Android app designed to help improve your device's performance and free up storage. It scans for unnecessary files, old caches, temporary data, and other junk that accumulates over time.</p><p>You stay in full control of what gets removed.</p>",
-    "featured": true,
+    "featured": false,
     "tags": ["cleaner", "performance", "storage", "cache"]
   },
   {
@@ -14,7 +14,7 @@
     "icon": "verified_user",
     "question": "Is Cleaner safe to use?",
     "answer": "<p>Yes, Cleaner is safe to use. It only targets files that are safe to remove and never touches personal data, media, or important system files.</p><p>The scanning logic is intentionally conservative to avoid deleting anything essential.</p>",
-    "featured": true,
+    "featured": false,
     "tags": ["safety", "security", "safe_to_use"]
   },
   {

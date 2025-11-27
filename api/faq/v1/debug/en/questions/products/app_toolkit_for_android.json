@@ -5,7 +5,7 @@
     "icon": "apps",
     "question": "What is App Toolkit?",
     "answer": "<p>App Toolkit is a showcase app for projects built with my AppToolkit library. It gives you a single place to browse, discover, and explore my Android apps without having to search the store manually.</p><p>Think of it as a catalog and launcher for my ecosystem of apps.</p>",
-    "featured": true,
+    "featured": false,
     "tags": ["app_toolkit", "showcase", "library", "catalog"]
   },
   {
