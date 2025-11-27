@@ -1,0 +1,61 @@
+{
+  "schemaVersion": 1,
+  "language": "en",
+
+  "products": [
+    {
+      "name": "Smart Cleaner for Android",
+      "productId": "com.d4rk.cleaner",
+      "key": "smart_cleaner_for_android",
+
+      "questionSources": [
+        {
+          "url": "https://mihaicristiancondrea.github.io/com.d4rk.apis/api/faq/v1/debug/en/questions/products/smart_cleaner_for_android.json",
+          "category": "Product – Smart Cleaner"
+        },
+        {
+          "url": "https://mihaicristiancondrea.github.io/com.d4rk.apis/api/faq/v1/debug/en/questions/general/ads_monetization.json",
+          "category": "Ads & Monetization"
+        },
+        {
+          "url": "https://mihaicristiancondrea.github.io/com.d4rk.apis/api/faq/v1/debug/en/questions/general/distribution_stores.json",
+          "category": "Distribution & Stores"
+        },
+        {
+          "url": "https://mihaicristiancondrea.github.io/com.d4rk.apis/api/faq/v1/debug/en/questions/general/general.json",
+          "category": "General"
+        }
+      ]
+    },
+
+    {
+      "name": "App Toolkit for Android",
+      "productId": "com.d4rk.toolkit",
+      "key": "app_toolkit_for_android",
+
+      "questionSources": [
+        {
+          "url": "https://mihaicristiancondrea.github.io/com.d4rk.apis/api/faq/v1/debug/en/questions/products/app_toolkit_for_android.json",
+          "category": "Product – App Toolkit"
+        },
+        {
+          "url": "https://mihaicristiancondrea.github.io/com.d4rk.apis/api/faq/v1/debug/en/questions/general/ads_monetization.json",
+          "category": "Ads & Monetization"
+        }
+      ]
+    },
+
+    {
+      "name": "API Workspace",
+      "productId": "api_workspace",
+      "key": "api_workspace",
+
+      "questionSources": [
+        {
+          "url": "https://mihaicristiancondrea.github.io/com.d4rk.apis/api/faq/v1/debug/en/questions/general/general.json",
+          "category": "General"
+        }
+      ]
+    }
+  ]
+}
