@@ -167,6 +167,38 @@ function setButtonLoading(button, isLoading, idleLabel, busyLabel, iconName) {
   }
 }
 
+function bindCollapsibleToggle(buttonId, wrapperId, labels = {}) {
+  const button = document.getElementById(buttonId);
+  const wrapper = document.getElementById(wrapperId);
+  if (!button || !wrapper) return;
+
+  const icon = button.querySelector('.material-symbols-outlined');
+  const label =
+    button.querySelector('.favorite-label') || button.querySelector('span:last-child');
+
+  const openLabel = labels.openLabel || 'Hide token';
+  const closedLabel = labels.closedLabel || 'Token settings';
+  const openIcon = labels.openIcon || 'expand_less';
+  const closedIcon = labels.closedIcon || 'settings';
+
+  const sync = () => {
+    const isOpen = !wrapper.hasAttribute('hidden');
+    if (label) label.textContent = isOpen ? openLabel : closedLabel;
+    if (icon) icon.textContent = isOpen ? openIcon : closedIcon;
+  };
+
+  button.addEventListener('click', () => {
+    if (wrapper.hasAttribute('hidden')) {
+      wrapper.removeAttribute('hidden');
+    } else {
+      wrapper.setAttribute('hidden', 'hidden');
+    }
+    sync();
+  });
+
+  sync();
+}
+
 function renderFavoritesGrid() {
   const grid = document.getElementById('favorites-grid');
   const emptyState = document.getElementById('favorites-empty');
@@ -232,7 +264,7 @@ function renderQuickFavorites() {
   const targets = [
     { id: 'mapper-quick-favs', view: 'mapper' },
     { id: 'releases-quick-favs', view: 'releases' },
-    { id: 'patch-quick-favs', view: 'releases' },
+    { id: 'patch-quick-favs', view: 'patch' },
   ];
 
   targets.forEach(({ id, view }) => {
@@ -257,12 +289,16 @@ function renderQuickFavorites() {
         <span>${fav.repo}</span>
       `;
       chip.addEventListener('click', () => {
-        const url = `https://github.com/${fav.owner}/${fav.repo}`;
+        const url =
+          view === 'patch'
+            ? `https://github.com/${fav.owner}/${fav.repo}/commit/`
+            : `https://github.com/${fav.owner}/${fav.repo}`;
         const targetInput = document.getElementById(`${view}-url`);
         if (targetInput) {
           targetInput.value = url;
           if (view === 'mapper') handleMapperFavoriteInput();
           if (view === 'releases') handleReleaseFavoriteInput();
+          if (view === 'patch') handlePatchFavoriteInput();
         }
       });
       container.appendChild(chip);
@@ -363,6 +399,15 @@ function handleReleaseFavoriteInput() {
   setFavoriteButtonState(favButton, parsed);
 }
 
+function handlePatchFavoriteInput() {
+  const input = document.getElementById('patch-url');
+  const favButton = document.getElementById('patch-fav-btn');
+  if (!input || !favButton) return;
+  const parsed = parseGithubCommitUrl(input.value || '');
+  state.patch.parsedRepo = parsed;
+  setFavoriteButtonState(favButton, parsed);
+}
+
 export function initRepoMapper() {
   const form = document.getElementById('mapper-form');
   if (!form) return;
@@ -385,6 +430,11 @@ export function initRepoMapper() {
   const submitBtn = document.getElementById('mapper-submit');
 
   initMapperFavorites('mapper-url', 'mapper-fav-btn');
+
+  bindCollapsibleToggle('mapper-token-reveal', 'mapper-token-wrapper', {
+    closedLabel: 'Token settings',
+    openLabel: 'Hide token',
+  });
 
   document
     .getElementById('mapper-token-toggle')
@@ -473,6 +523,11 @@ export function initReleaseStats() {
   const submitBtn = document.getElementById('releases-submit');
 
   initReleaseFavorites('releases-url', 'releases-fav-btn');
+
+  bindCollapsibleToggle('releases-token-reveal', 'releases-token-wrapper', {
+    closedLabel: 'Token settings',
+    openLabel: 'Hide token',
+  });
 
   document
     .getElementById('releases-token-toggle')
@@ -603,6 +658,11 @@ export function initGitPatch() {
   const submitBtn = document.getElementById('patch-submit');
 
   initPatchFavorites('patch-url', 'patch-fav-btn');
+
+  bindCollapsibleToggle('patch-token-reveal', 'patch-token-wrapper', {
+    closedLabel: 'Token settings',
+    openLabel: 'Hide token',
+  });
 
   document
     .getElementById('patch-token-toggle')

@@ -27,7 +27,15 @@
         </div>
       </div>
 
-      <div class="gh-input-group">
+      <div class="gh-row space-between wrap">
+        <button type="button" id="patch-token-reveal" class="gh-pill-button">
+          <span class="material-symbols-outlined">settings</span>
+          <span class="favorite-label">Token settings</span>
+        </button>
+        <div class="gh-badge-row" id="patch-quick-favs"></div>
+      </div>
+
+      <div class="gh-input-group gh-collapsible" id="patch-token-wrapper" hidden>
         <div class="gh-token" id="patch-token-container">
           <input
             id="patch-token"
@@ -43,14 +51,13 @@
         </div>
       </div>
 
-      <div class="gh-row space-between">
-        <div class="gh-actions">
+      <div class="gh-row space-between wrap">
+        <div class="gh-actions align-right">
           <button type="submit" id="patch-submit" class="gh-button">
             <span class="material-symbols-outlined">difference</span>
             <span>Get Patch</span>
           </button>
         </div>
-        <div class="gh-badge-row" id="patch-quick-favs"></div>
       </div>
     </form>
 
