@@ -1,0 +1,31 @@
+/* --- Inline Buttons --- */
+.api-inline-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  border: none;
+  border-radius: 999px;
+  padding: 0.4rem 0.9rem;
+  background-color: transparent;
+  color: var(--md-sys-color-on-surface-variant);
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: background-color 120ms ease, color 120ms ease;
+}
+
+.api-inline-button:hover {
+  background-color: rgba(0, 0, 0, 0.08);
+}
+
+.api-inline-button.variant-danger {
+  color: var(--md-sys-color-error);
+}
+
+.api-inline-button.variant-danger:hover {
+  background-color: rgba(176, 0, 32, 0.1);
+}
+
+.api-inline-icon {
+  font-size: 18px;
+}
+

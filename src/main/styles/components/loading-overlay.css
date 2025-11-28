@@ -1,0 +1,26 @@
+/* --- Page Loading Overlay --- */
+.page-loading-overlay {
+  position: fixed;
+  inset: 0;
+    min-height: 100dvh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: var(--safe-area-inset-top) var(--safe-area-inset-right)
+    var(--safe-area-inset-bottom) var(--safe-area-inset-left);
+  background-color: var(--app-bg-color);
+  z-index: 1400;
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity var(--app-motion-duration-medium, 300ms)
+      var(--app-motion-ease-standard, cubic-bezier(0, 0, 0.2, 1)),
+    visibility var(--app-motion-duration-medium, 300ms)
+      var(--app-motion-ease-standard, cubic-bezier(0, 0, 0.2, 1));
+}
+
+.page-loading-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+

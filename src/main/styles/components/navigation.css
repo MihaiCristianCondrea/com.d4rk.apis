@@ -1,0 +1,310 @@
+/* --- Top App Bar --- */
+md-top-app-bar { 
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  min-height: 56px;
+  height: var(--app-top-app-bar-height);
+  border-radius: 0;
+  box-shadow: none;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding-top: var(--safe-area-inset-top);
+  padding-inline-start: calc(4px + var(--safe-area-inset-left));
+  padding-inline-end: calc(4px + var(--safe-area-inset-right));
+  backdrop-filter: none !important;
+  transition:
+    background-color var(--app-motion-duration-short, 200ms)
+      var(--app-motion-ease-standard, cubic-bezier(0, 0, 0.2, 1)),
+    box-shadow var(--app-motion-duration-short, 200ms)
+      var(--app-motion-ease-standard, cubic-bezier(0, 0, 0.2, 1));
+}
+
+md-top-app-bar.scrolled { 
+  background-color: var(--md-sys-color-surface-container);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  border-bottom-left-radius: 24px;
+  border-bottom-right-radius: 24px;
+}
+
+md-top-app-bar [slot='headline'] { 
+  color: var(--md-sys-color-on-surface);
+  font-size: 20px;
+  font-weight: 500;
+}
+
+md-top-app-bar .material-symbols-outlined { 
+  font-family: 'Material Symbols SemiBold', 'Material Symbols Outlined', sans-serif;
+}
+
+#menuButton,
+#closeDrawerButton {
+  --md-focus-ring-width: 0;
+  --md-focus-ring-active-width: 0;
+  --md-focus-ring-color: transparent;
+  outline: none;
+}
+
+/* --- Navigation Drawer --- */
+.navigation-drawer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: calc(
+    env(safe-area-inset-bottom, 0px) - var(--safe-area-max-inset-bottom)
+  );
+  z-index: 1200;
+  display: flex;
+  flex-direction: column;
+  --md-navigation-drawer-container-width: var(--app-drawer-inline-size);
+  --md-navigation-drawer-container-height: 100%;
+  --md-navigation-drawer-container-color: var(--app-drawer-bg-color);
+  --md-navigation-drawer-container-shape: 0 24px 24px 0;
+  --md-navigation-drawer-modal-container-elevation: 2;
+  --md-navigation-drawer-standard-container-elevation: 0;
+  --md-navigation-drawer-active-indicator-color: var(
+    --md-sys-color-secondary-container
+  );
+  --md-navigation-drawer-active-indicator-shape: 28px;
+  --md-navigation-drawer-divider-color: var(--app-border-color);
+  padding-bottom: var(--safe-area-max-inset-bottom);
+}
+
+.drawer-overlay {
+  position: fixed;
+  inset: 0;
+    min-height: 100dvh;
+  background-color: color-mix(
+    in srgb,
+    var(--md-sys-color-scrim) 32%,
+    transparent
+  );
+  z-index: 1180;
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity var(--app-motion-duration-medium, 300ms)
+      var(--app-motion-ease-standard, cubic-bezier(0, 0, 0.2, 1)),
+    visibility var(--app-motion-duration-medium, 300ms)
+      var(--app-motion-ease-standard, cubic-bezier(0, 0, 0.2, 1));
+}
+
+.drawer-overlay.open {
+  opacity: 1;
+  visibility: visible;
+}
+
+.drawer-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+    padding: calc(24px + var(--safe-area-inset-top)) 28px 16px;
+    padding-inline-start: calc(28px + var(--safe-area-inset-left));
+  padding-inline-end: calc(28px + var(--safe-area-inset-right));
+  border-bottom: 1px solid var(--app-border-color);
+  flex-shrink: 0;
+}
+
+.drawer-header h2 {
+  margin: 0;
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--app-text-color);
+}
+
+.drawer-content {
+  flex-grow: 1;
+    padding: 8px 0 calc(16px + var(--safe-area-max-inset-bottom));
+    overflow-y: auto;
+  scrollbar-gutter: stable;
+}
+
+.drawer-footer {
+    padding: 16px 28px calc(20px + var(--safe-area-max-inset-bottom));
+    padding-inline-start: calc(28px + var(--safe-area-inset-left));
+  padding-inline-end: calc(28px + var(--safe-area-inset-right));
+  border-top: 1px solid var(--app-border-color);
+  flex-shrink: 0;
+  text-align: center;
+}
+
+.drawer-footer .theme-toggle-title {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--app-secondary-text-color);
+  margin-bottom: 8px;
+  text-align: left;
+}
+
+.theme-button-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+}
+
+.theme-button-container md-icon-button { 
+  --md-icon-button-icon-color: var(--app-text-color);
+  --md-icon-button-icon-size: 20px;
+  border-radius: 50%;
+  background-color: transparent;
+  transition: background-color var(--app-motion-duration-short, 200ms)
+    var(--app-motion-ease-standard, cubic-bezier(0, 0, 0.2, 1));
+}
+
+.theme-button-container md-icon-button.selected { 
+  background-color: var(--app-theme-button-selected-bg);
+  --md-icon-button-icon-color: var(--md-sys-color-primary);
+}
+
+.theme-button-container md-icon-button .material-symbols-outlined { 
+  font-family:
+    'Material Symbols SemiBold', 'Material Symbols Outlined', sans-serif;
+}
+
+.theme-button-container md-icon-button.selected .material-symbols-outlined { 
+  font-family:
+    'Material Symbols Filled', 'Material Symbols Outlined', sans-serif;
+}
+
+.drawer-footer .drawer-legal-links {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px;
+  font-size: 0.75rem;
+  margin-top: 12px;
+  width: 100%;
+}
+
+.drawer-footer .drawer-legal-links a {
+  text-decoration: underline;
+}
+
+md-list { 
+  --md-list-container-color: transparent;
+  padding: 8px 0;
+}
+
+md-list-item {
+  --md-list-item-label-text-color: var(--app-text-color);
+  --md-list-item-supporting-text-color: var(--app-secondary-text-color);
+  --md-list-item-leading-icon-color: var(--app-text-color);
+  --md-list-item-trailing-icon-color: var(--app-text-color);
+  --md-list-item-label-text-font: 'Google Sans Regular',
+    'Poppins', sans-serif;
+}
+
+.navigation-drawer md-list { 
+  padding: 0 12px;
+  margin: 0;
+  --md-list-container-color: transparent;
+}
+
+.navigation-drawer md-divider { 
+  --md-divider-thickness: 1px;
+  --md-divider-color: var(--app-border-color);
+  margin: 8px 0;
+}
+
+.navigation-drawer md-list-item {
+  --md-list-item-label-text-color: var(--md-sys-color-on-surface);
+  --md-list-item-supporting-text-color: var(--md-sys-color-on-surface-variant);
+  --md-list-item-leading-icon-color: var(--md-sys-color-on-surface-variant);
+  --md-list-item-trailing-icon-color: var(--md-sys-color-on-surface-variant);
+  --md-list-item-label-text-font: 'Google Sans Regular',
+    'Poppins', sans-serif;
+  --md-list-item-leading-space: 16px;
+  --md-list-item-trailing-space: 16px;
+  --md-list-item-one-line-container-height: 56px;
+  --md-list-item-container-shape: 28px;
+  --md-list-item-state-layer-shape: 28px;
+  --md-focus-ring-shape: 28px;
+  border-radius: var(--md-list-item-container-shape);
+  overflow: hidden;
+  transition:
+    color var(--app-motion-duration-short, 200ms)
+      var(--app-motion-ease-standard, cubic-bezier(0, 0, 0.2, 1)),
+    background-color var(--app-motion-duration-short, 200ms)
+      var(--app-motion-ease-standard, cubic-bezier(0, 0, 0.2, 1));
+}
+
+.navigation-drawer md-list-item [slot='headline'] {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.navigation-drawer md-list-item.nav-item-active {
+  background-color: var(--md-sys-color-secondary-container);
+  border-radius: 28px;
+  --md-list-item-label-text-color: var(--md-sys-color-on-secondary-container);
+  --md-list-item-leading-icon-color: var(--md-sys-color-on-secondary-container);
+  --md-list-item-trailing-icon-color: var(
+    --md-sys-color-on-secondary-container
+  );
+  --md-list-item-label-text-weight: 600;
+}
+
+.navigation-drawer md-list-item.nav-item-active .material-symbols-outlined {
+  font-family:
+    'Material Symbols Filled', 'Material Symbols Outlined', sans-serif;
+}
+
+.navigation-drawer md-list-item:hover:not(.nav-item-active) {
+  --md-list-item-leading-icon-color: var(--md-sys-color-on-surface);
+  --md-list-item-trailing-icon-color: var(--md-sys-color-on-surface);
+}
+
+.navigation-drawer md-list-item[aria-current='page'] {
+  --md-list-item-label-text-weight: 600;
+}
+
+md-list-item a[slot='headline'] {
+  color: inherit;
+  text-decoration: none;
+  display: block;
+  font-family: inherit;
+}
+
+.navigation-drawer md-list-item .material-symbols-outlined {
+  font-size: 24px;
+  transition:
+    color var(--app-motion-duration-short, 200ms)
+      var(--app-motion-ease-standard, cubic-bezier(0, 0, 0.2, 1)),
+    font-family var(--app-motion-duration-short, 200ms)
+      var(--app-motion-ease-standard, cubic-bezier(0, 0, 0.2, 1));
+  font-family:
+    'Material Symbols SemiBold', 'Material Symbols Outlined', sans-serif;
+}
+
+.nested-list {
+  padding: 0;
+  margin: 0;
+  overflow: hidden;
+  max-height: 0;
+  transition: max-height var(--app-motion-duration-medium, 300ms)
+    var(--app-motion-ease-standard, cubic-bezier(0, 0, 0.2, 1));
+  padding-inline-start: 28px;
+}
+
+.nested-list.open {
+  max-height: 600px;
+}
+
+.nested-list md-list { 
+  padding: 0;
+}
+
+md-list-item[type='button'] md-icon[slot='end'] { 
+  transition: transform var(--app-motion-duration-medium, 300ms)
+    var(--app-motion-ease-standard, cubic-bezier(0, 0, 0.2, 1));
+}
+
+md-list-item[type='button'].expanded md-icon[slot='end'] { 
+  transform: rotate(180deg);
+}
+
