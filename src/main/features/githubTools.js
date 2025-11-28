@@ -31,24 +31,44 @@ const state = {
   },
 };
 
-function loadFavorites() {
-  try {
-    const stored = localStorage.getItem(STORAGE_KEY);
-    const parsed = stored ? JSON.parse(stored) : [];
-    state.favorites = Array.isArray(parsed) ? parsed : [];
-  } catch (error) {
-    state.favorites = [];
+const copyResetTimers = new WeakMap();
+const storageTargets =
+  typeof window !== 'undefined'
+    ? [window.localStorage, window.sessionStorage].filter(Boolean)
+    : [];
+let memoryFavorites = [];
+
+function readStoredFavorites() {
+  for (const store of storageTargets) {
+    try {
+      const stored = store.getItem(STORAGE_KEY);
+      if (stored) {
+        return JSON.parse(stored);
+      }
+    } catch (error) {
+      // Ignore store failures and try the next target.
+    }
   }
+  return memoryFavorites;
+}
+
+function loadFavorites() {
+  const parsed = readStoredFavorites();
+  state.favorites = Array.isArray(parsed) ? parsed : [];
+  memoryFavorites = [...state.favorites];
   return [...state.favorites];
 }
 
 function saveFavorites(next) {
   state.favorites = [...next];
-  try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(state.favorites));
-  } catch (error) {
-    // ignore storage failures
-  }
+  memoryFavorites = [...state.favorites];
+  storageTargets.forEach((store) => {
+    try {
+      store.setItem(STORAGE_KEY, JSON.stringify(state.favorites));
+    } catch (error) {
+      // ignore storage failures
+    }
+  });
   hydrateDatalists();
   renderFavoritesGrid();
   renderQuickFavorites();
@@ -125,7 +145,13 @@ function setFavoriteButtonState(button, parsedRepo) {
 async function copyWithFeedback(buttonId, text) {
   const button = document.getElementById(buttonId);
   if (!button) return;
-  const original = button.innerHTML;
+  const original = button.dataset.defaultContent || button.innerHTML;
+  button.dataset.defaultContent = original;
+
+  const existingTimer = copyResetTimers.get(button);
+  if (existingTimer) {
+    clearTimeout(existingTimer);
+  }
   try {
     await navigator.clipboard.writeText(text || '');
   } catch (error) {
@@ -134,9 +160,11 @@ async function copyWithFeedback(buttonId, text) {
   }
   button.innerHTML =
     '<span class="material-symbols-outlined">check_circle</span><span>Copied</span>';
-  setTimeout(() => {
-    button.innerHTML = original;
+  const resetTimer = setTimeout(() => {
+    button.innerHTML = button.dataset.defaultContent || original;
+    copyResetTimers.delete(button);
   }, 1800);
+  copyResetTimers.set(button, resetTimer);
 }
 
 function showError(elementId, message) {
@@ -185,22 +213,23 @@ function bindCollapsibleToggle(buttonId, wrapperId, labels = {}) {
   const closedLabel = labels.closedLabel || 'Token settings';
   const { openIcon = 'expand_less', closedIcon = 'settings' } = labels;
 
-  const sync = () => {
-    const isOpen = !wrapper.hasAttribute('hidden');
+  const setOpen = (isOpen) => {
+    wrapper.hidden = !isOpen;
+    wrapper.classList.toggle('is-open', isOpen);
+    button.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
     if (label) label.textContent = isOpen ? openLabel : closedLabel;
     if (icon) icon.textContent = isOpen ? openIcon : closedIcon;
+    if (isOpen) {
+      const focusable = wrapper.querySelector('input, button, select, textarea');
+      focusable?.focus({ preventScroll: true });
+    }
   };
 
   button.addEventListener('click', () => {
-    if (wrapper.hasAttribute('hidden')) {
-      wrapper.removeAttribute('hidden');
-    } else {
-      wrapper.setAttribute('hidden', 'hidden');
-    }
-    sync();
+    setOpen(wrapper.hidden);
   });
 
-  sync();
+  setOpen(!wrapper.hidden);
 }
 
 function renderFavoritesGrid() {
@@ -439,8 +468,26 @@ export function initRepoMapper() {
   const asciiBtn = document.getElementById('btn-format-ascii');
   const pathsBtn = document.getElementById('btn-format-paths');
   const submitBtn = document.getElementById('mapper-submit');
+  const favButton = document.getElementById('mapper-fav-btn');
+
+  const resetMapperView = () => {
+    state.mapper.rawPaths = [];
+    state.mapper.parsedRepo = null;
+    state.mapper.format = 'ascii';
+    form.reset();
+    hideError('mapper-error');
+    resultEl?.setAttribute('hidden', 'hidden');
+    if (codeEl) codeEl.textContent = '';
+    if (foldersEl) foldersEl.textContent = '0';
+    if (filesEl) filesEl.textContent = '0';
+    asciiBtn?.classList.add('active');
+    pathsBtn?.classList.remove('active');
+    setFavoriteButtonState(favButton, null);
+  };
 
   initMapperFavorites('mapper-url', 'mapper-fav-btn');
+
+  resetMapperView();
 
   bindCollapsibleToggle('mapper-token-reveal', 'mapper-token-wrapper', {
     closedLabel: 'Token settings',
@@ -531,6 +578,11 @@ export function initReleaseStats() {
   const detailDateEl = document.getElementById('rel-detail-date');
   const detailDownloadsEl = document.getElementById('rel-detail-downloads');
   const submitBtn = document.getElementById('releases-submit');
+  const downloadBtn = document.getElementById('releases-download');
+
+  if (downloadBtn) {
+    downloadBtn.disabled = true;
+  }
 
   initReleaseFavorites('releases-url', 'releases-fav-btn');
 
@@ -580,6 +632,14 @@ export function initReleaseStats() {
     if (detailDateEl) detailDateEl.textContent = new Date(active.publishedAt).toLocaleDateString();
     if (detailDownloadsEl) detailDownloadsEl.textContent = active.totalDownloads.toLocaleString();
 
+    if (downloadBtn) {
+      const downloadAsset = active.assets.find((asset) => asset.browserDownloadUrl);
+      const label = downloadAsset ? 'Download asset' : 'Open release';
+      downloadBtn.disabled = !downloadAsset && !active.url;
+      const buttonLabel = downloadBtn.querySelector('span:last-child');
+      if (buttonLabel) buttonLabel.textContent = label;
+    }
+
     renderAssets(active.assets);
   };
 
@@ -622,6 +682,18 @@ export function initReleaseStats() {
     renderReleaseDetails();
     renderReleaseList();
   };
+
+  downloadBtn?.addEventListener('click', () => {
+    if (!state.releases.data) return;
+    const active = state.releases.data.releases[state.releases.selectedIndex];
+    if (!active) return;
+
+    const assetUrl = active.assets.find((asset) => asset.browserDownloadUrl)?.browserDownloadUrl;
+    const targetUrl = assetUrl || active.url;
+    if (targetUrl) {
+      window.open(targetUrl, '_blank', 'noopener');
+    }
+  });
 
   form.addEventListener('submit', async (event) => {
     event.preventDefault();

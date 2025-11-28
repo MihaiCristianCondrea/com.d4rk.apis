@@ -362,6 +362,10 @@
   flex-wrap: wrap;
 }
 
+.gh-action-row.align-end {
+  justify-content: flex-end;
+}
+
 .gh-output {
   background: var(--gh-card);
   border: var(--gh-border);
@@ -591,10 +595,19 @@
 }
 
 .gh-empty-icon {
-  padding: 1.1rem;
+  width: 72px;
+  height: 72px;
+  padding: 0.85rem;
   border-radius: 50%;
   background: var(--gh-card-strong);
   border: var(--gh-border);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.gh-empty-icon .material-symbols-outlined {
+  font-size: 32px;
 }
 
 .gh-empty-copy h3 {

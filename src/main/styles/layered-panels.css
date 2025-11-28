@@ -1,34 +1,25 @@
-:root {
-  --app-panel-shadow: 0 1.5rem 3rem -2rem rgba(15, 23, 42, 0.4);
-  --app-panel-radius: 1.75rem;
-  --app-panel-surface: color-mix(in srgb, var(--md-sys-color-surface-container-lowest) 88%, transparent);
-  --app-panel-border: 1px solid color-mix(in srgb, var(--md-sys-color-outline) 22%, transparent);
-}
-
 .app-shell-panel {
-  background: var(--app-panel-surface);
-  border: var(--app-panel-border);
-  border-radius: var(--app-panel-radius);
-  box-shadow: var(--app-panel-shadow);
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
   contain: content;
   content-visibility: auto;
   contain-intrinsic-size: 840px 1200px;
-  padding: clamp(1.5rem, 2vw, 2.5rem);
+  padding: clamp(1.25rem, 2vw, 2rem) 0;
   width: min(100%, 1200px);
   margin-inline: auto;
   overflow-x: hidden;
-  backdrop-filter: blur(12px) saturate(120%);
 }
 
 .app-shell-panel[data-compact="true"] {
-  padding: clamp(1rem, 1.2vw, 1.5rem);
+  padding: clamp(1rem, 1.2vw, 1.5rem) 0;
   contain-intrinsic-size: 640px 960px;
 }
 
 @media (max-width: 768px) {
   .app-shell-panel {
-    border-radius: 1.25rem;
-    padding: clamp(1rem, 2.5vw, 1.75rem);
+    padding: clamp(1rem, 2.5vw, 1.5rem) 0;
     contain-intrinsic-size: 720px 1600px;
   }
 }
