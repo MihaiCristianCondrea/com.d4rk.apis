@@ -6,7 +6,8 @@ self.addEventListener('message', async (event) => {
   try {
     const response = await fetch(url, { mode: 'cors', credentials: 'omit' });
     if (!response.ok) {
-      throw new Error(`Request failed with status ${response.status}`); // FIXME: 'throw' of exception caught locally
+      self.postMessage({ id, status: 'error', error: `Request failed with status ${response.status}` });
+      return;
     }
     const blob = await response.blob();
     const bitmap = await createImageBitmap(blob);

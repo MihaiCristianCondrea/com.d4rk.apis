@@ -8,7 +8,7 @@ import {
 import { PROFILE_AVATAR_FALLBACK_SRC } from '@/domain/constants';
 import { initThemeControls } from '@/services/themeService';
 import { initNavigationDrawer } from '@/services/navigationDrawerService';
-import Router, { initRouter, loadPageContent, normalizePageId } from '../router/index.js'; // FIXME: Unused imported default binding Router
+import { initRouter, loadPageContent, normalizePageId } from '../router/index.js';
 import RouterRoutes from '../router/routes.js';
 import { registerGlobalUtilities, registerCompatibilityGlobals } from './globals.js';
 

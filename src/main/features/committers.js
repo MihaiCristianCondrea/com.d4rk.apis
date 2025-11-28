@@ -89,7 +89,8 @@ async function fetchCommittersRanking() {
         });
 
         if (!response.ok) {
-            throw new Error(`Network response was not ok (status ${response.status})`); // FIXME: 'throw' of exception caught locally
+            updateCommittersStatus(statusElement, `Ranking request failed (status ${response.status}).`, true);
+            return;
         }
 
         const data = await response.json();
@@ -131,7 +132,6 @@ if (typeof module !== 'undefined' && module.exports) {
     module.exports = {
         formatOrdinal,
         formatDataAsOf,
-        updateCommittersStatus, // FIXME: Unused property updateCommittersStatus
         fetchCommittersRanking
     };
 }

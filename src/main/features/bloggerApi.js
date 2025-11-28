@@ -11,6 +11,8 @@ const appConfig = {
     }
 };
 
+const feedbackHideTimers = new WeakMap();
+
 /**
  * Creates an HTML card element for a blog post.
  * @param {object} post - The blog post data from Blogger API.
@@ -218,27 +220,6 @@ async function shareBlogPost(postData, feedbackElement) {
             console.warn('Clipboard API copy failed:', clipboardError);
         }
 
-        if (typeof document !== 'undefined') {
-            try {
-                const tempInput = document.createElement('textarea');
-                tempInput.value = url;
-                tempInput.setAttribute('readonly', '');
-                tempInput.style.position = 'fixed';
-                tempInput.style.opacity = '0';
-                document.body.appendChild(tempInput);
-                tempInput.focus();
-                tempInput.select();
-                const copied = document.execCommand && document.execCommand('copy'); // FIXME: Deprecated symbol used, consult docs for better alternative
-                document.body.removeChild(tempInput);
-                if (copied) {
-                    displayShareFeedback(feedbackElement, 'Link copied to clipboard.');
-                    return;
-                }
-            } catch (legacyError) {
-                console.warn('Legacy clipboard fallback failed:', legacyError);
-            }
-        }
-
         if (typeof window !== 'undefined' && typeof window.prompt === 'function') {
             window.prompt('Copy this link to share:', url);
         }
@@ -272,8 +253,9 @@ async function shareBlogPost(postData, feedbackElement) {
 function displayShareFeedback(feedbackElement, message, isError = false) {
     if (!feedbackElement) return;
 
-    if (feedbackElement._hideTimeoutId) { // FIXME:  // FIXME: Deprecated symbol used, consult docs for better alternative
-        clearTimeout(feedbackElement._hideTimeoutId);
+    const existingTimeout = feedbackHideTimers.get(feedbackElement) ?? feedbackElement._hideTimeoutId;
+    if (existingTimeout) {
+        clearTimeout(existingTimeout);
     }
 
     feedbackElement.textContent = message;
@@ -281,11 +263,15 @@ function displayShareFeedback(feedbackElement, message, isError = false) {
     feedbackElement.classList.toggle('error', Boolean(isError));
     feedbackElement.classList.add('is-visible');
 
-    feedbackElement._hideTimeoutId = setTimeout(() => {
+    const hideTimeoutId = setTimeout(() => {
         feedbackElement.classList.remove('is-visible');
         feedbackElement.classList.remove('error');
         feedbackElement.hidden = true;
         feedbackElement.textContent = '';
+        feedbackHideTimers.delete(feedbackElement);
         feedbackElement._hideTimeoutId = null;
     }, 4000);
+
+    feedbackHideTimers.set(feedbackElement, hideTimeoutId);
+    feedbackElement._hideTimeoutId = hideTimeoutId;
 }
