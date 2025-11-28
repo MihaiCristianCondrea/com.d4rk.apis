@@ -1038,8 +1038,6 @@
   scroll-snap-type: x mandatory;
   scroll-padding-inline: var(--screenshot-scroll-padding);
   scroll-snap-stop: always;
-  scrollbar-width: thin;
-  scrollbar-color: var(--app-border-color) transparent;
   overscroll-behavior-inline: contain;
   -webkit-overflow-scrolling: touch;
   direction: ltr;
@@ -1048,20 +1046,6 @@
 .screenshot-list:focus-visible {
   outline: 2px solid var(--md-sys-color-primary);
   outline-offset: 4px;
-}
-
-.screenshot-list::-webkit-scrollbar {
-  height: 8px;
-}
-
-.screenshot-list::-webkit-scrollbar-track {
-  background: color-mix(in srgb, var(--md-sys-color-surface-container-low) 55%, transparent);
-  border-radius: 999px;
-}
-
-.screenshot-list::-webkit-scrollbar-thumb {
-  background: color-mix(in srgb, var(--md-sys-color-primary) 55%, transparent);
-  border-radius: 999px;
 }
 
 @media (min-width: 768px) {
@@ -1075,7 +1059,6 @@
     grid-auto-columns: clamp(260px, 32vw, 380px);
   }
 }
-
 
 .screenshot-item {
   background: var(--md-sys-color-surface-container-low);
