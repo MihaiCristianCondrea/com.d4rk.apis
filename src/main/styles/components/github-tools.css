@@ -633,6 +633,10 @@
 }
 
 /* GitHub tools redesign (inspiration layout, project palette) */
+.material-symbols-outlined.filled-icon {
+  font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+}
+
 .gh-shell {
   max-width: 1100px;
   margin: 0 auto;
@@ -684,6 +688,10 @@
   gap: 0.5rem;
 }
 
+.gh-collapsible {
+  animation: tokenSlideDown 180ms ease;
+}
+
 .gh-field,
 .gh-token {
   position: relative;
@@ -733,7 +741,7 @@
 .gh-token input:not(:placeholder-shown) + label,
 .gh-field textarea:focus + label,
 .gh-field textarea:not(:placeholder-shown) + label {
-  top: 0.4rem;
+  top: 0.375rem;
   font-size: 0.8rem;
   color: var(--md-sys-color-primary);
 }
@@ -749,6 +757,10 @@
 
 .gh-row.space-between {
   justify-content: space-between;
+}
+
+.gh-actions.align-right {
+  margin-left: auto;
 }
 
 .gh-chip-group {
@@ -781,6 +793,46 @@
   color: var(--md-sys-color-on-primary);
   box-shadow: 0 14px 36px -24px rgba(0, 0, 0, 0.35);
   transform: translateY(-1px);
+}
+
+.gh-format-toggle {
+  display: inline-flex;
+  align-items: center;
+  background: var(--md-sys-color-surface-container-high);
+  border: 1px solid color-mix(in srgb, var(--md-sys-color-outline) 45%, transparent);
+  border-radius: 999px;
+  overflow: hidden;
+  box-shadow: 0 12px 36px -28px rgba(0, 0, 0, 0.4);
+}
+
+.gh-format-toggle button {
+  border: none;
+  background: transparent;
+  color: var(--app-secondary-text-color);
+  padding: 0.55rem 0.95rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 0.85rem;
+  transition: background var(--app-motion-duration-short) ease,
+    color var(--app-motion-duration-short) ease;
+}
+
+.gh-format-toggle button.active {
+  background: color-mix(in srgb, var(--md-sys-color-primary) 18%, transparent);
+  color: var(--md-sys-color-on-primary-container);
+}
+
+.gh-format-toggle button:not(.active):hover {
+  background: color-mix(in srgb, var(--md-sys-color-surface-tint) 18%, transparent);
+}
+
+.gh-format-divider {
+  width: 1px;
+  align-self: stretch;
+  background: color-mix(in srgb, var(--md-sys-color-outline) 65%, transparent);
 }
 
 .gh-pill-button {
@@ -858,6 +910,7 @@
   max-height: 60vh;
   overflow: auto;
   color: var(--app-text-color);
+  font-family: var(--app-mono, 'JetBrains Mono', 'SFMono-Regular', Menlo, monospace);
 }
 
 .gh-release-bar {

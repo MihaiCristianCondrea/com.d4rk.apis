@@ -29,7 +29,15 @@
         </div>
       </div>
 
-      <div class="gh-input-group">
+      <div class="gh-row space-between wrap">
+        <button type="button" id="releases-token-reveal" class="gh-pill-button">
+          <span class="material-symbols-outlined">settings</span>
+          <span class="favorite-label">Token settings</span>
+        </button>
+        <div class="gh-badge-row" id="releases-quick-favs"></div>
+      </div>
+
+      <div class="gh-input-group gh-collapsible" id="releases-token-wrapper" hidden>
         <div class="gh-token" id="releases-token-container">
           <input
             id="releases-token"
@@ -45,14 +53,13 @@
         </div>
       </div>
 
-      <div class="gh-row space-between">
-        <div class="gh-actions">
+      <div class="gh-row space-between wrap">
+        <div class="gh-actions align-right">
           <button type="submit" id="releases-submit" class="gh-button">
             <span class="material-symbols-outlined">analytics</span>
             <span>Analyze</span>
           </button>
         </div>
-        <div class="gh-badge-row" id="releases-quick-favs"></div>
       </div>
     </form>
 

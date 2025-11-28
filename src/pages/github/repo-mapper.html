@@ -21,13 +21,14 @@
           <label for="mapper-url">Repository URL (https://github.com/owner/repo)</label>
         </div>
         <div class="gh-row space-between">
-          <div class="gh-chip-group" id="mapper-format">
+          <div class="gh-format-toggle" id="mapper-format">
             <button type="button" id="btn-format-ascii" class="active">
-              <span class="material-symbols-outlined">account_tree</span>
+              <span class="material-symbols-outlined">terminal</span>
               <span>ASCII</span>
             </button>
+            <span class="gh-format-divider" aria-hidden="true"></span>
             <button type="button" id="btn-format-paths">
-              <span class="material-symbols-outlined">format_list_bulleted</span>
+              <span class="material-symbols-outlined">view_list</span>
               <span>Paths</span>
             </button>
           </div>
@@ -38,7 +39,15 @@
         </div>
       </div>
 
-      <div class="gh-input-group">
+      <div class="gh-row space-between wrap">
+        <button type="button" id="mapper-token-reveal" class="gh-pill-button">
+          <span class="material-symbols-outlined">settings</span>
+          <span class="favorite-label">Token settings</span>
+        </button>
+        <div class="gh-badge-row" id="mapper-quick-favs"></div>
+      </div>
+
+      <div class="gh-input-group gh-collapsible" id="mapper-token-wrapper" hidden>
         <div class="gh-token" id="mapper-token-container">
           <input
             id="mapper-token"
@@ -55,8 +64,8 @@
         </div>
       </div>
 
-      <div class="gh-row space-between">
-        <div class="gh-actions">
+      <div class="gh-row space-between wrap">
+        <div class="gh-actions align-right">
           <button type="submit" id="mapper-submit" class="gh-button">
             <span class="material-symbols-outlined">terminal</span>
             <span>Generate Map</span>
@@ -66,7 +75,6 @@
             <span>Copy</span>
           </button>
         </div>
-        <div class="gh-badge-row" id="mapper-quick-favs"></div>
       </div>
     </form>
 
