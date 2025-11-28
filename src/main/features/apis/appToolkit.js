@@ -1589,7 +1589,7 @@
                 classNames: ['builder-hint-chip'],
                 text: ''
             });
-            const screenshotCountId = `${screenshotHeaderId}-count`;
+            const screenshotCountId = `${screenshotHeaderId}-count`; // FIXME: Local variable screenshotCountId is redundant
             screenshotCountChip.id = screenshotCountId;
             screenshotHeader.appendChild(screenshotCountChip);
             screenshotsSection.appendChild(screenshotHeader);
@@ -2748,9 +2748,9 @@
             }
             /** @type {{mode: 'read' | 'readwrite'}} */
             const options = { mode };
-            if (typeof handle.queryPermission === 'function') {
+            if (typeof handle.queryPermission === 'function') { // FIXME: Unresolved variable queryPermission
                 try {
-                    const status = await handle.queryPermission(options);
+                    const status = await handle.queryPermission(options); // FIXME: Unresolved function or method queryPermission()
                     if (status === 'granted' || status === 'denied') {
                         return status;
                     }
@@ -2758,7 +2758,7 @@
                     // ignore and attempt to request permission below
                 }
             }
-            if (typeof handle.requestPermission === 'function') {
+            if (typeof handle.requestPermission === 'function') { // FIXME: Unresolved variable requestPermission
                 try {
                     return await handle.requestPermission(options);
                 } catch (error) {
@@ -2831,7 +2831,7 @@
             }
             let handles;
             try {
-                const openFilePicker = window?.showOpenFilePicker;
+                const openFilePicker = window?.showOpenFilePicker; // FIXME: Unresolved variable showOpenFilePicker
                 if (typeof openFilePicker !== 'function') {
                     return false;
                 }
@@ -3168,7 +3168,7 @@
 
         if (fetchButton) {
             fetchButton.addEventListener('click', () => {
-                fetchRemoteJson(); 
+                fetchRemoteJson();  // FIXME: Invalid number of arguments, expected 1..2
             });
         }
 

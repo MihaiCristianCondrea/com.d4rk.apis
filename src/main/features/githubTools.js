@@ -126,7 +126,7 @@ function copyWithFeedback(buttonId, text) {
   const button = document.getElementById(buttonId);
   if (!button) return;
   const original = button.innerHTML;
-  navigator.clipboard.writeText(text || '');
+  navigator.clipboard.writeText(text || ''); // FIXME: Promise returned from writeText is ignored
   button.innerHTML =
     '<span class="material-symbols-outlined">check_circle</span><span>Copied</span>';
   setTimeout(() => {
@@ -178,8 +178,8 @@ function bindCollapsibleToggle(buttonId, wrapperId, labels = {}) {
 
   const openLabel = labels.openLabel || 'Hide token';
   const closedLabel = labels.closedLabel || 'Token settings';
-  const openIcon = labels.openIcon || 'expand_less';
-  const closedIcon = labels.closedIcon || 'settings';
+  const openIcon = labels.openIcon || 'expand_less'; // FIXME: Unresolved variable openIcon
+  const closedIcon = labels.closedIcon || 'settings'; // FIXME: Unresolved variable closedIcon
 
   const sync = () => {
     const isOpen = !wrapper.hasAttribute('hidden');
@@ -249,11 +249,11 @@ function renderFavoritesGrid() {
     );
 
     card.querySelector('[data-map]')?.addEventListener('click', () => {
-      window.appNavigation?.navigate?.(`/github/repo-mapper?repo=${fav.owner}/${fav.repo}`);
+      window.appNavigation?.navigate?.(`/github/repo-mapper?repo=${fav.owner}/${fav.repo}`); // FIXME: Unresolved variable appNavigation
     });
 
     card.querySelector('[data-stats]')?.addEventListener('click', () => {
-      window.appNavigation?.navigate?.(`/github/release-stats?repo=${fav.owner}/${fav.repo}`);
+      window.appNavigation?.navigate?.(`/github/release-stats?repo=${fav.owner}/${fav.repo}`); // FIXME: Unresolved variable appNavigation
     });
 
     grid.appendChild(card);
@@ -627,7 +627,7 @@ export function initReleaseStats() {
     setButtonLoading(submitBtn, true, 'Analyze', 'Processing...', 'analytics');
 
     try {
-      const data = await fetchReleaseStats(parsed, tokenInput?.value || '');
+      const data = await fetchReleaseStats(parsed, tokenInput?.value || ''); // FIXME: Local variable data is redundant
       state.releases.data = data;
       state.releases.selectedIndex = 0;
       renderOverview();

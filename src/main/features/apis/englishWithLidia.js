@@ -521,7 +521,7 @@
                 lessonPayload = null;
             }
         }
-        const lessons = Array.isArray(lessonPayload?.data) ? lessonPayload.data : [];
+        const lessons = Array.isArray(lessonPayload?.data) ? lessonPayload.data : []; // FIXME: lessonPayload is possibly null
         const lesson = lessons[0] || {};
         const blocks = Array.isArray(lesson.lesson_content) ? lesson.lesson_content : [];
         metrics.lessonBlocks = blocks.length;
@@ -930,7 +930,7 @@
             if (!path && target.prefix) {
                 const slug = utils.trimString(githubLessonSlug?.value || '');
                 if (!slug) {
-                    throw new Error('Provide a lesson slug for lesson targets.');
+                    throw new Error('Provide a lesson slug for lesson targets.'); // FIXME: 'throw' of exception caught locally
                 }
                 const normalized = slug
                     .toLowerCase()
@@ -939,7 +939,7 @@
                 path = `${target.prefix}api_get_${normalized}.json`;
             }
             if (!path) {
-                throw new Error('Unable to determine repository path.');
+                throw new Error('Unable to determine repository path.'); // FIXME: 'throw' of exception caught locally
             }
             setGithubStatus({ status: 'info', message: 'Publishing to GitHub…' });
             const { owner, repo } = parseRepository(repoValue);
@@ -958,7 +958,7 @@
                 existingSha = body.sha;
             } else if (getResponse.status !== 404) {
                 const messageText = await readGithubError(getResponse);
-                throw new Error(messageText);
+                throw new Error(messageText); // FIXME: 'throw' of exception caught locally
             }
             const putResponse = await fetch(baseUrl, {
                 method: 'PUT',
@@ -975,7 +975,7 @@
             });
             if (!putResponse.ok) {
                 const messageText = await readGithubError(putResponse);
-                throw new Error(messageText);
+                throw new Error(messageText); // FIXME: 'throw' of exception caught locally
             }
             workspace.baseline[previewKey] = previewString;
             updateDiffSheet();
@@ -1270,7 +1270,7 @@
                         status: 'error',
                         message: 'No cards found in the imported JSON.'
                     });
-                    throw new Error('No cards found in the imported JSON.');
+                    throw new Error('No cards found in the imported JSON.'); // FIXME: 'throw' of exception caught locally
                 }
                 const toStringValue = (value) => (value === undefined || value === null ? '' : String(value));
                 state.cards = cards.map((raw) => ({
@@ -1613,7 +1613,7 @@
                         status: 'error',
                         message: 'No lessons found in JSON.'
                     });
-                    throw new Error('No lessons found in JSON.');
+                    throw new Error('No lessons found in JSON.'); // FIXME: 'throw' of exception caught locally
                 }
                 const lesson = lessonArray[0];
                 state.title = utils.trimString(lesson.lesson_title || '');

@@ -160,7 +160,7 @@
         builderRoot.dataset.initialized = 'true';
 
         if (presetSelectRoot && FAQ_API_PRESET_OPTIONS.length) {
-            const presetField = utils.createSelectField({
+            const presetField = utils.createSelectField({ // FIXME: Argument type {    label: string,    value: string | string | string | any | string,    options: {        value: any,        label: any    }[],    onChange: function(any): void} is not assignable to parameter type {    label: any,    value?: string,    options?: [],    onChange?: function()}  Type function(any): void is not assignable to type function()
                 label: 'Select API preset',
                 value: activePreset ? activePreset.value : '',
                 options: FAQ_API_PRESET_OPTIONS.map((preset) => ({
@@ -546,7 +546,7 @@
             });
             iconPreview.dataset.empty = entry.icon ? 'false' : 'true';
             const syncIconPreview = (value) => {
-                const symbol = value ? value : 'help';
+                const symbol = value ? value : 'help'; // FIXME: Local variable symbol is redundant
                 iconPreview.textContent = symbol;
                 iconPreview.dataset.empty = value ? 'false' : 'true';
             };
@@ -804,7 +804,7 @@
         }
 
         function buildPayload(entries) {
-            const normalizedEntries = Array.isArray(entries)
+            const normalizedEntries = Array.isArray(entries) // FIXME: Local variable normalizedEntries is redundant
                 ? entries
                       .map((entry) => normalizeEntry(entry))
                       .map((entry) => {
@@ -1118,7 +1118,7 @@
             workspacePulseEl.textContent = message;
         }
 
-        function updateMetrics(payload) {
+        function updateMetrics(payload) { // FIXME: Unused parameter payload
             const total = state.entries.length;
             const featured = state.entries.filter((entry) => Boolean(entry.featured)).length;
             const withIcons = state.entries.filter((entry) => Boolean(utils.trimString(entry.icon))).length;
@@ -1265,7 +1265,7 @@
             try {
                 const response = await fetch(resolved, { cache: 'no-store' });
                 if (!response.ok) {
-                    throw new Error(`Request failed with status ${response.status}`);
+                    throw new Error(`Request failed with status ${response.status}`); // FIXME: 'throw' of exception caught locally
                 }
                 const text = await response.text();
                 const parsed = utils.parseJson(text);
@@ -1291,7 +1291,7 @@
         async function fetchCatalogProduct(identifier, { silent = false } = {}) {
             const product = findCatalogProduct(identifier || catalogState.selectedKey || DEFAULT_PRODUCT_KEY);
             if (!product) {
-                setCatalogStatus('Select a product from the catalog to fetch FAQs.', 'warning');
+                setCatalogStatus('Select a product from the catalog to fetch FAQs.', 'warning'); // FIXME: No data sources are configured to run this SQL and provide advanced code assistance. Disable this inspection via problem menu (Alt+Enter).
                 return;
             }
             const sources = Array.isArray(product.questionSources)
@@ -1361,7 +1361,7 @@
             try {
                 const response = await fetch(trimmed, { cache: 'no-store' });
                 if (!response.ok) {
-                    throw new Error(`Request failed with status ${response.status}`);
+                    throw new Error(`Request failed with status ${response.status}`); // FIXME: 'throw' of exception caught locally
                 }
                 const text = await response.text();
                 const parsed = utils.parseJson(text);

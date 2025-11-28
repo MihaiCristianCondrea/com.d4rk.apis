@@ -197,7 +197,7 @@ function setupRouteLinkInterception() {
             return;
         }
 
-        const interactiveElement = eventTarget.closest('a[href^="#"], md-list-item[href^="#"]');
+        const interactiveElement = eventTarget.closest('a[href^="#"], md-list-item[href^="#"]'); // FIXME: Selector matches unknown element md-list-item
         if (!interactiveElement) {
             return;
         }

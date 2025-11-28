@@ -143,7 +143,7 @@
 }
 
 .search-card-extra-controls button:not(.active):hover {
-  background: color-mix(in srgb, var(--md-sys-color-surface-tint) 16%, transparent);
+  background: color-mix(in srgb, var(--md-sys-color-surface-tint) 16%, transparent); /*FIXME: Cannot resolve '--md-sys-color-surface-tint' custom property*/
   transform: translateY(-1px);
 }
 
@@ -347,7 +347,7 @@
   color: var(--app-text-color);
   background: transparent;
   white-space: pre-wrap;
-  font-family: var(--app-mono, 'SFMono-Regular', Menlo, Consolas, monospace);
+  font-family: var(--app-mono, 'SFMono-Regular', Menlo, Consolas, monospace); /*FIXME: Font property font-family does not have generic default*/
 }
 
 .patch-result .result-header {
