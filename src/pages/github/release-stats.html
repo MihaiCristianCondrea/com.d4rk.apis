@@ -1,121 +1,398 @@
 <style>
-  .gh-view { display: grid; gap: 1.5rem; }
-  .gh-card { background: var(--md-sys-color-surface-container); color: var(--app-text-color); border: 1px solid color-mix(in srgb, var(--md-sys-color-outline) 35%, transparent); border-radius: 24px; padding: clamp(1rem, 3vw, 1.5rem); box-shadow: 0 16px 48px -28px rgba(0, 0, 0, 0.55); }
-  .gh-title { display: grid; gap: 0.35rem; }
-  .gh-title h1 { margin: 0; font-size: clamp(1.75rem, 2vw + 1rem, 2.35rem); }
-  .gh-title p { margin: 0; color: var(--app-secondary-text-color); }
-  .gh-field { position: relative; background: var(--md-sys-color-surface-container-high); border-radius: 18px 18px 4px 4px; border-bottom: 1px solid color-mix(in srgb, var(--md-sys-color-outline) 45%, transparent); display: flex; align-items: center; }
-  .gh-field input { width: 100%; padding: 1.2rem 1rem 0.5rem 1rem; background: transparent; border: none; color: var(--app-text-color); font-size: 1rem; }
-  .gh-field input:focus { outline: none; }
-  .gh-field label { position: absolute; left: 1rem; top: 0.95rem; color: var(--app-secondary-text-color); font-size: 0.9rem; pointer-events: none; transition: all 160ms ease; }
-  .gh-field input:focus + label, .gh-field input:not(:placeholder-shown) + label { top: 0.35rem; font-size: 0.8rem; color: var(--md-sys-color-primary); }
-  .gh-actions, .gh-row { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.75rem; }
-  .gh-pill-button { border-radius: 999px; border: 1px solid color-mix(in srgb, var(--md-sys-color-outline) 55%, transparent); padding: 0.55rem 0.85rem; display: inline-flex; align-items: center; gap: 0.35rem; background: var(--md-sys-color-surface-container-highest); cursor: pointer; }
-  .gh-pill-button[disabled] { opacity: 0.55; cursor: not-allowed; }
-  .gh-pill-button.is-active { color: var(--md-sys-color-primary); border-color: color-mix(in srgb, var(--md-sys-color-primary) 50%, var(--md-sys-color-outline)); }
-  .gh-token { overflow: hidden; margin-top: 0.35rem; }
-  .gh-token input { width: 100%; padding: 1.05rem 1rem 0.65rem 1rem; background: var(--md-sys-color-surface-container-high); border: none; border-bottom: 1px solid color-mix(in srgb, var(--md-sys-color-outline) 35%, transparent); border-radius: 16px 16px 4px 4px; color: var(--app-text-color); }
-  .gh-token label { position: absolute; left: 1rem; top: 0.85rem; font-size: 0.9rem; color: var(--app-secondary-text-color); transition: all 160ms ease; }
-  .gh-token input:focus + label, .gh-token input:not(:placeholder-shown) + label { top: 0.25rem; font-size: 0.8rem; color: var(--md-sys-color-primary); }
-  .gh-error { display: none; background: color-mix(in srgb, var(--md-sys-color-error) 12%, transparent); border: 1px solid color-mix(in srgb, var(--md-sys-color-error) 40%, transparent); color: var(--md-sys-color-on-error-container); border-radius: 14px; padding: 0.9rem 1rem; }
-  .gh-grid { display: grid; grid-template-columns: 1fr; gap: 1rem; }
-  @media (min-width: 1024px) { .gh-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-  .gh-panel { background: var(--md-sys-color-surface-container); border: 1px solid color-mix(in srgb, var(--md-sys-color-outline) 35%, transparent); border-radius: 20px; box-shadow: 0 18px 50px -28px rgba(0, 0, 0, 0.55); padding: clamp(1rem, 3vw, 1.25rem); display: grid; gap: 1rem; }
-  .gh-subtitle { color: var(--app-secondary-text-color); text-transform: uppercase; letter-spacing: 0.12em; font-weight: 700; font-size: 0.75rem; margin: 0; }
-  .gh-asset { display: grid; gap: 0.35rem; }
-  .gh-asset-bar { height: 8px; background: color-mix(in srgb, var(--md-sys-color-outline) 20%, transparent); border-radius: 999px; overflow: hidden; }
-  .gh-asset-bar span { display: block; height: 100%; background: var(--md-sys-color-primary); }
-  .gh-list { display: grid; gap: 0.5rem; }
-  .gh-release-button { width: 100%; text-align: left; border: 1px solid transparent; border-radius: 14px; padding: 0.85rem; background: transparent; cursor: pointer; transition: background 140ms ease, border-color 140ms ease; }
-  .gh-release-button.active { background: var(--md-sys-color-primary); border-color: var(--md-sys-color-primary); color: var(--md-sys-color-on-primary); }
-  .gh-release-button:not(.active) { color: var(--app-secondary-text-color); }
-  .gh-release-bar { height: 6px; border-radius: 999px; overflow: hidden; margin-top: 0.35rem; background: color-mix(in srgb, var(--md-sys-color-outline) 25%, transparent); }
-  .gh-release-bar span { display: block; height: 100%; background: currentColor; }
-  .gh-meta { display: inline-flex; gap: 0.35rem; align-items: center; color: var(--app-secondary-text-color); font-size: 0.95rem; flex-wrap: wrap; }
+  .gh-page {
+    display: grid;
+    gap: 1.75rem;
+  }
+
+  .gh-card {
+    background: var(--md-sys-color-surface-container);
+    color: var(--app-text-color);
+    border: 1px solid color-mix(in srgb, var(--md-sys-color-outline) 35%, transparent);
+    border-radius: 24px;
+    padding: clamp(1.25rem, 3vw, 1.75rem);
+    box-shadow: 0 18px 50px -28px rgba(0, 0, 0, 0.45);
+  }
+
+  .gh-title h1 {
+    margin: 0;
+    font-size: clamp(1.9rem, 2vw + 1rem, 2.35rem);
+    font-weight: 600;
+  }
+
+  .gh-title p {
+    margin: 0.35rem 0 0;
+    color: var(--app-secondary-text-color);
+  }
+
+  .gh-field,
+  .gh-token {
+    position: relative;
+    background: var(--md-sys-color-surface-container-high);
+    border-radius: 18px 18px 6px 6px;
+    border: 1px solid color-mix(in srgb, var(--md-sys-color-outline) 40%, transparent);
+    display: flex;
+    align-items: center;
+  }
+
+  .gh-field input,
+  .gh-token input {
+    width: 100%;
+    padding: 1.1rem 1rem 0.55rem 1rem;
+    background: transparent;
+    border: none;
+    color: var(--app-text-color);
+    font-size: 1rem;
+  }
+
+  .gh-field input:focus,
+  .gh-token input:focus {
+    outline: none;
+  }
+
+  .gh-field label,
+  .gh-token label {
+    position: absolute;
+    left: 1rem;
+    top: 0.95rem;
+    color: var(--app-secondary-text-color);
+    font-size: 0.9rem;
+    pointer-events: none;
+    transition: all 160ms ease;
+  }
+
+  .gh-field input:focus + label,
+  .gh-token input:focus + label,
+  .gh-field input:not(:placeholder-shown) + label,
+  .gh-token input:not(:placeholder-shown) + label {
+    top: 0.35rem;
+    font-size: 0.8rem;
+    color: var(--md-sys-color-primary);
+  }
+
+  .gh-actions,
+  .gh-row,
+  .gh-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+  }
+
+  .gh-pill-button {
+    border-radius: 999px;
+    border: 1px solid color-mix(in srgb, var(--md-sys-color-outline) 45%, transparent);
+    padding: 0.55rem 0.85rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    background: var(--md-sys-color-surface-container-highest);
+    color: var(--app-secondary-text-color);
+    cursor: pointer;
+  }
+
+  .gh-pill-button.is-active {
+    color: var(--md-sys-color-primary);
+    border-color: color-mix(in srgb, var(--md-sys-color-primary) 50%, var(--md-sys-color-outline));
+  }
+
+  .gh-token {
+    overflow: hidden;
+    margin-top: 0.25rem;
+  }
+
+  .gh-error {
+    display: flex;
+    gap: 0.5rem;
+    align-items: flex-start;
+    background: color-mix(in srgb, var(--md-sys-color-error) 12%, transparent);
+    border: 1px solid color-mix(in srgb, var(--md-sys-color-error) 40%, transparent);
+    color: var(--md-sys-color-on-error-container);
+    border-radius: 14px;
+    padding: 0.9rem 1rem;
+  }
+
+  .gh-overview {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1rem;
+  }
+
+  .gh-stat-card {
+    padding: 1rem;
+    border-radius: 16px;
+    background: var(--md-sys-color-surface-container-high);
+    border: 1px solid color-mix(in srgb, var(--md-sys-color-outline) 30%, transparent);
+    display: grid;
+    gap: 0.35rem;
+  }
+
+  .gh-release-layout {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  }
+
+  .gh-release-button {
+    width: 100%;
+    text-align: left;
+    padding: 0.85rem;
+    border-radius: 14px;
+    border: 1px solid transparent;
+    background: transparent;
+    cursor: pointer;
+    display: grid;
+    gap: 0.45rem;
+  }
+
+  .gh-release-button.active {
+    background: color-mix(in srgb, var(--md-sys-color-primary) 12%, transparent);
+    border-color: color-mix(in srgb, var(--md-sys-color-primary) 35%, transparent);
+    color: var(--app-text-color);
+  }
+
+  .gh-release-bar {
+    height: 6px;
+    background: var(--md-sys-color-surface-container-high);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  .gh-release-bar span {
+    display: block;
+    height: 100%;
+    background: var(--md-sys-color-primary);
+  }
+
+  .gh-asset {
+    display: grid;
+    gap: 0.35rem;
+  }
+
+  .gh-asset-name {
+    font-weight: 600;
+  }
+
+  .gh-asset-bar {
+    height: 8px;
+    background: var(--md-sys-color-surface-container-high);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+
+  .gh-asset-bar span {
+    display: block;
+    height: 100%;
+    background: var(--md-sys-color-primary);
+  }
+
+  .gh-meta {
+    color: var(--app-secondary-text-color);
+    font-size: 0.95rem;
+  }
+
+  .gh-fav-grid {
+    display: grid;
+    gap: 1rem;
+  }
+
+  .gh-fav-card {
+    background: var(--md-sys-color-surface-container);
+    border-radius: 20px;
+    border: 1px solid color-mix(in srgb, var(--md-sys-color-outline) 40%, transparent);
+    padding: 1.1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    box-shadow: 0 12px 36px -26px rgba(0, 0, 0, 0.45);
+  }
+
+  .gh-fav-header {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.65rem;
+    align-items: flex-start;
+  }
+
+  .gh-fav-owner {
+    display: inline-flex;
+    gap: 0.35rem;
+    color: var(--app-secondary-text-color);
+    align-items: center;
+    font-size: 0.9rem;
+  }
+
+  .gh-fav-meta h3,
+  .gh-fav-meta h3 {
+    margin: 0.15rem 0 0;
+    font-size: 1.05rem;
+  }
+
+  .gh-fav-toggle {
+    border: none;
+    background: transparent;
+    color: var(--md-sys-color-primary);
+    border-radius: 999px;
+    padding: 0.35rem;
+    cursor: pointer;
+  }
+
+  .gh-fav-actions {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 0.5rem;
+  }
+
+  .gh-fav-action {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    padding: 0.7rem 0.9rem;
+    border-radius: 12px;
+    border: 1px solid color-mix(in srgb, var(--md-sys-color-outline) 25%, transparent);
+    background: var(--md-sys-color-surface-container-high);
+    color: var(--app-text-color);
+    cursor: pointer;
+  }
+
+  .rotating {
+    animation: spin 1s linear infinite;
+  }
+
+  @keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
 </style>
-<div class="gh-view">
+
+<div class="gh-page">
   <div class="gh-title">
     <h1>Release Stats</h1>
-    <p>Visualize download counts and assets for GitHub releases.</p>
+    <p>Visualize download counts and asset performance.</p>
   </div>
 
   <div class="gh-card">
     <form id="releases-form" class="space-y-4">
       <div class="gh-field">
-        <input id="releases-url" type="text" placeholder="https://github.com/..." list="releases-datalist" autocomplete="off" />
+        <input
+          id="releases-url"
+          type="text"
+          placeholder="https://github.com/..."
+          list="releases-datalist"
+          autocomplete="off"
+        />
         <label for="releases-url">Repository URL</label>
         <datalist id="releases-datalist"></datalist>
-        <button type="button" id="releases-fav-btn" class="gh-pill-button" title="Toggle Favorite" style="margin-right: 0.35rem;">
+        <button
+          type="button"
+          id="releases-fav-btn"
+          class="gh-pill-button"
+          title="Toggle Favorite"
+          style="margin-right: 0.35rem;"
+        >
           <span class="material-symbols-outlined">star</span>
           <span class="favorite-label">Favorite</span>
         </button>
       </div>
 
-      <div class="gh-row">
-        <button type="button" id="releases-token-toggle" class="gh-pill-button" aria-expanded="false">
-          <span class="material-symbols-outlined">key_vertical</span>
+      <div class="gh-toolbar">
+        <button type="button" id="releases-token-toggle" class="gh-pill-button">
+          <span class="material-symbols-outlined">settings</span>
           <span class="token-toggle-label">Token Settings</span>
         </button>
-        <div style="flex: 1"></div>
       </div>
 
       <div id="releases-token-container" class="gh-token" hidden>
-        <div style="position: relative;">
-          <input type="password" id="releases-token" placeholder="github_pat_..." />
-          <label for="releases-token">Access Token (Optional)</label>
-        </div>
+        <input
+          id="releases-token"
+          type="password"
+          placeholder="Personal Access Token"
+          autocomplete="off"
+        />
+        <label for="releases-token">GitHub Token (optional)</label>
       </div>
 
-      <div class="gh-actions" style="justify-content: flex-end;">
+      <div class="gh-actions">
         <md-filled-button id="releases-submit" type="submit">
-          <span slot="icon" class="material-symbols-outlined">analytics</span>
-          Analyze
+          <span class="material-symbols-outlined" slot="icon">analytics</span>
+          <span>Analyze</span>
         </md-filled-button>
+        <div class="gh-meta">See release download trends.</div>
+      </div>
+
+      <div id="releases-error" class="gh-error" hidden>
+        <span class="material-symbols-outlined">error</span>
+        <span data-error-text>Invalid GitHub URL</span>
       </div>
     </form>
   </div>
 
-  <div id="releases-error" class="gh-error"></div>
-
-  <div id="releases-result" class="gh-grid" hidden>
-    <div class="gh-panel">
-      <div>
-        <p class="gh-subtitle">Selected Release</p>
-        <h2 id="rel-detail-name" style="margin: 0;"></h2>
-        <div class="gh-meta">
-          <span class="material-symbols-outlined">label</span>
-          <span id="rel-detail-tag"></span>
-          <span>•</span>
-          <span id="rel-detail-date"></span>
-        </div>
+  <div id="releases-result" class="gh-card" hidden>
+    <div class="gh-overview">
+      <div class="gh-stat-card">
+        <span class="gh-meta">Total Downloads</span>
+        <strong style="font-size: 1.35rem;" id="rel-total-downloads">0</strong>
       </div>
-      <div class="gh-card" style="box-shadow: none; padding: 1rem; border-radius: 16px;">
-        <div class="gh-row" style="justify-content: space-between; align-items: center;">
-          <span class="gh-subtitle" style="color: var(--app-text-color);">Downloads</span>
-          <span id="rel-detail-downloads" style="font-size: 1.8rem; font-weight: 700;"></span>
-        </div>
-      </div>
-      <div>
-        <p class="gh-subtitle">Assets</p>
-        <div id="rel-assets-list" class="gh-list"></div>
+      <div class="gh-stat-card">
+        <span class="gh-meta">Releases</span>
+        <strong style="font-size: 1.35rem;" id="rel-count">0 Found</strong>
       </div>
     </div>
 
-    <div class="gh-panel">
-      <div class="gh-row" style="justify-content: space-between; align-items: center;">
-        <div>
-          <p class="gh-subtitle">Total Project Downloads</p>
-          <h2 id="rel-total-downloads" style="margin: 0;"></h2>
+    <div class="gh-release-layout">
+      <div>
+        <h3 style="margin: 0 0 0.5rem;">Releases</h3>
+        <div id="rel-list" class="space-y-2"></div>
+      </div>
+      <div>
+        <h3 style="margin: 0 0 0.5rem;">Details</h3>
+        <div class="gh-stat-card" style="gap: 0.5rem;">
+          <div class="gh-row">
+            <span class="material-symbols-outlined">sell</span>
+            <div>
+              <div class="gh-meta">Name</div>
+              <strong id="rel-detail-name">-</strong>
+            </div>
+          </div>
+          <div class="gh-row">
+            <span class="material-symbols-outlined">tag</span>
+            <div>
+              <div class="gh-meta">Tag</div>
+              <strong id="rel-detail-tag">-</strong>
+            </div>
+          </div>
+          <div class="gh-row">
+            <span class="material-symbols-outlined">calendar_today</span>
+            <div>
+              <div class="gh-meta">Published</div>
+              <strong id="rel-detail-date">-</strong>
+            </div>
+          </div>
+          <div class="gh-row">
+            <span class="material-symbols-outlined">download</span>
+            <div>
+              <div class="gh-meta">Downloads</div>
+              <strong id="rel-detail-downloads">0</strong>
+            </div>
+          </div>
         </div>
-        <div class="gh-pill-button" aria-hidden="true">
-          <span class="material-symbols-outlined">download</span>
+        <div style="margin-top: 1rem;">
+          <h4 style="margin: 0 0 0.5rem;">Assets</h4>
+          <div id="rel-assets-list" class="space-y-3"></div>
         </div>
       </div>
-      <div class="gh-row" style="justify-content: space-between; align-items: center;">
-        <p class="gh-subtitle">All Releases</p>
-        <p id="rel-count" class="gh-subtitle" style="color: var(--app-secondary-text-color);"></p>
-      </div>
-      <div id="rel-list" class="gh-list"></div>
+    </div>
+  </div>
+
+  <div class="gh-card">
+    <div class="gh-title">
+      <h2>Favorites</h2>
+      <p>Quick access to saved repositories.</p>
+    </div>
+    <div id="favorites-grid" class="gh-fav-grid"></div>
+    <div id="favorites-empty" class="gh-meta" hidden>
+      Star a repository to save it here.
     </div>
   </div>
 </div>
