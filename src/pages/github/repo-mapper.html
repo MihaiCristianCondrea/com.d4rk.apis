@@ -1,48 +1,56 @@
 <style>
-  .gh-view {
+  .gh-page {
     display: grid;
-    gap: 1.5rem;
+    gap: 1.75rem;
   }
+
   .gh-card {
     background: var(--md-sys-color-surface-container);
     color: var(--app-text-color);
     border: 1px solid color-mix(in srgb, var(--md-sys-color-outline) 35%, transparent);
     border-radius: 24px;
-    padding: clamp(1rem, 3vw, 1.5rem);
-    box-shadow: 0 16px 48px -28px rgba(0, 0, 0, 0.55);
+    padding: clamp(1.25rem, 3vw, 1.75rem);
+    box-shadow: 0 18px 50px -28px rgba(0, 0, 0, 0.45);
   }
-  .gh-title {
-    display: grid;
-    gap: 0.35rem;
-  }
+
   .gh-title h1 {
     margin: 0;
-    font-size: clamp(1.75rem, 2vw + 1rem, 2.35rem);
+    font-size: clamp(1.9rem, 2vw + 1rem, 2.35rem);
+    font-weight: 600;
   }
+
   .gh-title p {
-    margin: 0;
+    margin: 0.35rem 0 0;
     color: var(--app-secondary-text-color);
   }
-  .gh-field {
+
+  .gh-field,
+  .gh-token {
     position: relative;
     background: var(--md-sys-color-surface-container-high);
-    border-radius: 18px 18px 4px 4px;
-    border-bottom: 1px solid color-mix(in srgb, var(--md-sys-color-outline) 45%, transparent);
+    border-radius: 18px 18px 6px 6px;
+    border: 1px solid color-mix(in srgb, var(--md-sys-color-outline) 40%, transparent);
     display: flex;
     align-items: center;
   }
-  .gh-field input {
+
+  .gh-field input,
+  .gh-token input {
     width: 100%;
-    padding: 1.2rem 1rem 0.5rem 1rem;
+    padding: 1.1rem 1rem 0.55rem 1rem;
     background: transparent;
     border: none;
     color: var(--app-text-color);
     font-size: 1rem;
   }
-  .gh-field input:focus {
+
+  .gh-field input:focus,
+  .gh-token input:focus {
     outline: none;
   }
-  .gh-field label {
+
+  .gh-field label,
+  .gh-token label {
     position: absolute;
     left: 1rem;
     top: 0.95rem;
@@ -51,20 +59,43 @@
     pointer-events: none;
     transition: all 160ms ease;
   }
+
   .gh-field input:focus + label,
-  .gh-field input:not(:placeholder-shown) + label {
+  .gh-token input:focus + label,
+  .gh-field input:not(:placeholder-shown) + label,
+  .gh-token input:not(:placeholder-shown) + label {
     top: 0.35rem;
     font-size: 0.8rem;
     color: var(--md-sys-color-primary);
   }
+
   .gh-actions,
-  .gh-row {
+  .gh-row,
+  .gh-toolbar {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
     justify-content: space-between;
     gap: 0.75rem;
   }
+
+  .gh-pill-button {
+    border-radius: 999px;
+    border: 1px solid color-mix(in srgb, var(--md-sys-color-outline) 45%, transparent);
+    padding: 0.55rem 0.85rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    background: var(--md-sys-color-surface-container-highest);
+    color: var(--app-secondary-text-color);
+    cursor: pointer;
+  }
+
+  .gh-pill-button.is-active {
+    color: var(--md-sys-color-primary);
+    border-color: color-mix(in srgb, var(--md-sys-color-primary) 50%, var(--md-sys-color-outline));
+  }
+
   .gh-chip-group {
     display: inline-flex;
     gap: 0.35rem;
@@ -73,6 +104,7 @@
     background: var(--md-sys-color-surface-container-highest);
     border: 1px solid color-mix(in srgb, var(--md-sys-color-outline) 35%, transparent);
   }
+
   .gh-chip-group button {
     border: none;
     background: transparent;
@@ -85,65 +117,28 @@
     cursor: pointer;
     font-weight: 600;
   }
+
   .gh-chip-group button.active {
     background: var(--md-sys-color-primary);
     color: var(--md-sys-color-on-primary);
-    box-shadow: 0 12px 32px -22px rgba(0, 0, 0, 0.6);
+    box-shadow: 0 12px 32px -22px rgba(0, 0, 0, 0.4);
   }
-  .gh-pill-button {
-    border-radius: 999px;
-    border: 1px solid color-mix(in srgb, var(--md-sys-color-outline) 55%, transparent);
-    padding: 0.55rem 0.85rem;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.35rem;
-    background: var(--md-sys-color-surface-container-highest);
-    cursor: pointer;
-  }
-  .gh-pill-button[disabled] {
-    opacity: 0.55;
-    cursor: not-allowed;
-  }
-  .gh-pill-button.is-active {
-    color: var(--md-sys-color-primary);
-    border-color: color-mix(in srgb, var(--md-sys-color-primary) 50%, var(--md-sys-color-outline));
-  }
+
   .gh-token {
     overflow: hidden;
-    margin-top: 0.35rem;
+    margin-top: 0.25rem;
   }
-  .gh-token input {
-    width: 100%;
-    padding: 1.05rem 1rem 0.65rem 1rem;
-    background: var(--md-sys-color-surface-container-high);
-    border: none;
-    border-bottom: 1px solid color-mix(in srgb, var(--md-sys-color-outline) 35%, transparent);
-    border-radius: 16px 16px 4px 4px;
-    color: var(--app-text-color);
-  }
-  .gh-token label {
-    position: absolute;
-    left: 1rem;
-    top: 0.85rem;
-    font-size: 0.9rem;
-    color: var(--app-secondary-text-color);
-    transition: all 160ms ease;
-  }
-  .gh-token input:focus + label,
-  .gh-token input:not(:placeholder-shown) + label {
-    top: 0.25rem;
-    font-size: 0.8rem;
-    color: var(--md-sys-color-primary);
-  }
+
   .gh-result {
     background: var(--md-sys-color-surface-container);
     border-radius: 20px;
     border: 1px solid color-mix(in srgb, var(--md-sys-color-outline) 35%, transparent);
-    box-shadow: 0 18px 50px -28px rgba(0, 0, 0, 0.55);
+    box-shadow: 0 18px 50px -28px rgba(0, 0, 0, 0.45);
     padding: clamp(1rem, 3vw, 1.25rem);
     display: grid;
     gap: 1rem;
   }
+
   .gh-result pre {
     max-height: 60vh;
     overflow: auto;
@@ -153,19 +148,24 @@
     margin: 0;
     color: var(--app-text-color);
   }
+
   .gh-error {
-    display: none;
+    display: flex;
+    gap: 0.5rem;
+    align-items: flex-start;
     background: color-mix(in srgb, var(--md-sys-color-error) 12%, transparent);
     border: 1px solid color-mix(in srgb, var(--md-sys-color-error) 40%, transparent);
     color: var(--md-sys-color-on-error-container);
     border-radius: 14px;
     padding: 0.9rem 1rem;
   }
+
   .gh-stats {
     display: flex;
     gap: 0.65rem;
     flex-wrap: wrap;
   }
+
   .gh-stat-chip {
     background: var(--md-sys-color-surface-container-high);
     border: 1px solid color-mix(in srgb, var(--md-sys-color-outline) 30%, transparent);
@@ -173,15 +173,89 @@
     border-radius: 12px;
     font-weight: 600;
   }
-  .gh-toolbar {
+
+  .rotating {
+    animation: spin 1s linear infinite;
+  }
+
+  @keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+
+  /* Favorites shared styling */
+  .gh-fav-grid {
+    display: grid;
+    gap: 1rem;
+  }
+
+  .gh-fav-card {
+    background: var(--md-sys-color-surface-container);
+    border-radius: 20px;
+    border: 1px solid color-mix(in srgb, var(--md-sys-color-outline) 40%, transparent);
+    padding: 1.1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    box-shadow: 0 12px 36px -26px rgba(0, 0, 0, 0.45);
+  }
+
+  .gh-fav-header {
     display: flex;
     justify-content: space-between;
+    gap: 0.65rem;
+    align-items: flex-start;
+  }
+
+  .gh-fav-owner {
+    display: inline-flex;
+    gap: 0.35rem;
+    color: var(--app-secondary-text-color);
     align-items: center;
-    gap: 0.75rem;
-    flex-wrap: wrap;
+    font-size: 0.9rem;
+  }
+
+  .gh-fav-meta h3,
+  .gh-fav-meta h3 {
+    margin: 0.15rem 0 0;
+    font-size: 1.05rem;
+  }
+
+  .gh-fav-toggle {
+    border: none;
+    background: transparent;
+    color: var(--md-sys-color-primary);
+    border-radius: 999px;
+    padding: 0.35rem;
+    cursor: pointer;
+  }
+
+  .gh-fav-actions {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 0.5rem;
+  }
+
+  .gh-fav-action {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    padding: 0.7rem 0.9rem;
+    border-radius: 12px;
+    border: 1px solid color-mix(in srgb, var(--md-sys-color-outline) 25%, transparent);
+    background: var(--md-sys-color-surface-container-high);
+    color: var(--app-text-color);
+    cursor: pointer;
+  }
+
+  .gh-meta {
+    color: var(--app-secondary-text-color);
+    font-size: 0.95rem;
   }
 </style>
-<div class="gh-view">
+
+<div class="gh-page">
   <div class="gh-title">
     <h1>Repo Mapper</h1>
     <p>Generate ASCII file trees from public repositories.</p>
@@ -190,61 +264,95 @@
   <div class="gh-card">
     <form id="mapper-form" class="space-y-4">
       <div class="gh-field">
-        <input id="mapper-url" type="text" placeholder="https://github.com/..." list="mapper-datalist" autocomplete="off" />
+        <input
+          id="mapper-url"
+          type="text"
+          placeholder="https://github.com/..."
+          list="mapper-datalist"
+          autocomplete="off"
+        />
         <label for="mapper-url">Repository URL</label>
         <datalist id="mapper-datalist"></datalist>
-        <button type="button" id="mapper-fav-btn" class="gh-pill-button" title="Toggle Favorite" style="margin-right: 0.35rem;">
+        <button
+          type="button"
+          id="mapper-fav-btn"
+          class="gh-pill-button"
+          title="Toggle Favorite"
+          style="margin-right: 0.35rem;"
+        >
           <span class="material-symbols-outlined">star</span>
           <span class="favorite-label">Favorite</span>
         </button>
       </div>
 
-      <div class="gh-row">
-        <button type="button" id="mapper-token-toggle" class="gh-pill-button" aria-expanded="false">
-          <span class="material-symbols-outlined">key_vertical</span>
+      <div class="gh-toolbar">
+        <button type="button" id="mapper-token-toggle" class="gh-pill-button">
+          <span class="material-symbols-outlined">settings</span>
           <span class="token-toggle-label">Token Settings</span>
         </button>
+
         <div class="gh-chip-group">
           <button type="button" id="btn-format-ascii" class="active">
             <span class="material-symbols-outlined">terminal</span>
             ASCII
           </button>
           <button type="button" id="btn-format-paths">
-            <span class="material-symbols-outlined">view_list</span>
+            <span class="material-symbols-outlined">list_alt</span>
             Paths
           </button>
         </div>
       </div>
 
       <div id="mapper-token-container" class="gh-token" hidden>
-        <div style="position: relative;">
-          <input type="password" id="mapper-token" placeholder="github_pat_..." />
-          <label for="mapper-token">Access Token (Optional)</label>
+        <input
+          id="mapper-token"
+          type="password"
+          placeholder="Personal Access Token"
+          autocomplete="off"
+        />
+        <label for="mapper-token">GitHub Token (optional)</label>
+      </div>
+
+      <div class="gh-actions">
+        <md-filled-button id="mapper-submit" type="submit">
+          <span class="material-symbols-outlined" slot="icon">terminal</span>
+          <span>Generate Map</span>
+        </md-filled-button>
+        <div class="gh-stats">
+          <div class="gh-stat-chip">Folders: <span id="mapper-stats-folders">0</span></div>
+          <div class="gh-stat-chip">Files: <span id="mapper-stats-files">0</span></div>
         </div>
       </div>
 
-      <div class="gh-actions" style="justify-content: flex-end;">
-        <md-filled-button id="mapper-submit" type="submit">
-          <span slot="icon" class="material-symbols-outlined">terminal</span>
-          Generate Map
-        </md-filled-button>
+      <div id="mapper-error" class="gh-error" hidden>
+        <span class="material-symbols-outlined">error</span>
+        <span data-error-text>Invalid GitHub URL</span>
       </div>
     </form>
   </div>
 
-  <div id="mapper-error" class="gh-error"></div>
-
   <div id="mapper-result" class="gh-result" hidden>
     <div class="gh-toolbar">
-      <div class="gh-stats">
-        <span class="gh-stat-chip"><span id="mapper-stats-folders">0</span> Folders</span>
-        <span class="gh-stat-chip"><span id="mapper-stats-files">0</span> Files</span>
+      <div class="gh-row">
+        <span class="material-symbols-outlined">integration_instructions</span>
+        <span class="gh-meta">Generated Structure</span>
       </div>
-      <button id="mapper-copy-btn" class="gh-pill-button" type="button">
+      <button id="mapper-copy-btn" type="button" class="gh-pill-button">
         <span class="material-symbols-outlined">content_copy</span>
-        <span>Copy Code</span>
+        <span>Copy</span>
       </button>
     </div>
     <pre><code id="mapper-code"></code></pre>
+  </div>
+
+  <div class="gh-card">
+    <div class="gh-title">
+      <h2>Favorites</h2>
+      <p>Quick access to saved repositories.</p>
+    </div>
+    <div id="favorites-grid" class="gh-fav-grid"></div>
+    <div id="favorites-empty" class="gh-meta" hidden>
+      Star a repository to save it here.
+    </div>
   </div>
 </div>

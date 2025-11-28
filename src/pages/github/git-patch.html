@@ -1,88 +1,132 @@
 <style>
-  .gh-view { display: grid; gap: 1.5rem; }
-  .gh-card { background: var(--md-sys-color-surface-container); color: var(--app-text-color); border: 1px solid color-mix(in srgb, var(--md-sys-color-outline) 35%, transparent); border-radius: 24px; padding: clamp(1rem, 3vw, 1.5rem); box-shadow: 0 16px 48px -28px rgba(0, 0, 0, 0.55); }
-  .gh-title { display: grid; gap: 0.35rem; }
-  .gh-title h1 { margin: 0; font-size: clamp(1.75rem, 2vw + 1rem, 2.35rem); }
-  .gh-title p { margin: 0; color: var(--app-secondary-text-color); }
-  .gh-field { position: relative; background: var(--md-sys-color-surface-container-high); border-radius: 18px 18px 4px 4px; border-bottom: 1px solid color-mix(in srgb, var(--md-sys-color-outline) 45%, transparent); display: flex; align-items: center; }
-  .gh-field input { width: 100%; padding: 1.2rem 1rem 0.5rem 1rem; background: transparent; border: none; color: var(--app-text-color); font-size: 1rem; }
-  .gh-field input:focus { outline: none; }
-  .gh-field label { position: absolute; left: 1rem; top: 0.95rem; color: var(--app-secondary-text-color); font-size: 0.9rem; pointer-events: none; transition: all 160ms ease; }
-  .gh-field input:focus + label, .gh-field input:not(:placeholder-shown) + label { top: 0.35rem; font-size: 0.8rem; color: var(--md-sys-color-primary); }
-  .gh-actions, .gh-row { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.75rem; }
-  .gh-pill-button { border-radius: 999px; border: 1px solid color-mix(in srgb, var(--md-sys-color-outline) 55%, transparent); padding: 0.55rem 0.85rem; display: inline-flex; align-items: center; gap: 0.35rem; background: var(--md-sys-color-surface-container-highest); cursor: pointer; }
-  .gh-pill-button[disabled] { opacity: 0.55; cursor: not-allowed; }
+  .gh-page { display: grid; gap: 1.75rem; }
+  .gh-card {
+    background: var(--md-sys-color-surface-container);
+    color: var(--app-text-color);
+    border: 1px solid color-mix(in srgb, var(--md-sys-color-outline) 35%, transparent);
+    border-radius: 24px;
+    padding: clamp(1.25rem, 3vw, 1.75rem);
+    box-shadow: 0 18px 50px -28px rgba(0, 0, 0, 0.45);
+  }
+  .gh-title h1 { margin: 0; font-size: clamp(1.9rem, 2vw + 1rem, 2.35rem); font-weight: 600; }
+  .gh-title p { margin: 0.35rem 0 0; color: var(--app-secondary-text-color); }
+  .gh-field, .gh-token { position: relative; background: var(--md-sys-color-surface-container-high); border-radius: 18px 18px 6px 6px; border: 1px solid color-mix(in srgb, var(--md-sys-color-outline) 40%, transparent); display: flex; align-items: center; }
+  .gh-field input, .gh-token input { width: 100%; padding: 1.1rem 1rem 0.55rem 1rem; background: transparent; border: none; color: var(--app-text-color); font-size: 1rem; }
+  .gh-field input:focus, .gh-token input:focus { outline: none; }
+  .gh-field label, .gh-token label { position: absolute; left: 1rem; top: 0.95rem; color: var(--app-secondary-text-color); font-size: 0.9rem; pointer-events: none; transition: all 160ms ease; }
+  .gh-field input:focus + label, .gh-token input:focus + label, .gh-field input:not(:placeholder-shown) + label, .gh-token input:not(:placeholder-shown) + label { top: 0.35rem; font-size: 0.8rem; color: var(--md-sys-color-primary); }
+  .gh-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; flex-wrap: wrap; }
+  .gh-row { display: inline-flex; align-items: center; gap: 0.35rem; }
+  .gh-pill-button { border-radius: 999px; border: 1px solid color-mix(in srgb, var(--md-sys-color-outline) 45%, transparent); padding: 0.55rem 0.85rem; display: inline-flex; align-items: center; gap: 0.35rem; background: var(--md-sys-color-surface-container-highest); color: var(--app-secondary-text-color); cursor: pointer; }
   .gh-pill-button.is-active { color: var(--md-sys-color-primary); border-color: color-mix(in srgb, var(--md-sys-color-primary) 50%, var(--md-sys-color-outline)); }
-  .gh-token { overflow: hidden; margin-top: 0.35rem; }
-  .gh-token input { width: 100%; padding: 1.05rem 1rem 0.65rem 1rem; background: var(--md-sys-color-surface-container-high); border: none; border-bottom: 1px solid color-mix(in srgb, var(--md-sys-color-outline) 35%, transparent); border-radius: 16px 16px 4px 4px; color: var(--app-text-color); }
-  .gh-token label { position: absolute; left: 1rem; top: 0.85rem; font-size: 0.9rem; color: var(--app-secondary-text-color); transition: all 160ms ease; }
-  .gh-token input:focus + label, .gh-token input:not(:placeholder-shown) + label { top: 0.25rem; font-size: 0.8rem; color: var(--md-sys-color-primary); }
-  .gh-error { display: none; background: color-mix(in srgb, var(--md-sys-color-error) 12%, transparent); border: 1px solid color-mix(in srgb, var(--md-sys-color-error) 40%, transparent); color: var(--md-sys-color-on-error-container); border-radius: 14px; padding: 0.9rem 1rem; }
-  .gh-result { background: var(--md-sys-color-surface-container); border-radius: 20px; border: 1px solid color-mix(in srgb, var(--md-sys-color-outline) 35%, transparent); box-shadow: 0 18px 50px -28px rgba(0, 0, 0, 0.55); padding: clamp(1rem, 3vw, 1.25rem); display: grid; gap: 1rem; }
-  .gh-toolbar { display: flex; justify-content: space-between; align-items: center; gap: 0.75rem; flex-wrap: wrap; }
+  .gh-token { overflow: hidden; margin-top: 0.25rem; }
+  .gh-error { display: flex; gap: 0.5rem; align-items: flex-start; background: color-mix(in srgb, var(--md-sys-color-error) 12%, transparent); border: 1px solid color-mix(in srgb, var(--md-sys-color-error) 40%, transparent); color: var(--md-sys-color-on-error-container); border-radius: 14px; padding: 0.9rem 1rem; }
+  .gh-result { background: var(--md-sys-color-surface-container); border-radius: 20px; border: 1px solid color-mix(in srgb, var(--md-sys-color-outline) 35%, transparent); box-shadow: 0 18px 50px -28px rgba(0, 0, 0, 0.45); padding: clamp(1rem, 3vw, 1.25rem); display: grid; gap: 1rem; }
   .gh-result pre { max-height: 60vh; overflow: auto; background: var(--md-sys-color-surface-container-high); border-radius: 16px; padding: 1rem; margin: 0; color: var(--app-text-color); white-space: pre-wrap; }
+  .gh-meta { color: var(--app-secondary-text-color); font-size: 0.95rem; }
+  .rotating { animation: spin 1s linear infinite; }
+  @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+  /* Favorites shared */
+  .gh-fav-grid { display: grid; gap: 1rem; }
+  .gh-fav-card { background: var(--md-sys-color-surface-container); border-radius: 20px; border: 1px solid color-mix(in srgb, var(--md-sys-color-outline) 40%, transparent); padding: 1.1rem; display: flex; flex-direction: column; gap: 0.75rem; box-shadow: 0 12px 36px -26px rgba(0, 0, 0, 0.45); }
+  .gh-fav-header { display: flex; justify-content: space-between; gap: 0.65rem; align-items: flex-start; }
+  .gh-fav-owner { display: inline-flex; gap: 0.35rem; color: var(--app-secondary-text-color); align-items: center; font-size: 0.9rem; }
+  .gh-fav-toggle { border: none; background: transparent; color: var(--md-sys-color-primary); border-radius: 999px; padding: 0.35rem; cursor: pointer; }
+  .gh-fav-actions { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 0.5rem; }
+  .gh-fav-action { display: inline-flex; align-items: center; justify-content: center; gap: 0.4rem; padding: 0.7rem 0.9rem; border-radius: 12px; border: 1px solid color-mix(in srgb, var(--md-sys-color-outline) 25%, transparent); background: var(--md-sys-color-surface-container-high); color: var(--app-text-color); cursor: pointer; }
 </style>
-<div class="gh-view">
+
+<div class="gh-page">
   <div class="gh-title">
     <h1>Git Patch</h1>
-    <p>Extract raw .patch files from commits for git apply.</p>
+    <p>Extract raw .patch files from commit URLs.</p>
   </div>
 
   <div class="gh-card">
     <form id="patch-form" class="space-y-4">
       <div class="gh-field">
-        <input id="patch-url" type="text" placeholder="https://github.com/..." list="patch-datalist" autocomplete="off" />
+        <input
+          id="patch-url"
+          type="text"
+          placeholder="https://github.com/.../commit/..."
+          list="patch-datalist"
+          autocomplete="off"
+        />
         <label for="patch-url">Commit URL</label>
         <datalist id="patch-datalist"></datalist>
-        <button type="button" id="patch-fav-btn" class="gh-pill-button" title="Toggle Favorite" style="margin-right: 0.35rem;">
+        <button
+          type="button"
+          id="patch-fav-btn"
+          class="gh-pill-button"
+          title="Toggle Favorite"
+          style="margin-right: 0.35rem;"
+        >
           <span class="material-symbols-outlined">star</span>
           <span class="favorite-label">Favorite</span>
         </button>
       </div>
 
-      <div class="gh-row">
-        <button type="button" id="patch-token-toggle" class="gh-pill-button" aria-expanded="false">
-          <span class="material-symbols-outlined">key_vertical</span>
+      <div class="gh-toolbar">
+        <button type="button" id="patch-token-toggle" class="gh-pill-button">
+          <span class="material-symbols-outlined">settings</span>
           <span class="token-toggle-label">Token Settings</span>
         </button>
-        <div style="flex: 1"></div>
       </div>
 
       <div id="patch-token-container" class="gh-token" hidden>
-        <div style="position: relative;">
-          <input type="password" id="patch-token" placeholder="github_pat_..." />
-          <label for="patch-token">Access Token (Optional)</label>
-        </div>
+        <input
+          id="patch-token"
+          type="password"
+          placeholder="Personal Access Token"
+          autocomplete="off"
+        />
+        <label for="patch-token">GitHub Token (optional)</label>
       </div>
 
-      <div class="gh-actions" style="justify-content: flex-end;">
+      <div class="gh-toolbar">
         <md-filled-button id="patch-submit" type="submit">
-          <span slot="icon" class="material-symbols-outlined">difference</span>
-          Get Patch
+          <span class="material-symbols-outlined" slot="icon">difference</span>
+          <span>Get Patch</span>
         </md-filled-button>
+        <div class="gh-meta">Download or copy raw patch content.</div>
+      </div>
+
+      <div id="patch-error" class="gh-error" hidden>
+        <span class="material-symbols-outlined">error</span>
+        <span data-error-text>Invalid Commit URL</span>
       </div>
     </form>
   </div>
 
-  <div id="patch-error" class="gh-error"></div>
-
   <div id="patch-result" class="gh-result" hidden>
     <div class="gh-toolbar">
-      <div class="gh-pill-button" aria-hidden="true">
-        <span class="material-symbols-outlined">check</span>
-        Ready to Apply
+      <div class="gh-row">
+        <span class="material-symbols-outlined">integration_instructions</span>
+        <span class="gh-meta">Patch Preview</span>
       </div>
-      <div class="gh-actions" style="justify-content: flex-end;">
-        <button id="patch-download-btn" class="gh-pill-button" type="button">
-          <span class="material-symbols-outlined">download</span>
-          <span>Download</span>
-        </button>
-        <button id="patch-copy-btn" class="gh-pill-button" type="button">
+      <div class="gh-row" style="gap: 0.5rem;">
+        <button id="patch-copy-btn" type="button" class="gh-pill-button">
           <span class="material-symbols-outlined">content_copy</span>
           <span>Copy</span>
+        </button>
+        <button id="patch-download-btn" type="button" class="gh-pill-button">
+          <span class="material-symbols-outlined">download</span>
+          <span>Download</span>
         </button>
       </div>
     </div>
     <pre><code id="patch-code"></code></pre>
+  </div>
+
+  <div class="gh-card">
+    <div class="gh-title">
+      <h2>Favorites</h2>
+      <p>Quick access to saved repositories.</p>
+    </div>
+    <div id="favorites-grid" class="gh-fav-grid"></div>
+    <div id="favorites-empty" class="gh-meta" hidden>
+      Star a repository to save it here.
+    </div>
   </div>
 </div>

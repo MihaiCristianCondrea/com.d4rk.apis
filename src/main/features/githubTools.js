@@ -1,13 +1,22 @@
-import { fetchCommitPatch, fetchReleaseStats, fetchRepositoryTree } from '../services/githubService';
-import { generateAsciiTree, generatePathList, parseGithubCommitUrl, parseGithubUrl } from '../domain/utils.js';
+import {
+  fetchCommitPatch,
+  fetchReleaseStats,
+  fetchRepositoryTree,
+} from '../services/githubService';
+import {
+  generateAsciiTree,
+  generatePathList,
+  parseGithubCommitUrl,
+  parseGithubUrl,
+} from '../domain/utils.js';
 
-const FAVORITES_KEY = 'repomapper_favorites';
+const STORAGE_KEY = 'repomapper_favorites';
 
 const state = {
   favorites: [],
   mapper: {
-    rawPaths: [],
     format: 'ascii',
+    rawPaths: [],
     parsedRepo: null,
   },
   releases: {
@@ -24,61 +33,49 @@ const state = {
 
 function loadFavorites() {
   try {
-    const stored = localStorage.getItem(FAVORITES_KEY);
+    const stored = localStorage.getItem(STORAGE_KEY);
     const parsed = stored ? JSON.parse(stored) : [];
     state.favorites = Array.isArray(parsed) ? parsed : [];
   } catch (error) {
-    state.favorites = state.favorites || [];
+    state.favorites = [];
   }
   return [...state.favorites];
 }
 
-function saveFavorites(list) {
-  state.favorites = [...list];
+function saveFavorites(next) {
+  state.favorites = [...next];
   try {
-    localStorage.setItem(FAVORITES_KEY, JSON.stringify(list));
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state.favorites));
   } catch (error) {
-    // ignore storage issues
+    // ignore storage failures
   }
+  hydrateDatalists();
+  renderFavoritesGrid();
+}
+
+function isFavorite(owner, repo) {
+  return state.favorites.some(
+    (fav) =>
+      fav.owner.toLowerCase() === owner.toLowerCase() &&
+      fav.repo.toLowerCase() === repo.toLowerCase(),
+  );
 }
 
 function toggleFavorite(owner, repo) {
-  const current = loadFavorites();
-  const existingIndex = current.findIndex(
-    (fav) => fav.owner.toLowerCase() === owner.toLowerCase() && fav.repo.toLowerCase() === repo.toLowerCase(),
+  const next = loadFavorites();
+  const existingIndex = next.findIndex(
+    (fav) =>
+      fav.owner.toLowerCase() === owner.toLowerCase() &&
+      fav.repo.toLowerCase() === repo.toLowerCase(),
   );
 
   if (existingIndex >= 0) {
-    current.splice(existingIndex, 1);
+    next.splice(existingIndex, 1);
   } else {
-    current.unshift({ owner, repo, timestamp: Date.now() });
+    next.unshift({ owner, repo, timestamp: Date.now() });
   }
 
-  saveFavorites(current);
-  renderFavoritesGrid();
-  hydrateDatalists();
-  return current;
-}
-
-function setFavoriteButtonState(button, parsedRepo) {
-  if (!button) return;
-  const icon = button.querySelector('.material-symbols-outlined');
-  const label = button.querySelector('.favorite-label');
-  const isValid = Boolean(parsedRepo);
-  const isFav = parsedRepo && state.favorites.some(
-    (fav) => fav.owner.toLowerCase() === parsedRepo.owner.toLowerCase() && fav.repo.toLowerCase() === parsedRepo.repo.toLowerCase(),
-  );
-
-  button.hidden = !isValid;
-  button.disabled = !isValid;
-  button.classList.toggle('is-active', Boolean(isFav));
-
-  if (icon) {
-    icon.textContent = isFav ? 'star' : 'star_border';
-  }
-  if (label) {
-    label.textContent = isFav ? 'Favorited' : 'Favorite';
-  }
+  saveFavorites(next);
 }
 
 function hydrateDatalist(listId, suffix = '') {
@@ -98,44 +95,29 @@ function hydrateDatalists() {
   hydrateDatalist('patch-datalist', '/commit/');
 }
 
-function toggleToken(buttonId, containerId) {
-  const button = document.getElementById(buttonId);
-  const container = document.getElementById(containerId);
-  if (!button || !container) return;
-
-  const labelNode = button.querySelector('.token-toggle-label');
-  const isOpen = button.getAttribute('aria-expanded') === 'true';
-  const nextState = !isOpen;
-
-  button.setAttribute('aria-expanded', nextState ? 'true' : 'false');
-  container.hidden = !nextState;
-  if (labelNode) {
-    labelNode.textContent = nextState ? 'Hide Settings' : 'Token Settings';
-  }
-}
-
-function showError(elementId, message) {
-  const el = document.getElementById(elementId);
-  if (!el) return;
-  el.textContent = message;
-  el.style.display = 'block';
-}
-
-function hideError(elementId) {
-  const el = document.getElementById(elementId);
-  if (!el) return;
-  el.style.display = 'none';
-}
-
-function setButtonLoading(button, isLoading, label, loadingLabel) {
+function setFavoriteButtonState(button, parsedRepo) {
   if (!button) return;
-  if (isLoading) {
-    button.setAttribute('data-original-label', label);
+  const icon = button.querySelector('.material-symbols-outlined');
+  const label = button.querySelector('.favorite-label');
+
+  if (!parsedRepo) {
+    button.hidden = true;
     button.disabled = true;
-    button.innerHTML = `<span slot="icon" class="material-symbols-outlined rotating">progress_activity</span>${loadingLabel}`;
-  } else {
-    button.disabled = false;
-    button.innerHTML = button.getAttribute('data-original-label') || label;
+    return;
+  }
+
+  button.hidden = false;
+  button.disabled = false;
+
+  const active = isFavorite(parsedRepo.owner, parsedRepo.repo);
+  button.classList.toggle('is-active', active);
+
+  if (icon) {
+    icon.textContent = active ? 'star' : 'star_border';
+    icon.classList.toggle('filled-icon', active);
+  }
+  if (label) {
+    label.textContent = active ? 'Favorited' : 'Favorite';
   }
 }
 
@@ -144,78 +126,110 @@ function copyWithFeedback(buttonId, text) {
   if (!button) return;
   const original = button.innerHTML;
   navigator.clipboard.writeText(text || '');
-  button.innerHTML = '<span class="material-symbols-outlined">check_circle</span>Copied';
+  button.innerHTML =
+    '<span class="material-symbols-outlined">check_circle</span><span>Copied</span>';
   setTimeout(() => {
     button.innerHTML = original;
   }, 1800);
 }
 
+function showError(elementId, message) {
+  const container = document.getElementById(elementId);
+  if (!container) return;
+  container.removeAttribute('hidden');
+  const text = container.querySelector('[data-error-text]');
+  if (text) text.textContent = message;
+}
+
+function hideError(elementId) {
+  const container = document.getElementById(elementId);
+  if (!container) return;
+  container.setAttribute('hidden', 'hidden');
+}
+
+function setButtonLoading(button, isLoading, idleLabel, busyLabel, iconName) {
+  if (!button) return;
+  const icon = button.querySelector('.material-symbols-outlined');
+  const label = button.querySelector('span:last-child');
+  if (!icon || !label) return;
+
+  if (isLoading) {
+    button.disabled = true;
+    icon.textContent = 'progress_activity';
+    icon.classList.add('rotating');
+    label.textContent = busyLabel;
+  } else {
+    button.disabled = false;
+    icon.textContent = iconName;
+    icon.classList.remove('rotating');
+    label.textContent = idleLabel;
+  }
+}
+
 function renderFavoritesGrid() {
   const grid = document.getElementById('favorites-grid');
-  const empty = document.getElementById('favorites-empty');
-  if (!grid || !empty) return;
+  const emptyState = document.getElementById('favorites-empty');
+  if (!grid || !emptyState) return;
 
   const favorites = loadFavorites();
   grid.innerHTML = '';
 
   if (!favorites.length) {
-    empty.style.display = 'flex';
+    emptyState.classList.remove('hidden');
     return;
   }
 
-  empty.style.display = 'none';
+  emptyState.classList.add('hidden');
 
   favorites.forEach((fav) => {
-    const card = document.createElement('div');
-    card.className = 'gh-card';
+    const card = document.createElement('article');
+    card.className = 'gh-fav-card';
     card.innerHTML = `
-      <header>
-        <div>
-          <div class="gh-meta">
+      <div class="gh-fav-header">
+        <div class="gh-fav-meta">
+          <div class="gh-fav-owner">
             <span class="material-symbols-outlined">folder_open</span>
             <span>${fav.owner}</span>
           </div>
           <h3 title="${fav.repo}">${fav.repo}</h3>
         </div>
-        <button type="button" class="gh-pill-button" aria-label="Remove favorite">
+        <button type="button" class="gh-fav-toggle">
           <span class="material-symbols-outlined">star</span>
-          <span class="favorite-label">Favorited</span>
         </button>
-      </header>
-      <div class="gh-actions">
-        <md-filled-tonal-button class="favorite-map" data-url="https://github.com/${fav.owner}/${fav.repo}">
-          <span slot="icon" class="material-symbols-outlined">terminal</span>
-          Map
-        </md-filled-tonal-button>
-        <md-filled-tonal-button class="favorite-stats" data-url="https://github.com/${fav.owner}/${fav.repo}">
-          <span slot="icon" class="material-symbols-outlined">bar_chart</span>
-          Stats
-        </md-filled-tonal-button>
+      </div>
+      <div class="gh-fav-actions">
+        <button type="button" class="gh-fav-action map" data-url="https://github.com/${fav.owner}/${fav.repo}">
+          <span class="material-symbols-outlined">terminal</span>
+          <span>Map</span>
+        </button>
+        <button type="button" class="gh-fav-action stats" data-url="https://github.com/${fav.owner}/${fav.repo}">
+          <span class="material-symbols-outlined">bar_chart</span>
+          <span>Stats</span>
+        </button>
       </div>
     `;
 
-    const removeBtn = card.querySelector('button');
-    removeBtn?.addEventListener('click', () => {
+    const toggleBtn = card.querySelector('.gh-fav-toggle');
+    toggleBtn?.addEventListener('click', () => {
       toggleFavorite(fav.owner, fav.repo);
+      renderFavoritesGrid();
     });
 
-    const mapBtn = card.querySelector('.favorite-map');
-    mapBtn?.addEventListener('click', () => {
-      window.location.href = '#repo-mapper';
+    card.querySelector('.gh-fav-action.map')?.addEventListener('click', () => {
       const mapperInput = document.getElementById('mapper-url');
       if (mapperInput) {
-        mapperInput.value = mapBtn.dataset.url;
+        mapperInput.value = `https://github.com/${fav.owner}/${fav.repo}`;
         mapperInput.dispatchEvent(new Event('input'));
+        window.location.hash = '#repo-mapper';
       }
     });
 
-    const statsBtn = card.querySelector('.favorite-stats');
-    statsBtn?.addEventListener('click', () => {
-      window.location.href = '#release-stats';
+    card.querySelector('.gh-fav-action.stats')?.addEventListener('click', () => {
       const releaseInput = document.getElementById('releases-url');
       if (releaseInput) {
-        releaseInput.value = statsBtn.dataset.url;
+        releaseInput.value = `https://github.com/${fav.owner}/${fav.repo}`;
         releaseInput.dispatchEvent(new Event('input'));
+        window.location.hash = '#release-stats';
       }
     });
 
@@ -223,11 +237,79 @@ function renderFavoritesGrid() {
   });
 }
 
-function handleFavoriteToggle(buttonId, parsedRepo) {
+function toggleToken(buttonId, containerId) {
   const button = document.getElementById(buttonId);
-  if (!button || !parsedRepo) return;
-  toggleFavorite(parsedRepo.owner, parsedRepo.repo);
-  setFavoriteButtonState(button, parsedRepo);
+  const container = document.getElementById(containerId);
+  if (!button || !container) return;
+
+  const expanded = button.getAttribute('aria-expanded') === 'true';
+  button.setAttribute('aria-expanded', expanded ? 'false' : 'true');
+  container.hidden = expanded;
+  const label = button.querySelector('.token-toggle-label');
+  if (label) label.textContent = expanded ? 'Token Settings' : 'Hide Settings';
+}
+
+function initMapperFavorites(urlInputId, favoriteButtonId) {
+  const urlInput = document.getElementById(urlInputId);
+  const favButton = document.getElementById(favoriteButtonId);
+  if (!urlInput || !favButton) return;
+
+  const update = () => {
+    const parsed = parseGithubUrl(urlInput.value || '');
+    state.mapper.parsedRepo = parsed;
+    setFavoriteButtonState(favButton, parsed);
+  };
+
+  urlInput.addEventListener('input', update);
+  favButton.addEventListener('click', () => {
+    if (!state.mapper.parsedRepo) return;
+    toggleFavorite(state.mapper.parsedRepo.owner, state.mapper.parsedRepo.repo);
+    setFavoriteButtonState(favButton, state.mapper.parsedRepo);
+  });
+
+  update();
+}
+
+function initReleaseFavorites(urlInputId, favoriteButtonId) {
+  const urlInput = document.getElementById(urlInputId);
+  const favButton = document.getElementById(favoriteButtonId);
+  if (!urlInput || !favButton) return;
+
+  const update = () => {
+    const parsed = parseGithubUrl(urlInput.value || '');
+    state.releases.parsedRepo = parsed;
+    setFavoriteButtonState(favButton, parsed);
+  };
+
+  urlInput.addEventListener('input', update);
+  favButton.addEventListener('click', () => {
+    if (!state.releases.parsedRepo) return;
+    toggleFavorite(state.releases.parsedRepo.owner, state.releases.parsedRepo.repo);
+    setFavoriteButtonState(favButton, state.releases.parsedRepo);
+  });
+
+  update();
+}
+
+function initPatchFavorites(urlInputId, favoriteButtonId) {
+  const urlInput = document.getElementById(urlInputId);
+  const favButton = document.getElementById(favoriteButtonId);
+  if (!urlInput || !favButton) return;
+
+  const update = () => {
+    const parsed = parseGithubCommitUrl(urlInput.value || '');
+    state.patch.parsedRepo = parsed;
+    setFavoriteButtonState(favButton, parsed);
+  };
+
+  urlInput.addEventListener('input', update);
+  favButton.addEventListener('click', () => {
+    if (!state.patch.parsedRepo) return;
+    toggleFavorite(state.patch.parsedRepo.owner, state.patch.parsedRepo.repo);
+    setFavoriteButtonState(favButton, state.patch.parsedRepo);
+  });
+
+  update();
 }
 
 export function initRepoMapper() {
@@ -236,12 +318,11 @@ export function initRepoMapper() {
 
   loadFavorites();
   hydrateDatalists();
+  renderFavoritesGrid();
 
   const urlInput = document.getElementById('mapper-url');
   const tokenInput = document.getElementById('mapper-token');
   const tokenToggle = document.getElementById('mapper-token-toggle');
-  const favoriteButton = document.getElementById('mapper-fav-btn');
-  const errorEl = document.getElementById('mapper-error');
   const resultEl = document.getElementById('mapper-result');
   const codeEl = document.getElementById('mapper-code');
   const foldersEl = document.getElementById('mapper-stats-folders');
@@ -251,21 +332,11 @@ export function initRepoMapper() {
   const pathsBtn = document.getElementById('btn-format-paths');
   const submitBtn = document.getElementById('mapper-submit');
 
-  const updateStateFromInput = () => {
-    const parsed = parseGithubUrl(urlInput?.value || '');
-    state.mapper.parsedRepo = parsed;
-    setFavoriteButtonState(favoriteButton, parsed);
-    return parsed;
-  };
+  initMapperFavorites('mapper-url', 'mapper-fav-btn');
 
-  urlInput?.addEventListener('input', updateStateFromInput);
-
-  favoriteButton?.addEventListener('click', () => {
-    const parsed = updateStateFromInput();
-    if (parsed) handleFavoriteToggle('mapper-fav-btn', parsed);
-  });
-
-  tokenToggle?.addEventListener('click', () => toggleToken('mapper-token-toggle', 'mapper-token-container'));
+  tokenToggle?.addEventListener('click', () =>
+    toggleToken('mapper-token-toggle', 'mapper-token-container'),
+  );
 
   const setFormat = (format) => {
     state.mapper.format = format;
@@ -278,24 +349,28 @@ export function initRepoMapper() {
   pathsBtn?.addEventListener('click', () => setFormat('paths'));
 
   const renderMapperOutput = () => {
-    const setStats = ({ files, folders }) => {
+    const stats = ({ files, folders }) => {
       if (filesEl) filesEl.textContent = files;
       if (foldersEl) foldersEl.textContent = folders;
     };
 
-    const output = state.mapper.format === 'paths'
-      ? generatePathList(state.mapper.rawPaths, setStats)
-      : generateAsciiTree(state.mapper.rawPaths, setStats);
+    const output =
+      state.mapper.format === 'paths'
+        ? generatePathList(state.mapper.rawPaths, stats)
+        : generateAsciiTree(state.mapper.rawPaths, stats);
 
     if (codeEl) codeEl.textContent = output;
     resultEl?.removeAttribute('hidden');
   };
 
-  copyBtn?.addEventListener('click', () => copyWithFeedback('mapper-copy-btn', codeEl?.textContent || ''));
+  copyBtn?.addEventListener('click', () =>
+    copyWithFeedback('mapper-copy-btn', codeEl?.textContent || ''),
+  );
 
   form.addEventListener('submit', async (event) => {
     event.preventDefault();
-    const parsed = updateStateFromInput();
+    const parsed = parseGithubUrl(urlInput?.value || '');
+    state.mapper.parsedRepo = parsed;
     if (!parsed) {
       showError('mapper-error', 'Invalid GitHub URL');
       return;
@@ -303,8 +378,7 @@ export function initRepoMapper() {
 
     hideError('mapper-error');
     resultEl?.setAttribute('hidden', 'hidden');
-
-    setButtonLoading(submitBtn, true, 'Generate Map', 'Processing...');
+    setButtonLoading(submitBtn, true, 'Generate Map', 'Processing...', 'terminal');
 
     try {
       const { tree, truncated } = await fetchRepositoryTree(parsed, tokenInput?.value || '');
@@ -316,11 +390,9 @@ export function initRepoMapper() {
     } catch (error) {
       showError('mapper-error', error.message || 'Failed to fetch repository.');
     } finally {
-      setButtonLoading(submitBtn, false, 'Generate Map');
+      setButtonLoading(submitBtn, false, 'Generate Map', 'Generate Map', 'terminal');
     }
   });
-
-  updateStateFromInput();
 }
 
 export function initReleaseStats() {
@@ -329,12 +401,11 @@ export function initReleaseStats() {
 
   loadFavorites();
   hydrateDatalists();
+  renderFavoritesGrid();
 
   const urlInput = document.getElementById('releases-url');
   const tokenInput = document.getElementById('releases-token');
   const tokenToggle = document.getElementById('releases-token-toggle');
-  const favoriteButton = document.getElementById('releases-fav-btn');
-  const errorEl = document.getElementById('releases-error');
   const resultEl = document.getElementById('releases-result');
   const totalDownloadsEl = document.getElementById('rel-total-downloads');
   const relCountEl = document.getElementById('rel-count');
@@ -346,21 +417,11 @@ export function initReleaseStats() {
   const detailDownloadsEl = document.getElementById('rel-detail-downloads');
   const submitBtn = document.getElementById('releases-submit');
 
-  const updateStateFromInput = () => {
-    const parsed = parseGithubUrl(urlInput?.value || '');
-    state.releases.parsedRepo = parsed;
-    setFavoriteButtonState(favoriteButton, parsed);
-    return parsed;
-  };
+  initReleaseFavorites('releases-url', 'releases-fav-btn');
 
-  urlInput?.addEventListener('input', updateStateFromInput);
-
-  favoriteButton?.addEventListener('click', () => {
-    const parsed = updateStateFromInput();
-    if (parsed) handleFavoriteToggle('releases-fav-btn', parsed);
-  });
-
-  tokenToggle?.addEventListener('click', () => toggleToken('releases-token-toggle', 'releases-token-container'));
+  tokenToggle?.addEventListener('click', () =>
+    toggleToken('releases-token-toggle', 'releases-token-container'),
+  );
 
   const renderAssets = (assets) => {
     if (!assetsEl) return;
@@ -373,8 +434,8 @@ export function initReleaseStats() {
       .map(
         (asset) => `
           <div class="gh-asset">
-            <div class="gh-row" style="justify-content: space-between; align-items: center; gap: 0.5rem;">
-              <span style="font-weight: 600;">${asset.name}</span>
+            <div class="gh-row">
+              <span class="gh-asset-name">${asset.name}</span>
               <span class="gh-meta">${asset.downloads.toLocaleString()}</span>
             </div>
             <div class="gh-asset-bar"><span style="width: ${maxAsset > 0 ? (asset.downloads / maxAsset) * 100 : 0}%"></span></div>
@@ -395,9 +456,9 @@ export function initReleaseStats() {
         const percent = maxDownloads > 0 ? (release.totalDownloads / maxDownloads) * 100 : 0;
         return `
           <button type="button" class="gh-release-button ${isActive ? 'active' : ''}" data-index="${idx}">
-            <div class="gh-row" style="justify-content: space-between; align-items: center;">
-              <span style="font-weight: 600;" class="${isActive ? '' : 'gh-meta'}">${release.name}</span>
-              <span class="gh-meta" style="color: ${isActive ? 'inherit' : 'var(--app-secondary-text-color)'}">${release.totalDownloads.toLocaleString()}</span>
+            <div class="gh-row">
+              <span class="${isActive ? 'gh-strong' : 'gh-meta'}">${release.name}</span>
+              <span class="gh-meta">${release.totalDownloads.toLocaleString()}</span>
             </div>
             <div class="gh-release-bar"><span style="width:${percent}%;"></span></div>
           </button>`;
@@ -418,10 +479,10 @@ export function initReleaseStats() {
     const active = releases[state.releases.selectedIndex];
     if (!active) return;
 
-    detailNameEl.textContent = active.name;
-    detailTagEl.textContent = active.tagName;
-    detailDateEl.textContent = new Date(active.publishedAt).toLocaleDateString();
-    detailDownloadsEl.textContent = active.totalDownloads.toLocaleString();
+    if (detailNameEl) detailNameEl.textContent = active.name;
+    if (detailTagEl) detailTagEl.textContent = active.tagName;
+    if (detailDateEl) detailDateEl.textContent = new Date(active.publishedAt).toLocaleDateString();
+    if (detailDownloadsEl) detailDownloadsEl.textContent = active.totalDownloads.toLocaleString();
 
     renderAssets(active.assets);
     renderReleaseList();
@@ -430,14 +491,15 @@ export function initReleaseStats() {
   const renderOverview = () => {
     if (!state.releases.data) return;
     const { totalDownloads, releases } = state.releases.data;
-    totalDownloadsEl.textContent = totalDownloads.toLocaleString();
-    relCountEl.textContent = `${releases.length} Found`;
+    if (totalDownloadsEl) totalDownloadsEl.textContent = totalDownloads.toLocaleString();
+    if (relCountEl) relCountEl.textContent = `${releases.length} Found`;
     renderReleaseDetails();
   };
 
   form.addEventListener('submit', async (event) => {
     event.preventDefault();
-    const parsed = updateStateFromInput();
+    const parsed = parseGithubUrl(urlInput?.value || '');
+    state.releases.parsedRepo = parsed;
     if (!parsed) {
       showError('releases-error', 'Invalid GitHub URL');
       return;
@@ -445,7 +507,7 @@ export function initReleaseStats() {
 
     hideError('releases-error');
     resultEl?.setAttribute('hidden', 'hidden');
-    setButtonLoading(submitBtn, true, 'Analyze', 'Processing...');
+    setButtonLoading(submitBtn, true, 'Analyze', 'Processing...', 'analytics');
 
     try {
       const data = await fetchReleaseStats(parsed, tokenInput?.value || '');
@@ -456,11 +518,9 @@ export function initReleaseStats() {
     } catch (error) {
       showError('releases-error', error.message || 'Failed to fetch releases.');
     } finally {
-      setButtonLoading(submitBtn, false, 'Analyze');
+      setButtonLoading(submitBtn, false, 'Analyze', 'Analyze', 'analytics');
     }
   });
-
-  updateStateFromInput();
 }
 
 export function initGitPatch() {
@@ -469,35 +529,26 @@ export function initGitPatch() {
 
   loadFavorites();
   hydrateDatalists();
+  renderFavoritesGrid();
 
   const urlInput = document.getElementById('patch-url');
   const tokenInput = document.getElementById('patch-token');
   const tokenToggle = document.getElementById('patch-token-toggle');
-  const favoriteButton = document.getElementById('patch-fav-btn');
-  const errorEl = document.getElementById('patch-error');
   const resultEl = document.getElementById('patch-result');
   const codeEl = document.getElementById('patch-code');
   const copyBtn = document.getElementById('patch-copy-btn');
   const downloadBtn = document.getElementById('patch-download-btn');
   const submitBtn = document.getElementById('patch-submit');
 
-  const updateStateFromInput = () => {
-    const parsed = parseGithubCommitUrl(urlInput?.value || '');
-    state.patch.parsedRepo = parsed;
-    setFavoriteButtonState(favoriteButton, parsed);
-    return parsed;
-  };
+  initPatchFavorites('patch-url', 'patch-fav-btn');
 
-  urlInput?.addEventListener('input', updateStateFromInput);
+  tokenToggle?.addEventListener('click', () =>
+    toggleToken('patch-token-toggle', 'patch-token-container'),
+  );
 
-  favoriteButton?.addEventListener('click', () => {
-    const parsed = updateStateFromInput();
-    if (parsed) handleFavoriteToggle('patch-fav-btn', parsed);
-  });
-
-  tokenToggle?.addEventListener('click', () => toggleToken('patch-token-toggle', 'patch-token-container'));
-
-  copyBtn?.addEventListener('click', () => copyWithFeedback('patch-copy-btn', state.patch.content));
+  copyBtn?.addEventListener('click', () =>
+    copyWithFeedback('patch-copy-btn', state.patch.content),
+  );
 
   downloadBtn?.addEventListener('click', () => {
     if (!state.patch.content) return;
@@ -514,7 +565,8 @@ export function initGitPatch() {
 
   form.addEventListener('submit', async (event) => {
     event.preventDefault();
-    const parsed = updateStateFromInput();
+    const parsed = parseGithubCommitUrl(urlInput?.value || '');
+    state.patch.parsedRepo = parsed;
     if (!parsed) {
       showError('patch-error', 'Invalid Commit URL');
       return;
@@ -522,7 +574,7 @@ export function initGitPatch() {
 
     hideError('patch-error');
     resultEl?.setAttribute('hidden', 'hidden');
-    setButtonLoading(submitBtn, true, 'Get Patch', 'Fetching...');
+    setButtonLoading(submitBtn, true, 'Get Patch', 'Fetching...', 'difference');
 
     try {
       const patch = await fetchCommitPatch(parsed, tokenInput?.value || '');
@@ -533,11 +585,9 @@ export function initGitPatch() {
     } catch (error) {
       showError('patch-error', error.message || 'Failed to fetch patch.');
     } finally {
-      setButtonLoading(submitBtn, false, 'Get Patch');
+      setButtonLoading(submitBtn, false, 'Get Patch', 'Get Patch', 'difference');
     }
   });
-
-  updateStateFromInput();
 }
 
 export function initGithubFavorites() {
