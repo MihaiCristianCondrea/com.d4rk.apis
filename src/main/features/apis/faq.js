@@ -455,6 +455,7 @@
 
             const moveUpButton = utils.createInlineButton({ // FIXME: Argument type {    icon: string,    title: string,    onClick: function(): void} is not assignable to parameter type {    label: string,    icon?: (string | null),    onClick?: (function(): void),    variant?: string,    title?: string}  Type string is not assignable to type undefined
                 icon: 'arrow_upward',
+                label: 'Move up',
                 title: 'Move up',
                 onClick: () => moveEntry(index, -1)
             });
@@ -463,6 +464,7 @@
 
             const moveDownButton = utils.createInlineButton({ // FIXME: Argument type {    icon: string,    title: string,    onClick: function(): void} is not assignable to parameter type {    label: string,    icon?: (string | null),    onClick?: (function(): void),    variant?: string,    title?: string}  Type string is not assignable to type undefined
                 icon: 'arrow_downward',
+                label: 'Move down',
                 title: 'Move down',
                 onClick: () => moveEntry(index, 1)
             });
@@ -803,39 +805,39 @@
         }
 
         function buildPayload(entries) {
-            const normalizedEntries = Array.isArray(entries) // FIXME: Local variable normalizedEntries is redundant
-                ? entries
-                      .map((entry) => normalizeEntry(entry))
-                      .map((entry) => {
-                          const id = utils.trimString(entry.id);
-                          const question = utils.trimString(entry.question);
-                          const answer = typeof entry.answer === 'string' ? entry.answer : '';
-                          if (!id || !question || !answer.trim()) {
-                              return null;
-                          }
-                          const categories = sortCategories(entry.categories || []);
-                          const icon = utils.trimString(entry.icon);
-                          const tags = normalizeTags(entry.tags || []);
-                          const payloadEntry = {
-                              id,
-                              question,
-                              answer: answer
-                          };
-                          if (categories.length) {
-                              payloadEntry.categories = categories;
-                          }
-                          payloadEntry.featured = Boolean(entry.featured);
-                          if (icon) {
-                              payloadEntry.icon = icon;
-                          }
-                          if (tags.length) {
-                              payloadEntry.tags = tags;
-                          }
-                          return payloadEntry;
-                      })
-                      .filter(Boolean)
-                : [];
-            return normalizedEntries;
+            if (!Array.isArray(entries)) {
+                return [];
+            }
+            return entries
+                .map((entry) => normalizeEntry(entry))
+                .map((entry) => {
+                    const id = utils.trimString(entry.id);
+                    const question = utils.trimString(entry.question);
+                    const answer = typeof entry.answer === 'string' ? entry.answer : '';
+                    if (!id || !question || !answer.trim()) {
+                        return null;
+                    }
+                    const categories = sortCategories(entry.categories || []);
+                    const icon = utils.trimString(entry.icon);
+                    const tags = normalizeTags(entry.tags || []);
+                    const payloadEntry = {
+                        id,
+                        question,
+                        answer: answer
+                    };
+                    if (categories.length) {
+                        payloadEntry.categories = categories;
+                    }
+                    payloadEntry.featured = Boolean(entry.featured);
+                    if (icon) {
+                        payloadEntry.icon = icon;
+                    }
+                    if (tags.length) {
+                        payloadEntry.tags = tags;
+                    }
+                    return payloadEntry;
+                })
+                .filter(Boolean);
         }
 
         function mergeEntryRecords(target, source) {
@@ -914,7 +916,7 @@
                 if (Array.isArray(payload.entries)) {
                     return payload.entries;
                 }
-                if (payload.catalog && typeof payload.catalog === 'object') { // FIXME: Unresolved variable catalog
+                if (payload.catalog && typeof payload.catalog === 'object') {
                     return flattenCatalogPayload(payload.catalog);
                 }
                 if (payload.categories && typeof payload.categories === 'object' && !Array.isArray(payload.categories)) {
@@ -982,8 +984,8 @@
                 return payload.length;
             }
             if (payload && typeof payload === 'object') {
-                if (typeof payload.index?.totalEntries === 'number') { // FIXME: Unresolved variable totalEntries
-                    return payload.index.totalEntries; // FIXME: Unresolved variable totalEntries
+                if (typeof payload.index?.totalEntries === 'number') {
+                    return payload.index.totalEntries;
                 }
                 if (Array.isArray(payload.entries)) {
                     return payload.entries.length;
@@ -1433,7 +1435,7 @@
                 try {
                     const response = await fetch(endpoint, { cache: 'no-store' });
                     if (!response.ok) {
-                        throw new Error(`Icon request failed with status ${response.status}`); // FIXME: 'throw' of exception caught locally
+                        throw new Error(`Icon request failed with status ${response.status}`);
                     }
                     const text = await response.text();
                     const names = parseIconCatalog(text);
@@ -1591,7 +1593,7 @@
                 iconPickerSearch.value = '';
             }
             if (!iconNames.length && !iconsRequested) {
-                refreshIcons(); // FIXME: Promise returned from refreshIcons is ignored
+                void refreshIcons();
             }
             renderIconPickerOptions('');
             if (iconPickerSearch) {
@@ -1688,13 +1690,13 @@
         if (catalogButton) {
             catalogButton.addEventListener('click', () => {
                 const selectedKey = catalogButton.dataset.faqProduct || catalogState.selectedKey || '';
-                fetchCatalogProduct(selectedKey); // FIXME: Promise returned from fetchCatalogProduct is ignored
+                void fetchCatalogProduct(selectedKey);
             });
         }
 
         if (catalogRefreshButton) {
             catalogRefreshButton.addEventListener('click', () => {
-                fetchCatalog(DEFAULT_CATALOG_URL); // FIXME: Promise returned from fetchCatalog is ignored
+                void fetchCatalog(DEFAULT_CATALOG_URL);
             });
         }
 
@@ -1706,7 +1708,7 @@
                     if (fetchInput) {
                         fetchInput.value = presetUrl;
                     }
-                    fetchFromUrl(presetUrl); // FIXME: Promise returned from fetchFromUrl is ignored
+                    void fetchFromUrl(presetUrl);
                 }
             });
         }
@@ -1733,7 +1735,7 @@
         if (refreshIconsButton) {
             refreshIconsButton.addEventListener('click', () => {
                 iconsRequested = false;
-                refreshIcons(); // FIXME: Promise returned from refreshIcons is ignored
+                void refreshIcons();
             });
         }
 
@@ -1765,14 +1767,14 @@
         }
 
         render();
-        refreshIcons(); // FIXME: Promise returned from refreshIcons is ignored
+        void refreshIcons();
         fetchCatalog(DEFAULT_CATALOG_URL).then(() => {
             const product = findCatalogProduct(DEFAULT_PRODUCT_KEY);
             if (product) {
-                fetchCatalogProduct(product.key || product.productId, { silent: true }); // FIXME: Promise returned from fetchCatalogProduct is ignored
+                void fetchCatalogProduct(product.key || product.productId, { silent: true });
             }
         });
-        fetchFromUrl(DEFAULT_DATA_URL, { silent: true }); // FIXME: Promise returned from fetchFromUrl is ignored
+        void fetchFromUrl(DEFAULT_DATA_URL, { silent: true });
     }
 
     global.initFaqWorkspace = initFaqWorkspace;

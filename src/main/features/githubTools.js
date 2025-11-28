@@ -183,8 +183,7 @@ function bindCollapsibleToggle(buttonId, wrapperId, labels = {}) {
 
   const openLabel = labels.openLabel || 'Hide token';
   const closedLabel = labels.closedLabel || 'Token settings';
-  const openIcon = labels.openIcon || 'expand_less'; // FIXME: Unresolved variable openIcon
-  const closedIcon = labels.closedIcon || 'settings'; // FIXME: Unresolved variable closedIcon
+  const { openIcon = 'expand_less', closedIcon = 'settings' } = labels;
 
   const sync = () => {
     const isOpen = !wrapper.hasAttribute('hidden');
@@ -253,12 +252,20 @@ function renderFavoritesGrid() {
       toggleFavorite(fav.owner, fav.repo),
     );
 
+    const navigate =
+      (typeof window !== 'undefined' && window.appNavigation?.navigate) ||
+      ((href) => {
+        if (href) {
+          window.location.href = href;
+        }
+      });
+
     card.querySelector('[data-map]')?.addEventListener('click', () => {
-      window.appNavigation?.navigate?.(`/github/repo-mapper?repo=${fav.owner}/${fav.repo}`); // FIXME: Unresolved variable appNavigation
+      navigate(`/github/repo-mapper?repo=${fav.owner}/${fav.repo}`);
     });
 
     card.querySelector('[data-stats]')?.addEventListener('click', () => {
-      window.appNavigation?.navigate?.(`/github/release-stats?repo=${fav.owner}/${fav.repo}`); // FIXME: Unresolved variable appNavigation
+      navigate(`/github/release-stats?repo=${fav.owner}/${fav.repo}`);
     });
 
     grid.appendChild(card);
@@ -556,7 +563,7 @@ export function initReleaseStats() {
               <span class="gh-muted">${asset.downloads.toLocaleString()}</span>
             </div>
             <div class="gh-release-bar">
-              <span style="width:${maxAsset > 0 ? (asset.downloads / maxAsset) * 100 : 0}%;"></span> <!--FIXME: Selector matches unknown element width-->
+              <span style="width:${maxAsset > 0 ? (asset.downloads / maxAsset) * 100 : 0}%;"></span>
             </div>
           </div>
         `,
@@ -594,7 +601,7 @@ export function initReleaseStats() {
               <span class="gh-muted">${release.totalDownloads.toLocaleString()}</span>
             </div>
             <div class="gh-release-bar">
-              <span style="width:${percent}%;"></span><!--FIXME: Selector matches unknown element width-->
+              <span style="width:${percent}%;"></span>
             </div>
           </button>`;
       })
@@ -632,8 +639,7 @@ export function initReleaseStats() {
     setButtonLoading(submitBtn, true, 'Analyze', 'Processing...', 'analytics');
 
     try {
-      const data = await fetchReleaseStats(parsed, tokenInput?.value || ''); // FIXME: Local variable data is redundant
-      state.releases.data = data;
+      state.releases.data = await fetchReleaseStats(parsed, tokenInput?.value || '');
       state.releases.selectedIndex = 0;
       renderOverview();
       resultEl?.removeAttribute('hidden');

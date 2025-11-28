@@ -1,3 +1,7 @@
+:root {
+  --md-sys-color-surface-tint: var(--md-sys-color-primary, #6750a4);
+}
+
 .github-tools-surface {
   background: var(--md-sys-color-surface-container);
   color: var(--app-text-color);
@@ -145,7 +149,7 @@
 .search-card-extra-controls button:not(.active):hover {
   background: color-mix(
     in srgb,
-    var(--md-sys-color-surface-tint, var(--md-sys-color-primary)) 16%, /*FIXME: Cannot resolve '--md-sys-color-surface-tint' custom property*/
+    var(--md-sys-color-surface-tint, var(--md-sys-color-primary)) 16%,
     transparent
   );
   transform: translateY(-1px);
@@ -830,7 +834,7 @@
 }
 
 .gh-format-toggle button:not(.active):hover {
-  background: color-mix(in srgb, var(--md-sys-color-surface-tint) 18%, transparent); /*FIXME: Cannot resolve '--md-sys-color-surface-tint' custom property*/
+  background: color-mix(in srgb, var(--md-sys-color-surface-tint, var(--md-sys-color-primary)) 18%, transparent);
 }
 
 .gh-format-divider {
