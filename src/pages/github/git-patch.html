@@ -1,65 +1,67 @@
-<div class="gh-shell">
-  <section class="gh-section">
-    <div class="gh-header">
-      <p class="gh-muted">GitHub Tools</p>
+<div class="gh-tools-page">
+  <section class="gh-tools-section">
+    <header class="gh-tools-header">
+      <p class="gh-eyebrow">GitHub Tools</p>
       <h1>Git Patch</h1>
-      <p>Fetch raw .patch files from commit URLs.</p>
-    </div>
+      <p class="gh-subtext">Fetch raw .patch files from commit URLs.</p>
+    </header>
 
-    <form id="patch-form" class="gh-stack" autocomplete="off">
-      <div class="gh-input-group">
-        <div class="gh-field">
-          <input
-            id="patch-url"
-            type="url"
-            placeholder=" "
-            list="patch-datalist"
-            required
-            autocomplete="off"
-          />
-          <label for="patch-url">Commit URL (https://github.com/owner/repo/commit/sha)</label>
-        </div>
-        <div class="gh-row space-between">
-          <button type="button" id="patch-fav-btn" class="gh-pill-button" hidden>
+    <div class="gh-card">
+      <form id="patch-form" class="gh-form" autocomplete="off">
+        <div class="gh-floating-row">
+          <div class="gh-floating-field">
+            <input
+              id="patch-url"
+              type="url"
+              class="gh-floating-input"
+              placeholder=" "
+              list="patch-datalist"
+              required
+              autocomplete="off"
+            />
+            <label for="patch-url">Commit URL</label>
+            <span class="gh-underline"></span>
+          </div>
+          <button type="button" id="patch-fav-btn" class="gh-icon-button" hidden>
             <span class="material-symbols-outlined">star</span>
-            <span class="favorite-label">Favorite</span>
           </button>
         </div>
-      </div>
 
-      <div class="gh-row space-between wrap">
-        <button type="button" id="patch-token-reveal" class="gh-pill-button">
-          <span class="material-symbols-outlined">settings</span>
-          <span class="favorite-label">Token settings</span>
-        </button>
-        <div class="gh-badge-row" id="patch-quick-favs"></div>
-      </div>
-
-      <div class="gh-input-group gh-collapsible" id="patch-token-wrapper" hidden>
-        <div class="gh-token" id="patch-token-container">
-          <input
-            id="patch-token"
-            type="password"
-            placeholder=" "
-            autocomplete="off"
-          />
-          <label for="patch-token">Personal Access Token (optional)</label>
-          <button type="button" id="patch-token-toggle" class="gh-pill-button">
-            <span class="material-symbols-outlined">visibility</span>
-            <span>Show token</span>
+        <div class="gh-control-row">
+          <button type="button" id="patch-token-reveal" class="gh-chip-button">
+            <span class="material-symbols-outlined">settings</span>
+            <span class="favorite-label">Token settings</span>
           </button>
         </div>
-      </div>
 
-      <div class="gh-row space-between wrap">
-        <div class="gh-actions align-right">
-          <button type="submit" id="patch-submit" class="gh-button">
+        <div class="gh-collapsible" id="patch-token-wrapper" hidden>
+          <div class="gh-floating-field">
+            <input
+              id="patch-token"
+              type="password"
+              class="gh-floating-input"
+              placeholder=" "
+              autocomplete="off"
+            />
+            <label for="patch-token">Personal Access Token (optional)</label>
+            <span class="gh-underline"></span>
+          </div>
+          <div class="gh-inline-actions">
+            <button type="button" id="patch-token-toggle" class="gh-chip-button ghost">
+              <span class="material-symbols-outlined">visibility</span>
+              <span>Show token</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="gh-actions end">
+          <button type="submit" id="patch-submit" class="gh-primary-button">
             <span class="material-symbols-outlined">difference</span>
             <span>Get Patch</span>
           </button>
         </div>
-      </div>
-    </form>
+      </form>
+    </div>
 
     <div id="patch-error" class="gh-error" hidden>
       <span class="material-symbols-outlined">error</span>
@@ -67,17 +69,31 @@
     </div>
 
     <div id="patch-result" class="gh-result" hidden>
-      <div class="gh-actions">
-        <button type="button" id="patch-copy-btn" class="gh-button secondary">
-          <span class="material-symbols-outlined">content_copy</span>
-          <span>Copy</span>
-        </button>
-        <button type="button" id="patch-download-btn" class="gh-button secondary">
-          <span class="material-symbols-outlined">download</span>
-          <span>Download</span>
-        </button>
+      <div class="gh-result-bar">
+        <div class="gh-badge-group">
+          <span class="gh-stat-pill">
+            <span class="material-symbols-outlined">check</span>
+            <span>Ready to apply</span>
+          </span>
+        </div>
+        <div class="gh-action-row">
+          <button type="button" id="patch-download-btn" class="gh-ghost-button">
+            <span class="material-symbols-outlined">download</span>
+            <span>Download</span>
+          </button>
+          <button type="button" id="patch-copy-btn" class="gh-ghost-button">
+            <span class="material-symbols-outlined">content_copy</span>
+            <span>Copy</span>
+          </button>
+        </div>
       </div>
-      <pre><code id="patch-code"></code></pre>
+      <div class="gh-output">
+        <div class="gh-output-header">
+          <span class="material-symbols-outlined">integration_instructions</span>
+          <span>Patch</span>
+        </div>
+        <pre><code id="patch-code"></code></pre>
+      </div>
     </div>
   </section>
 </div>

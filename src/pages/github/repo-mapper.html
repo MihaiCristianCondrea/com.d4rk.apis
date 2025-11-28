@@ -1,82 +1,80 @@
-<div class="gh-shell">
-  <section class="gh-section">
-    <div class="gh-header">
-      <p class="gh-muted">GitHub Tools</p>
+<div class="gh-tools-page">
+  <section class="gh-tools-section">
+    <header class="gh-tools-header">
+      <p class="gh-eyebrow">GitHub Tools</p>
       <h1>Repo Mapper</h1>
-      <p>Generate ASCII directory trees or path lists for any repository.</p>
-    </div>
+      <p class="gh-subtext">Generate ASCII directory trees or path lists for any repository.</p>
+    </header>
 
-    <form id="mapper-form" class="gh-stack" autocomplete="off">
-      <div class="gh-input-group">
-        <div class="gh-field">
-          <input
-            id="mapper-url"
-            name="mapper-url"
-            type="url"
-            placeholder=" "
-            list="mapper-datalist"
-            required
-            autocomplete="off"
-          />
-          <label for="mapper-url">Repository URL (https://github.com/owner/repo)</label>
+    <div class="gh-card">
+      <form id="mapper-form" class="gh-form" autocomplete="off">
+        <div class="gh-floating-row">
+          <div class="gh-floating-field">
+            <input
+              id="mapper-url"
+              name="mapper-url"
+              type="url"
+              class="gh-floating-input"
+              placeholder=" "
+              list="mapper-datalist"
+              required
+              autocomplete="off"
+            />
+            <label for="mapper-url">Repository URL</label>
+            <span class="gh-underline"></span>
+          </div>
+          <button type="button" id="mapper-fav-btn" class="gh-icon-button" hidden>
+            <span class="material-symbols-outlined">star</span>
+          </button>
         </div>
-        <div class="gh-row space-between">
-          <div class="gh-format-toggle" id="mapper-format">
+
+        <div class="gh-control-row">
+          <button type="button" id="mapper-token-reveal" class="gh-chip-button">
+            <span class="material-symbols-outlined">settings</span>
+            <span class="favorite-label">Token settings</span>
+          </button>
+          <div class="gh-segmented" id="mapper-format">
             <button type="button" id="btn-format-ascii" class="active">
               <span class="material-symbols-outlined">terminal</span>
               <span>ASCII</span>
             </button>
-            <span class="gh-format-divider" aria-hidden="true"></span>
+            <span class="gh-segmented-divider" aria-hidden="true"></span>
             <button type="button" id="btn-format-paths">
               <span class="material-symbols-outlined">view_list</span>
               <span>Paths</span>
             </button>
           </div>
-          <button type="button" id="mapper-fav-btn" class="gh-pill-button" hidden>
-            <span class="material-symbols-outlined">star</span>
-            <span class="favorite-label">Favorite</span>
-          </button>
         </div>
-      </div>
 
-      <div class="gh-row space-between wrap">
-        <button type="button" id="mapper-token-reveal" class="gh-pill-button">
-          <span class="material-symbols-outlined">settings</span>
-          <span class="favorite-label">Token settings</span>
-        </button>
-        <div class="gh-badge-row" id="mapper-quick-favs"></div>
-      </div>
-
-      <div class="gh-input-group gh-collapsible" id="mapper-token-wrapper" hidden>
-        <div class="gh-token" id="mapper-token-container">
-          <input
-            id="mapper-token"
-            name="mapper-token"
-            type="password"
-            placeholder=" "
-            autocomplete="off"
-          />
-          <label for="mapper-token">Personal Access Token (optional)</label>
-          <button type="button" id="mapper-token-toggle" class="gh-pill-button">
-            <span class="material-symbols-outlined">visibility</span>
-            <span>Show token</span>
-          </button>
+        <div class="gh-collapsible" id="mapper-token-wrapper" hidden>
+          <div class="gh-floating-field">
+            <input
+              id="mapper-token"
+              name="mapper-token"
+              type="password"
+              class="gh-floating-input"
+              placeholder=" "
+              autocomplete="off"
+            />
+            <label for="mapper-token">Personal Access Token (optional)</label>
+            <span class="gh-underline"></span>
+          </div>
+          <div class="gh-inline-actions">
+            <button type="button" id="mapper-token-toggle" class="gh-chip-button ghost">
+              <span class="material-symbols-outlined">visibility</span>
+              <span>Show token</span>
+            </button>
+          </div>
         </div>
-      </div>
 
-      <div class="gh-row space-between wrap">
-        <div class="gh-actions align-right">
-          <button type="submit" id="mapper-submit" class="gh-button">
+        <div class="gh-actions end">
+          <button type="submit" id="mapper-submit" class="gh-primary-button">
             <span class="material-symbols-outlined">terminal</span>
             <span>Generate Map</span>
           </button>
-          <button type="button" id="mapper-copy-btn" class="gh-button secondary">
-            <span class="material-symbols-outlined">content_copy</span>
-            <span>Copy</span>
-          </button>
         </div>
-      </div>
-    </form>
+      </form>
+    </div>
 
     <div id="mapper-error" class="gh-error" hidden>
       <span class="material-symbols-outlined">error</span>
@@ -84,33 +82,23 @@
     </div>
 
     <div id="mapper-result" class="gh-result" hidden>
-      <div class="gh-stat-grid">
-        <div class="gh-stat-card">
-          <span class="gh-stat-title">
-            <span class="material-symbols-outlined">folder_open</span> Folders
-          </span>
-          <span id="mapper-stats-folders" class="gh-bold">0</span>
+      <div class="gh-result-bar">
+        <div class="gh-badge-group">
+          <span class="gh-stat-pill"><span id="mapper-stats-folders">0</span> Folders</span>
+          <span class="gh-stat-pill"><span id="mapper-stats-files">0</span> Files</span>
         </div>
-        <div class="gh-stat-card">
-          <span class="gh-stat-title">
-            <span class="material-symbols-outlined">description</span> Files
-          </span>
-          <span id="mapper-stats-files" class="gh-bold">0</span>
-        </div>
-        <div class="gh-stat-card">
-          <span class="gh-stat-title">
-            <span class="material-symbols-outlined">visibility</span> Output
-          </span>
-          <span class="gh-muted">Use copy to grab the generated tree.</span>
-        </div>
-      </div>
-      <div class="gh-actions">
-        <button type="button" id="mapper-copy-btn-footer" class="gh-button secondary">
+        <button type="button" id="mapper-copy-btn" class="gh-ghost-button">
           <span class="material-symbols-outlined">content_copy</span>
-          <span>Copy output</span>
+          <span>Copy Code</span>
         </button>
       </div>
-      <pre><code id="mapper-code"></code></pre>
+      <div class="gh-output">
+        <div class="gh-output-header">
+          <span class="material-symbols-outlined">description</span>
+          <span>Output</span>
+        </div>
+        <pre><code id="mapper-code"></code></pre>
+      </div>
     </div>
   </section>
 </div>
