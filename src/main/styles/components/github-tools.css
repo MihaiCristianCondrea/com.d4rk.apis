@@ -30,7 +30,7 @@
 
 .gh-tools-header {
   display: grid;
-  gap: 0.4rem;
+  gap: 0.5rem;
 }
 
 .gh-tools-header h1 {
@@ -54,6 +54,30 @@
   font-size: 0.95rem;
 }
 
+.gh-quick-access {
+  display: grid;
+  gap: 0.35rem;
+  padding: 0.75rem 1rem;
+  border-radius: var(--gh-radius-lg);
+  border: var(--gh-border);
+  background: color-mix(in srgb, var(--gh-card-strong) 75%, transparent);
+}
+
+.gh-quick-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-weight: 700;
+  color: var(--gh-text);
+}
+
+.gh-chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+}
+
 .gh-card {
   background: var(--gh-card);
   border: var(--gh-border);
@@ -74,17 +98,21 @@
 }
 
 .gh-floating-field {
-  flex: 1;
+  --floating-surface: var(--gh-card-strong);
+  --floating-border: color-mix(in srgb, var(--gh-outline) 55%, transparent);
   position: relative;
-  background: var(--gh-card-strong);
-  border-bottom: 1px solid color-mix(in srgb, var(--gh-outline) 55%, transparent);
-  border-radius: var(--gh-radius-sm) var(--gh-radius-sm) 0 0;
+  flex: 1;
+  background: var(--floating-surface);
+  border: 1px solid var(--floating-border);
+  border-radius: var(--gh-radius-sm);
   padding: 0.25rem 0.5rem 0.35rem;
-  transition: background var(--gh-transition), border-color var(--gh-transition);
+  transition: background var(--gh-transition), border-color var(--gh-transition), box-shadow var(--gh-transition);
 }
 
-.gh-floating-field:hover {
-  background: color-mix(in srgb, var(--gh-card-strong) 80%, var(--gh-card));
+.gh-floating-field:hover,
+.gh-floating-field:focus-within {
+  background: color-mix(in srgb, var(--gh-card-strong) 85%, var(--gh-card));
+  box-shadow: 0 10px 30px -22px rgba(0, 0, 0, 0.65);
 }
 
 .gh-floating-input {
@@ -128,7 +156,7 @@
   right: 0;
   bottom: -1px;
   height: 2px;
-  background: var(--gh-text);
+  background: var(--md-sys-color-primary, #e6e1e5);
   transform: scaleX(0);
   transform-origin: left;
   transition: transform var(--gh-transition);
@@ -231,6 +259,18 @@
   width: 44px;
   height: 44px;
   justify-content: center;
+}
+
+.gh-icon-button.is-active,
+.gh-pill-button.is-active {
+  background: color-mix(in srgb, var(--md-sys-color-primary) 18%, var(--gh-card-strong));
+  border-color: color-mix(in srgb, var(--md-sys-color-primary) 45%, var(--gh-outline));
+}
+
+.gh-icon-button.is-active .material-symbols-outlined,
+.gh-pill-button.is-active .material-symbols-outlined {
+  font-variation-settings: 'FILL' 1;
+  color: var(--md-sys-color-primary, currentColor);
 }
 
 .gh-segmented {
@@ -481,6 +521,12 @@
   flex-wrap: wrap;
 }
 
+.gh-quick-note {
+  color: var(--gh-subtext);
+  font-size: 0.9rem;
+  margin: 0;
+}
+
 .gh-favorites-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
@@ -599,5 +645,23 @@
   }
   to {
     transform: rotate(360deg);
+  }
+}
+
+@media (max-width: 720px) {
+  .gh-floating-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .gh-control-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .gh-actions,
+  .gh-actions.end,
+  .gh-inline-actions {
+    justify-content: flex-start;
   }
 }
