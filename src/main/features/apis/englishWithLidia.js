@@ -256,7 +256,7 @@
             fetchButton.addEventListener('click', () => {
                 const target = getFetchTarget();
                 const url = workspace.elements.fetchInput?.value || '';
-                fetchRemotePayload(target, url); // FIXME: Promise returned from fetchRemotePayload is ignored
+                fetchRemotePayload(target, url);
             });
             fetchButton.dataset.wired = 'true';
         }
@@ -274,7 +274,7 @@
                     if (workspace.elements.fetchInput) {
                         workspace.elements.fetchInput.value = url;
                     }
-                    fetchRemotePayload(target, url); // FIXME: Promise returned from fetchRemotePayload is ignored
+                    fetchRemotePayload(target, url);
                 });
                 button.dataset.wired = 'true';
             });
@@ -1332,7 +1332,7 @@
         }
 
         async function updatePreview() {
-            const result = await utils.renderJsonPreview({ // FIXME: Argument type {    previewArea: HTMLElement,    statusElement: HTMLElement,    data: [{        lesson_id: string,        lesson_type: string,        lesson_title: string,        lesson_thumbnail_image_url: string,        lesson_deep_link_path: string,        customFields: []    }],    buildPayload: function(any): {        data: any    },    autoFix: function(any): any,    successMessage: function(any): (string | string | string)} is not assignable to parameter type {    previewArea: any,    statusElement: any,    data: any,    buildPayload: any,    autoFix: any,    validator: any,    successMessage?: string,    errorMessage?: string,    workerClient?: JsonWorkerClient}  Type function(any): (string | string | string) is not assignable to type string
+            const result = await utils.renderJsonPreview({
                 previewArea,
                 statusElement: validationStatus,
                 data: state.cards,
@@ -1458,7 +1458,7 @@
             metadataContainer.appendChild(header);
             const list = utils.createElement('div', { classNames: 'custom-field-list' });
             state.metadata.forEach((field, index) => {
-                list.appendChild(createCustomFieldRow(field, (key) => { // FIXME: Unresolved function or method createCustomFieldRow()
+                list.appendChild(createCustomFieldRow(field, (key) => {
                     state.metadata[index].key = key;
                     requestPreviewUpdate();
                 }, (value) => {
@@ -1573,7 +1573,7 @@
             customSection.appendChild(utils.createElement('h4', { text: 'Custom fields' }));
             const list = utils.createElement('div', { classNames: 'custom-field-list' });
             block.customFields.forEach((field, fieldIndex) => {
-                list.appendChild(createCustomFieldRow(field, (key) => { // FIXME: Unresolved function or method createCustomFieldRow()vvvvvvv
+                list.appendChild(createCustomFieldRow(field, (key) => {
                     state.blocks[index].customFields[fieldIndex].key = key;
                     requestPreviewUpdate();
                 }, (value) => {
@@ -1693,7 +1693,7 @@
         }
 
         async function updatePreview() {
-            const result = await utils.renderJsonPreview({ // FIXME: Argument type {    previewArea: HTMLElement,    statusElement: HTMLElement,    data: null,    buildPayload: function(): {        data: [{}] | []    },    successMessage: function(any): (string | string | string | string)} is not assignable to parameter type {    previewArea: any,    statusElement: any,    data: any,    buildPayload: any,    autoFix: any,    validator: any,    successMessage?: string,    errorMessage?: string,    workerClient?: JsonWorkerClient}  Type function(any): (string | string | string | string) is not assignable to type string
+            const result = await utils.renderJsonPreview({
                 previewArea,
                 statusElement: validationStatus,
                 data: null,

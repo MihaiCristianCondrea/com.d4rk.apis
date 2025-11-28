@@ -31,7 +31,6 @@
         'https://raw.githubusercontent.com/google/material-design-icons/master/variablefont/MaterialSymbolsOutlined%5BFILL%2CGRAD%2Copsz%2Cwght%5D.codepoints'
     ];
     const ICON_PICKER_MAX_RENDER = 400;
-    const CUSTOM_PRESET_LABEL = 'Fetch custom URL';
 
     const CATEGORY_GROUPS = [
         {
@@ -67,27 +66,6 @@
     const CATEGORY_ORDER = new Map(ALL_CATEGORIES.map((item, index) => [item.value, index]));
     const DEFAULT_CATEGORIES = [];
 
-    const FAQ_API_PRESET_OPTIONS = (() => {
-        const faqBase = withBase('api/faq/v1/debug/en/questions');
-        return [
-            {
-                value: 'faq-general-debug',
-                label: 'General FAQs · Debug',
-                url: `${faqBase}/general/general.json`
-            },
-            {
-                value: 'faq-ads-debug',
-                label: 'Ads & Monetization · Debug',
-                url: `${faqBase}/general/ads_monetization.json`
-            },
-            {
-                value: 'faq-catalog-debug',
-                label: 'FAQ Catalog · Debug',
-                url: DEFAULT_CATALOG_URL
-            }
-        ];
-    })();
-
     function initFaqWorkspace() {
         const builderRoot = document.getElementById('faqBuilder');
         if (!builderRoot || builderRoot.dataset.initialized === 'true') {
@@ -107,9 +85,6 @@
         const catalogButtonLabel = document.getElementById('faqCatalogButtonLabel');
         const catalogRefreshButton = document.getElementById('faqCatalogRefresh');
         const catalogSelectRoot = document.getElementById('faqCatalogSelect');
-        const presetButton = document.getElementById('faqPresetButton');
-        const presetSelectRoot = document.getElementById('faqPresetSelect');
-        const presetButtonLabel = document.getElementById('faqPresetButtonLabel');
         const previewArea = document.getElementById('faqPreview');
         const validationStatus = document.getElementById('faqValidation');
         const toolbarStatus = document.getElementById('faqToolbarStatus');
@@ -147,36 +122,15 @@
         let activeIconContext = null;
         let previousBodyOverflow = '';
         let activeCategoryMenu = null;
-        const defaultPreset =
-            FAQ_API_PRESET_OPTIONS.find((preset) => preset.url === DEFAULT_DATA_URL) ||
-            FAQ_API_PRESET_OPTIONS[0] ||
-            null;
-        let activePreset = defaultPreset;
-        let presetSelectEl = null;
         const catalogState = { products: [], loaded: false };
         let catalogSelectEl = null;
         catalogState.selectedKey = DEFAULT_PRODUCT_KEY;
 
         builderRoot.dataset.initialized = 'true';
 
-        if (presetSelectRoot && FAQ_API_PRESET_OPTIONS.length) {
-            const presetField = utils.createSelectField({
-                label: 'Select API preset',
-                value: activePreset ? activePreset.value : '',
-                options: FAQ_API_PRESET_OPTIONS.map((preset) => ({
-                    value: preset.value,
-                    label: preset.label
-                })),
-                onChange: (value) => {
-                    const selectedPreset = findPresetByValue(value);
-                    applyPresetSelection(selectedPreset);
-                }
-            });
-            presetSelectEl = presetField.select;
-            presetSelectRoot.appendChild(presetField.wrapper);
+        if (fetchInput) {
+            fetchInput.setAttribute('placeholder', DEFAULT_DATA_URL);
         }
-
-        applyPresetSelection(activePreset, { updateInput: true, updatePlaceholder: true });
 
         function sortCategories(values = []) {
             const seen = new Set();
@@ -233,68 +187,6 @@
             return `${labels[0]} +${labels.length - 1} more`;
         }
 
-        if (fetchInput) {
-            fetchInput.addEventListener('input', (event) => {
-                const typedValue = utils.trimString(event.target.value);
-                const matchingPreset = FAQ_API_PRESET_OPTIONS.find((preset) => preset.url === typedValue);
-                if (matchingPreset) {
-                    applyPresetSelection(matchingPreset, { updateInput: false, updatePlaceholder: false });
-                    return;
-                }
-                if (!typedValue) {
-                    if (defaultPreset) {
-                        applyPresetSelection(defaultPreset, { updateInput: false, updatePlaceholder: true });
-                    } else if (presetButtonLabel) {
-                        presetButtonLabel.textContent = CUSTOM_PRESET_LABEL;
-                    }
-                    return;
-                }
-                activePreset = null;
-                if (presetSelectEl) {
-                    presetSelectEl.value = '';
-                }
-                if (presetButton) {
-                    presetButton.removeAttribute('data-faq-preset');
-                }
-                if (presetButtonLabel) {
-                    presetButtonLabel.textContent = CUSTOM_PRESET_LABEL;
-                }
-            });
-        }
-
-        function findPresetByValue(value) {
-            return (
-                FAQ_API_PRESET_OPTIONS.find((preset) => preset.value === value) ||
-                FAQ_API_PRESET_OPTIONS.find((preset) => preset.url === value) ||
-                FAQ_API_PRESET_OPTIONS[0] ||
-                null
-            );
-        }
-
-        function applyPresetSelection(preset, { updateInput = true, updatePlaceholder = true } = {}) {
-            if (!preset) {
-                return;
-            }
-            activePreset = preset;
-            if (presetSelectEl && presetSelectEl.value !== preset.value) {
-                presetSelectEl.value = preset.value;
-            }
-            if (presetButton) {
-                presetButton.setAttribute('data-faq-preset', preset.url);
-            }
-            if (presetButtonLabel) {
-                presetButtonLabel.textContent = `Fetch ${preset.label}`;
-            }
-            if (fetchInput) {
-                if (updatePlaceholder) {
-                    fetchInput.setAttribute('placeholder', preset.url);
-                }
-                if (updateInput) {
-                    fetchInput.value = preset.url;
-                }
-            }
-        }
-
         function createEmptyEntry() {
             return {
                 id: '',
@@ -328,8 +220,8 @@
             let categories = [];
             if (Array.isArray(raw.categories)) {
                 categories = raw.categories;
-            } else if (Array.isArray(raw.topics)) { // FIXME: Unresolved variable topics
-                categories = raw.topics; // FIXME: Unresolved variable topics
+            } else if (Array.isArray(raw.topics)) {
+                categories = raw.topics;
             }
             const tags = Array.isArray(raw.tags)
                 ? raw.tags
@@ -341,16 +233,16 @@
                 question: typeof raw.question === 'string' ? raw.question : '',
                 icon: typeof raw.icon === 'string'
                     ? raw.icon
-                    : typeof raw.iconSymbol === 'string' // FIXME: Unresolved variable iconSymbol
-                    ? raw.iconSymbol // FIXME: Unresolved variable iconSymbol
+                    : typeof raw.iconSymbol === 'string'
+                    ? raw.iconSymbol
                     : '',
                 categories: sortCategories(categories),
                 featured: Boolean(raw.featured),
                 answer:
                     typeof raw.answer === 'string'
                         ? raw.answer
-                        : typeof raw.answerHtml === 'string' // FIXME: Unresolved variable answerHtml
-                        ? raw.answerHtml // FIXME: Unresolved variable answerHtml
+                        : typeof raw.answerHtml === 'string'
+                        ? raw.answerHtml
                         : '',
                 tags: normalizeTags(tags)
             };
@@ -453,7 +345,7 @@
             const header = utils.createElement('div', { classNames: 'builder-card-header' });
             header.appendChild(utils.createElement('h3', { text: `FAQ ${index + 1}` }));
 
-            const moveUpButton = utils.createInlineButton({ // FIXME: Argument type {    icon: string,    title: string,    onClick: function(): void} is not assignable to parameter type {    label: string,    icon?: (string | null),    onClick?: (function(): void),    variant?: string,    title?: string}  Type string is not assignable to type undefined
+            const moveUpButton = utils.createInlineButton({
                 icon: 'arrow_upward',
                 label: 'Move up',
                 title: 'Move up',
@@ -462,7 +354,7 @@
             moveUpButton.disabled = index === 0;
             header.appendChild(moveUpButton);
 
-            const moveDownButton = utils.createInlineButton({ // FIXME: Argument type {    icon: string,    title: string,    onClick: function(): void} is not assignable to parameter type {    label: string,    icon?: (string | null),    onClick?: (function(): void),    variant?: string,    title?: string}  Type string is not assignable to type undefined
+            const moveDownButton = utils.createInlineButton({
                 icon: 'arrow_downward',
                 label: 'Move down',
                 title: 'Move down',
@@ -1295,7 +1187,7 @@
         async function fetchCatalogProduct(identifier, { silent = false } = {}) {
             const product = findCatalogProduct(identifier || catalogState.selectedKey || DEFAULT_PRODUCT_KEY);
             if (!product) {
-                setCatalogStatus('Select a product from the catalog to fetch FAQs.', 'warning'); // FIXME: No data sources are configured to run this SQL and provide advanced code assistance. Disable this inspection via problem menu (Alt+Enter).
+                setCatalogStatus('Select a product from the catalog to fetch FAQs.', 'warning');
                 return;
             }
             const sources = Array.isArray(product.questionSources)
@@ -1697,19 +1589,6 @@
         if (catalogRefreshButton) {
             catalogRefreshButton.addEventListener('click', () => {
                 void fetchCatalog(DEFAULT_CATALOG_URL);
-            });
-        }
-
-        if (presetButton) {
-            presetButton.addEventListener('click', () => {
-                const typedUrl = fetchInput ? utils.trimString(fetchInput.value) : '';
-                const presetUrl = activePreset?.url || typedUrl || presetButton.getAttribute('data-faq-preset');
-                if (presetUrl) {
-                    if (fetchInput) {
-                        fetchInput.value = presetUrl;
-                    }
-                    void fetchFromUrl(presetUrl);
-                }
             });
         }
 

@@ -1341,7 +1341,7 @@
                     lesson_description: utils.trimString(toStringValue(raw.lesson_description)),
                     thumbnail_image_url: utils.trimString(toStringValue(raw.thumbnail_image_url)),
                     square_image_url: utils.trimString(toStringValue(raw.square_image_url)),
-                    deep_link_path: utils.trimString(toStringValue(raw.deep_link_path || raw.deep_link)), // FIXME: Unresolved variable deep_link
+                    deep_link_path: utils.trimString(toStringValue(raw.deep_link_path || raw.deep_link)),
                     lesson_tags: Array.isArray(raw.lesson_tags)
                         ? raw.lesson_tags
                               .map((tag) => utils.trimString(toStringValue(tag)))
@@ -1414,7 +1414,7 @@
         }
 
         async function updatePreview() {
-            const result = await utils.renderJsonPreview({ // FIXME: Argument type {    previewArea: HTMLElement,    statusElement: HTMLElement,    data: [{        lesson_id: string,        lesson_type: string,        lesson_title: string,        lesson_description: string,        thumbnail_image_url: string,        square_image_url: string,        deep_link_path: string,        lesson_tags: [],        customFields: []    }],    buildPayload: function(any): {        data: any    },    autoFix: function(any): any,    successMessage: function(any): (string | string | string)} is not assignable to parameter type {    previewArea: any,    statusElement: any,    data: any,    buildPayload: any,    autoFix: any,    validator: any,    successMessage?: string,    errorMessage?: string,    workerClient?: JsonWorkerClient}  Type function(any): (string | string | string) is not assignable to type string
+            const result = await utils.renderJsonPreview({
                 previewArea,
                 statusElement: validationStatus,
                 data: state.cards,
@@ -1798,7 +1798,7 @@
         }
 
         async function updatePreview() {
-            const result = await utils.renderJsonPreview({ // FIXME: Argument type {    previewArea: HTMLElement,    statusElement: HTMLElement,    data: null,    buildPayload: function(): {        data: [{}] | []    },    successMessage: function(any): (string | string | string | string)} is not assignable to parameter type {    previewArea: any,    statusElement: any,    data: any,    buildPayload: any,    autoFix: any,    validator: any,    successMessage?: string,    errorMessage?: string,    workerClient?: JsonWorkerClient}  Type function(any): (string | string | string | string) is not assignable to type string
+            const result = await utils.renderJsonPreview({
                 previewArea,
                 statusElement: validationStatus,
                 data: null,

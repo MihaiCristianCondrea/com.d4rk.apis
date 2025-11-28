@@ -73,6 +73,85 @@
   gap: 2rem;
 }
 
+.github-tools-surface {
+  padding: clamp(1.5rem, 2vw, 2.5rem);
+  border-radius: 20px;
+  background: radial-gradient(circle at 20% 20%, rgba(88, 101, 242, 0.12), transparent 42%),
+    radial-gradient(circle at 80% 10%, rgba(24, 176, 116, 0.12), transparent 38%),
+    var(--md-sys-color-surface-container);
+  border: 1px solid color-mix(in srgb, var(--md-sys-color-outline) 18%, transparent);
+  box-shadow: 0 18px 44px rgba(15, 20, 25, 0.12);
+}
+
+.github-tools-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 1rem;
+  flex-wrap: wrap;
+  color: var(--app-text-color);
+}
+
+.github-tools-header p {
+  margin: 0;
+  color: var(--app-secondary-text-color);
+  max-width: 52ch;
+}
+
+.tool-card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1rem;
+}
+
+.tool-card {
+  text-decoration: none;
+  color: var(--app-text-color);
+  background: color-mix(in srgb, var(--md-sys-color-surface-container-high) 75%, transparent);
+  border: 1px solid color-mix(in srgb, var(--md-sys-color-outline) 18%, transparent);
+  border-radius: 18px;
+  padding: 1.1rem 1.2rem;
+  display: grid;
+  gap: 0.5rem;
+  transition: transform 150ms ease, box-shadow 150ms ease, border-color 150ms ease;
+}
+
+.tool-card:hover {
+  transform: translateY(-2px);
+  border-color: color-mix(in srgb, var(--md-sys-color-primary) 28%, transparent);
+  box-shadow: 0 16px 32px rgba(0, 0, 0, 0.08);
+}
+
+.tool-card-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--md-sys-color-primary) 16%, transparent);
+  display: grid;
+  place-items: center;
+  font-size: 24px;
+  color: var(--md-sys-color-primary);
+}
+
+.tool-card h3 {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.tool-card p {
+  margin: 0;
+  color: var(--app-secondary-text-color);
+}
+
+.tool-card .card-footer {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-weight: 600;
+  color: var(--md-sys-color-primary);
+}
+
 .section-header {
   display: grid;
   gap: 0.6rem;

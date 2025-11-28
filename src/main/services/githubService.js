@@ -96,6 +96,7 @@ export const fetchReleaseStats = async ({ owner, repo }, token) => {
       .map((asset) => ({
         name: asset.name,
         downloads: asset.download_count,
+        browserDownloadUrl: asset.browser_download_url,
       }))
       .sort((a, b) => b.downloads - a.downloads);
 
@@ -104,6 +105,7 @@ export const fetchReleaseStats = async ({ owner, repo }, token) => {
       tagName: release.tag_name,
       publishedAt: release.published_at,
       totalDownloads: releaseDownloads,
+      url: release.html_url,
       assets,
     };
   });
