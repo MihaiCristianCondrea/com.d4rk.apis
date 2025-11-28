@@ -5,16 +5,20 @@
       <h1>Favorites</h1>
       <p class="gh-subtext">Quick access to saved repositories for Repo Mapper and Release Stats.</p>
     </header>
+    <div class="gh-card">
+      <div class="gh-stack" style="gap: 1rem;">
+        <p class="gh-subtext">Star repositories from any GitHub tool to keep them close.</p>
+        <div id="favorites-grid" class="gh-favorites-grid"></div>
 
-    <div id="favorites-grid" class="gh-favorites-grid"></div>
-
-    <div id="favorites-empty" class="gh-empty" hidden>
-      <div class="gh-empty-icon">
-        <span class="material-symbols-outlined">star_border</span>
-      </div>
-      <div class="gh-empty-copy">
-        <h3>No favorites yet</h3>
-        <p>Star repositories from the tools to see them here.</p>
+        <div id="favorites-empty" class="gh-empty" hidden>
+          <div class="gh-empty-icon">
+            <span class="material-symbols-outlined">star_border</span>
+          </div>
+          <div class="gh-empty-copy">
+            <h3>No favorites yet</h3>
+            <p>Star repositories from the tools to see them here.</p>
+          </div>
+        </div>
       </div>
     </div>
   </section>
