@@ -256,7 +256,7 @@
             fetchButton.addEventListener('click', () => {
                 const target = getFetchTarget();
                 const url = workspace.elements.fetchInput?.value || '';
-                fetchRemotePayload(target, url);
+                fetchRemotePayload(target, url); // FIXME: Promise returned from fetchRemotePayload is ignored
             });
             fetchButton.dataset.wired = 'true';
         }
@@ -274,7 +274,7 @@
                     if (workspace.elements.fetchInput) {
                         workspace.elements.fetchInput.value = url;
                     }
-                    fetchRemotePayload(target, url);
+                    fetchRemotePayload(target, url); // FIXME: Promise returned from fetchRemotePayload is ignored
                 });
                 button.dataset.wired = 'true';
             });
@@ -513,15 +513,15 @@
             }
         });
         const composeLesson = workspace.lessonCompose;
-        let lessonPayload = null;
+        let lessonPayload = { data: [] };
         if (typeof composeLesson === 'function') {
             try {
-                lessonPayload = composeLesson();
+                lessonPayload = composeLesson() || { data: [] };
             } catch (error) {
-                lessonPayload = null;
+                lessonPayload = { data: [] };
             }
         }
-        const lessons = Array.isArray(lessonPayload?.data) ? lessonPayload.data : []; // FIXME: lessonPayload is possibly null
+        const lessons = Array.isArray(lessonPayload?.data) ? lessonPayload.data : [];
         const lesson = lessons[0] || {};
         const blocks = Array.isArray(lesson.lesson_content) ? lesson.lesson_content : [];
         metrics.lessonBlocks = blocks.length;
@@ -930,7 +930,8 @@
             if (!path && target.prefix) {
                 const slug = utils.trimString(githubLessonSlug?.value || '');
                 if (!slug) {
-                    throw new Error('Provide a lesson slug for lesson targets.'); // FIXME: 'throw' of exception caught locally
+                    setGithubStatus({ status: 'error', message: 'Provide a lesson slug for lesson targets.' });
+                    return;
                 }
                 const normalized = slug
                     .toLowerCase()
@@ -939,7 +940,8 @@
                 path = `${target.prefix}api_get_${normalized}.json`;
             }
             if (!path) {
-                throw new Error('Unable to determine repository path.'); // FIXME: 'throw' of exception caught locally
+                setGithubStatus({ status: 'error', message: 'Unable to determine repository path.' });
+                return;
             }
             setGithubStatus({ status: 'info', message: 'Publishing to GitHub…' });
             const { owner, repo } = parseRepository(repoValue);
@@ -958,7 +960,8 @@
                 existingSha = body.sha;
             } else if (getResponse.status !== 404) {
                 const messageText = await readGithubError(getResponse);
-                throw new Error(messageText); // FIXME: 'throw' of exception caught locally
+                setGithubStatus({ status: 'error', message: messageText });
+                return;
             }
             const putResponse = await fetch(baseUrl, {
                 method: 'PUT',
@@ -975,7 +978,8 @@
             });
             if (!putResponse.ok) {
                 const messageText = await readGithubError(putResponse);
-                throw new Error(messageText); // FIXME: 'throw' of exception caught locally
+                setGithubStatus({ status: 'error', message: messageText });
+                return;
             }
             workspace.baseline[previewKey] = previewString;
             updateDiffSheet();
@@ -1270,7 +1274,7 @@
                         status: 'error',
                         message: 'No cards found in the imported JSON.'
                     });
-                    throw new Error('No cards found in the imported JSON.'); // FIXME: 'throw' of exception caught locally
+                    return;
                 }
                 const toStringValue = (value) => (value === undefined || value === null ? '' : String(value));
                 state.cards = cards.map((raw) => ({
@@ -1328,7 +1332,7 @@
         }
 
         async function updatePreview() {
-            const result = await utils.renderJsonPreview({
+            const result = await utils.renderJsonPreview({ // FIXME: Argument type {    previewArea: HTMLElement,    statusElement: HTMLElement,    data: [{        lesson_id: string,        lesson_type: string,        lesson_title: string,        lesson_thumbnail_image_url: string,        lesson_deep_link_path: string,        customFields: []    }],    buildPayload: function(any): {        data: any    },    autoFix: function(any): any,    successMessage: function(any): (string | string | string)} is not assignable to parameter type {    previewArea: any,    statusElement: any,    data: any,    buildPayload: any,    autoFix: any,    validator: any,    successMessage?: string,    errorMessage?: string,    workerClient?: JsonWorkerClient}  Type function(any): (string | string | string) is not assignable to type string
                 previewArea,
                 statusElement: validationStatus,
                 data: state.cards,
@@ -1454,7 +1458,7 @@
             metadataContainer.appendChild(header);
             const list = utils.createElement('div', { classNames: 'custom-field-list' });
             state.metadata.forEach((field, index) => {
-                list.appendChild(createCustomFieldRow(field, (key) => {
+                list.appendChild(createCustomFieldRow(field, (key) => { // FIXME: Unresolved function or method createCustomFieldRow()
                     state.metadata[index].key = key;
                     requestPreviewUpdate();
                 }, (value) => {
@@ -1569,7 +1573,7 @@
             customSection.appendChild(utils.createElement('h4', { text: 'Custom fields' }));
             const list = utils.createElement('div', { classNames: 'custom-field-list' });
             block.customFields.forEach((field, fieldIndex) => {
-                list.appendChild(createCustomFieldRow(field, (key) => {
+                list.appendChild(createCustomFieldRow(field, (key) => { // FIXME: Unresolved function or method createCustomFieldRow()vvvvvvv
                     state.blocks[index].customFields[fieldIndex].key = key;
                     requestPreviewUpdate();
                 }, (value) => {
@@ -1613,7 +1617,7 @@
                         status: 'error',
                         message: 'No lessons found in JSON.'
                     });
-                    throw new Error('No lessons found in JSON.'); // FIXME: 'throw' of exception caught locally
+                    return;
                 }
                 const lesson = lessonArray[0];
                 state.title = utils.trimString(lesson.lesson_title || '');
@@ -1689,7 +1693,7 @@
         }
 
         async function updatePreview() {
-            const result = await utils.renderJsonPreview({
+            const result = await utils.renderJsonPreview({ // FIXME: Argument type {    previewArea: HTMLElement,    statusElement: HTMLElement,    data: null,    buildPayload: function(): {        data: [{}] | []    },    successMessage: function(any): (string | string | string | string)} is not assignable to parameter type {    previewArea: any,    statusElement: any,    data: any,    buildPayload: any,    autoFix: any,    validator: any,    successMessage?: string,    errorMessage?: string,    workerClient?: JsonWorkerClient}  Type function(any): (string | string | string | string) is not assignable to type string
                 previewArea,
                 statusElement: validationStatus,
                 data: null,

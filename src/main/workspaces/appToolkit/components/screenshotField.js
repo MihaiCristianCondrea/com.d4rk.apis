@@ -18,7 +18,7 @@ template.innerHTML = `
     </div>
   </div>
   <div class="thumbnail" data-state="empty" part="thumbnail">
-    <img part="image" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" />
+    <img part="image" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" /> <!--FIXME: Element img doesn't have required attribute src-->
   </div>
   <div class="info" part="info">
     <md-outlined-text-field class="input" label="Screenshot" placeholder="https://example.com/screenshot.png" part="input"></md-outlined-text-field>
@@ -121,7 +121,7 @@ export class AppToolkitScreenshotField extends HTMLElement {
     if (this._input && this._input.value !== normalized) {
       this._input.value = normalized;
     }
-    this._refreshPreview(); // FIXME: Promise returned from _refreshPreview is ignored
+    void this._refreshPreview();
   }
 
   get position() { // FIXME: Unused property position

@@ -353,7 +353,7 @@
             fetchButton.addEventListener('click', () => {
                 const target = getFetchTarget();
                 const url = workspace.elements.fetchInput?.value || '';
-                fetchRemotePayload(target, url); // FIXME: Promise returned from fetchRemotePayload is ignored
+                void fetchRemotePayload(target, url);
             });
             fetchButton.dataset.wired = 'true';
         }
@@ -371,7 +371,7 @@
                     if (workspace.elements.fetchInput) {
                         workspace.elements.fetchInput.value = url;
                     }
-                    fetchRemotePayload(target, url); // FIXME: Promise returned from fetchRemotePayload is ignored
+                    void fetchRemotePayload(target, url);
                 });
                 button.dataset.wired = 'true';
             });
@@ -416,7 +416,11 @@
         try {
             const response = await fetch(trimmed, { cache: 'no-store' });
             if (!response.ok) {
-                throw new Error(`Request failed: ${response.status}`); // FIXME: 'throw' of exception caught locally
+                utils.setValidationStatus(statusElement, {
+                    status: 'error',
+                    message: `Request failed: ${response.status}`
+                });
+                return;
             }
             const text = await response.text();
             const formatted = utils.prettifyJsonString(text);
@@ -606,15 +610,15 @@
             }
         });
         const composeLesson = workspace.lessonCompose;
-        let lessonPayload = null;
+        let lessonPayload = { data: [] };
         if (typeof composeLesson === 'function') {
             try {
-                lessonPayload = composeLesson();
+                lessonPayload = composeLesson() || { data: [] };
             } catch (error) {
-                lessonPayload = null;
+                lessonPayload = { data: [] };
             }
         }
-        const lessons = Array.isArray(lessonPayload?.data) ? lessonPayload.data : []; // FIXME: lessonPayload is possibly null
+        const lessons = Array.isArray(lessonPayload?.data) ? lessonPayload.data : [];
         const lesson = lessons[0] || {};
         const blocks = Array.isArray(lesson.lesson_content) ? lesson.lesson_content : [];
         metrics.lessonBlocks = blocks.length;
@@ -990,32 +994,38 @@
             const token = validateGithubToken(githubToken?.value || '');
             const repoValue = utils.trimString(githubRepo?.value || '');
             if (!repoValue) {
-                throw new Error('Provide a repository in owner/name format.'); // FIXME: 'throw' of exception caught locally
+                setGithubStatus({ status: 'error', message: 'Provide a repository in owner/name format.' });
+                return;
             }
             const branch = utils.trimString(githubBranch?.value || '');
             if (!branch) {
-                throw new Error('Provide a branch name.'); // FIXME: 'throw' of exception caught locally
+                setGithubStatus({ status: 'error', message: 'Provide a branch name.' });
+                return;
             }
             const message = utils.trimString(githubMessage?.value || '');
             if (!message) {
-                throw new Error('Provide a commit message.'); // FIXME: 'throw' of exception caught locally
+                setGithubStatus({ status: 'error', message: 'Provide a commit message.' });
+                return;
             }
             const targetKey = githubTarget?.value || 'home-debug';
             const target = GITHUB_TARGETS[targetKey];
             if (!target) {
-                throw new Error('Select a payload target.'); // FIXME: 'throw' of exception caught locally
+                setGithubStatus({ status: 'error', message: 'Select a payload target.' });
+                return;
             }
             const previewKey = target.previewKey;
             const previewString = previewKey === 'home' ? workspace.homePreview : workspace.lessonPreview;
             const previewResult = previewKey === 'home' ? workspace.homeResult : workspace.lessonResult;
             if (!previewResult.success || !previewString) {
-                throw new Error('Resolve preview validation issues before publishing.'); // FIXME: 'throw' of exception caught locally
+                setGithubStatus({ status: 'error', message: 'Resolve preview validation issues before publishing.' });
+                return;
             }
             let path = target.path;
             if (!path && target.prefix) {
                 const slug = utils.trimString(githubLessonSlug?.value || '');
                 if (!slug) {
-                    throw new Error('Provide a lesson slug for lesson targets.'); // FIXME: 'throw' of exception caught locally
+                    setGithubStatus({ status: 'error', message: 'Provide a lesson slug for lesson targets.' });
+                    return;
                 }
                 const normalized = slug
                     .toLowerCase()
@@ -1024,7 +1034,8 @@
                 path = `${target.prefix}api_get_${normalized}.json`;
             }
             if (!path) {
-                throw new Error('Unable to determine repository path.'); // FIXME: 'throw' of exception caught locally
+                setGithubStatus({ status: 'error', message: 'Unable to determine repository path.' });
+                return;
             }
             setGithubStatus({ status: 'info', message: 'Publishing to GitHub…' });
             const { owner, repo } = parseRepository(repoValue);
@@ -1043,7 +1054,8 @@
                 existingSha = body.sha;
             } else if (getResponse.status !== 404) {
                 const messageText = await readGithubError(getResponse);
-                throw new Error(messageText); // FIXME: 'throw' of exception caught locally
+                setGithubStatus({ status: 'error', message: messageText });
+                return;
             }
             const putResponse = await fetch(baseUrl, {
                 method: 'PUT',
@@ -1060,7 +1072,8 @@
             });
             if (!putResponse.ok) {
                 const messageText = await readGithubError(putResponse);
-                throw new Error(messageText); // FIXME: 'throw' of exception caught locally
+                setGithubStatus({ status: 'error', message: messageText });
+                return;
             }
             workspace.baseline[previewKey] = previewString;
             updateDiffSheet();
@@ -1145,7 +1158,7 @@
 
             const fields = utils.createElement('div', { classNames: 'builder-card-fields' });
             fields.appendChild(
-                utils.createInputField({ // FIXME: Argument type {    label: string,    value: string | any,    onInput: function(any): void} is not assignable to parameter type {    label: any,    value?: string,    type?: string,    placeholder?: string,    onInput?: function(),    helperText?: string}  Type function(any): void is not assignable to type function()
+                utils.createInputField({
                     label: 'Lesson ID',
                     value: card.lesson_id,
                     onInput: (value) => {
@@ -1155,7 +1168,7 @@
                 }).wrapper
             );
             fields.appendChild(
-                utils.createInputField({ // FIXME: Argument type {    label: string,    value: string | any,    helperText: string,    onInput: function(any): void} is not assignable to parameter type {    label: any,    value?: string,    type?: string,    placeholder?: string,    onInput?: function(),    helperText?: string}  Type function(any): void is not assignable to type function()
+                utils.createInputField({
                     label: 'Lesson type',
                     value: card.lesson_type,
                     helperText: HOME_TYPE_HINT,
@@ -1198,7 +1211,7 @@
                 }).wrapper
             );
             fields.appendChild(
-                utils.createInputField({ // FIXME: Argument type {    label: string,    value: string | any,    placeholder: string,    onInput: function(any): void} is not assignable to parameter type {    label: any,    value?: string,    type?: string,    placeholder?: string,    onInput?: function(),    helperText?: string}  Type function(any): void is not assignable to type function()
+                utils.createInputField({
                     label: 'Square image URL',
                     value: card.square_image_url,
                     placeholder: 'https://example.com/square.webp',
@@ -1314,7 +1327,11 @@
                 const json = utils.parseJson(text);
                 const cards = Array.isArray(json?.data) ? json.data : Array.isArray(json) ? json : [];
                 if (!cards.length) {
-                    throw new Error('No cards found in the imported JSON.'); // FIXME: 'throw' of exception caught locally
+                    utils.setValidationStatus(validationStatus, {
+                        status: 'error',
+                        message: 'No cards found in the imported JSON.'
+                    });
+                    return;
                 }
                 const toStringValue = (value) => (value === undefined || value === null ? '' : String(value));
                 state.cards = cards.map((raw) => ({
@@ -1324,7 +1341,7 @@
                     lesson_description: utils.trimString(toStringValue(raw.lesson_description)),
                     thumbnail_image_url: utils.trimString(toStringValue(raw.thumbnail_image_url)),
                     square_image_url: utils.trimString(toStringValue(raw.square_image_url)),
-                    deep_link_path: utils.trimString(toStringValue(raw.deep_link_path || raw.deep_link)),
+                    deep_link_path: utils.trimString(toStringValue(raw.deep_link_path || raw.deep_link)), // FIXME: Unresolved variable deep_link
                     lesson_tags: Array.isArray(raw.lesson_tags)
                         ? raw.lesson_tags
                               .map((tag) => utils.trimString(toStringValue(tag)))
@@ -1397,7 +1414,7 @@
         }
 
         async function updatePreview() {
-            const result = await utils.renderJsonPreview({
+            const result = await utils.renderJsonPreview({ // FIXME: Argument type {    previewArea: HTMLElement,    statusElement: HTMLElement,    data: [{        lesson_id: string,        lesson_type: string,        lesson_title: string,        lesson_description: string,        thumbnail_image_url: string,        square_image_url: string,        deep_link_path: string,        lesson_tags: [],        customFields: []    }],    buildPayload: function(any): {        data: any    },    autoFix: function(any): any,    successMessage: function(any): (string | string | string)} is not assignable to parameter type {    previewArea: any,    statusElement: any,    data: any,    buildPayload: any,    autoFix: any,    validator: any,    successMessage?: string,    errorMessage?: string,    workerClient?: JsonWorkerClient}  Type function(any): (string | string | string) is not assignable to type string
                 previewArea,
                 statusElement: validationStatus,
                 data: state.cards,
@@ -1593,7 +1610,7 @@
 
             const fields = utils.createElement('div', { classNames: 'builder-card-fields' });
             fields.appendChild(
-                utils.createInputField({ // FIXME: Argument type {    label: string,    value: any,    onInput: function(any): void} is not assignable to parameter type {    label: any,    value?: string,    type?: string,    placeholder?: string,    onInput?: function(),    helperText?: string}  Type function(any): void is not assignable to type function()
+                utils.createInputField({
                     label: 'Content ID',
                     value: block.content_id,
                     onInput: (value) => {
@@ -1620,7 +1637,7 @@
             fieldDefinitions.forEach((definition) => {
                 if (definition.type === 'textarea') {
                     fields.appendChild(
-                        utils.createTextareaField({ // FIXME: Argument type {    label: any,    value,    helperText,    onInput: function(any): void} is not assignable to parameter type {    label: any,    value?: string,    rows?: number,    placeholder?: string,    onInput?: function(),    helperText?: string}  Type function(any): void is not assignable to type function()
+                        utils.createTextareaField({
                             label: definition.label,
                             value: block.props[definition.key] || '',
                             helperText: definition.helperText || '',
@@ -1632,7 +1649,7 @@
                     );
                 } else {
                     fields.appendChild(
-                        utils.createInputField({ // FIXME: Argument type {    label: any,    value,    type: string | string,    placeholder,    helperText,    onInput: function(any): void} is not assignable to parameter type {    label: any,    value?: string,    type?: string,    placeholder?: string,    onInput?: function(),    helperText?: string}  Type function(any): void is not assignable to type function()
+                        utils.createInputField({
                             label: definition.label,
                             value: block.props[definition.key] || '',
                             type: definition.type === 'number' ? 'number' : 'text',
@@ -1701,7 +1718,11 @@
                 const json = utils.parseJson(text);
                 const lessonArray = Array.isArray(json?.data) ? json.data : [];
                 if (!lessonArray.length) {
-                    throw new Error('No lessons found in JSON.'); // FIXME: 'throw' of exception caught locally
+                    utils.setValidationStatus(validationStatus, {
+                        status: 'error',
+                        message: 'No lessons found in JSON.'
+                    });
+                    return;
                 }
                 const lesson = lessonArray[0];
                 state.title = utils.trimString(lesson.lesson_title || '');

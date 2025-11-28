@@ -143,7 +143,11 @@
 }
 
 .search-card-extra-controls button:not(.active):hover {
-  background: color-mix(in srgb, var(--md-sys-color-surface-tint) 16%, transparent); /*FIXME: Cannot resolve '--md-sys-color-surface-tint' custom property*/
+  background: color-mix(
+    in srgb,
+    var(--md-sys-color-surface-tint, var(--md-sys-color-primary)) 16%, /*FIXME: Cannot resolve '--md-sys-color-surface-tint' custom property*/
+    transparent
+  );
   transform: translateY(-1px);
 }
 
@@ -347,7 +351,7 @@
   color: var(--app-text-color);
   background: transparent;
   white-space: pre-wrap;
-  font-family: var(--app-mono, 'SFMono-Regular', Menlo, Consolas, monospace); /*FIXME: Font property font-family does not have generic default*/
+  font-family: var(--app-mono, 'SFMono-Regular', Menlo, Consolas, monospace), monospace;
 }
 
 .patch-result .result-header {
@@ -826,7 +830,7 @@
 }
 
 .gh-format-toggle button:not(.active):hover {
-  background: color-mix(in srgb, var(--md-sys-color-surface-tint) 18%, transparent);
+  background: color-mix(in srgb, var(--md-sys-color-surface-tint) 18%, transparent); /*FIXME: Cannot resolve '--md-sys-color-surface-tint' custom property*/
 }
 
 .gh-format-divider {
@@ -910,7 +914,7 @@
   max-height: 60vh;
   overflow: auto;
   color: var(--app-text-color);
-  font-family: var(--app-mono, 'JetBrains Mono', 'SFMono-Regular', Menlo, monospace);
+  font-family: var(--app-mono, 'JetBrains Mono', 'SFMono-Regular', Menlo, monospace); /*FIXME: Font property font-family does not have generic default*/
 }
 
 .gh-release-bar {

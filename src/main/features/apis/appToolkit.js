@@ -52,7 +52,7 @@
     const CATEGORY_BY_ID = new Map(
         GOOGLE_PLAY_CATEGORIES.map((category) => [category.id.toLowerCase(), category])
     );
-    const CATEGORY_BY_LABEL = new Map(
+    const CATEGORY_BY_LABEL = new Map( // FIXME: Unused constant CATEGORY_BY_LABEL
         GOOGLE_PLAY_CATEGORIES.map((category) => [category.label.toLowerCase(), category])
     );
     const PACKAGE_NAME_PATTERN = /^[a-z][a-z0-9_]*(\.[a-z][a-z0-9_]*)+$/i;
@@ -278,7 +278,7 @@
                 buttonLabel: 'Category (A–Z)',
                 ariaLabel: 'category, alphabetical A to Z',
                 type: 'string',
-                getValue: (_app, sanitized) => sanitized?.category?.label || ''
+                getValue: (_app, sanitized) => sanitized?.category?.label || '' // FIXME: Unused property getValue
             },
             screenshots: {
                 key: 'screenshots',
@@ -286,7 +286,7 @@
                 buttonLabel: 'Screenshot count (high to low)',
                 ariaLabel: 'screenshot count, high to low',
                 type: 'number',
-                getValue: (_app, _sanitized, meta) => meta.screenshotCount || 0,
+                getValue: (_app, _sanitized, meta) => meta.screenshotCount || 0, // FIXME: Unused property getValue
                 compare: (a, b) => b.value - a.value
             }
         };
@@ -687,7 +687,7 @@
         }
 
         async function updatePreview() {
-            const result = await utils.renderJsonPreview({
+            const result = await utils.renderJsonPreview({ // FIXME: Argument type {    previewArea: HTMLElement,    statusElement: HTMLElement,    data: [{        name: string,        packageName: string,        category: {            label: string,            category_id: string        },        description: string,        iconLogo: string,        screenshots: [{            url: string,            aspectRatio: string        }]    }],    buildPayload: function(any): {        data: {            apps: any        }    },    autoFix: function(any): any,    successMessage: function(any): (string | string | string)} is not assignable to parameter type {    previewArea: any,    statusElement: any,    data: any,    buildPayload: any,    autoFix: any,    validator: any,    successMessage?: string,    errorMessage?: string,    workerClient?: JsonWorkerClient}  Type function(any): (string | string | string) is not assignable to type string
                 previewArea,
                 statusElement: validationStatus,
                 data: state.apps,
@@ -1061,7 +1061,7 @@
                 return;
             }
             activeFilters.clear();
-            const chips = filterChipSet.querySelectorAll('md-filter-chip');
+            const chips = filterChipSet.querySelectorAll('md-filter-chip'); // FIXME: Selector matches unknown element md-filter-chip
             chips.forEach((chip) => {
                 if (chip.hasAttribute('selected')) {
                     const key = chip.dataset.appToolkitFilter;
@@ -1142,7 +1142,7 @@
                 return;
             }
             segmented.value = value;
-            segmented.querySelectorAll('md-segmented-button').forEach((button) => {
+            segmented.querySelectorAll('md-segmented-button').forEach((button) => { // FIXME: Selector matches unknown element md-segmented-button
                 const buttonValue =
                     button.getAttribute('value') ||
                     button.dataset.appToolkitMode ||
@@ -1589,8 +1589,7 @@
                 classNames: ['builder-hint-chip'],
                 text: ''
             });
-            const screenshotCountId = `${screenshotHeaderId}-count`; // FIXME: Local variable screenshotCountId is redundant
-            screenshotCountChip.id = screenshotCountId;
+            screenshotCountChip.id = `${screenshotHeaderId}-count`;
             screenshotHeader.appendChild(screenshotCountChip);
             screenshotsSection.appendChild(screenshotHeader);
 
@@ -2760,7 +2759,7 @@
             }
             if (typeof handle.requestPermission === 'function') { // FIXME: Unresolved variable requestPermission
                 try {
-                    return await handle.requestPermission(options);
+                    return await handle.requestPermission(options); // FIXME: Unresolved function or method requestPermission()
                 } catch (error) {
                     return 'denied';
                 }
@@ -2962,7 +2961,7 @@
                 return btoa(binary);
             }
             if (typeof btoa !== 'undefined') {
-                return btoa(unescape(encodeURIComponent(string))); 
+                return btoa(unescape(encodeURIComponent(string)));  // FIXME: Deprecated symbol used, consult docs for better alternative
             }
             throw new Error('Base64 encoding is not supported in this environment.');
         }
@@ -3168,7 +3167,7 @@
 
         if (fetchButton) {
             fetchButton.addEventListener('click', () => {
-                fetchRemoteJson();  // FIXME: Invalid number of arguments, expected 1..2
+                void fetchRemoteJson(); // FIXME: Invalid number of arguments, expected 1..2
             });
         }
 
@@ -3176,7 +3175,7 @@
             fetchInput.addEventListener('keydown', (event) => {
                 if (event.key === 'Enter') {
                     event.preventDefault();
-                    fetchRemoteJson(); 
+                    fetchRemoteJson();  // FIXME: PInvalid number of arguments, expected 1..2
                 }
             });
             fetchInput.addEventListener('input', () => {
@@ -3209,7 +3208,7 @@
                             fetchInput.select();
                         }
                     }
-                    fetchRemoteJson(presetUrl, { fromPreset: true });
+                    fetchRemoteJson(presetUrl, { fromPreset: true }); // FIXME: Promise returned from fetchRemoteJson is ignored
                 });
             });
         }

@@ -2,13 +2,13 @@ import {
   fetchCommitPatch,
   fetchReleaseStats,
   fetchRepositoryTree,
-} from '../services/githubService';
+} from '@/services/githubService';
 import {
   generateAsciiTree,
   generatePathList,
   parseGithubCommitUrl,
   parseGithubUrl,
-} from '../domain/utils.js';
+} from '@/domain/utils';
 
 const STORAGE_KEY = 'repomapper_favorites';
 
@@ -122,11 +122,16 @@ function setFavoriteButtonState(button, parsedRepo) {
   }
 }
 
-function copyWithFeedback(buttonId, text) {
+async function copyWithFeedback(buttonId, text) {
   const button = document.getElementById(buttonId);
   if (!button) return;
   const original = button.innerHTML;
-  navigator.clipboard.writeText(text || ''); // FIXME: Promise returned from writeText is ignored
+  try {
+    await navigator.clipboard.writeText(text || '');
+  } catch (error) {
+    console.error('GitHubTools: failed to write to clipboard', error);
+    return;
+  }
   button.innerHTML =
     '<span class="material-symbols-outlined">check_circle</span><span>Copied</span>';
   setTimeout(() => {
@@ -468,7 +473,7 @@ export function initRepoMapper() {
   };
 
   const copyAction = (targetId) => () =>
-    copyWithFeedback(targetId, codeEl?.textContent || '');
+    void copyWithFeedback(targetId, codeEl?.textContent || '');
   copyBtn?.addEventListener('click', copyAction('mapper-copy-btn'));
   copyFooterBtn?.addEventListener('click', copyAction('mapper-copy-btn-footer'));
 
@@ -551,7 +556,7 @@ export function initReleaseStats() {
               <span class="gh-muted">${asset.downloads.toLocaleString()}</span>
             </div>
             <div class="gh-release-bar">
-              <span style="width:${maxAsset > 0 ? (asset.downloads / maxAsset) * 100 : 0}%;"></span>
+              <span style="width:${maxAsset > 0 ? (asset.downloads / maxAsset) * 100 : 0}%;"></span> <!--FIXME: Selector matches unknown element width-->
             </div>
           </div>
         `,
@@ -589,7 +594,7 @@ export function initReleaseStats() {
               <span class="gh-muted">${release.totalDownloads.toLocaleString()}</span>
             </div>
             <div class="gh-release-bar">
-              <span style="width:${percent}%;"></span>
+              <span style="width:${percent}%;"></span><!--FIXME: Selector matches unknown element width-->
             </div>
           </button>`;
       })
@@ -671,7 +676,7 @@ export function initGitPatch() {
     );
 
   copyBtn?.addEventListener('click', () =>
-    copyWithFeedback('patch-copy-btn', state.patch.content),
+    void copyWithFeedback('patch-copy-btn', state.patch.content),
   );
 
   downloadBtn?.addEventListener('click', () => {

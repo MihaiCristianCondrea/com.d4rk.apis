@@ -1,6 +1,6 @@
 import { createElement } from '../dom/elements.js';
 
-const noop = () => {};
+const noop = (_value) => {};
 
 export function createInputField({
   label,

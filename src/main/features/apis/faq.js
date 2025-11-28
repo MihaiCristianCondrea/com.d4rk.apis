@@ -160,7 +160,7 @@
         builderRoot.dataset.initialized = 'true';
 
         if (presetSelectRoot && FAQ_API_PRESET_OPTIONS.length) {
-            const presetField = utils.createSelectField({ // FIXME: Argument type {    label: string,    value: string | string | string | any | string,    options: {        value: any,        label: any    }[],    onChange: function(any): void} is not assignable to parameter type {    label: any,    value?: string,    options?: [],    onChange?: function()}  Type function(any): void is not assignable to type function()
+            const presetField = utils.createSelectField({
                 label: 'Select API preset',
                 value: activePreset ? activePreset.value : '',
                 options: FAQ_API_PRESET_OPTIONS.map((preset) => ({
@@ -328,8 +328,8 @@
             let categories = [];
             if (Array.isArray(raw.categories)) {
                 categories = raw.categories;
-            } else if (Array.isArray(raw.topics)) {
-                categories = raw.topics;
+            } else if (Array.isArray(raw.topics)) { // FIXME: Unresolved variable topics
+                categories = raw.topics; // FIXME: Unresolved variable topics
             }
             const tags = Array.isArray(raw.tags)
                 ? raw.tags
@@ -341,16 +341,16 @@
                 question: typeof raw.question === 'string' ? raw.question : '',
                 icon: typeof raw.icon === 'string'
                     ? raw.icon
-                    : typeof raw.iconSymbol === 'string'
-                    ? raw.iconSymbol
+                    : typeof raw.iconSymbol === 'string' // FIXME: Unresolved variable iconSymbol
+                    ? raw.iconSymbol // FIXME: Unresolved variable iconSymbol
                     : '',
                 categories: sortCategories(categories),
                 featured: Boolean(raw.featured),
                 answer:
                     typeof raw.answer === 'string'
                         ? raw.answer
-                        : typeof raw.answerHtml === 'string'
-                        ? raw.answerHtml
+                        : typeof raw.answerHtml === 'string' // FIXME: Unresolved variable answerHtml
+                        ? raw.answerHtml // FIXME: Unresolved variable answerHtml
                         : '',
                 tags: normalizeTags(tags)
             };
@@ -453,7 +453,7 @@
             const header = utils.createElement('div', { classNames: 'builder-card-header' });
             header.appendChild(utils.createElement('h3', { text: `FAQ ${index + 1}` }));
 
-            const moveUpButton = utils.createInlineButton({
+            const moveUpButton = utils.createInlineButton({ // FIXME: Argument type {    icon: string,    title: string,    onClick: function(): void} is not assignable to parameter type {    label: string,    icon?: (string | null),    onClick?: (function(): void),    variant?: string,    title?: string}  Type string is not assignable to type undefined
                 icon: 'arrow_upward',
                 title: 'Move up',
                 onClick: () => moveEntry(index, -1)
@@ -461,7 +461,7 @@
             moveUpButton.disabled = index === 0;
             header.appendChild(moveUpButton);
 
-            const moveDownButton = utils.createInlineButton({
+            const moveDownButton = utils.createInlineButton({ // FIXME: Argument type {    icon: string,    title: string,    onClick: function(): void} is not assignable to parameter type {    label: string,    icon?: (string | null),    onClick?: (function(): void),    variant?: string,    title?: string}  Type string is not assignable to type undefined
                 icon: 'arrow_downward',
                 title: 'Move down',
                 onClick: () => moveEntry(index, 1)
@@ -546,8 +546,7 @@
             });
             iconPreview.dataset.empty = entry.icon ? 'false' : 'true';
             const syncIconPreview = (value) => {
-                const symbol = value ? value : 'help'; // FIXME: Local variable symbol is redundant
-                iconPreview.textContent = symbol;
+                iconPreview.textContent = value || 'help';
                 iconPreview.dataset.empty = value ? 'false' : 'true';
             };
             const iconButtons = utils.createElement('div', { classNames: 'faq-icon-buttons' });
@@ -915,7 +914,7 @@
                 if (Array.isArray(payload.entries)) {
                     return payload.entries;
                 }
-                if (payload.catalog && typeof payload.catalog === 'object') {
+                if (payload.catalog && typeof payload.catalog === 'object') { // FIXME: Unresolved variable catalog
                     return flattenCatalogPayload(payload.catalog);
                 }
                 if (payload.categories && typeof payload.categories === 'object' && !Array.isArray(payload.categories)) {
@@ -983,8 +982,8 @@
                 return payload.length;
             }
             if (payload && typeof payload === 'object') {
-                if (typeof payload.index?.totalEntries === 'number') {
-                    return payload.index.totalEntries;
+                if (typeof payload.index?.totalEntries === 'number') { // FIXME: Unresolved variable totalEntries
+                    return payload.index.totalEntries; // FIXME: Unresolved variable totalEntries
                 }
                 if (Array.isArray(payload.entries)) {
                     return payload.entries.length;
@@ -1118,7 +1117,7 @@
             workspacePulseEl.textContent = message;
         }
 
-        function updateMetrics(payload) { // FIXME: Unused parameter payload
+        function updateMetrics() {
             const total = state.entries.length;
             const featured = state.entries.filter((entry) => Boolean(entry.featured)).length;
             const withIcons = state.entries.filter((entry) => Boolean(utils.trimString(entry.icon))).length;
@@ -1265,7 +1264,10 @@
             try {
                 const response = await fetch(resolved, { cache: 'no-store' });
                 if (!response.ok) {
-                    throw new Error(`Request failed with status ${response.status}`); // FIXME: 'throw' of exception caught locally
+                    if (!silent) {
+                        setCatalogStatus(`Request failed with status ${response.status}`, 'error');
+                    }
+                    return;
                 }
                 const text = await response.text();
                 const parsed = utils.parseJson(text);
@@ -1361,7 +1363,10 @@
             try {
                 const response = await fetch(trimmed, { cache: 'no-store' });
                 if (!response.ok) {
-                    throw new Error(`Request failed with status ${response.status}`); // FIXME: 'throw' of exception caught locally
+                    if (!silent) {
+                        setFetchStatus(`Request failed with status ${response.status}`);
+                    }
+                    return;
                 }
                 const text = await response.text();
                 const parsed = utils.parseJson(text);
@@ -1428,7 +1433,7 @@
                 try {
                     const response = await fetch(endpoint, { cache: 'no-store' });
                     if (!response.ok) {
-                        throw new Error(`Icon request failed with status ${response.status}`);
+                        throw new Error(`Icon request failed with status ${response.status}`); // FIXME: 'throw' of exception caught locally
                     }
                     const text = await response.text();
                     const names = parseIconCatalog(text);
@@ -1586,7 +1591,7 @@
                 iconPickerSearch.value = '';
             }
             if (!iconNames.length && !iconsRequested) {
-                refreshIcons();
+                refreshIcons(); // FIXME: Promise returned from refreshIcons is ignored
             }
             renderIconPickerOptions('');
             if (iconPickerSearch) {
@@ -1683,13 +1688,13 @@
         if (catalogButton) {
             catalogButton.addEventListener('click', () => {
                 const selectedKey = catalogButton.dataset.faqProduct || catalogState.selectedKey || '';
-                fetchCatalogProduct(selectedKey);
+                fetchCatalogProduct(selectedKey); // FIXME: Promise returned from fetchCatalogProduct is ignored
             });
         }
 
         if (catalogRefreshButton) {
             catalogRefreshButton.addEventListener('click', () => {
-                fetchCatalog(DEFAULT_CATALOG_URL);
+                fetchCatalog(DEFAULT_CATALOG_URL); // FIXME: Promise returned from fetchCatalog is ignored
             });
         }
 
@@ -1701,7 +1706,7 @@
                     if (fetchInput) {
                         fetchInput.value = presetUrl;
                     }
-                    fetchFromUrl(presetUrl);
+                    fetchFromUrl(presetUrl); // FIXME: Promise returned from fetchFromUrl is ignored
                 }
             });
         }
@@ -1728,7 +1733,7 @@
         if (refreshIconsButton) {
             refreshIconsButton.addEventListener('click', () => {
                 iconsRequested = false;
-                refreshIcons();
+                refreshIcons(); // FIXME: Promise returned from refreshIcons is ignored
             });
         }
 
@@ -1760,14 +1765,14 @@
         }
 
         render();
-        refreshIcons();
+        refreshIcons(); // FIXME: Promise returned from refreshIcons is ignored
         fetchCatalog(DEFAULT_CATALOG_URL).then(() => {
             const product = findCatalogProduct(DEFAULT_PRODUCT_KEY);
             if (product) {
-                fetchCatalogProduct(product.key || product.productId, { silent: true });
+                fetchCatalogProduct(product.key || product.productId, { silent: true }); // FIXME: Promise returned from fetchCatalogProduct is ignored
             }
         });
-        fetchFromUrl(DEFAULT_DATA_URL, { silent: true });
+        fetchFromUrl(DEFAULT_DATA_URL, { silent: true }); // FIXME: Promise returned from fetchFromUrl is ignored
     }
 
     global.initFaqWorkspace = initFaqWorkspace;

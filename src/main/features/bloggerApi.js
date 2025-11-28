@@ -253,7 +253,7 @@ async function shareBlogPost(postData, feedbackElement) {
 function displayShareFeedback(feedbackElement, message, isError = false) {
     if (!feedbackElement) return;
  
-    const existingTimeout = feedbackHideTimers.get(feedbackElement) ?? feedbackElement._hideTimeoutId; // FIXME: Unresolved variable _hideTimeoutId
+    const existingTimeout = feedbackHideTimers.get(feedbackElement);
     if (existingTimeout) {
         clearTimeout(existingTimeout);
     }
