@@ -51,6 +51,7 @@ function saveFavorites(next) {
   }
   hydrateDatalists();
   renderFavoritesGrid();
+  renderQuickFavorites();
 }
 
 function isFavorite(owner, repo) {
@@ -156,12 +157,12 @@ function setButtonLoading(button, isLoading, idleLabel, busyLabel, iconName) {
   if (isLoading) {
     button.disabled = true;
     icon.textContent = 'progress_activity';
-    icon.classList.add('rotating');
+    icon.classList.add('gh-rolling');
     label.textContent = busyLabel;
   } else {
     button.disabled = false;
     icon.textContent = iconName;
-    icon.classList.remove('rotating');
+    icon.classList.remove('gh-rolling');
     label.textContent = idleLabel;
   }
 }
@@ -175,78 +176,110 @@ function renderFavoritesGrid() {
   grid.innerHTML = '';
 
   if (!favorites.length) {
-    emptyState.classList.remove('hidden');
+    emptyState.removeAttribute('hidden');
     return;
   }
 
-  emptyState.classList.add('hidden');
+  emptyState.setAttribute('hidden', 'hidden');
 
   favorites.forEach((fav) => {
     const card = document.createElement('article');
-    card.className = 'gh-fav-card';
+    card.className = 'gh-favorite-card';
     card.innerHTML = `
-      <div class="gh-fav-header">
-        <div class="gh-fav-meta">
-          <div class="gh-fav-owner">
-            <span class="material-symbols-outlined">folder_open</span>
-            <span>${fav.owner}</span>
+      <div class="gh-favorite-meta">
+        <div class="gh-stack" style="gap:0.25rem;">
+          <div class="gh-badge-row">
+            <span class="gh-badge">
+              <span class="material-symbols-outlined">folder_open</span>
+              <span>${fav.owner}</span>
+            </span>
           </div>
-          <h3 title="${fav.repo}">${fav.repo}</h3>
+          <h3 class="gh-bold" title="${fav.repo}">${fav.repo}</h3>
         </div>
-        <button type="button" class="gh-fav-toggle">
-          <span class="material-symbols-outlined">star</span>
+        <button type="button" class="gh-pill-button" aria-label="Remove favorite">
+          <span class="material-symbols-outlined filled-icon">star</span>
         </button>
       </div>
-      <div class="gh-fav-actions">
-        <button type="button" class="gh-fav-action map" data-url="https://github.com/${fav.owner}/${fav.repo}">
+      <div class="gh-favorite-actions">
+        <button type="button" class="gh-button secondary" data-map>
           <span class="material-symbols-outlined">terminal</span>
-          <span>Map</span>
+          <span>Repo Mapper</span>
         </button>
-        <button type="button" class="gh-fav-action stats" data-url="https://github.com/${fav.owner}/${fav.repo}">
+        <button type="button" class="gh-button secondary" data-stats>
           <span class="material-symbols-outlined">bar_chart</span>
-          <span>Stats</span>
+          <span>Release Stats</span>
         </button>
       </div>
     `;
 
-    const toggleBtn = card.querySelector('.gh-fav-toggle');
-    toggleBtn?.addEventListener('click', () => {
-      toggleFavorite(fav.owner, fav.repo);
-      renderFavoritesGrid();
+    card.querySelector('[aria-label="Remove favorite"]')?.addEventListener('click', () =>
+      toggleFavorite(fav.owner, fav.repo),
+    );
+
+    card.querySelector('[data-map]')?.addEventListener('click', () => {
+      window.appNavigation?.navigate?.(`/github/repo-mapper?repo=${fav.owner}/${fav.repo}`);
     });
 
-    card.querySelector('.gh-fav-action.map')?.addEventListener('click', () => {
-      const mapperInput = document.getElementById('mapper-url');
-      if (mapperInput) {
-        mapperInput.value = `https://github.com/${fav.owner}/${fav.repo}`;
-        mapperInput.dispatchEvent(new Event('input'));
-        window.location.hash = '#repo-mapper';
-      }
-    });
-
-    card.querySelector('.gh-fav-action.stats')?.addEventListener('click', () => {
-      const releaseInput = document.getElementById('releases-url');
-      if (releaseInput) {
-        releaseInput.value = `https://github.com/${fav.owner}/${fav.repo}`;
-        releaseInput.dispatchEvent(new Event('input'));
-        window.location.hash = '#release-stats';
-      }
+    card.querySelector('[data-stats]')?.addEventListener('click', () => {
+      window.appNavigation?.navigate?.(`/github/release-stats?repo=${fav.owner}/${fav.repo}`);
     });
 
     grid.appendChild(card);
   });
 }
 
-function toggleToken(buttonId, containerId) {
-  const button = document.getElementById(buttonId);
-  const container = document.getElementById(containerId);
-  if (!button || !container) return;
+function renderQuickFavorites() {
+  const targets = [
+    { id: 'mapper-quick-favs', view: 'mapper' },
+    { id: 'releases-quick-favs', view: 'releases' },
+    { id: 'patch-quick-favs', view: 'releases' },
+  ];
 
-  const expanded = button.getAttribute('aria-expanded') === 'true';
-  button.setAttribute('aria-expanded', expanded ? 'false' : 'true');
-  container.hidden = expanded;
-  const label = button.querySelector('.token-toggle-label');
-  if (label) label.textContent = expanded ? 'Token Settings' : 'Hide Settings';
+  targets.forEach(({ id, view }) => {
+    const container = document.getElementById(id);
+    if (!container) return;
+    container.innerHTML = '';
+
+    if (!state.favorites.length) {
+      container.classList.add('gh-muted');
+      container.textContent = 'Add favorites from tools to jump back quickly.';
+      return;
+    }
+
+    container.classList.remove('gh-muted');
+
+    state.favorites.slice(0, 4).forEach((fav) => {
+      const chip = document.createElement('button');
+      chip.type = 'button';
+      chip.className = 'gh-favorite-chip';
+      chip.innerHTML = `
+        <span class="material-symbols-outlined filled-icon">star</span>
+        <span>${fav.repo}</span>
+      `;
+      chip.addEventListener('click', () => {
+        const url = `https://github.com/${fav.owner}/${fav.repo}`;
+        const targetInput = document.getElementById(`${view}-url`);
+        if (targetInput) {
+          targetInput.value = url;
+          if (view === 'mapper') handleMapperFavoriteInput();
+          if (view === 'releases') handleReleaseFavoriteInput();
+        }
+      });
+      container.appendChild(chip);
+    });
+  });
+}
+
+function toggleTokenVisibility(toggleId, inputId) {
+  const toggle = document.getElementById(toggleId);
+  const input = document.getElementById(inputId);
+  if (!toggle || !input) return;
+  const showing = input.getAttribute('type') === 'text';
+  input.setAttribute('type', showing ? 'password' : 'text');
+  const icon = toggle.querySelector('.material-symbols-outlined');
+  const label = toggle.querySelector('span:last-child');
+  if (icon) icon.textContent = showing ? 'visibility' : 'visibility_off';
+  if (label) label.textContent = showing ? 'Show token' : 'Hide token';
 }
 
 function initMapperFavorites(urlInputId, favoriteButtonId) {
@@ -312,6 +345,24 @@ function initPatchFavorites(urlInputId, favoriteButtonId) {
   update();
 }
 
+function handleMapperFavoriteInput() {
+  const input = document.getElementById('mapper-url');
+  const favButton = document.getElementById('mapper-fav-btn');
+  if (!input || !favButton) return;
+  const parsed = parseGithubUrl(input.value || '');
+  state.mapper.parsedRepo = parsed;
+  setFavoriteButtonState(favButton, parsed);
+}
+
+function handleReleaseFavoriteInput() {
+  const input = document.getElementById('releases-url');
+  const favButton = document.getElementById('releases-fav-btn');
+  if (!input || !favButton) return;
+  const parsed = parseGithubUrl(input.value || '');
+  state.releases.parsedRepo = parsed;
+  setFavoriteButtonState(favButton, parsed);
+}
+
 export function initRepoMapper() {
   const form = document.getElementById('mapper-form');
   if (!form) return;
@@ -319,24 +370,27 @@ export function initRepoMapper() {
   loadFavorites();
   hydrateDatalists();
   renderFavoritesGrid();
+  renderQuickFavorites();
 
   const urlInput = document.getElementById('mapper-url');
   const tokenInput = document.getElementById('mapper-token');
-  const tokenToggle = document.getElementById('mapper-token-toggle');
   const resultEl = document.getElementById('mapper-result');
   const codeEl = document.getElementById('mapper-code');
   const foldersEl = document.getElementById('mapper-stats-folders');
   const filesEl = document.getElementById('mapper-stats-files');
   const copyBtn = document.getElementById('mapper-copy-btn');
+  const copyFooterBtn = document.getElementById('mapper-copy-btn-footer');
   const asciiBtn = document.getElementById('btn-format-ascii');
   const pathsBtn = document.getElementById('btn-format-paths');
   const submitBtn = document.getElementById('mapper-submit');
 
   initMapperFavorites('mapper-url', 'mapper-fav-btn');
 
-  tokenToggle?.addEventListener('click', () =>
-    toggleToken('mapper-token-toggle', 'mapper-token-container'),
-  );
+  document
+    .getElementById('mapper-token-toggle')
+    ?.addEventListener('click', () =>
+      toggleTokenVisibility('mapper-token-toggle', 'mapper-token'),
+    );
 
   const setFormat = (format) => {
     state.mapper.format = format;
@@ -363,9 +417,10 @@ export function initRepoMapper() {
     resultEl?.removeAttribute('hidden');
   };
 
-  copyBtn?.addEventListener('click', () =>
-    copyWithFeedback('mapper-copy-btn', codeEl?.textContent || ''),
-  );
+  const copyAction = (targetId) => () =>
+    copyWithFeedback(targetId, codeEl?.textContent || '');
+  copyBtn?.addEventListener('click', copyAction('mapper-copy-btn'));
+  copyFooterBtn?.addEventListener('click', copyAction('mapper-copy-btn-footer'));
 
   form.addEventListener('submit', async (event) => {
     event.preventDefault();
@@ -402,10 +457,10 @@ export function initReleaseStats() {
   loadFavorites();
   hydrateDatalists();
   renderFavoritesGrid();
+  renderQuickFavorites();
 
   const urlInput = document.getElementById('releases-url');
   const tokenInput = document.getElementById('releases-token');
-  const tokenToggle = document.getElementById('releases-token-toggle');
   const resultEl = document.getElementById('releases-result');
   const totalDownloadsEl = document.getElementById('rel-total-downloads');
   const relCountEl = document.getElementById('rel-count');
@@ -419,58 +474,34 @@ export function initReleaseStats() {
 
   initReleaseFavorites('releases-url', 'releases-fav-btn');
 
-  tokenToggle?.addEventListener('click', () =>
-    toggleToken('releases-token-toggle', 'releases-token-container'),
-  );
+  document
+    .getElementById('releases-token-toggle')
+    ?.addEventListener('click', () =>
+      toggleTokenVisibility('releases-token-toggle', 'releases-token'),
+    );
 
   const renderAssets = (assets) => {
     if (!assetsEl) return;
     if (!assets.length) {
-      assetsEl.innerHTML = '<div class="gh-meta">No assets.</div>';
+      assetsEl.innerHTML = '<p class="gh-muted">No assets.</p>';
       return;
     }
-    const maxAsset = Math.max(...assets.map((a) => a.downloads));
+    const maxAsset = Math.max(...assets.map((asset) => asset.downloads));
     assetsEl.innerHTML = assets
       .map(
         (asset) => `
-          <div class="gh-asset">
-            <div class="gh-row">
-              <span class="gh-asset-name">${asset.name}</span>
-              <span class="gh-meta">${asset.downloads.toLocaleString()}</span>
+          <div class="gh-stack">
+            <div class="gh-row space-between">
+              <span class="gh-bold">${asset.name}</span>
+              <span class="gh-muted">${asset.downloads.toLocaleString()}</span>
             </div>
-            <div class="gh-asset-bar"><span style="width: ${maxAsset > 0 ? (asset.downloads / maxAsset) * 100 : 0}%"></span></div>
+            <div class="gh-release-bar">
+              <span style="width:${maxAsset > 0 ? (asset.downloads / maxAsset) * 100 : 0}%;"></span>
+            </div>
           </div>
         `,
       )
       .join('');
-  };
-
-  const renderReleaseList = () => {
-    if (!state.releases.data || !listEl) return;
-    const { releases } = state.releases.data;
-    const maxDownloads = Math.max(...releases.map((r) => r.totalDownloads));
-
-    listEl.innerHTML = releases
-      .map((release, idx) => {
-        const isActive = idx === state.releases.selectedIndex;
-        const percent = maxDownloads > 0 ? (release.totalDownloads / maxDownloads) * 100 : 0;
-        return `
-          <button type="button" class="gh-release-button ${isActive ? 'active' : ''}" data-index="${idx}">
-            <div class="gh-row">
-              <span class="${isActive ? 'gh-strong' : 'gh-meta'}">${release.name}</span>
-              <span class="gh-meta">${release.totalDownloads.toLocaleString()}</span>
-            </div>
-            <div class="gh-release-bar"><span style="width:${percent}%;"></span></div>
-          </button>`;
-      })
-      .join('');
-
-    listEl.querySelectorAll('button[data-index]').forEach((btn) => {
-      btn.addEventListener('click', () => {
-        state.releases.selectedIndex = Number(btn.dataset.index);
-        renderReleaseDetails();
-      });
-    });
   };
 
   const renderReleaseDetails = () => {
@@ -485,7 +516,37 @@ export function initReleaseStats() {
     if (detailDownloadsEl) detailDownloadsEl.textContent = active.totalDownloads.toLocaleString();
 
     renderAssets(active.assets);
-    renderReleaseList();
+  };
+
+  const renderReleaseList = () => {
+    if (!state.releases.data || !listEl) return;
+    const { releases } = state.releases.data;
+    const maxDownloads = Math.max(...releases.map((r) => r.totalDownloads));
+
+    listEl.innerHTML = releases
+      .map((release, idx) => {
+        const isActive = idx === state.releases.selectedIndex;
+        const percent = maxDownloads > 0 ? (release.totalDownloads / maxDownloads) * 100 : 0;
+        return `
+          <button type="button" class="${isActive ? 'active' : ''}">
+            <div class="gh-row space-between">
+              <span class="${isActive ? 'gh-bold' : 'gh-muted'}">${release.name}</span>
+              <span class="gh-muted">${release.totalDownloads.toLocaleString()}</span>
+            </div>
+            <div class="gh-release-bar">
+              <span style="width:${percent}%;"></span>
+            </div>
+          </button>`;
+      })
+      .join('');
+
+    listEl.querySelectorAll('button').forEach((btn, idx) => {
+      btn.addEventListener('click', () => {
+        state.releases.selectedIndex = idx;
+        renderReleaseDetails();
+        renderReleaseList();
+      });
+    });
   };
 
   const renderOverview = () => {
@@ -494,6 +555,7 @@ export function initReleaseStats() {
     if (totalDownloadsEl) totalDownloadsEl.textContent = totalDownloads.toLocaleString();
     if (relCountEl) relCountEl.textContent = `${releases.length} Found`;
     renderReleaseDetails();
+    renderReleaseList();
   };
 
   form.addEventListener('submit', async (event) => {
@@ -530,10 +592,10 @@ export function initGitPatch() {
   loadFavorites();
   hydrateDatalists();
   renderFavoritesGrid();
+  renderQuickFavorites();
 
   const urlInput = document.getElementById('patch-url');
   const tokenInput = document.getElementById('patch-token');
-  const tokenToggle = document.getElementById('patch-token-toggle');
   const resultEl = document.getElementById('patch-result');
   const codeEl = document.getElementById('patch-code');
   const copyBtn = document.getElementById('patch-copy-btn');
@@ -542,9 +604,11 @@ export function initGitPatch() {
 
   initPatchFavorites('patch-url', 'patch-fav-btn');
 
-  tokenToggle?.addEventListener('click', () =>
-    toggleToken('patch-token-toggle', 'patch-token-container'),
-  );
+  document
+    .getElementById('patch-token-toggle')
+    ?.addEventListener('click', () =>
+      toggleTokenVisibility('patch-token-toggle', 'patch-token'),
+    );
 
   copyBtn?.addEventListener('click', () =>
     copyWithFeedback('patch-copy-btn', state.patch.content),
