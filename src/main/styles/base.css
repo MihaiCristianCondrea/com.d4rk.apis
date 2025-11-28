@@ -108,7 +108,6 @@ optgroup {
   word-wrap: normal;
   direction: ltr;
   font-feature-settings: 'liga';
-  -webkit-font-feature-settings: 'liga'; /*FIXME: Property '-webkit-font-feature-settings' is allowed only in following rules: @font-face*/
   -webkit-font-smoothing: antialiased;
 }
 

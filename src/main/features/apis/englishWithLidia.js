@@ -319,7 +319,11 @@
         try {
             const response = await fetch(trimmed, { cache: 'no-store' });
             if (!response.ok) {
-                throw new Error(`Request failed: ${response.status}`); // FIXME: 'throw' of exception caught locally
+                utils.setValidationStatus(statusElement, {
+                    status: 'error',
+                    message: `Request failed: ${response.status}`
+                });
+                return;
             }
             const text = await response.text();
             const formatted = utils.prettifyJsonString(text);
@@ -896,26 +900,31 @@
             const token = validateGithubToken(githubToken?.value || '');
             const repoValue = utils.trimString(githubRepo?.value || '');
             if (!repoValue) {
-                throw new Error('Provide a repository in owner/name format.'); // FIXME: 'throw' of exception caught locally
+                setGithubStatus({ status: 'error', message: 'Provide a repository in owner/name format.' });
+                return;
             }
             const branch = utils.trimString(githubBranch?.value || '');
             if (!branch) {
-                throw new Error('Provide a branch name.'); // FIXME: 'throw' of exception caught locally
+                setGithubStatus({ status: 'error', message: 'Provide a branch name.' });
+                return;
             }
             const message = utils.trimString(githubMessage?.value || '');
             if (!message) {
-                throw new Error('Provide a commit message.'); // FIXME: 'throw' of exception caught locally
+                setGithubStatus({ status: 'error', message: 'Provide a commit message.' });
+                return;
             }
             const targetKey = githubTarget?.value || 'home-debug';
             const target = GITHUB_TARGETS[targetKey];
             if (!target) {
-                throw new Error('Select a payload target.'); // FIXME: 'throw' of exception caught locally
+                setGithubStatus({ status: 'error', message: 'Select a payload target.' });
+                return;
             }
             const previewKey = target.previewKey;
             const previewString = previewKey === 'home' ? workspace.homePreview : workspace.lessonPreview;
             const previewResult = previewKey === 'home' ? workspace.homeResult : workspace.lessonResult;
             if (!previewResult.success || !previewString) {
-                throw new Error('Resolve preview validation issues before publishing.'); // FIXME: 'throw' of exception caught locally
+                setGithubStatus({ status: 'error', message: 'Resolve preview validation issues before publishing.' });
+                return;
             }
             let path = target.path;
             if (!path && target.prefix) {
