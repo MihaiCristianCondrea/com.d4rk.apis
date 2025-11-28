@@ -1,19 +1,20 @@
-<div class="gh-shell">
-  <section class="gh-section">
-    <div class="gh-header">
-      <p class="gh-muted">GitHub Tools</p>
+<div class="gh-tools-page">
+  <section class="gh-tools-section">
+    <header class="gh-tools-header">
+      <p class="gh-eyebrow">GitHub Tools</p>
       <h1>Favorites</h1>
-      <p>Quick access to saved repositories for Repo Mapper and Release Stats.</p>
-    </div>
+      <p class="gh-subtext">Quick access to saved repositories for Repo Mapper and Release Stats.</p>
+    </header>
 
-    <div id="favorites-grid" class="gh-grid two"></div>
-    <div id="favorites-empty" class="gh-empty-state" hidden>
+    <div id="favorites-grid" class="gh-favorites-grid"></div>
+
+    <div id="favorites-empty" class="gh-empty" hidden>
       <div class="gh-empty-icon">
-        <span class="material-symbols-outlined">star</span>
+        <span class="material-symbols-outlined">star_border</span>
       </div>
-      <div class="gh-stack" style="gap:0.25rem;">
-        <h3 class="gh-bold">No favorites yet</h3>
-        <p class="gh-muted">Star repositories from the tools to see them here.</p>
+      <div class="gh-empty-copy">
+        <h3>No favorites yet</h3>
+        <p>Star repositories from the tools to see them here.</p>
       </div>
     </div>
   </section>

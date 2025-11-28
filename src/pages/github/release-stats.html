@@ -1,120 +1,109 @@
-<div class="gh-shell">
-  <section class="gh-section">
-    <div class="gh-header">
-      <p class="gh-muted">GitHub Tools</p>
+<div class="gh-tools-page">
+  <section class="gh-tools-section">
+    <header class="gh-tools-header">
+      <p class="gh-eyebrow">GitHub Tools</p>
       <h1>Release Stats</h1>
-      <p>Analyze downloads and assets for repository releases.</p>
-    </div>
+      <p class="gh-subtext">Analyze downloads and assets for repository releases.</p>
+    </header>
 
-    <form id="releases-form" class="gh-stack" autocomplete="off">
-      <div class="gh-input-group">
-        <div class="gh-field">
-          <input
-            id="releases-url"
-            type="url"
-            placeholder=" "
-            list="releases-datalist"
-            required
-            autocomplete="off"
-          />
-          <label for="releases-url">Repository URL (https://github.com/owner/repo)</label>
+    <div class="gh-card">
+      <form id="releases-form" class="gh-form" autocomplete="off">
+        <div class="gh-floating-row">
+          <div class="gh-floating-field">
+            <input
+              id="releases-url"
+              type="url"
+              class="gh-floating-input"
+              placeholder=" "
+              list="releases-datalist"
+              required
+              autocomplete="off"
+            />
+            <label for="releases-url">Repository URL</label>
+            <span class="gh-underline"></span>
+          </div>
+          <button type="button" id="releases-fav-btn" class="gh-icon-button" hidden>
+            <span class="material-symbols-outlined">star</span>
+          </button>
         </div>
-        <div class="gh-row space-between">
-          <div class="gh-row">
-            <button type="button" id="releases-fav-btn" class="gh-pill-button" hidden>
-              <span class="material-symbols-outlined">star</span>
-              <span class="favorite-label">Favorite</span>
+
+        <div class="gh-control-row">
+          <button type="button" id="releases-token-reveal" class="gh-chip-button">
+            <span class="material-symbols-outlined">settings</span>
+            <span class="favorite-label">Token settings</span>
+          </button>
+        </div>
+
+        <div class="gh-collapsible" id="releases-token-wrapper" hidden>
+          <div class="gh-floating-field">
+            <input
+              id="releases-token"
+              type="password"
+              class="gh-floating-input"
+              placeholder=" "
+              autocomplete="off"
+            />
+            <label for="releases-token">Personal Access Token (optional)</label>
+            <span class="gh-underline"></span>
+          </div>
+          <div class="gh-inline-actions">
+            <button type="button" id="releases-token-toggle" class="gh-chip-button ghost">
+              <span class="material-symbols-outlined">visibility</span>
+              <span>Show token</span>
             </button>
           </div>
         </div>
-      </div>
 
-      <div class="gh-row space-between wrap">
-        <button type="button" id="releases-token-reveal" class="gh-pill-button">
-          <span class="material-symbols-outlined">settings</span>
-          <span class="favorite-label">Token settings</span>
-        </button>
-        <div class="gh-badge-row" id="releases-quick-favs"></div>
-      </div>
-
-      <div class="gh-input-group gh-collapsible" id="releases-token-wrapper" hidden>
-        <div class="gh-token" id="releases-token-container">
-          <input
-            id="releases-token"
-            type="password"
-            placeholder=" "
-            autocomplete="off"
-          />
-          <label for="releases-token">Personal Access Token (optional)</label>
-          <button type="button" id="releases-token-toggle" class="gh-pill-button">
-            <span class="material-symbols-outlined">visibility</span>
-            <span>Show token</span>
-          </button>
-        </div>
-      </div>
-
-      <div class="gh-row space-between wrap">
-        <div class="gh-actions align-right">
-          <button type="submit" id="releases-submit" class="gh-button">
+        <div class="gh-actions end">
+          <button type="submit" id="releases-submit" class="gh-primary-button">
             <span class="material-symbols-outlined">analytics</span>
             <span>Analyze</span>
           </button>
         </div>
-      </div>
-    </form>
+      </form>
+    </div>
 
     <div id="releases-error" class="gh-error" hidden>
       <span class="material-symbols-outlined">error</span>
       <span data-error-text>Unable to analyze releases.</span>
     </div>
 
-    <div id="releases-result" class="gh-result" hidden>
-      <div class="gh-stat-grid">
-        <div class="gh-stat-card">
-          <span class="gh-stat-title">
-            <span class="material-symbols-outlined">download</span> Total downloads
-          </span>
-          <span id="rel-total-downloads" class="gh-bold">0</span>
+    <div id="releases-result" class="gh-result-grid" hidden>
+      <div class="gh-result-card">
+        <div class="gh-result-heading">
+          <p class="gh-subtext">Selected release</p>
+          <h3 id="rel-detail-name" class="gh-title">—</h3>
+          <div class="gh-badge-row">
+            <span id="rel-detail-tag" class="gh-badge">tag</span>
+            <span id="rel-detail-date" class="gh-badge">date</span>
+          </div>
         </div>
-        <div class="gh-stat-card">
-          <span class="gh-stat-title">
-            <span class="material-symbols-outlined">inventory_2</span> Releases
-          </span>
-          <span id="rel-count" class="gh-bold">0 Found</span>
+        <div class="gh-stat-block">
+          <span class="gh-subtext">Downloads</span>
+          <span id="rel-detail-downloads" class="gh-stat-value">0</span>
+        </div>
+        <div class="gh-stack">
+          <p class="gh-subtext">Assets</p>
+          <div id="rel-assets-list" class="gh-assets"></div>
         </div>
       </div>
 
-      <div class="gh-grid two">
-        <div class="gh-stack">
-          <div class="gh-row space-between">
-            <h3 class="gh-bold">Releases</h3>
+      <div class="gh-result-card">
+        <div class="gh-overview">
+          <div>
+            <p class="gh-subtext">Total project downloads</p>
+            <h3 id="rel-total-downloads" class="gh-title">0</h3>
           </div>
-          <div id="rel-list" class="gh-list"></div>
+          <div class="gh-icon-spot">
+            <span class="material-symbols-outlined">download</span>
+          </div>
         </div>
-
-        <div class="gh-stack">
-          <div class="gh-row space-between">
-            <div>
-              <p class="gh-muted">Selected release</p>
-              <h3 id="rel-detail-name" class="gh-bold">—</h3>
-            </div>
-            <div class="gh-row">
-              <span id="rel-detail-tag" class="gh-badge">tag</span>
-              <span id="rel-detail-date" class="gh-badge">date</span>
-            </div>
+        <div class="gh-overview-list">
+          <div class="gh-overview-header">
+            <p class="gh-subtext">All releases</p>
+            <p id="rel-count" class="gh-subtext">0 Found</p>
           </div>
-          <div class="gh-stat-card">
-            <span class="gh-stat-title">
-              <span class="material-symbols-outlined">download</span> Downloads
-            </span>
-            <span id="rel-detail-downloads" class="gh-bold">0</span>
-          </div>
-          <div class="gh-stack">
-            <div class="gh-row space-between">
-              <h4 class="gh-bold">Assets</h4>
-            </div>
-            <div id="rel-assets-list" class="gh-grid"></div>
-          </div>
+          <div id="rel-list" class="gh-release-list"></div>
         </div>
       </div>
     </div>

@@ -436,7 +436,6 @@ export function initRepoMapper() {
   const foldersEl = document.getElementById('mapper-stats-folders');
   const filesEl = document.getElementById('mapper-stats-files');
   const copyBtn = document.getElementById('mapper-copy-btn');
-  const copyFooterBtn = document.getElementById('mapper-copy-btn-footer');
   const asciiBtn = document.getElementById('btn-format-ascii');
   const pathsBtn = document.getElementById('btn-format-paths');
   const submitBtn = document.getElementById('mapper-submit');
@@ -482,7 +481,6 @@ export function initRepoMapper() {
   const copyAction = (targetId) => () =>
     void copyWithFeedback(targetId, codeEl?.textContent || '');
   copyBtn?.addEventListener('click', copyAction('mapper-copy-btn'));
-  copyFooterBtn?.addEventListener('click', copyAction('mapper-copy-btn-footer'));
 
   form.addEventListener('submit', async (event) => {
     event.preventDefault();
@@ -729,4 +727,55 @@ export function initGithubFavorites() {
   loadFavorites();
   hydrateDatalists();
   renderFavoritesGrid();
+}
+
+export async function runMapper(url, token = '', format = 'ascii') {
+  const parsed = parseGithubUrl(url || '');
+  if (!parsed) {
+    throw new Error('Invalid GitHub URL');
+  }
+
+  state.mapper.format = format === 'paths' ? 'paths' : 'ascii';
+  const { tree, truncated } = await fetchRepositoryTree(parsed, token);
+  state.mapper.rawPaths = tree || [];
+
+  const stats = { files: 0, folders: 0 };
+  const captureStats = ({ files, folders }) => {
+    stats.files = files;
+    stats.folders = folders;
+  };
+
+  const output =
+    state.mapper.format === 'paths'
+      ? generatePathList(state.mapper.rawPaths, captureStats)
+      : generateAsciiTree(state.mapper.rawPaths, captureStats);
+
+  return { output, truncated: !!truncated, stats };
+}
+
+export async function runReleaseStats(url, token = '') {
+  const parsed = parseGithubUrl(url || '');
+  if (!parsed) {
+    throw new Error('Invalid GitHub URL');
+  }
+
+  const data = await fetchReleaseStats(parsed, token);
+  state.releases.data = data;
+  state.releases.parsedRepo = parsed;
+  state.releases.selectedIndex = 0;
+  return data;
+}
+
+export async function runPatch(url, token = '') {
+  const parsed = parseGithubCommitUrl(url || '');
+  if (!parsed) {
+    throw new Error('Invalid Commit URL');
+  }
+
+  const content = await fetchCommitPatch(parsed, token);
+  const filename = `${parsed.repo}-${parsed.commitSha.slice(0, 7)}.patch`;
+  state.patch.content = content;
+  state.patch.filename = filename;
+  state.patch.parsedRepo = parsed;
+  return { content, filename };
 }

@@ -166,3 +166,50 @@
   }
 }
 
+
+/* --- Floating field pattern for GitHub tools --- */
+.gh-floating-field,
+.floating-field {
+  position: relative;
+}
+
+.floating-input,
+.gh-floating-input {
+  width: 100%;
+  border: none;
+  background: transparent;
+  font: inherit;
+  color: var(--app-text-color, #e6e1e5);
+  padding: 1rem 0.75rem 0.35rem;
+}
+
+.floating-input:focus,
+.gh-floating-input:focus {
+  outline: none;
+}
+
+.floating-field label,
+.gh-floating-field label {
+  position: absolute;
+  top: 1.05rem;
+  left: 0.85rem;
+  font-size: 0.95rem;
+  color: var(--app-secondary-text-color, #cac4d0);
+  transition: transform 160ms ease, font-size 160ms ease, top 160ms ease, color 160ms ease;
+  pointer-events: none;
+}
+
+.floating-input:placeholder-shown + label,
+.gh-floating-input:placeholder-shown + label {
+  top: 1.1rem;
+  font-size: 0.95rem;
+}
+
+.floating-input:focus + label,
+.gh-floating-input:focus + label,
+.floating-input:not(:placeholder-shown) + label,
+.gh-floating-input:not(:placeholder-shown) + label {
+  top: 0.45rem;
+  font-size: 0.75rem;
+  color: var(--app-text-color, #e6e1e5);
+}
