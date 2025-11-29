@@ -143,14 +143,39 @@ export class NavigationDrawerController {
 
   focusFirstNavItem() {
     if (!this.navDrawer) {
-      return;
+      return false;
     }
     const firstNavItem = this.navDrawer.querySelector('md-list-item[href]');
     if (firstNavItem && typeof firstNavItem.focus === 'function') {
       firstNavItem.focus();
+      return true;
+    }
+    if (this.closeDrawerButton?.focus) {
+      this.closeDrawerButton.focus();
+      return true;
+    }
+    return false;
+  }
+
+  redirectFocusAwayFromInertAreas() {
+    if (!this.inertTargets.length || typeof document === 'undefined') {
       return;
     }
-    this.closeDrawerButton?.focus?.();
+
+    const activeElement = document.activeElement;
+    if (!activeElement) {
+      return;
+    }
+
+    const isInsideInert = this.inertTargets.some(
+      (element) => element && element.contains(activeElement),
+    );
+    if (isInsideInert) {
+      const moved = this.focusFirstNavItem();
+      if (!moved && typeof this.navDrawer?.focus === 'function') {
+        this.navDrawer.focus();
+      }
+    }
   }
 
   syncDrawerState(isOpened) {
@@ -184,6 +209,9 @@ export class NavigationDrawerController {
 
   updateModalAccessibilityState(isDrawerOpen) {
     const inert = Boolean(isDrawerOpen);
+    if (inert) {
+      this.redirectFocusAwayFromInertAreas();
+    }
     this.drawerOverlay?.toggleAttribute('aria-hidden', !inert);
 
     this.inertTargets.forEach((element) => {

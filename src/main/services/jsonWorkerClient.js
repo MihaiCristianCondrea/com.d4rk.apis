@@ -1,5 +1,7 @@
+import { resolveAssetUrl } from '@/app/config.js';
+
 const DEFAULT_TIMEOUT = 7000;
-const DEFAULT_WORKER_PATH = './workers/jsonWorker.js';
+const DEFAULT_WORKER_PATH = resolveAssetUrl('workers/jsonWorker.js');
 const FALLBACK_STRINGIFY_SPACING = 2;
 
 const LOCAL_ACTIONS = {
@@ -32,31 +34,40 @@ export class JsonWorkerClient {
     this.workerUrl = workerUrl;
     this.worker = null;
     this.pending = new Map();
+    this.workerUnavailable = false;
   }
 
   ensureWorker() {
-    if (this.worker || typeof Worker === 'undefined') {
+    if (this.workerUnavailable || this.worker || typeof Worker === 'undefined') {
       return;
     }
-    this.worker = new Worker(this.workerUrl, { type: 'module' });
-    this.worker.onmessage = (event) => {
-      const { requestId, status, result, message } = event.data || {};
-      const entry = this.pending.get(requestId);
-      if (!entry) {
-        return;
-      }
-      const { resolve, reject, timeoutId } = entry;
-      clearTimeout(timeoutId);
-      this.pending.delete(requestId);
-      if (status === 'success') {
-        resolve(result);
-      } else {
-        reject(new Error(message || 'Worker error'));
-      }
-    };
-    this.worker.onerror = (error) => {
-      this.flushPending(error.error || error.message || 'Worker failure');
-    };
+    try {
+      const workerSource = new URL(
+        this.workerUrl,
+        typeof window !== 'undefined' ? window.location.origin : undefined,
+      ).toString();
+      this.worker = new Worker(workerSource, { type: 'module' });
+      this.worker.onmessage = (event) => {
+        const { requestId, status, result, message } = event.data || {};
+        const entry = this.pending.get(requestId);
+        if (!entry) {
+          return;
+        }
+        const { resolve, reject, timeoutId } = entry;
+        clearTimeout(timeoutId);
+        this.pending.delete(requestId);
+        if (status === 'success') {
+          resolve(result);
+        } else {
+          reject(new Error(message || 'Worker error'));
+        }
+      };
+      this.worker.onerror = (error) => {
+        this.handleWorkerFailure(error.error || error.message || 'Worker failure');
+      };
+    } catch (error) {
+      this.handleWorkerFailure(error);
+    }
   }
 
   flushPending(message) {
@@ -67,12 +78,31 @@ export class JsonWorkerClient {
     this.pending.clear();
   }
 
+  handleWorkerFailure(reason) {
+    this.workerUnavailable = true;
+    if (this.worker && typeof this.worker.terminate === 'function') {
+      this.worker.terminate();
+    }
+    this.worker = null;
+    const message =
+      typeof reason === 'string'
+        ? reason
+        : reason?.message || 'Worker unavailable';
+    console.warn('JsonWorkerClient: Worker unavailable, using local execution.', message);
+    if (this.pending.size > 0) {
+      this.flushPending(message);
+    }
+  }
+
   request(action, payload, { timeout = DEFAULT_TIMEOUT } = {}) {
-    if (typeof Worker === 'undefined') {
+    if (this.workerUnavailable || typeof Worker === 'undefined') {
       return this.executeLocally(action, payload);
     }
 
     this.ensureWorker();
+    if (this.workerUnavailable || !this.worker) {
+      return this.executeLocally(action, payload);
+    }
     const requestId = crypto.randomUUID();
     return new Promise((resolve, reject) => {
       const timeoutId = setTimeout(() => {

@@ -1,0 +1,31 @@
+/* --- Outlined Buttons --- */
+/* stylelint-disable selector-type-no-unknown */
+md-outlined-button {
+  padding-inline-start: var(--app-button-inline-padding);
+  padding-inline-end: var(--app-button-inline-padding);
+  --md-outlined-button-leading-space: var(--app-button-inline-padding);
+  --md-outlined-button-trailing-space: var(--app-button-inline-padding);
+  --md-outlined-button-with-leading-icon-leading-space: var(
+    --app-button-icon-leading-padding
+  );
+  --md-outlined-button-with-leading-icon-trailing-space: var(
+    --app-button-icon-trailing-padding
+  );
+  --md-outlined-button-with-trailing-icon-leading-space: var(
+    --app-button-icon-trailing-padding
+  );
+  --md-outlined-button-with-trailing-icon-trailing-space: var(
+    --app-button-icon-leading-padding
+  );
+}
+
+md-outlined-button[has-icon]:not([trailing-icon]) {
+  padding-inline-start: var(--app-button-icon-leading-padding);
+  padding-inline-end: var(--app-button-icon-trailing-padding);
+}
+
+md-outlined-button[has-icon][trailing-icon] {
+  padding-inline-start: var(--app-button-icon-trailing-padding);
+  padding-inline-end: var(--app-button-icon-leading-padding);
+}
+/* stylelint-enable selector-type-no-unknown */

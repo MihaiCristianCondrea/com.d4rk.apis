@@ -7,16 +7,6 @@
   flex-wrap: wrap;
 }
 
-.faq-icon-buttons {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-}
-
-.faq-icon-button {
-  min-width: 0;
-}
-
 .faq-icon-preview {
   width: 52px;
   height: 52px;
@@ -602,117 +592,6 @@
   gap: 0.75rem;
 }
 
-.builder-card {
-  background-color: var(--md-sys-color-surface-container);
-  border-radius: 20px;
-  padding: 1.25rem;
-  box-shadow: 0 12px 32px rgba(15, 20, 25, 0.12);
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-.builder-card.filtered-out {
-  display: none;
-}
-
-.builder-card-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 1rem;
-}
-
-.builder-card-header h3 {
-  margin: 0;
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: var(--app-text-color);
-}
-
-.builder-card-fields {
-  display: grid;
-  gap: 1rem;
-}
-
-.builder-card-grid {
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-}
-
-.builder-card-grid md-filled-text-field, 
-.builder-card-grid md-outlined-text-field, 
-.builder-card-grid md-outlined-select, 
-.builder-card-grid md-assist-chip-set, 
-.builder-card-grid .builder-subsection {
-  width: 100%;
-  box-sizing: border-box;
-}
-
-.builder-card-fields.builder-card-list {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-}
-
-.builder-card-fields.builder-card-list .builder-field-group {
-  width: 100%;
-}
-
-.builder-card-fields.builder-card-list .builder-field-group--list {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  padding: 0 0 1.25rem;
-  border-bottom: 1px solid color-mix(in srgb, var(--md-sys-color-outline-variant) 55%, transparent);
-}
-
-.builder-card-fields.builder-card-list .builder-field-group--list:last-of-type {
-  border-bottom: none;
-  padding-bottom: 0;
-}
-
-.builder-field-group--screenshots {
-  gap: 0.75rem;
-}
-
-.builder-field-group {
-  display: grid;
-  gap: 0.5rem;
-  align-items: start;
-  width: 100%;
-}
-
-.builder-field-group > :where(
-    md-filled-text-field, 
-    md-outlined-text-field, 
-    md-outlined-select, 
-    md-filled-select, 
-    md-assist-chip-set 
-  ) {
-  width: 100%;
-  box-sizing: border-box;
-  max-width: 100%;
-  min-width: 0;
-}
-
-.builder-field-group :where(
-    md-outlined-text-field,
-    md-outlined-select,
-    md-filled-text-field,
-    md-filled-select
-  ) {
-  --builder-field-container-shape: var(--app-field-shape);
-  --md-outlined-text-field-container-shape: var(--builder-field-container-shape);
-  --md-outlined-select-container-shape: var(--builder-field-container-shape);
-  --md-outlined-field-container-shape: var(--builder-field-container-shape);
-  --md-filled-text-field-container-shape: var(--builder-field-container-shape);
-  --md-filled-select-container-shape: var(--builder-field-container-shape);
-  --md-filled-field-container-shape: var(--builder-field-container-shape);
-}
-
 .builder-hint-chip-set {
   display: flex;
   gap: 0.35rem;
@@ -1026,64 +905,6 @@
   transform: translate(-50%, 6px);
 }
 
-.screenshot-list {
-  display: grid;
-  grid-auto-flow: column;
-  grid-auto-columns: clamp(220px, 75vw, 320px);
-  gap: var(--screenshot-inline-gap);
-  padding-block: 0.5rem;
-  padding-inline: 0;
-  overflow-x: auto;
-  overflow-y: hidden;
-  scroll-snap-type: x mandatory;
-  scroll-padding-inline: var(--screenshot-scroll-padding);
-  scroll-snap-stop: always;
-  overscroll-behavior-inline: contain;
-  -webkit-overflow-scrolling: touch;
-  direction: ltr;
-}
-
-.screenshot-list:focus-visible {
-  outline: 2px solid var(--md-sys-color-primary);
-  outline-offset: 4px;
-}
-
-@media (min-width: 768px) {
-  .screenshot-list {
-    grid-auto-columns: clamp(240px, 45vw, 340px);
-  }
-}
-
-@media (min-width: 1280px) {
-  .screenshot-list {
-    grid-auto-columns: clamp(260px, 32vw, 380px);
-  }
-}
-
-.screenshot-item {
-  background: var(--md-sys-color-surface-container-low);
-  border-radius: 20px;
-  padding: 1rem;
-  display: grid;
-  gap: 0.75rem;
-  transition: box-shadow 140ms ease, transform 140ms ease;
-  border: 1px solid transparent;
-  min-width: 0;
-  scroll-snap-align: start center;
-  scroll-snap-stop: always;
-}
-
-.screenshot-item.dragging {
-  opacity: 0.7;
-  transform: scale(0.98);
-  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.18);
-}
-
-.screenshot-item.is-active,
-.screenshot-item:focus-within {
-  border-color: color-mix(in srgb, var(--md-sys-color-primary) 45%, transparent);
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.16);
-}
 
 .screenshot-item.drag-over {
   border-color: var(--md-sys-color-primary);
