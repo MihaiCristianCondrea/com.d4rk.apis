@@ -35,16 +35,7 @@
   color: var(--app-text-color);
 }
 
-.focus-checklist {
-  max-height: 220px;
-  overflow: auto;
-}
-
-.focus-checklist md-list-item {
-  --md-list-item-container-shape: 14px;
-}
-
-.hero-visual dotlottie-player { 
+.hero-visual dotlottie-player {
   width: 320px;
   max-width: 100%;
   height: auto;

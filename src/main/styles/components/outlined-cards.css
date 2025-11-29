@@ -1,0 +1,29 @@
+/* --- Outlined Cards --- */
+.outlined-card {
+  background: var(--app-outlined-card-bg-color);
+  border: 1px solid var(--app-border-color);
+  border-radius: 18px;
+  padding: 1.1rem 1.25rem;
+  box-shadow: 0 10px 26px rgba(15, 20, 25, 0.08);
+  display: grid;
+  gap: 0.75rem;
+}
+
+.outlined-card__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.outlined-card__title {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--app-text-color);
+}
+
+.outlined-card__content {
+  display: grid;
+  gap: 0.5rem;
+}

@@ -5,6 +5,7 @@
         return;
     }
 
+    const APP_CONFIG = global.__APP_CONFIG__ || {};
     const DEFAULT_FILENAME = 'faq_questions.json';
     const SITE_BASE = (() => {
         try {
@@ -15,21 +16,36 @@
             return '';
         }
     })();
+    const BASE_ASSET_URL = (() => {
+        const configured = utils.trimString(APP_CONFIG.assetBaseUrl);
+        if (configured) {
+            return configured.replace(/\/?$/, '/');
+        }
+        return SITE_BASE ? `${SITE_BASE}/` : '';
+    })();
     const withBase = (path) => {
         try {
-            return new URL(path.replace(/^\//, ''), `${SITE_BASE}/`).toString();
+            const baseUrl = BASE_ASSET_URL || `${SITE_BASE}/`;
+            return new URL(path.replace(/^\//, ''), baseUrl).toString();
         } catch (error) {
             console.warn('FaqBuilder: Unable to resolve URL for', path, error);
             return path;
         }
     };
-    const DEFAULT_DATA_URL = withBase('api/faq/v1/debug/en/questions/general/general.json');
-    const DEFAULT_CATALOG_URL = withBase('api/faq/v1/debug/catalog.json');
+    const DEFAULT_DATA_URL = withBase(
+        APP_CONFIG.defaultFaqDataUrl || 'api/faq/v1/debug/en/questions/general/general.json'
+    );
+    const DEFAULT_CATALOG_URL = withBase(
+        APP_CONFIG.defaultFaqCatalogUrl || 'api/faq/v1/debug/catalog.json'
+    );
     const DEFAULT_PRODUCT_KEY = 'api_workspace';
-    const ICON_CATALOG_ENDPOINTS = [
-        'https://fonts.google.com/metadata/icons?incomplete=1&icon.set=Material+Symbols',
-        'https://raw.githubusercontent.com/google/material-design-icons/master/variablefont/MaterialSymbolsOutlined%5BFILL%2CGRAD%2Copsz%2Cwght%5D.codepoints'
-    ];
+    const ICON_CATALOG_ENDPOINTS = Array.isArray(APP_CONFIG.iconCatalogSources)
+        && APP_CONFIG.iconCatalogSources.length
+        ? APP_CONFIG.iconCatalogSources
+        : [
+            withBase('data/material-symbols.json'),
+            'https://raw.githubusercontent.com/google/material-design-icons/master/variablefont/MaterialSymbolsOutlined%5BFILL%2CGRAD%2Copsz%2Cwght%5D.codepoints'
+        ];
     const ICON_PICKER_MAX_RENDER = 400;
 
     const CATEGORY_GROUPS = [

@@ -153,16 +153,6 @@
   }
 }
 
-.builder-remote-card {
-  margin-top: 1.5rem;
-}
-
-.builder-remote-card .card-body {
-  display: flex;
-  flex-direction: column;
-  gap: 1.25rem;
-}
-
 .builder-github-note {
   display: grid;
   gap: 0.5rem;

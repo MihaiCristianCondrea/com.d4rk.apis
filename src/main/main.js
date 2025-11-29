@@ -6,6 +6,7 @@ import './styles/pages.css';
 import './styles/fonts.css';
 import './styles/layered-panels.css';
 import './styles/viewport-optimizations.css';
+import './app/config.js';
 
 import resumeStylesAsset from './styles/resume.css?url';
 import resumePrintStylesAsset from './styles/print.css?url';

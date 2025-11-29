@@ -138,37 +138,6 @@ md-top-app-bar .material-symbols-outlined {
   text-align: left;
 }
 
-.theme-button-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 12px;
-}
-
-.theme-button-container md-icon-button { 
-  --md-icon-button-icon-color: var(--app-text-color);
-  --md-icon-button-icon-size: 20px;
-  border-radius: 50%;
-  background-color: transparent;
-  transition: background-color var(--app-motion-duration-short, 200ms)
-    var(--app-motion-ease-standard, cubic-bezier(0, 0, 0.2, 1));
-}
-
-.theme-button-container md-icon-button.selected { 
-  background-color: var(--app-theme-button-selected-bg);
-  --md-icon-button-icon-color: var(--md-sys-color-primary);
-}
-
-.theme-button-container md-icon-button .material-symbols-outlined { 
-  font-family:
-    'Material Symbols SemiBold', 'Material Symbols Outlined', sans-serif;
-}
-
-.theme-button-container md-icon-button.selected .material-symbols-outlined { 
-  font-family:
-    'Material Symbols Filled', 'Material Symbols Outlined', sans-serif;
-}
-
 .drawer-footer .drawer-legal-links {
   display: flex;
   justify-content: center;

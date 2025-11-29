@@ -1,0 +1,91 @@
+/* --- Buttons --- */
+:root {
+  --app-button-inline-padding: 24px;
+  --app-button-icon-leading-padding: 16px;
+  --app-button-icon-trailing-padding: 24px;
+}
+
+/* Allow styling custom Material elements throughout this file. */
+/* stylelint-disable selector-type-no-unknown */
+:where(
+    md-filled-button,
+    md-filled-tonal-button,
+    md-text-button,
+    md-elevated-button
+  ) {
+  padding-inline-start: var(--app-button-inline-padding);
+  padding-inline-end: var(--app-button-inline-padding);
+}
+
+:where(
+    md-filled-button,
+    md-filled-tonal-button,
+    md-text-button,
+    md-elevated-button
+  )[has-icon]:not([trailing-icon]) {
+  padding-inline-start: var(--app-button-icon-leading-padding);
+  padding-inline-end: var(--app-button-icon-trailing-padding);
+}
+
+:where(
+    md-filled-button,
+    md-filled-tonal-button,
+    md-text-button,
+    md-elevated-button
+  )[has-icon][trailing-icon] {
+  padding-inline-start: var(--app-button-icon-trailing-padding);
+  padding-inline-end: var(--app-button-icon-leading-padding);
+}
+
+md-filled-button {
+  --md-filled-button-leading-space: var(--app-button-inline-padding);
+  --md-filled-button-trailing-space: var(--app-button-inline-padding);
+  --md-filled-button-with-leading-icon-leading-space: var(--app-button-icon-leading-padding);
+  --md-filled-button-with-leading-icon-trailing-space: var(--app-button-icon-trailing-padding);
+  --md-filled-button-with-trailing-icon-leading-space: var(--app-button-icon-trailing-padding);
+  --md-filled-button-with-trailing-icon-trailing-space: var(--app-button-icon-leading-padding);
+}
+
+md-filled-tonal-button {
+  --md-filled-tonal-button-leading-space: var(--app-button-inline-padding);
+  --md-filled-tonal-button-trailing-space: var(--app-button-inline-padding);
+  --md-filled-tonal-button-with-leading-icon-leading-space: var(--app-button-icon-leading-padding);
+  --md-filled-tonal-button-with-leading-icon-trailing-space: var(--app-button-icon-trailing-padding);
+  --md-filled-tonal-button-with-trailing-icon-leading-space: var(--app-button-icon-trailing-padding);
+  --md-filled-tonal-button-with-trailing-icon-trailing-space: var(--app-button-icon-leading-padding);
+}
+
+md-elevated-button {
+  --md-elevated-button-leading-space: var(--app-button-inline-padding);
+  --md-elevated-button-trailing-space: var(--app-button-inline-padding);
+  --md-elevated-button-with-leading-icon-leading-space: var(--app-button-icon-leading-padding);
+  --md-elevated-button-with-leading-icon-trailing-space: var(--app-button-icon-trailing-padding);
+  --md-elevated-button-with-trailing-icon-leading-space: var(--app-button-icon-trailing-padding);
+  --md-elevated-button-with-trailing-icon-trailing-space: var(--app-button-icon-leading-padding);
+}
+
+md-text-button {
+  padding-inline-start: calc(var(--app-button-inline-padding) - 8px);
+  padding-inline-end: calc(var(--app-button-inline-padding) - 8px);
+  --md-text-button-leading-space: calc(var(--app-button-inline-padding) - 8px);
+  --md-text-button-trailing-space: calc(var(--app-button-inline-padding) - 8px);
+  --md-text-button-with-leading-icon-leading-space: var(--app-button-icon-leading-padding);
+  --md-text-button-with-leading-icon-trailing-space: calc(
+    var(--app-button-icon-trailing-padding) - 8px
+  );
+  --md-text-button-with-trailing-icon-leading-space: calc(
+    var(--app-button-icon-trailing-padding) - 8px
+  );
+  --md-text-button-with-trailing-icon-trailing-space: var(--app-button-icon-leading-padding);
+}
+
+md-text-button[has-icon]:not([trailing-icon]) {
+  padding-inline-start: var(--app-button-icon-leading-padding);
+  padding-inline-end: calc(var(--app-button-icon-trailing-padding) - 8px);
+}
+
+md-text-button[has-icon][trailing-icon] {
+  padding-inline-start: calc(var(--app-button-icon-trailing-padding) - 8px);
+  padding-inline-end: var(--app-button-icon-leading-padding);
+}
+/* stylelint-enable selector-type-no-unknown */
