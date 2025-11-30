@@ -1189,8 +1189,48 @@
         }
         syncFiltersFromChipSet();
 
+        function captureScreenshotScrollPositions() {
+            const positions = new Map();
+            if (!entriesContainer) {
+                return positions;
+            }
+            entriesContainer.querySelectorAll('.screenshot-list').forEach((list) => {
+                const key = list.id || `app-${list.dataset.appIndex || ''}`;
+                positions.set(key, {
+                    left: list.scrollLeft,
+                    top: list.scrollTop
+                });
+            });
+            return positions;
+        }
+
+        function restoreScreenshotScrollPositions(positions) {
+            if (!positions || !positions.size || !entriesContainer) {
+                return;
+            }
+            const restore = () => {
+                entriesContainer.querySelectorAll('.screenshot-list').forEach((list) => {
+                    const key = list.id || `app-${list.dataset.appIndex || ''}`;
+                    const scrollPosition = positions.get(key);
+                    if (scrollPosition) {
+                        list.scrollTo({
+                            left: scrollPosition.left,
+                            top: scrollPosition.top,
+                            behavior: 'auto'
+                        });
+                    }
+                });
+            };
+            if (typeof window !== 'undefined' && typeof window.requestAnimationFrame === 'function') {
+                window.requestAnimationFrame(restore);
+            } else {
+                restore();
+            }
+        }
+
         function render() {
             if (!entriesContainer) return;
+            const screenshotScrollState = captureScreenshotScrollPositions();
             utils.clearElement(entriesContainer);
             if (!state.apps.length) {
                 state.apps.push(createEmptyApp());
@@ -1201,6 +1241,7 @@
             state.apps.forEach((app, index) => {
                 entriesContainer.appendChild(createAppCard(app, index));
             });
+            restoreScreenshotScrollPositions(screenshotScrollState);
             requestPreviewUpdate();
             applyCardFilters();
         }
