@@ -23,8 +23,9 @@
             <label for="mapper-url">Repository URL</label>
             <span class="gh-underline"></span>
           </div>
-          <button type="button" id="mapper-fav-btn" class="gh-icon-button" hidden>
+          <button type="button" id="mapper-fav-btn" class="gh-pill-button" hidden aria-pressed="false">
             <span class="material-symbols-outlined">star</span>
+            <span class="favorite-label">Favorite</span>
           </button>
         </div>
 
@@ -36,6 +37,7 @@
             aria-controls="mapper-token-wrapper"
             aria-expanded="false"
           >
+            <span class="material-symbols-outlined" aria-hidden="true">settings</span>
             <span class="favorite-label">Token settings</span>
           </button>
           <div class="gh-segmented" id="mapper-format">

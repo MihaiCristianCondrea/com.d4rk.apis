@@ -253,14 +253,22 @@
 }
 
 .gh-chip-button.token-toggle {
+  border: none;
   background: transparent;
-  border-color: transparent;
   color: var(--gh-text);
-  padding-inline: 0.35rem;
+  padding: 0.35rem 0.5rem;
+  font-weight: 700;
+  gap: 0.35rem;
 }
 
-.gh-chip-button.token-toggle:hover {
-  text-decoration: underline;
+.gh-chip-button.token-toggle .material-symbols-outlined {
+  font-size: 20px;
+}
+
+.gh-chip-button.token-toggle:hover,
+.gh-chip-button.token-toggle.is-open {
+  background: color-mix(in srgb, var(--md-sys-color-primary) 12%, transparent);
+  text-decoration: none;
   transform: none;
   box-shadow: none;
 }
@@ -285,8 +293,9 @@
 }
 
 .gh-ghost-button.compact {
-  padding: 0.4rem 0.65rem;
+  padding: 0.35rem 0.7rem;
   gap: 0.35rem;
+  font-size: 0.95rem;
 }
 
 .gh-icon-button.is-active .material-symbols-outlined,
