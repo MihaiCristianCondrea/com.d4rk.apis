@@ -38,6 +38,31 @@ const storageTargets =
     : [];
 let memoryFavorites = [];
 
+function readCookieFavorites() {
+  if (typeof document === 'undefined') return null;
+  try {
+    const cookie = document.cookie
+      .split('; ')
+      .find((entry) => entry.startsWith(`${STORAGE_KEY}=`));
+    if (!cookie) return null;
+    const value = decodeURIComponent(cookie.split('=')[1] || '');
+    return JSON.parse(value);
+  } catch (error) {
+    return null;
+  }
+}
+
+function writeCookieFavorites(favorites) {
+  if (typeof document === 'undefined') return;
+  try {
+    document.cookie = `${STORAGE_KEY}=${encodeURIComponent(
+      JSON.stringify(favorites),
+    )}; path=/; max-age=${60 * 60 * 24 * 365}; SameSite=Lax`;
+  } catch (error) {
+    // ignore cookie failures
+  }
+}
+
 function readStoredFavorites() {
   for (const store of storageTargets) {
     try {
@@ -48,6 +73,10 @@ function readStoredFavorites() {
     } catch (error) {
       // Ignore store failures and try the next target.
     }
+  }
+  const cookie = readCookieFavorites();
+  if (cookie) {
+    return cookie;
   }
   return memoryFavorites;
 }
@@ -69,6 +98,7 @@ function saveFavorites(next) {
       // ignore storage failures
     }
   });
+  writeCookieFavorites(state.favorites);
   hydrateDatalists();
   renderFavoritesGrid();
   renderQuickFavorites();

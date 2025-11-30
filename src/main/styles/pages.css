@@ -96,6 +96,10 @@
   margin: 0;
   color: var(--app-secondary-text-color);
   max-width: 52ch;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex: 1 1 auto;
 }
 
 .tool-card-grid {

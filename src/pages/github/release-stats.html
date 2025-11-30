@@ -28,8 +28,13 @@
         </div>
 
         <div class="gh-control-row">
-          <button type="button" id="releases-token-reveal" class="gh-chip-button">
-            <span class="material-symbols-outlined">settings</span>
+          <button
+            type="button"
+            id="releases-token-reveal"
+            class="gh-chip-button token-toggle"
+            aria-controls="releases-token-wrapper"
+            aria-expanded="false"
+          >
             <span class="favorite-label">Token settings</span>
           </button>
         </div>
@@ -83,7 +88,7 @@
           <span id="rel-detail-downloads" class="gh-stat-value">0</span>
         </div>
         <div class="gh-action-row align-end">
-          <button type="button" id="releases-download" class="gh-ghost-button">
+          <button type="button" id="releases-download" class="gh-ghost-button compact">
             <span class="material-symbols-outlined">download</span>
             <span>Open release</span>
           </button>
@@ -99,9 +104,6 @@
           <div>
             <p class="gh-subtext">Total project downloads</p>
             <h3 id="rel-total-downloads" class="gh-title">0</h3>
-          </div>
-          <div class="gh-icon-spot">
-            <span class="material-symbols-outlined">download</span>
           </div>
         </div>
         <div class="gh-overview-list">
