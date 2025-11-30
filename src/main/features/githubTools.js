@@ -38,6 +38,28 @@ const storageTargets =
     : [];
 let memoryFavorites = [];
 
+function sanitizeFavorites(entries) {
+  if (!Array.isArray(entries)) return [];
+  const seen = new Set();
+
+  return entries.reduce((list, item) => {
+    if (!item || typeof item.owner !== 'string' || typeof item.repo !== 'string') {
+      return list;
+    }
+
+    const owner = item.owner.trim();
+    const repo = item.repo.trim();
+    if (!owner || !repo) return list;
+
+    const key = `${owner.toLowerCase()}/${repo.toLowerCase()}`;
+    if (seen.has(key)) return list;
+
+    list.push({ owner, repo, timestamp: typeof item.timestamp === 'number' ? item.timestamp : Date.now() });
+    seen.add(key);
+    return list;
+  }, []);
+}
+
 function readCookieFavorites() {
   if (typeof document === 'undefined') return null;
   try {
@@ -63,33 +85,56 @@ function writeCookieFavorites(favorites) {
   }
 }
 
+function clearStoredFavorites() {
+  storageTargets.forEach((store) => {
+    try {
+      store.removeItem(STORAGE_KEY);
+    } catch (error) {
+      // ignore storage failures
+    }
+  });
+
+  if (typeof document !== 'undefined') {
+    document.cookie = `${STORAGE_KEY}=; path=/; max-age=0; SameSite=Lax`;
+  }
+}
+
 function readStoredFavorites() {
   for (const store of storageTargets) {
     try {
       const stored = store.getItem(STORAGE_KEY);
       if (stored) {
-        return JSON.parse(stored);
+          const parsed = sanitizeFavorites(JSON.parse(stored));
+          if (parsed.length) {
+            return parsed;
+          }
+          store.removeItem(STORAGE_KEY);
       }
     } catch (error) {
       // Ignore store failures and try the next target.
     }
   }
-  const cookie = readCookieFavorites();
-  if (cookie) {
+  const cookieRaw = readCookieFavorites();
+  const cookie = sanitizeFavorites(cookieRaw);
+  if (cookie.length) {
     return cookie;
+  }
+  if (cookieRaw) {
+    clearStoredFavorites();
   }
   return memoryFavorites;
 }
 
 function loadFavorites() {
-  const parsed = readStoredFavorites();
+  const parsed = sanitizeFavorites(readStoredFavorites());
   state.favorites = Array.isArray(parsed) ? parsed : [];
   memoryFavorites = [...state.favorites];
   return [...state.favorites];
 }
 
 function saveFavorites(next) {
-  state.favorites = [...next];
+  const sanitized = sanitizeFavorites(next);
+  state.favorites = [...sanitized];
   memoryFavorites = [...state.favorites];
   storageTargets.forEach((store) => {
     try {
@@ -113,17 +158,21 @@ function isFavorite(owner, repo) {
 }
 
 function toggleFavorite(owner, repo) {
+  const ownerName = typeof owner === 'string' ? owner.trim() : '';
+  const repoName = typeof repo === 'string' ? repo.trim() : '';
+  if (!ownerName || !repoName) return;
+
   const next = loadFavorites();
   const existingIndex = next.findIndex(
     (fav) =>
-      fav.owner.toLowerCase() === owner.toLowerCase() &&
-      fav.repo.toLowerCase() === repo.toLowerCase(),
+      fav.owner.toLowerCase() === ownerName.toLowerCase() &&
+      fav.repo.toLowerCase() === repoName.toLowerCase(),
   );
 
   if (existingIndex >= 0) {
     next.splice(existingIndex, 1);
   } else {
-    next.unshift({ owner, repo, timestamp: Date.now() });
+    next.unshift({ owner: ownerName, repo: repoName, timestamp: Date.now() });
   }
 
   saveFavorites(next);
@@ -162,6 +211,7 @@ function setFavoriteButtonState(button, parsedRepo) {
 
   const active = isFavorite(parsedRepo.owner, parsedRepo.repo);
   button.classList.toggle('is-active', active);
+  button.setAttribute('aria-pressed', active ? 'true' : 'false');
 
   if (icon) {
     icon.textContent = active ? 'star' : 'star_border';
@@ -246,6 +296,7 @@ function bindCollapsibleToggle(buttonId, wrapperId, labels = {}) {
   const setOpen = (isOpen) => {
     wrapper.hidden = !isOpen;
     wrapper.classList.toggle('is-open', isOpen);
+    button.classList.toggle('is-open', isOpen);
     button.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
     if (label) label.textContent = isOpen ? openLabel : closedLabel;
     if (icon) icon.textContent = isOpen ? openIcon : closedIcon;
@@ -272,10 +323,12 @@ function renderFavoritesGrid() {
 
   if (!favorites.length) {
     emptyState.removeAttribute('hidden');
+    grid.setAttribute('hidden', 'hidden');
     return;
   }
 
   emptyState.setAttribute('hidden', 'hidden');
+  grid.removeAttribute('hidden');
 
   favorites.forEach((fav) => {
     const card = document.createElement('article');

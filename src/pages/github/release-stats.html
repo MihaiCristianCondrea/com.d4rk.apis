@@ -22,8 +22,9 @@
             <label for="releases-url">Repository URL</label>
             <span class="gh-underline"></span>
           </div>
-          <button type="button" id="releases-fav-btn" class="gh-icon-button" hidden>
+          <button type="button" id="releases-fav-btn" class="gh-pill-button" hidden aria-pressed="false">
             <span class="material-symbols-outlined">star</span>
+            <span class="favorite-label">Favorite</span>
           </button>
         </div>
 
@@ -35,6 +36,7 @@
             aria-controls="releases-token-wrapper"
             aria-expanded="false"
           >
+            <span class="material-symbols-outlined" aria-hidden="true">settings</span>
             <span class="favorite-label">Token settings</span>
           </button>
         </div>
@@ -87,7 +89,7 @@
           <span class="gh-subtext">Downloads</span>
           <span id="rel-detail-downloads" class="gh-stat-value">0</span>
         </div>
-        <div class="gh-action-row align-end">
+        <div class="gh-action-row">
           <button type="button" id="releases-download" class="gh-ghost-button compact">
             <span class="material-symbols-outlined">download</span>
             <span>Open release</span>
