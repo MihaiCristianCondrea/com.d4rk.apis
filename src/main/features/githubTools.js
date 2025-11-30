@@ -293,24 +293,26 @@ function bindCollapsibleToggle(buttonId, wrapperId, labels = {}) {
   const closedLabel = labels.closedLabel || 'Token settings';
   const { openIcon = 'expand_less', closedIcon = 'settings' } = labels;
 
-  const setOpen = (isOpen) => {
-    wrapper.hidden = !isOpen;
-    wrapper.classList.toggle('is-open', isOpen);
-    button.classList.toggle('is-open', isOpen);
-    button.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
-    if (label) label.textContent = isOpen ? openLabel : closedLabel;
-    if (icon) icon.textContent = isOpen ? openIcon : closedIcon;
-    if (isOpen) {
+  const isOpen = () => !wrapper.hasAttribute('hidden');
+
+  const setOpen = (value) => {
+    wrapper.toggleAttribute('hidden', !value);
+    wrapper.classList.toggle('is-open', value);
+    button.classList.toggle('is-open', value);
+    button.setAttribute('aria-expanded', value ? 'true' : 'false');
+    if (label) label.textContent = value ? openLabel : closedLabel;
+    if (icon) icon.textContent = value ? openIcon : closedIcon;
+    if (value) {
       const focusable = wrapper.querySelector('input, button, select, textarea');
       focusable?.focus({ preventScroll: true });
     }
   };
 
   button.addEventListener('click', () => {
-    setOpen(wrapper.hidden);
+    setOpen(!isOpen());
   });
 
-  setOpen(!wrapper.hidden);
+  setOpen(isOpen());
 }
 
 function renderFavoritesGrid() {
@@ -532,6 +534,9 @@ function handlePatchFavoriteInput() {
   setFavoriteButtonState(favButton, parsed);
 }
 
+// Ensure favorites state is hydrated on load so toggles reflect saved entries immediately.
+loadFavorites();
+
 export function initRepoMapper() {
   const form = document.getElementById('mapper-form');
   if (!form) return;
@@ -661,11 +666,6 @@ export function initReleaseStats() {
   const detailDateEl = document.getElementById('rel-detail-date');
   const detailDownloadsEl = document.getElementById('rel-detail-downloads');
   const submitBtn = document.getElementById('releases-submit');
-  const downloadBtn = document.getElementById('releases-download');
-
-  if (downloadBtn) {
-    downloadBtn.disabled = true;
-  }
 
   initReleaseFavorites('releases-url', 'releases-fav-btn');
 
@@ -689,17 +689,31 @@ export function initReleaseStats() {
     const maxAsset = Math.max(...assets.map((asset) => asset.downloads));
     assetsEl.innerHTML = assets
       .map(
-        (asset) => `
-          <div class="gh-stack">
-            <div class="gh-row space-between">
-              <span class="gh-bold">${asset.name}</span>
-              <span class="gh-muted">${asset.downloads.toLocaleString()}</span>
+        (asset) => {
+          const percent = maxAsset > 0 ? (asset.downloads / maxAsset) * 100 : 0;
+          const canDownload = Boolean(asset.browserDownloadUrl);
+          const assetLabel = canDownload
+            ? `<a class="gh-asset-link" href="${asset.browserDownloadUrl}" target="_blank" rel="noopener">
+                <span class="material-symbols-outlined" aria-hidden="true">download</span>
+                <span>${asset.name}</span>
+              </a>`
+            : `<span class="gh-asset-link is-disabled">
+                <span class="material-symbols-outlined" aria-hidden="true">inventory_2</span>
+                <span>${asset.name}</span>
+              </span>`;
+
+          return `
+            <div class="gh-stack">
+              <div class="gh-asset-row">
+                ${assetLabel}
+                <span class="gh-muted" aria-label="Downloads for ${asset.name}">${asset.downloads.toLocaleString()}</span>
+              </div>
+              <div class="gh-release-bar">
+                <span style="width:${percent}%;"></span>
+              </div>
             </div>
-            <div class="gh-release-bar">
-              <span style="width:${maxAsset > 0 ? (asset.downloads / maxAsset) * 100 : 0}%;"></span>
-            </div>
-          </div>
-        `,
+          `;
+        },
       )
       .join('');
   };
@@ -714,14 +728,6 @@ export function initReleaseStats() {
     if (detailTagEl) detailTagEl.textContent = active.tagName;
     if (detailDateEl) detailDateEl.textContent = new Date(active.publishedAt).toLocaleDateString();
     if (detailDownloadsEl) detailDownloadsEl.textContent = active.totalDownloads.toLocaleString();
-
-    if (downloadBtn) {
-      const downloadAsset = active.assets.find((asset) => asset.browserDownloadUrl);
-      const label = downloadAsset ? 'Download asset' : 'Open release';
-      downloadBtn.disabled = !downloadAsset && !active.url;
-      const buttonLabel = downloadBtn.querySelector('span:last-child');
-      if (buttonLabel) buttonLabel.textContent = label;
-    }
 
     renderAssets(active.assets);
   };
@@ -765,18 +771,6 @@ export function initReleaseStats() {
     renderReleaseDetails();
     renderReleaseList();
   };
-
-  downloadBtn?.addEventListener('click', () => {
-    if (!state.releases.data) return;
-    const active = state.releases.data.releases[state.releases.selectedIndex];
-    if (!active) return;
-
-    const assetUrl = active.assets.find((asset) => asset.browserDownloadUrl)?.browserDownloadUrl;
-    const targetUrl = assetUrl || active.url;
-    if (targetUrl) {
-      window.open(targetUrl, '_blank', 'noopener');
-    }
-  });
 
   form.addEventListener('submit', async (event) => {
     event.preventDefault();
