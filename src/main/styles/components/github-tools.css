@@ -101,6 +101,13 @@
   gap: 0.75rem;
 }
 
+.gh-field-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0.75rem;
+  align-items: flex-start;
+}
+
 .gh-floating-field {
   --floating-surface: var(--gh-card-strong);
   --floating-border: color-mix(in srgb, var(--gh-outline) 55%, transparent);
@@ -117,6 +124,50 @@
 .gh-floating-field:focus-within {
   background: color-mix(in srgb, var(--gh-card-strong) 85%, var(--gh-card));
   box-shadow: 0 10px 30px -22px rgba(0, 0, 0, 0.65);
+}
+
+.gh-field-row md-outlined-text-field {
+  width: 100%;
+  --md-outlined-text-field-container-shape: var(--gh-radius-sm);
+  --md-outlined-text-field-container-color: color-mix(
+    in srgb,
+    var(--gh-card-strong) 82%,
+    transparent
+  );
+  --md-outlined-text-field-outline-color: color-mix(
+    in srgb,
+    var(--gh-outline) 55%,
+    transparent
+  );
+  --md-outlined-text-field-focus-outline-color: var(--md-sys-color-primary);
+  --md-outlined-text-field-hover-outline-color: color-mix(
+    in srgb,
+    var(--md-sys-color-primary) 35%,
+    var(--gh-outline)
+  );
+  --md-outlined-text-field-input-text-color: var(--gh-text);
+  --md-outlined-text-field-supporting-text-color: var(--gh-subtext);
+  --md-outlined-text-field-label-text-color: var(--gh-subtext);
+  --md-outlined-text-field-caret-color: var(--md-sys-color-primary);
+}
+
+.gh-token-dropdown {
+  display: grid;
+  gap: 0.75rem;
+  flex: 1;
+}
+
+.gh-token-dropdown .token-toggle {
+  justify-content: space-between;
+  width: 100%;
+}
+
+.gh-token-dropdown .token-toggle .chevron {
+  transition: transform var(--gh-transition);
+}
+
+.gh-token-dropdown .token-toggle.is-open .chevron {
+  transform: rotate(180deg);
 }
 
 .gh-floating-input {
@@ -243,6 +294,10 @@
   border-radius: var(--gh-radius-md);
   padding: 0.75rem;
   box-shadow: 0 12px 36px -26px rgba(0, 0, 0, 0.65);
+  overflow: hidden;
+  opacity: 1;
+  transition: height var(--gh-transition), opacity var(--gh-transition),
+    padding var(--gh-transition);
 }
 
 .gh-inline-actions {
@@ -789,6 +844,10 @@
   .gh-floating-row {
     flex-direction: column;
     align-items: stretch;
+  }
+
+  .gh-field-row {
+    grid-template-columns: 1fr;
   }
 
   .gh-control-row {

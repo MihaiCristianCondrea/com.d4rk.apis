@@ -73,11 +73,24 @@ export function rafThrottle(callback) {
 export const parseGithubUrl = (inputUrl) => {
   try {
     const cleanUrl = inputUrl.trim().replace(/\/$/, ''); // Remove trailing slash
-    const pattern = /github\.com\/([^/]+)\/([^/]+)/i;
-    const match = cleanUrl.toLowerCase().match(pattern);
-    if (match) {
-      return { owner: match[1], repo: match[2] };
+    const normalized = cleanUrl
+      .replace(/^https?:\/\//i, '')
+      .replace(/^www\./i, '')
+      .replace(/^github\.com\//i, 'github.com/');
+
+    const urlPattern = /github\.com\/([^/]+)\/([^/?#]+)/i;
+    const slugPattern = /^([^/\s]+)\/([^/\s]+)$/i;
+
+    const urlMatch = normalized.toLowerCase().match(urlPattern);
+    if (urlMatch) {
+      return { owner: urlMatch[1], repo: urlMatch[2] };
     }
+
+    const slugMatch = normalized.match(slugPattern);
+    if (slugMatch) {
+      return { owner: slugMatch[1], repo: slugMatch[2] };
+    }
+
     return null;
   } catch (e) {
     return null;
@@ -87,13 +100,25 @@ export const parseGithubUrl = (inputUrl) => {
 export const parseGithubCommitUrl = (inputUrl) => {
   try {
     const cleanUrl = inputUrl.trim().replace(/\/$/, '');
-    // Matches .../owner/repo/commit/sha
+    const normalized = cleanUrl
+      .replace(/^https?:\/\//i, '')
+      .replace(/^www\./i, '')
+      .replace(/^github\.com\//i, 'github.com/');
+
+    // Matches .../owner/repo/commit/sha or owner/repo/commit/sha
     const pattern = /github\.com\/([^/]+)\/([^/]+)\/commit\/([a-fA-F0-9]+)/i;
-    const lowered = cleanUrl.toLowerCase();
-    const match = lowered.match(pattern);
-    if (match) {
-      return { owner: match[1], repo: match[2], commitSha: match[3] };
+    const slugPattern = /^([^/]+)\/([^/]+)\/commit\/([a-fA-F0-9]+)/i;
+
+    const urlMatch = normalized.toLowerCase().match(pattern);
+    if (urlMatch) {
+      return { owner: urlMatch[1], repo: urlMatch[2], commitSha: urlMatch[3] };
     }
+
+    const slugMatch = normalized.toLowerCase().match(slugPattern);
+    if (slugMatch) {
+      return { owner: slugMatch[1], repo: slugMatch[2], commitSha: slugMatch[3] };
+    }
+
     return null;
   } catch (e) {
     return null;

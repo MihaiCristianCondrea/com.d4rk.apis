@@ -127,6 +127,48 @@
         const featuredCountEl = document.getElementById('faqFeaturedCount');
         const iconCoverageEl = document.getElementById('faqIconCoverage');
         const workspacePulseEl = document.getElementById('faqWorkspacePulse');
+        const modeButtons = document.querySelectorAll('[data-faq-mode]');
+        const modeStatus = document.getElementById('faqModeStatus');
+
+        const modeTargets = {
+            catalog: catalogSelectRoot?.closest('.builder-remote-card') || catalogSelectRoot,
+            new: entriesContainer,
+            edit: document.getElementById('faqRemoteImport')
+        };
+
+        const modeMessages = {
+            catalog: 'Update catalog.json and refresh products before exporting.',
+            new: 'Use the workspace toolbar to add questions and preview HTML answers.',
+            edit: 'Fetch an existing JSON or import a file to keep iterating.'
+        };
+
+        const setMode = (mode) => {
+            const selectedMode = modeMessages[mode] ? mode : 'catalog';
+            modeButtons.forEach((button) => {
+                const isActive = button.dataset.faqMode === selectedMode;
+                button.classList.toggle('is-active', isActive);
+                button.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+            });
+
+            if (modeStatus) {
+                modeStatus.textContent = modeMessages[selectedMode];
+            }
+
+            const target = modeTargets[selectedMode];
+            if (target) {
+                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                target.classList.add('faq-mode-pulse');
+                setTimeout(() => target.classList.remove('faq-mode-pulse'), 650);
+            }
+        };
+
+        modeButtons.forEach((button) => {
+            button.addEventListener('click', () => setMode(button.dataset.faqMode));
+        });
+
+        if (modeButtons.length) {
+            setMode(modeButtons[0].dataset.faqMode);
+        }
 
         const state = {
             entries: [createEmptyEntry()]
