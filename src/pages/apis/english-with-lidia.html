@@ -1,516 +1,171 @@
 <div id="englishWorkspace" class="page-section app-shell-panel active">
   <header class="page-header">
     <h1>English with Lidia API workspace</h1>
-    <p>
-      Build the home feed and lesson experiences that power English with Lidia.
-      Follow the same curation workflow as the App Toolkit workspace to keep
-      data quality high across both payload types.
-    </p>
+    <p>Build the home feed and lesson experiences that power English with Lidia. Follow the same curation workflow as the App Toolkit workspace to keep data quality high across both payload types.</p>
   </header>
-
   <section class="workspace-dashboard" aria-label="Workspace overview">
     <div class="workspace-insight-grid">
-      <md-elevated-card class="insight-card">
-        <div class="insight-card-header">
-          <span class="material-symbols-outlined insight-icon">view_agenda</span>
-          <span class="insight-label">Home cards tracked</span>
-        </div>
-        <p class="insight-value" id="englishHomeCardCount">0</p>
-        <p class="insight-helper">Live count mirrors the JSON preview.</p>
-      </md-elevated-card>
-      <md-elevated-card class="insight-card">
-        <div class="insight-card-header">
-          <span class="material-symbols-outlined insight-icon">task_alt</span>
-          <span class="insight-label">Release ready</span>
-        </div>
-        <p class="insight-value" id="englishReleaseReadyCount">0</p>
-        <p class="insight-helper">Entries that meet required metadata.</p>
-      </md-elevated-card>
-      <md-elevated-card class="insight-card">
-        <div class="insight-card-header">
-          <span class="material-symbols-outlined insight-icon">list_alt</span>
-          <span class="insight-label">Blocks per lesson</span>
-        </div>
-        <p class="insight-value" id="englishLessonBlockAverage">0</p>
-        <p class="insight-helper">Average content blocks for the active lesson.</p>
-      </md-elevated-card>
+      <div class="insight-card-header">
+        <span class="material-symbols-outlined insight-icon">view_agenda</span> <span class="insight-label">Home cards tracked</span>
+      </div>
+      <p class="insight-value" id="englishHomeCardCount">0</p>
+      <p class="insight-helper">Live count mirrors the JSON preview.</p>
+      <div class="insight-card-header">
+        <span class="material-symbols-outlined insight-icon">task_alt</span> <span class="insight-label">Release ready</span>
+      </div>
+      <p class="insight-value" id="englishReleaseReadyCount">0</p>
+      <p class="insight-helper">Entries that meet required metadata.</p>
+      <div class="insight-card-header">
+        <span class="material-symbols-outlined insight-icon">list_alt</span> <span class="insight-label">Blocks per lesson</span>
+      </div>
+      <p class="insight-value" id="englishLessonBlockAverage">0</p>
+      <p class="insight-helper">Average content blocks for the active lesson.</p>
     </div>
-
     <div class="workspace-secondary-grid">
-      <md-filled-card class="workspace-plan">
-        <div class="card-body">
-          <div class="plan-header">
-            <h2>Today's pipeline</h2>
-            <span class="plan-updated"
-              >Updated <span id="englishLastEdited">awaiting changes</span></span
-            >
+      <div class="card-body">
+        <div class="plan-header">
+          <h2>Today's pipeline</h2><span class="plan-updated">Updated <span id="englishLastEdited">awaiting changes</span></span>
+        </div>
+        <ol class="plan-list">
+          <li><span class="plan-step-title">Refine home feed metadata</span> <span class="plan-step-meta" id="englishReviewCount">0 cards needing attention</span></li>
+          <li><span class="plan-step-title">Validate lesson structure</span> <span class="plan-step-meta">Ensure title, metadata, and blocks render cleanly.</span></li>
+          <li><span class="plan-step-title">Publish to GitHub</span> <span class="plan-step-meta">Ship debug and release payloads together.</span></li>
+        </ol>
+        <div class="plan-actions">
+          <span class="material-symbols-outlined">timelapse</span> Start focus session <span class="material-symbols-outlined">edit_note</span> Capture notes <span class="note-indicator" aria-hidden="true">●</span>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="release-header">
+          <h2>Release readiness</h2>
+          <p id="englishWorkspacePulse">Review entries to unlock insights.</p>
+        </div>
+        <div class="release-progress" role="img" aria-label="Release readiness progress">
+          <div class="release-progress-track">
+            <div class="release-progress-bar" id="englishReleaseProgress"></div>
           </div>
-          <ol class="plan-list">
-            <li>
-              <span class="plan-step-title">Refine home feed metadata</span>
-              <span class="plan-step-meta" id="englishReviewCount"
-                >0 cards needing attention</span
-              >
-            </li>
-            <li>
-              <span class="plan-step-title">Validate lesson structure</span>
-              <span class="plan-step-meta"
-                >Ensure title, metadata, and blocks render cleanly.</span
-              >
-            </li>
-            <li>
-              <span class="plan-step-title">Publish to GitHub</span>
-              <span class="plan-step-meta"
-                >Ship debug and release payloads together.</span
-              >
-            </li>
-          </ol>
-          <div class="plan-actions">
-            <md-filled-tonal-button id="englishFocusButton" has-icon>
-              <md-icon slot="icon"
-                ><span class="material-symbols-outlined">timelapse</span></md-icon
-              >
-              Start focus session
-            </md-filled-tonal-button>
-            <md-text-button id="englishNotesButton" has-icon>
-              <md-icon slot="icon"
-                ><span class="material-symbols-outlined">edit_note</span></md-icon
-              >
-              Capture notes
-              <span class="note-indicator" aria-hidden="true">●</span>
-            </md-text-button>
+          <div class="release-progress-legend">
+            <span>Home</span> <span>Lesson</span>
           </div>
         </div>
-      </md-filled-card>
-
-      <md-filled-card class="workspace-release">
-        <div class="card-body">
-          <div class="release-header">
-            <h2>Release readiness</h2>
-            <p id="englishWorkspacePulse">Review entries to unlock insights.</p>
-          </div>
-          <div
-            class="release-progress"
-            role="img"
-            aria-label="Release readiness progress"
-          >
-            <div class="release-progress-track">
-              <div
-                class="release-progress-bar"
-                id="englishReleaseProgress"
-              ></div>
-            </div>
-            <div class="release-progress-legend">
-              <span>Home</span>
-              <span>Lesson</span>
-            </div>
-          </div>
-          <ul class="release-tips">
-            <li>Populate lesson_id, lesson_type, and thumbnails for each card.</li>
-            <li>Provide at least four content blocks per lesson to keep pacing.</li>
-          </ul>
-        </div>
-      </md-filled-card>
+        <ul class="release-tips">
+          <li>Populate lesson_id, lesson_type, and thumbnails for each card.</li>
+          <li>Provide at least four content blocks per lesson to keep pacing.</li>
+        </ul>
+      </div>
     </div>
   </section>
-
-  <md-filled-card class="guidance-card">
-    <div class="card-body">
-      <h2>Before you start</h2>
-      <ul>
-        <li>
-          Home cards should include <strong>lesson_id</strong>,
-          <strong>lesson_type</strong>, and a <strong>lesson_title</strong> for
-          quick scanning.
-        </li>
-        <li>
-          Use <code>content_player</code>, <code>image</code>, and ad block types
-          to match the production schema for lessons.
-        </li>
-        <li>
-          Publish-ready JSON now lives under
-          <code>api/english_with_lidia/v1/[debug|release]/ro/[home|lessons]/</code>.
-          Keep both channels aligned before opening a PR.
-        </li>
-        <li>
-          Fetch the latest payloads before editing to compare changes in the diff
-          sheet and verify the GitHub Pages output.
-        </li>
-      </ul>
+  <div class="card-body">
+    <h2>Before you start</h2>
+    <ul>
+      <li>Home cards should include <strong>lesson_id</strong>, <strong>lesson_type</strong>, and a <strong>lesson_title</strong> for quick scanning.</li>
+      <li>Use <code>content_player</code>, <code>image</code>, and ad block types to match the production schema for lessons.</li>
+      <li>Publish-ready JSON now lives under <code>api/english_with_lidia/v1/[debug|release]/ro/[home|lessons]/</code>. Keep both channels aligned before opening a PR.</li>
+      <li>Fetch the latest payloads before editing to compare changes in the diff sheet and verify the GitHub Pages output.</li>
+    </ul>
+  </div>
+  <div class="card-body">
+    <div class="builder-remote-header">
+      <div>
+        <h2>Fetch existing JSON</h2>
+        <p>Pull the latest home or lesson payload before editing entries.</p>
+      </div>Home Lesson
     </div>
-  </md-filled-card>
-
-  <md-filled-card class="builder-remote-card" id="englishRemoteImport">
-    <div class="card-body">
-      <div class="builder-remote-header">
-        <div>
-          <h2>Fetch existing JSON</h2>
-          <p>Pull the latest home or lesson payload before editing entries.</p>
-        </div>
-        <md-segmented-button-set
-          id="englishFetchTarget"
-          aria-label="Payload to fetch"
-        >
-          <md-segmented-button value="home" selected>Home</md-segmented-button>
-          <md-segmented-button value="lesson">Lesson</md-segmented-button>
-        </md-segmented-button-set>
-      </div>
-      <div class="builder-remote-controls">
-        <md-outlined-text-field
-          id="englishFetchInput"
-          type="url"
-          label="JSON URL"
-          placeholder="./api/english_with_lidia/v1/debug/ro/home/api_get_lessons.json"
-          supporting-text="Paste a direct link to the current payload"
-          spellcheck="false"
-        >
-          <md-icon slot="leading-icon"
-            ><span class="material-symbols-outlined">link</span></md-icon
-          >
-        </md-outlined-text-field>
-        <md-filled-tonal-button id="englishFetchButton" has-icon>
-          <md-icon slot="icon"
-            ><span class="material-symbols-outlined">cloud_download</span></md-icon
-          >
-          Fetch from URL
-        </md-filled-tonal-button>
-      </div>
-      <div class="builder-remote-presets" aria-label="Quick fetch shortcuts">
-        <span class="builder-remote-presets-label">Quick links</span>
-        <md-text-button
-          has-icon
-          data-english-fetch-target="home"
-          data-english-fetch-preset="./api/english_with_lidia/v1/debug/ro/home/api_get_lessons.json"
-        >
-          <md-icon slot="icon"
-            ><span class="material-symbols-outlined">download</span></md-icon
-          >
-          Home · Debug
-        </md-text-button>
-        <md-text-button
-          has-icon
-          data-english-fetch-target="home"
-          data-english-fetch-preset="./api/english_with_lidia/v1/release/ro/home/api_get_lessons.json"
-        >
-          <md-icon slot="icon"
-            ><span class="material-symbols-outlined">download</span></md-icon
-          >
-          Home · Release
-        </md-text-button>
-        <md-text-button
-          has-icon
-          data-english-fetch-target="lesson"
-          data-english-fetch-preset="./api/english_with_lidia/v1/debug/ro/lessons/api_get_tell_me_about_yourself.json"
-        >
-          <md-icon slot="icon"
-            ><span class="material-symbols-outlined">download</span></md-icon
-          >
-          Lesson · Debug
-        </md-text-button>
-        <md-text-button
-          has-icon
-          data-english-fetch-target="lesson"
-          data-english-fetch-preset="./api/english_with_lidia/v1/release/ro/lessons/api_get_to_be_or_not_to_be.json"
-        >
-          <md-icon slot="icon"
-            ><span class="material-symbols-outlined">download</span></md-icon
-          >
-          Lesson · Release
-        </md-text-button>
+    <div class="builder-remote-controls">
+      <span class="material-symbols-outlined">link</span> <span class="material-symbols-outlined">cloud_download</span> Fetch from URL
+    </div>
+    <div class="builder-remote-presets" aria-label="Quick fetch shortcuts">
+      <span class="builder-remote-presets-label">Quick links</span> <span class="material-symbols-outlined">download</span> Home · Debug <span class="material-symbols-outlined">download</span> Home · Release <span class="material-symbols-outlined">download</span> Lesson · Debug <span class="material-symbols-outlined">download</span> Lesson · Release
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="builder-remote-header">
+      <div>
+        <h2>Publish to GitHub</h2>
+        <p>Use the GitHub Contents API to update payloads once the previews are valid. Tokens are used only for this request and never stored.</p>
       </div>
     </div>
-  </md-filled-card>
-
-  <md-filled-card class="builder-remote-card" id="englishGithubCard">
-    <div class="card-body">
-      <div class="builder-remote-header">
-        <div>
-          <h2>Publish to GitHub</h2>
-          <p>
-            Use the GitHub Contents API to update payloads once the previews are
-            valid. Tokens are used only for this request and never stored.
-          </p>
-        </div>
-      </div>
-      <div class="builder-github-note" role="note">
-        <p>
-          <strong>Create a personal access token</strong> with
-          <em>Repository permissions → Contents: Read &amp; write</em>. Keep the
-          token outside of source control and scope it to this repository.
-        </p>
-      </div>
-      <div class="builder-github-launch">
-        <md-filled-button id="englishGithubWizardButton" has-icon>
-          <md-icon slot="icon"
-            ><span class="material-symbols-outlined">rocket_launch</span></md-icon
-          >
-          Open publish wizard
-        </md-filled-button>
-        <p class="builder-github-helper">
-          Validate the previews first, then follow the guided steps to publish.
-        </p>
-      </div>
+    <div class="builder-github-note" role="note">
+      <p><strong>Create a personal access token</strong> with <em>Repository permissions → Contents: Read & write</em>. Keep the token outside of source control and scope it to this repository.</p>
     </div>
-  </md-filled-card>
-
-  <div class="pager" id="englishPager" data-pager>
+    <div class="builder-github-launch">
+      <span class="material-symbols-outlined">rocket_launch</span> Open publish wizard
+      <p class="builder-github-helper">Validate the previews first, then follow the guided steps to publish.</p>
+    </div>
+  </div>
+  <div class="pager" id="englishPager" data-pager="">
     <div class="pager-tabs" role="tablist">
-      <button
-        type="button"
-        class="pager-tab active"
-        data-page="home"
-        role="tab"
-        aria-selected="true"
-      >
-        Home API
-      </button>
-      <button
-        type="button"
-        class="pager-tab"
-        data-page="lesson"
-        role="tab"
-        aria-selected="false"
-      >
-        Lesson API
-      </button>
+      <button type="button" class="pager-tab active" data-page="home" role="tab" aria-selected="true">Home API</button> <button type="button" class="pager-tab" data-page="lesson" role="tab" aria-selected="false">Lesson API</button>
     </div>
     <div class="pager-pages">
       <section class="pager-page active" data-page="home" role="tabpanel">
-        <md-filled-card class="guidance-card">
-          <div class="card-body">
-            <h2>Home feed essentials</h2>
-            <ul>
-              <li>
-                Cards need <strong>lesson_id</strong>,
-                <strong>lesson_type</strong>, and optionally title, thumbnail,
-                and deep link.
-              </li>
-              <li>
-                Use <code>banner_image_local</code> or
-                <code>row_buttons_local</code> for static UI components and ad
-                identifiers for monetized slots.
-              </li>
-            </ul>
-          </div>
-        </md-filled-card>
-
-        <section
-          class="api-builder"
-          id="englishHomeBuilder"
-          data-builder-type="english-home"
-        >
+        <div class="card-body">
+          <h2>Home feed essentials</h2>
+          <ul>
+            <li>Cards need <strong>lesson_id</strong>, <strong>lesson_type</strong>, and optionally title, thumbnail, and deep link.</li>
+            <li>Use <code>banner_image_local</code> or <code>row_buttons_local</code> for static UI components and ad identifiers for monetized slots.</li>
+          </ul>
+        </div>
+        <section class="api-builder" id="englishHomeBuilder" data-builder-type="english-home">
           <div class="builder-toolbar">
             <div class="builder-toolbar-actions">
-              <md-filled-button id="englishHomeAddCard" has-icon>
-                <md-icon slot="icon"
-                  ><span class="material-symbols-outlined">add</span></md-icon
-                >
-                Add card
-              </md-filled-button>
-              <md-outlined-button id="englishHomeImportButton" has-icon>
-                <md-icon slot="icon"
-                  ><span class="material-symbols-outlined">upload</span></md-icon
-                >
-                Import JSON
-              </md-outlined-button>
-              <input
-                type="file"
-                id="englishHomeImportInput"
-                accept="application/json"
-                hidden
-              />
-              <md-text-button id="englishHomeResetButton" has-icon>
-                <md-icon slot="icon"
-                  ><span class="material-symbols-outlined">refresh</span></md-icon
-                >
-                Clear cards
-              </md-text-button>
+              <span class="material-symbols-outlined">add</span> Add card <span class="material-symbols-outlined">upload</span> Import JSON <input type="file" id="englishHomeImportInput" accept="application/json" hidden=""> <span class="material-symbols-outlined">refresh</span> Clear cards
             </div>
             <div class="builder-toolbar-meta">
               <div class="toolbar-status" role="status" aria-live="polite">
-                <span class="toolbar-status-label">Home status</span>
-                <span
-                  class="toolbar-status-value"
-                  id="englishHomeToolbarPulse"
-                  >Awaiting input</span
-                >
+                <span class="toolbar-status-label">Home status</span> <span class="toolbar-status-value" id="englishHomeToolbarPulse">Awaiting input</span>
               </div>
             </div>
           </div>
-
           <div class="builder-layout builder-columns">
-            <div
-              class="builder-forms"
-              id="englishHomeEntries"
-              aria-live="polite"
-            ></div>
+            <div class="builder-forms" id="englishHomeEntries" aria-live="polite"></div>
             <aside class="builder-preview" aria-label="JSON preview">
               <div class="preview-header">
-                <h2>Preview &amp; export</h2>
+                <h2>Preview & export</h2>
                 <p>Review the generated payload before committing.</p>
               </div>
-              <textarea
-                id="englishHomePreview"
-                class="preview-textarea"
-                readonly
-                spellcheck="false"
-                aria-label="English with Lidia home JSON preview"
-              ></textarea>
-              <div
-                class="preview-validation"
-                id="englishHomeValidation"
-                role="status"
-                aria-live="polite"
-              ></div>
+              <textarea id="englishHomePreview" class="preview-textarea" readonly spellcheck="false" aria-label="English with Lidia home JSON preview"></textarea>
+              <div class="preview-validation" id="englishHomeValidation" role="status" aria-live="polite"></div>
               <div class="preview-actions">
-                <md-filled-tonal-button id="englishHomeCopyButton" has-icon>
-                  <md-icon slot="icon"
-                    ><span class="material-symbols-outlined"
-                      >content_copy</span
-                    ></md-icon
-                  >
-                  Copy JSON
-                </md-filled-tonal-button>
-                <md-outlined-button
-                  id="englishHomeDownloadButton"
-                  has-icon
-                  trailing-icon
-                >
-                  Download
-                  <md-icon slot="icon"
-                    ><span class="material-symbols-outlined"
-                      >download</span
-                    ></md-icon
-                  >
-                </md-outlined-button>
+                <span class="material-symbols-outlined">content_copy</span> Copy JSON Download <span class="material-symbols-outlined">download</span>
               </div>
             </aside>
           </div>
         </section>
       </section>
-
       <section class="pager-page" data-page="lesson" role="tabpanel">
-        <md-filled-card class="guidance-card">
-          <div class="card-body">
-            <h2>Lesson payload structure</h2>
-            <ul>
-              <li>
-                Provide a <strong>lesson_title</strong> and add content blocks in
-                the order they appear in the app.
-              </li>
-              <li>
-                Block types include audio players, headers, rich text, images,
-                and ad placements. Optional fields appear based on the selected
-                type.
-              </li>
-            </ul>
-          </div>
-        </md-filled-card>
-
-        <section
-          class="api-builder"
-          id="englishLessonBuilder"
-          data-builder-type="english-lesson"
-        >
+        <div class="card-body">
+          <h2>Lesson payload structure</h2>
+          <ul>
+            <li>Provide a <strong>lesson_title</strong> and add content blocks in the order they appear in the app.</li>
+            <li>Block types include audio players, headers, rich text, images, and ad placements. Optional fields appear based on the selected type.</li>
+          </ul>
+        </div>
+        <section class="api-builder" id="englishLessonBuilder" data-builder-type="english-lesson">
           <div class="builder-toolbar">
-            <md-outlined-text-field
-              id="englishLessonTitle"
-              label="Lesson title"
-              placeholder="Tell me about yourself"
-              supporting-text="Displayed at the top of the lesson"
-              class="lesson-title-field"
-            ></md-outlined-text-field>
             <div class="toolbar-actions">
-              <md-filled-button id="englishLessonAddBlock" has-icon>
-                <md-icon slot="icon"
-                  ><span class="material-symbols-outlined">add</span></md-icon
-                >
-                Add block
-              </md-filled-button>
-              <md-outlined-button id="englishLessonImportButton" has-icon>
-                <md-icon slot="icon"
-                  ><span class="material-symbols-outlined">upload</span></md-icon
-                >
-                Import JSON
-              </md-outlined-button>
-              <input
-                type="file"
-                id="englishLessonImportInput"
-                accept="application/json"
-                hidden
-              />
-              <md-text-button id="englishLessonResetButton" has-icon>
-                <md-icon slot="icon"
-                  ><span class="material-symbols-outlined"
-                    >refresh</span
-                  ></md-icon
-                >
-                Clear blocks
-              </md-text-button>
+              <span class="material-symbols-outlined">add</span> Add block <span class="material-symbols-outlined">upload</span> Import JSON <input type="file" id="englishLessonImportInput" accept="application/json" hidden=""> <span class="material-symbols-outlined">refresh</span> Clear blocks
             </div>
             <div class="builder-toolbar-meta">
               <div class="toolbar-status" role="status" aria-live="polite">
-                <span class="toolbar-status-label">Lesson status</span>
-                <span
-                  class="toolbar-status-value"
-                  id="englishLessonToolbarPulse"
-                  >Awaiting input</span
-                >
+                <span class="toolbar-status-label">Lesson status</span> <span class="toolbar-status-value" id="englishLessonToolbarPulse">Awaiting input</span>
               </div>
             </div>
           </div>
-
           <div class="builder-layout builder-columns">
             <div class="builder-forms">
-              <div
-                class="builder-field-collection"
-                id="englishLessonMetadata"
-              ></div>
-              <div
-                class="builder-field-collection"
-                id="englishLessonBlocks"
-                aria-live="polite"
-              ></div>
+              <div class="builder-field-collection" id="englishLessonMetadata"></div>
+              <div class="builder-field-collection" id="englishLessonBlocks" aria-live="polite"></div>
             </div>
             <aside class="builder-preview" aria-label="JSON preview">
               <div class="preview-header">
-                <h2>Preview &amp; export</h2>
+                <h2>Preview & export</h2>
                 <p>Blocks render in the exact order defined here.</p>
               </div>
-              <textarea
-                id="englishLessonPreview"
-                class="preview-textarea"
-                readonly
-                spellcheck="false"
-                aria-label="English with Lidia lesson JSON preview"
-              ></textarea>
-              <div
-                class="preview-validation"
-                id="englishLessonValidation"
-                role="status"
-                aria-live="polite"
-              ></div>
+              <textarea id="englishLessonPreview" class="preview-textarea" readonly spellcheck="false" aria-label="English with Lidia lesson JSON preview"></textarea>
+              <div class="preview-validation" id="englishLessonValidation" role="status" aria-live="polite"></div>
               <div class="preview-actions">
-                <md-filled-tonal-button id="englishLessonCopyButton" has-icon>
-                  <md-icon slot="icon"
-                    ><span class="material-symbols-outlined"
-                      >content_copy</span
-                    ></md-icon
-                  >
-                  Copy JSON
-                </md-filled-tonal-button>
-                <md-outlined-button
-                  id="englishLessonDownloadButton"
-                  has-icon
-                  trailing-icon
-                >
-                  Download
-                  <md-icon slot="icon"
-                    ><span class="material-symbols-outlined"
-                      >download</span
-                    ></md-icon
-                  >
-                </md-outlined-button>
+                <span class="material-symbols-outlined">content_copy</span> Copy JSON Download <span class="material-symbols-outlined">download</span>
               </div>
             </aside>
           </div>
@@ -518,132 +173,46 @@
       </section>
     </div>
   </div>
-
-  <md-side-sheet
-    id="englishDiffSheet"
-    class="builder-diff-sheet"
-    aria-label="Workspace diff"
-  >
-    <div slot="headline">Workspace diff</div>
-    <div slot="supporting-text">
-      Compare the current workspace against the last fetched payloads.
+  <div slot="headline">
+    Workspace diff
+  </div>
+  <div slot="supporting-text">
+    Compare the current workspace against the last fetched payloads.
+  </div>
+  <div slot="content" class="diff-sheet-content">
+    <div id="englishDiffContent" class="diff-view diff-view--empty" role="status" aria-live="polite"></div>
+  </div>
+  <div slot="headline">
+    Focus session
+  </div>
+  <div slot="content" class="focus-dialog-content">
+    <div class="focus-dialog-timer" id="englishFocusTimer" aria-live="polite">
+      25:00
     </div>
-    <div slot="content" class="diff-sheet-content">
-      <div
-        id="englishDiffContent"
-        class="diff-view diff-view--empty"
-        role="status"
-        aria-live="polite"
-      ></div>
+    <div class="focus-dialog-controls">
+      Start Pause Reset
     </div>
-  </md-side-sheet>
-
-  <md-dialog id="englishFocusDialog" class="app-dialog focus-dialog">
-    <div slot="headline">Focus session</div>
-    <div slot="content" class="focus-dialog-content">
-      <div class="focus-dialog-timer" id="englishFocusTimer" aria-live="polite">
-        25:00
-      </div>
-      <div class="focus-dialog-controls">
-        <md-filled-tonal-button id="englishFocusStart" data-dialog-initial-focus>
-          Start
-        </md-filled-tonal-button>
-        <md-filled-tonal-button id="englishFocusPause">Pause</md-filled-tonal-button>
-        <md-text-button id="englishFocusReset">Reset</md-text-button>
-      </div>
-      <div class="focus-dialog-checklist">
-        <h3>Pending checklist</h3>
-        <md-list id="englishFocusChecklist" class="focus-checklist"></md-list>
-      </div>
-      <md-filled-text-field
-        id="englishFocusNotes"
-        label="Session notes"
-        supporting-text="Notes are saved locally for this browser session."
-        rows="4"
-        multiline
-      ></md-filled-text-field>
+    <div class="focus-dialog-checklist">
+      <h3>Pending checklist</h3>
     </div>
-    <div slot="actions">
-      <md-text-button dialog-action="close">Close</md-text-button>
-      <md-filled-button id="englishFocusSave">Save note</md-filled-button>
+  </div>
+  <div slot="actions">
+    Close Save note
+  </div>
+  <div slot="headline">
+    Publish to GitHub
+  </div>
+  <div slot="content" class="github-dialog-content">
+    <div class="github-step" data-step="authenticate"></div>
+    <div class="github-step" data-step="target">
+      Home · Debug Home · Release Lesson · Debug Lesson · Release
     </div>
-  </md-dialog>
-
-  <md-dialog id="englishGithubDialog" class="app-dialog github-dialog">
-    <div slot="headline">Publish to GitHub</div>
-    <div slot="content" class="github-dialog-content">
-      <md-steppers id="englishGithubStepper" value="authenticate">
-        <md-step value="authenticate" label="Authenticate">
-          <div class="github-step" data-step="authenticate">
-            <md-filled-text-field
-              id="englishGithubToken"
-              label="Personal access token"
-              type="password"
-              autocomplete="off"
-              spellcheck="false"
-              supporting-text="Tokens require Contents: Read &amp; write access."
-            ></md-filled-text-field>
-          </div>
-        </md-step>
-        <md-step value="target" label="Target">
-          <div class="github-step" data-step="target">
-            <md-filled-text-field
-              id="englishGithubRepo"
-              label="Repository (owner/name)"
-              value="MihaiCristianCondrea/com.d4rk.apis"
-              supporting-text="Use owner/name format."
-              spellcheck="false"
-            ></md-filled-text-field>
-            <md-filled-text-field
-              id="englishGithubBranch"
-              label="Branch"
-              value="main"
-              spellcheck="false"
-            ></md-filled-text-field>
-            <md-filled-text-field
-              id="englishGithubMessage"
-              label="Commit message"
-              value="chore(english-with-lidia): update payloads"
-              spellcheck="false"
-            ></md-filled-text-field>
-            <md-outlined-select
-              id="englishGithubTarget"
-              label="Payload target"
-              value="home-debug"
-            >
-              <md-select-option value="home-debug">Home · Debug</md-select-option>
-              <md-select-option value="home-release">Home · Release</md-select-option>
-              <md-select-option value="lesson-debug">Lesson · Debug</md-select-option>
-              <md-select-option value="lesson-release">Lesson · Release</md-select-option>
-            </md-outlined-select>
-            <md-filled-text-field
-              id="englishGithubLessonSlug"
-              label="Lesson slug (for lesson targets)"
-              placeholder="tell_me_about_yourself"
-              supporting-text="Used to build api_get_{slug}.json file names."
-              spellcheck="false"
-            ></md-filled-text-field>
-          </div>
-        </md-step>
-        <md-step value="review" label="Review">
-          <div class="github-step" data-step="review">
-            <p class="github-review-copy">
-              Confirm the diff in the side sheet and publish when ready.
-            </p>
-            <div
-              class="github-status"
-              id="englishGithubStatus"
-              role="status"
-              aria-live="polite"
-            ></div>
-          </div>
-        </md-step>
-      </md-steppers>
+    <div class="github-step" data-step="review">
+      <p class="github-review-copy">Confirm the diff in the side sheet and publish when ready.</p>
+      <div class="github-status" id="englishGithubStatus" role="status" aria-live="polite"></div>
     </div>
-    <div slot="actions" class="github-dialog-actions">
-      <md-text-button dialog-action="close">Cancel</md-text-button>
-      <md-text-button id="englishGithubBack">Back</md-text-button>
-      <md-filled-button id="englishGithubNext" data-dialog-initial-focus>Next</md-filled-button>
-    </div>
-  </md-dialog>
+  </div>
+  <div slot="actions" class="github-dialog-actions">
+    Cancel Back Next
+  </div>
 </div>

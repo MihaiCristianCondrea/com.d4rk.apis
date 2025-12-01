@@ -84,39 +84,28 @@
 }
 
 .gh-floating-field {
-  --floating-surface: var(
-    --gh-card-strong,
-    color-mix(in srgb, var(--md-sys-color-surface-container-high, #1d1b20) 85%, transparent)
-  );
-  --floating-border: color-mix(
-    in srgb,
-    var(--gh-outline, var(--app-border-color, #49454f)) 55%,
-    transparent
-  );
+  /* Align GitHub tools text fields with the App Toolkit form styling. Use the
+     same surface and border colors as the standard API fields so users see a
+     consistent input experience across all tools. */
+  --floating-surface: var(--md-sys-color-surface-container);
+  --floating-border: var(--app-border-color);
   position: relative;
   flex: 1;
   background: var(--floating-surface);
   border: 1px solid var(--floating-border);
-  border-radius: var(--gh-radius-sm, var(--app-field-shape));
-  padding: 0.25rem 0.5rem 0.35rem;
-  transition: background var(--gh-transition, 160ms ease),
-    border-color var(--gh-transition, 160ms ease),
-    box-shadow var(--gh-transition, 160ms ease);
+  border-radius: var(--app-field-shape);
+  padding: 0.65rem 0.75rem;
+  min-height: 56px;
+  transition: border-color var(--gh-transition, 160ms ease);
 }
 
 .gh-floating-field:hover,
 .gh-floating-field:focus-within {
-  background: color-mix(
-    in srgb,
-    var(--md-sys-color-primary, #e6e1e5) 6%,
-    var(--floating-surface)
-  );
-  border-color: color-mix(
-    in srgb,
-    var(--md-sys-color-primary, #e6e1e5) 35%,
-    var(--gh-outline, var(--app-border-color, #49454f))
-  );
-  box-shadow: 0 12px 38px -28px rgba(0, 0, 0, 0.8);
+  /* When focused or hovered, simply use the primary color for the outline to
+     maintain clarity. We avoid box shadows to keep the field flat like other
+     API fields. */
+  border-color: var(--md-sys-color-primary);
+  box-shadow: none;
 }
 
 .floating-field,

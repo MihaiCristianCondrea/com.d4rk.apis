@@ -32,10 +32,10 @@ const state = {
 };
 
 const copyResetTimers = new WeakMap();
-const storageTargets =
-  typeof window !== 'undefined'
-    ? [window.localStorage, window.sessionStorage].filter(Boolean)
-    : [];
+// Only use persistent localStorage for favorites. Session storage was causing
+// favorites to disappear across page reloads. By relying on localStorage and
+// falling back to cookies we guarantee persistence within the domain.
+const storage = typeof window !== 'undefined' ? window.localStorage : null;
 let memoryFavorites = [];
 
 function resolveInputElement(target) {
@@ -140,13 +140,13 @@ function writeCookieFavorites(favorites) {
 }
 
 function clearStoredFavorites() {
-  storageTargets.forEach((store) => {
+  if (storage) {
     try {
-      store.removeItem(STORAGE_KEY);
+      storage.removeItem(STORAGE_KEY);
     } catch (error) {
       // ignore storage failures
     }
-  });
+  }
 
   if (typeof document !== 'undefined') {
     document.cookie = `${STORAGE_KEY}=; path=/; max-age=0; SameSite=Lax`;
@@ -154,19 +154,19 @@ function clearStoredFavorites() {
 }
 
 function readStoredFavorites() {
-  for (const store of storageTargets) {
+  if (storage) {
     try {
-      const stored = store.getItem(STORAGE_KEY);
+      const stored = storage.getItem(STORAGE_KEY);
       if (stored) {
         const parsed = sanitizeFavorites(JSON.parse(stored));
         if (parsed.length) {
           return parsed;
         }
-        store.removeItem(STORAGE_KEY);
+        storage.removeItem(STORAGE_KEY);
       }
     } catch (error) {
       try {
-        store.removeItem(STORAGE_KEY);
+        storage.removeItem(STORAGE_KEY);
       } catch (cleanupError) {
         // ignore cleanup failures
       }

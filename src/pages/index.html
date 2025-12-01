@@ -1,585 +1,267 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
-    />
-    <title>API Console</title>
-    <meta
-      name="description"
-      content="Design and manage the JSON APIs that power Mihai-Cristian's Android apps with a visual editor built for App Toolkit, FAQ, English with Lidia, and Android Studio Tutorials."
-    />
-    <meta
-      name="keywords"
-      content="API Console, Android API builder, JSON editor, App Toolkit API, FAQ API, English with Lidia API, Android Studio Tutorials API"
-    />
-    <meta property="og:title" content="API Console" />
-    <meta
-      property="og:description"
-      content="Design and manage JSON APIs visually for D4rK's Android applications, including App Toolkit, FAQ, English with Lidia, and Android Studio Tutorials."
-    />
-    <meta property="og:type" content="website" />
-    <meta
-      property="og:image"
-      content="https://raw.githubusercontent.com/D4rK7355608/com.d4rk.apis/main/src/main/assets/images/placeholder.png"
-    />
-    <meta
-      property="og:image:alt"
-      content="Illustration of JSON blocks connected to Android app screens"
-    />
-    <meta
-      property="og:url"
-      content="https://d4rk7355608.github.io/com.d4rk.apis/"
-    />
-    <meta property="og:site_name" content="API Console" />
-    <link
-      rel="canonical"
-      href="https://d4rk7355608.github.io/com.d4rk.apis/"
-    />
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="API Console" />
-    <meta
-      name="twitter:description"
-      content="Visual tooling for crafting JSON APIs that power D4rK's Android experiences."
-    />
-    <meta
-      name="twitter:image"
-      content="https://raw.githubusercontent.com/D4rK7355608/com.d4rk.apis/main/src/main/assets/images/placeholder.png"
-    />
-    <meta name="twitter:site" content="@MihaiCrstian" />
-    <meta name="twitter:creator" content="@MihaiCrstian" />
-    <link rel="icon" href="icons/favicon.ico" sizes="any" />
-    <link rel="apple-touch-icon" href="icons/apple-touch-icon.png" />
-    <link rel="manifest" href="manifest.json" />
-    <script
-      src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.6.2/dist/dotlottie-wc.js"
-      type="module"
-      integrity="sha384-OZP/kBQ09BUzBtJHrUq28uANiSKcAs/R1SZMBoo3IIRdqeuHYaWtly7m+dmPVQcn"
-      crossorigin="anonymous"
-    ></script>
-    <script
-      type="module"
-      src="https://unpkg.com/@material/web@2.3.0/all.js?module"
-      integrity="sha384-aOmcMDy9kBho0cZT2yrFWshXxdPUL1w999tY2RHdpdco3L6wJ8WAVJe8yf5F6TzL"
-      crossorigin="anonymous"
-    ></script>
-    <script
-      type="module"
-      src="https://unpkg.com/@material/web@2.3.0/labs/navigationdrawer/navigation-drawer.js?module"
-      integrity="sha384-lPXM0qsvgIKgWhi/1b/UfU7ErVU5s3kUmXlzygQOS2smmkcVu4ZpFBl6+xFddjlI"
-      crossorigin="anonymous"
-    ></script>
-    <script
-      type="module"
-      src="https://unpkg.com/@material/web@2.3.0/dialog/dialog.js?module"
-      integrity="sha384-I8fokP3t9XLUdUurD4pOLLPRVsI1UKwHwp5m/50aw5GOvCfKm0WEm46XRK/xzw+8"
-      crossorigin="anonymous"
-    ></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap"
-    />
-    <link
-      href="https://db.onlinewebfonts.com/c/000be6a5acfcd4e4a425e9f1bb6c80f0?family=Google+Sans+Regular"
-      rel="stylesheet"
-    />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap"
-      rel="stylesheet"
-    />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
-      integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
-      crossorigin="anonymous"
-      referrerpolicy="no-referrer"
-    />
-    <link rel="modulepreload" href="../main/main.js" />
-  </head>
-
-  <body class="bg-surface-container-lowest">
-    <div id="drawerOverlay" class="drawer-overlay" aria-hidden="true"></div>
-    <div id="pageLoadingOverlay" class="page-loading-overlay">
-      <md-circular-progress indeterminate></md-circular-progress>
-    </div>
-
-    <nav aria-label="Main Navigation">
-      <md-navigation-drawer
-        id="navDrawer"
-        class="navigation-drawer"
-        pivot="start"
-        aria-label="Site navigation"
-        aria-modal="true"
-      >
-        <div class="drawer-header">
-          <h2>API Console</h2>
-          <md-icon-button
-            id="closeDrawerButton"
-            aria-label="Close menu"
-            aria-controls="navDrawer"
-          >
-            <md-icon
-              ><span class="material-symbols-outlined">close</span></md-icon
-            >
-          </md-icon-button>
-        </div>
-        <div class="drawer-content">
-          <md-list>
-            <md-list-item href="#home" id="navHomeLink">
-              <md-icon slot="start"
-                ><span class="material-symbols-outlined">home</span></md-icon
-              >
-              <div slot="headline">Home</div>
-            </md-list-item>
-            <md-divider></md-divider>
-            <md-list-item
-              type="button"
-              id="apiWorkspacesToggle"
-              aria-controls="apiWorkspacesContent"
-              aria-expanded="true"
-              class="expanded"
-            >
-              <md-icon slot="start"
-                ><span class="material-symbols-outlined">hub</span></md-icon
-              >
-              <div slot="headline">API Workspaces</div>
-              <md-icon slot="end"
-                ><span class="material-symbols-outlined"
-                  >expand_more</span
-                ></md-icon
-              >
-            </md-list-item>
-            <div
-              class="nested-list open"
-              id="apiWorkspacesContent"
-              role="group"
-              aria-hidden="false"
-            >
-              <md-list>
-                <md-list-item href="#app-toolkit-api" id="navAppToolkit">
-                  <div slot="headline">App Toolkit</div>
-                  <div slot="supporting-text">Manage Android utilities</div>
-                </md-list-item>
-                <md-list-item href="#faq-api" id="navFaq">
-                  <div slot="headline">FAQ API</div>
-                  <div slot="supporting-text">Ship policy & support answers</div>
-                </md-list-item>
-                <md-list-item href="#english-with-lidia-api" id="navEnglish">
-                  <div slot="headline">English with Lidia</div>
-                  <div slot="supporting-text">Build lessons & home feeds</div>
-                </md-list-item>
-                <md-list-item
-                  href="#android-studio-tutorials-api"
-                  id="navAst"
-                >
-                  <div slot="headline">Android Studio Tutorials</div>
-                  <div slot="supporting-text">Compose home & lesson flows</div>
-                </md-list-item>
-              </md-list>
-            </div>
-            <md-divider></md-divider>
-            <md-list-item
-              type="button"
-              id="githubToolsToggle"
-              aria-controls="githubToolsContent"
-              aria-expanded="false"
-            >
-              <md-icon slot="start"
-                ><span class="material-symbols-outlined">code</span></md-icon
-              >
-              <div slot="headline">GitHub Tools</div>
-              <md-icon slot="end"
-                ><span class="material-symbols-outlined"
-                  >expand_more</span
-                ></md-icon
-              >
-            </md-list-item>
-            <div
-              class="nested-list"
-              id="githubToolsContent"
-              role="group"
-              aria-hidden="true"
-            >
-              <md-list>
-                <md-list-item href="#github-favorites" id="navGithubFavorites">
-                  <div slot="headline">Favorites</div>
-                  <div slot="supporting-text">Quick access to starred repos</div>
-                </md-list-item>
-                <md-list-item href="#repo-mapper" id="navRepoMapper">
-                  <div slot="headline">Repo Mapper</div>
-                  <div slot="supporting-text">Generate directory trees</div>
-                </md-list-item>
-                <md-list-item href="#release-stats" id="navReleaseStats">
-                  <div slot="headline">Release Stats</div>
-                  <div slot="supporting-text">Visualize download counts</div>
-                </md-list-item>
-                <md-list-item href="#git-patch" id="navGitPatch">
-                  <div slot="headline">Git Patch</div>
-                  <div slot="supporting-text">Extract commit patches</div>
-                </md-list-item>
-              </md-list>
-            </div>
-          </md-list>
-        </div>
-        <div class="drawer-footer">
-          <div class="theme-toggle-title">Theme</div>
-          <div class="theme-button-container">
-            <md-icon-button
-              id="lightThemeButton"
-              aria-label="Light theme"
-              data-theme="light"
-            >
-              <md-icon
-                ><span class="material-symbols-outlined">light_mode</span></md-icon
-              >
-            </md-icon-button>
-            <md-icon-button
-              id="darkThemeButton"
-              aria-label="Dark theme"
-              data-theme="dark"
-            >
-              <md-icon
-                ><span class="material-symbols-outlined">dark_mode</span></md-icon
-              >
-            </md-icon-button>
-            <md-icon-button
-              id="autoThemeButton"
-              aria-label="Auto theme"
-              data-theme="auto"
-            >
-              <md-icon
-                ><span class="material-symbols-outlined"
-                  >brightness_auto</span
-                ></md-icon
-              >
-            </md-icon-button>
-          </div>
-        </div>
-      </md-navigation-drawer>
-    </nav>
-
-    <md-top-app-bar id="topAppBar" data-drawer-inert-target>
-      <md-icon-button
-        id="menuButton"
-        slot="navigationIcon"
-        aria-label="Open menu"
-        aria-controls="navDrawer"
-        aria-expanded="false"
-        aria-haspopup="dialog"
-      >
-        <md-icon><span class="material-symbols-outlined">menu</span></md-icon>
-      </md-icon-button>
-      <span slot="headline" id="appBarHeadline">API Console</span>
-    </md-top-app-bar>
-
-    <div class="content-wrapper" id="pageContentArea" data-drawer-inert-target>
-      <div id="mainContentPage" class="page-section app-shell-panel active">
-        <section class="hero">
-          <div class="hero-copy">
-            <p class="hero-eyebrow">Purpose-built for Mihai-Cristian Condrea's apps</p>
-            <h1>Build JSON APIs visually and ship updates faster</h1>
-            <p class="hero-body">
-              Use reusable templates, smart defaults, and interactive previews to
-              craft the App Toolkit, English with Lidia, and Android Studio
-              Tutorials APIs without memorizing schemas.
-            </p>
-            <div class="hero-actions">
-              <a href="#app-toolkit-api">
-                <md-filled-button has-icon>
-                  <md-icon slot="icon"
-                    ><span class="material-symbols-outlined"
-                      >rocket_launch</span
-                    ></md-icon
-                  >
-                  Start with App Toolkit
-                </md-filled-button>
-              </a>
-              <a href="#english-with-lidia-api">
-                <md-filled-tonal-button has-icon trailing-icon>
-                  Explore lesson tooling
-                  <md-icon slot="icon"
-                    ><span class="material-symbols-outlined"
-                      >menu_book</span
-                    ></md-icon
-                  >
-                </md-filled-tonal-button>
-              </a>
-            </div>
-          </div>
-          <div class="hero-visual" aria-hidden="true">
-            <dotlottie-player
-              autoplay
-              loop
-              mode="normal"
-              src="https://lottie.host/f1077af0-6736-4c2b-a824-6c1512c6f0f4/3mOPp9h33h.json"
-            ></dotlottie-player>
-          </div>
-        </section>
-
-        <section class="home-section">
-          <div class="section-header">
-            <h2>Pick your API workspace</h2>
-            <p>
-              Each workspace reflects the structure and constraints documented in
-              the production JSON files so you can safely prototype or edit.
-            </p>
-          </div>
-          <ul class="workspace-list">
-            <li class="workspace-list-item">
-              <md-elevated-card class="workspace-card">
-                <div class="workspace-card-header">
-                  <div class="workspace-icon">
-                    <span class="material-symbols-outlined">build</span>
-                  </div>
-                  <h3>App Toolkit</h3>
-                </div>
-                <p>
-                  Curate tool listings, screenshots, and metadata that power the
-                  App Toolkit catalog in both debug and release channels.
-                </p>
-                <ul>
-                  <li>Generate app collections with drag-to-add entries</li>
-                  <li>Bulk import existing JSON for review</li>
-                  <li>Export formatted payloads instantly</li>
-                </ul>
-                <a class="workspace-action" href="#app-toolkit-api">
-                  <md-outlined-button trailing-icon>
-                    Open workspace
-                    <md-icon slot="icon"
-                      ><span class="material-symbols-outlined"
-                        >arrow_forward</span
-                      ></md-icon
-                    >
-                  </md-outlined-button>
-                </a>
-              </md-elevated-card>
-            </li>
-            <li class="workspace-list-item">
-              <md-elevated-card class="workspace-card">
-                <div class="workspace-card-header">
-                  <div class="workspace-icon">
-                    <span class="material-symbols-outlined">help_center</span>
-                  </div>
-                  <h3>FAQ API</h3>
-                </div>
-                <p>
-                  Coordinate policy answers for websites and Android apps with
-                  Google icon suggestions and featured callouts.
-                </p>
-                <ul>
-                  <li>Manage question IDs, categories, and featured flags</li>
-                  <li>Author rich HTML answers with home-page summaries</li>
-                  <li>Autocomplete Material Symbols straight from Google</li>
-                </ul>
-                <a class="workspace-action" href="#faq-api">
-                  <md-outlined-button trailing-icon>
-                    Open workspace
-                    <md-icon slot="icon"
-                      ><span class="material-symbols-outlined"
-                        >arrow_forward</span
-                      ></md-icon
-                    >
-                  </md-outlined-button>
-                </a>
-              </md-elevated-card>
-            </li>
-            <li class="workspace-list-item">
-              <md-elevated-card class="workspace-card">
-                <div class="workspace-card-header">
-                  <div class="workspace-icon">
-                    <span class="material-symbols-outlined">lightbulb</span>
-                  </div>
-                  <h3>English with Lidia</h3>
-                </div>
-                <p>
-                  Design home feeds and lesson flows with multimedia content,
-                  audio tracks, and ads aligned with the published documentation.
-                </p>
-                <ul>
-                  <li>Switch between Home and Lesson API builders</li>
-                  <li>Attach audio, images, and copy in context</li>
-                  <li>Preview generated JSON before exporting</li>
-                </ul>
-                <a class="workspace-action" href="#english-with-lidia-api">
-                  <md-outlined-button trailing-icon>
-                    Open workspace
-                    <md-icon slot="icon"
-                      ><span class="material-symbols-outlined"
-                        >arrow_forward</span
-                      ></md-icon
-                    >
-                  </md-outlined-button>
-                </a>
-              </md-elevated-card>
-            </li>
-            <li class="workspace-list-item">
-              <md-elevated-card class="workspace-card">
-                <div class="workspace-card-header">
-                  <div class="workspace-icon">
-                    <span class="material-symbols-outlined">school</span>
-                  </div>
-                  <h3>Android Studio Tutorials</h3>
-                </div>
-                <p>
-                  Assemble Compose-first lesson journeys with code samples,
-                  banners, ads, and metadata tailored for the tutorials app.
-                </p>
-                <ul>
-                  <li>Define home feed cards with smart defaults</li>
-                  <li>Craft lesson narratives block-by-block</li>
-                  <li>Document deep links and tags consistently</li>
-                </ul>
-                <a
-                  class="workspace-action"
-                  href="#android-studio-tutorials-api"
-                >
-                  <md-outlined-button trailing-icon>
-                    Open workspace
-                    <md-icon slot="icon"
-                      ><span class="material-symbols-outlined"
-                        >arrow_forward</span
-                      ></md-icon
-                    >
-                  </md-outlined-button>
-                </a>
-              </md-elevated-card>
-            </li>
-          </ul>
-        </section>
-
-        <section class="home-section">
-          <div class="github-tools-surface">
-            <div class="tool-card-grid">
-              <a class="tool-card" href="#repo-mapper">
-                <span class="tool-card-icon material-symbols-outlined">terminal</span>
-                <h3>Repo Mapper</h3>
-                <p>Generate ASCII directory trees from any public repository. Perfect for documentation and LLM context.</p>
-                <span class="card-footer">Launch Tool <span class="material-symbols-outlined">arrow_forward</span></span>
-              </a>
-              <a class="tool-card" href="#release-stats">
-                <span class="tool-card-icon material-symbols-outlined">bar_chart</span>
-                <h3>Release Stats</h3>
-                <p>Visualize download counts, analyze asset performance, and track version history in real-time.</p>
-                <span class="card-footer">Launch Tool <span class="material-symbols-outlined">arrow_forward</span></span>
-              </a>
-              <a class="tool-card" href="#git-patch" style="grid-column: span 2;">
-                <span class="tool-card-icon material-symbols-outlined">difference</span>
-                <h3>Git Patch</h3>
-                <p>Extract raw .patch files from commit URLs. Easily apply changes from one repo to another or perform code reviews.</p>
-                <span class="card-footer">Launch Tool <span class="material-symbols-outlined">arrow_forward</span></span>
-              </a>
-            </div>
-          </div>
-        </section>
-
-        <section class="home-section">
-          <div class="section-header">
-            <h2>Three steps to ship an update</h2>
-          </div>
-          <div class="steps-grid">
-            <div class="step-card">
-              <span class="step-number">1</span>
-              <h3>Choose a preset</h3>
-              <p>
-                Start from blank templates or import an existing JSON payload to
-                continue where you left off.
-              </p>
-            </div>
-            <div class="step-card">
-              <span class="step-number">2</span>
-              <h3>Edit visually</h3>
-              <p>
-                Add lessons, content blocks, ads, and multimedia assets with
-                contextual helpers that validate required properties.
-              </p>
-            </div>
-            <div class="step-card">
-              <span class="step-number">3</span>
-              <h3>Export & commit</h3>
-              <p>
-                Copy the prettified JSON or download it as a file, then drop it
-                into the appropriate debug or release folder.
-              </p>
-            </div>
-          </div>
-        </section>
-
-        <section class="home-section">
-          <div class="section-header">
-            <h2>Reference documentation</h2>
-            <p>
-              Keep the official API specs close while you work. The external
-              links below open in a new tab.
-            </p>
-          </div>
-          <div class="docs-grid">
-            <a
-              class="docs-card"
-              href="https://github.com/D4rK7355608/com.d4rk.apis/tree/main/App%20Toolkit"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <div class="docs-icon">
-                <span class="material-symbols-outlined">widgets</span>
-              </div>
-              <div>
-                <h3>App Toolkit JSON schema</h3>
-                <p>Understand how catalog entries are structured.</p>
-              </div>
-              <span class="material-symbols-outlined" aria-hidden="true"
-                >open_in_new</span
-              >
-            </a>
-            <a
-              class="docs-card"
-              href="https://github.com/D4rK7355608/com.d4rk.apis/tree/main/English%20with%20Lidia"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <div class="docs-icon">
-                <span class="material-symbols-outlined">translate</span>
-              </div>
-              <div>
-                <h3>English with Lidia docs</h3>
-                <p>Review lesson conventions, ads, and audio usage.</p>
-              </div>
-              <span class="material-symbols-outlined" aria-hidden="true"
-                >open_in_new</span
-              >
-            </a>
-            <a
-              class="docs-card"
-              href="https://github.com/D4rK7355608/com.d4rk.apis/tree/main/Android%20Studio%20Tutorials/docs"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <div class="docs-icon">
-                <span class="material-symbols-outlined">article</span>
-              </div>
-              <div>
-                <h3>Android Studio Tutorials docs</h3>
-                <p>
-                  Access the home and lesson API specifications maintained for
-                  the tutorials app.
-                </p>
-              </div>
-              <span class="material-symbols-outlined" aria-hidden="true"
-                >open_in_new</span
-              >
-            </a>
-          </div>
-        </section>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>API Console</title>
+  <meta name="description" content="Design and manage the JSON APIs that power Mihai-Cristian's Android apps with a visual editor built for App Toolkit, FAQ, English with Lidia, and Android Studio Tutorials.">
+  <meta name="keywords" content="API Console, Android API builder, JSON editor, App Toolkit API, FAQ API, English with Lidia API, Android Studio Tutorials API">
+  <meta property="og:title" content="API Console">
+  <meta property="og:description" content="Design and manage JSON APIs visually for D4rK's Android applications, including App Toolkit, FAQ, English with Lidia, and Android Studio Tutorials.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="https://raw.githubusercontent.com/D4rK7355608/com.d4rk.apis/main/src/main/assets/images/placeholder.png">
+  <meta property="og:image:alt" content="Illustration of JSON blocks connected to Android app screens">
+  <meta property="og:url" content="https://d4rk7355608.github.io/com.d4rk.apis/">
+  <meta property="og:site_name" content="API Console">
+  <link rel="canonical" href="https://d4rk7355608.github.io/com.d4rk.apis/">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="API Console">
+  <meta name="twitter:description" content="Visual tooling for crafting JSON APIs that power D4rK's Android experiences.">
+  <meta name="twitter:image" content="https://raw.githubusercontent.com/D4rK7355608/com.d4rk.apis/main/src/main/assets/images/placeholder.png">
+  <meta name="twitter:site" content="@MihaiCrstian">
+  <meta name="twitter:creator" content="@MihaiCrstian">
+  <link rel="icon" href="icons/favicon.ico" sizes="any">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <link rel="manifest" href="manifest.json">
+  <script src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.6.2/dist/dotlottie-wc.js" type="module" integrity="sha384-OZP/kBQ09BUzBtJHrUq28uANiSKcAs/R1SZMBoo3IIRdqeuHYaWtly7m+dmPVQcn" crossorigin="anonymous"></script>
+  <script type="module" src="https://unpkg.com/@material/web@2.3.0/all.js?module" integrity="sha384-aOmcMDy9kBho0cZT2yrFWshXxdPUL1w999tY2RHdpdco3L6wJ8WAVJe8yf5F6TzL" crossorigin="anonymous"></script>
+  <script type="module" src="https://unpkg.com/@material/web@2.3.0/labs/navigationdrawer/navigation-drawer.js?module" integrity="sha384-lPXM0qsvgIKgWhi/1b/UfU7ErVU5s3kUmXlzygQOS2smmkcVu4ZpFBl6+xFddjlI" crossorigin="anonymous"></script>
+  <script type="module" src="https://unpkg.com/@material/web@2.3.0/dialog/dialog.js?module" integrity="sha384-I8fokP3t9XLUdUurD4pOLLPRVsI1UKwHwp5m/50aw5GOvCfKm0WEm46XRK/xzw+8" crossorigin="anonymous"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&amp;display=swap">
+  <link href="https://db.onlinewebfonts.com/c/000be6a5acfcd4e4a425e9f1bb6c80f0?family=Google+Sans+Regular" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&amp;display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer">
+  <link rel="modulepreload" href="../main/main.js">
+</head>
+<body class="bg-surface-container-lowest">
+<div id="drawerOverlay" class="drawer-overlay" aria-hidden="true"></div>
+<div id="pageLoadingOverlay" class="page-loading-overlay"></div>
+<nav aria-label="Main Navigation">
+  <div class="drawer-header">
+    <h2>API Console</h2><span class="material-symbols-outlined">close</span>
+  </div>
+  <div class="drawer-content">
+    <span class="material-symbols-outlined">home</span>
+    <div slot="headline">
+      Home
+    </div><span class="material-symbols-outlined">hub</span>
+    <div slot="headline">
+      API Workspaces
+    </div><span class="material-symbols-outlined">expand_more</span>
+    <div class="nested-list open" id="apiWorkspacesContent" role="group" aria-hidden="false">
+      <div slot="headline">
+        App Toolkit
+      </div>
+      <div slot="supporting-text">
+        Manage Android utilities
+      </div>
+      <div slot="headline">
+        FAQ API
+      </div>
+      <div slot="supporting-text">
+        Ship policy & support answers
+      </div>
+      <div slot="headline">
+        English with Lidia
+      </div>
+      <div slot="supporting-text">
+        Build lessons & home feeds
+      </div>
+      <div slot="headline">
+        Android Studio Tutorials
+      </div>
+      <div slot="supporting-text">
+        Compose home & lesson flows
+      </div>
+    </div><span class="material-symbols-outlined">code</span>
+    <div slot="headline">
+      GitHub Tools
+    </div><span class="material-symbols-outlined">expand_more</span>
+    <div class="nested-list" id="githubToolsContent" role="group" aria-hidden="true">
+      <div slot="headline">
+        Favorites
+      </div>
+      <div slot="supporting-text">
+        Quick access to starred repos
+      </div>
+      <div slot="headline">
+        Repo Mapper
+      </div>
+      <div slot="supporting-text">
+        Generate directory trees
+      </div>
+      <div slot="headline">
+        Release Stats
+      </div>
+      <div slot="supporting-text">
+        Visualize download counts
+      </div>
+      <div slot="headline">
+        Git Patch
+      </div>
+      <div slot="supporting-text">
+        Extract commit patches
       </div>
     </div>
-
-    <footer class="app-footer">
-      <span id="copyright-message"></span>
-    </footer>
-
-    <script type="module" src="../main/main.js"></script>
-  </body>
+  </div>
+  <div class="drawer-footer">
+    <div class="theme-toggle-title">
+      Theme
+    </div>
+    <div class="theme-button-container">
+      <span class="material-symbols-outlined">light_mode</span> <span class="material-symbols-outlined">dark_mode</span> <span class="material-symbols-outlined">brightness_auto</span>
+    </div>
+  </div>
+</nav><span class="material-symbols-outlined">menu</span> <span slot="headline" id="appBarHeadline">API Console</span>
+<div class="content-wrapper" id="pageContentArea" data-drawer-inert-target="">
+  <div id="mainContentPage" class="page-section app-shell-panel active">
+    <section class="hero">
+      <div class="hero-copy">
+        <p class="hero-eyebrow">Purpose-built for Mihai-Cristian Condrea's apps</p>
+        <h1>Build JSON APIs visually and ship updates faster</h1>
+        <p class="hero-body">Use reusable templates, smart defaults, and interactive previews to craft the App Toolkit, English with Lidia, and Android Studio Tutorials APIs without memorizing schemas.</p>
+        <div class="hero-actions">
+          <a href="#app-toolkit-api"><span class="material-symbols-outlined">rocket_launch</span> Start with App Toolkit</a> <a href="#english-with-lidia-api">Explore lesson tooling <span class="material-symbols-outlined">menu_book</span></a>
+        </div>
+      </div>
+      <div class="hero-visual" aria-hidden="true"></div>
+    </section>
+    <section class="home-section">
+      <div class="section-header">
+        <h2>Pick your API workspace</h2>
+        <p>Each workspace reflects the structure and constraints documented in the production JSON files so you can safely prototype or edit.</p>
+      </div>
+      <ul class="workspace-list">
+        <li class="workspace-list-item">
+          <div class="workspace-card-header">
+            <div class="workspace-icon">
+              <span class="material-symbols-outlined">build</span>
+            </div>
+            <h3>App Toolkit</h3>
+          </div>
+          <p>Curate tool listings, screenshots, and metadata that power the App Toolkit catalog in both debug and release channels.</p>
+          <ul>
+            <li>Generate app collections with drag-to-add entries</li>
+            <li>Bulk import existing JSON for review</li>
+            <li>Export formatted payloads instantly</li>
+          </ul><a class="workspace-action" href="#app-toolkit-api">Open workspace <span class="material-symbols-outlined">arrow_forward</span></a>
+        </li>
+        <li class="workspace-list-item">
+          <div class="workspace-card-header">
+            <div class="workspace-icon">
+              <span class="material-symbols-outlined">help_center</span>
+            </div>
+            <h3>FAQ API</h3>
+          </div>
+          <p>Coordinate policy answers for websites and Android apps with Google icon suggestions and featured callouts.</p>
+          <ul>
+            <li>Manage question IDs, categories, and featured flags</li>
+            <li>Author rich HTML answers with home-page summaries</li>
+            <li>Autocomplete Material Symbols straight from Google</li>
+          </ul><a class="workspace-action" href="#faq-api">Open workspace <span class="material-symbols-outlined">arrow_forward</span></a>
+        </li>
+        <li class="workspace-list-item">
+          <div class="workspace-card-header">
+            <div class="workspace-icon">
+              <span class="material-symbols-outlined">lightbulb</span>
+            </div>
+            <h3>English with Lidia</h3>
+          </div>
+          <p>Design home feeds and lesson flows with multimedia content, audio tracks, and ads aligned with the published documentation.</p>
+          <ul>
+            <li>Switch between Home and Lesson API builders</li>
+            <li>Attach audio, images, and copy in context</li>
+            <li>Preview generated JSON before exporting</li>
+          </ul><a class="workspace-action" href="#english-with-lidia-api">Open workspace <span class="material-symbols-outlined">arrow_forward</span></a>
+        </li>
+        <li class="workspace-list-item">
+          <div class="workspace-card-header">
+            <div class="workspace-icon">
+              <span class="material-symbols-outlined">school</span>
+            </div>
+            <h3>Android Studio Tutorials</h3>
+          </div>
+          <p>Assemble Compose-first lesson journeys with code samples, banners, ads, and metadata tailored for the tutorials app.</p>
+          <ul>
+            <li>Define home feed cards with smart defaults</li>
+            <li>Craft lesson narratives block-by-block</li>
+            <li>Document deep links and tags consistently</li>
+          </ul><a class="workspace-action" href="#android-studio-tutorials-api">Open workspace <span class="material-symbols-outlined">arrow_forward</span></a>
+        </li>
+      </ul>
+    </section>
+    <section class="home-section">
+      <div class="github-tools-surface">
+        <div class="tool-card-grid">
+          <a class="tool-card" href="#repo-mapper"><span class="tool-card-icon material-symbols-outlined">terminal</span>
+            <h3>Repo Mapper</h3>
+            <p>Generate ASCII directory trees from any public repository. Perfect for documentation and LLM context.</p><span class="card-footer">Launch Tool <span class="material-symbols-outlined">arrow_forward</span></span></a> <a class="tool-card" href="#release-stats"><span class="tool-card-icon material-symbols-outlined">bar_chart</span>
+          <h3>Release Stats</h3>
+          <p>Visualize download counts, analyze asset performance, and track version history in real-time.</p><span class="card-footer">Launch Tool <span class="material-symbols-outlined">arrow_forward</span></span></a> <a class="tool-card" href="#git-patch" style="grid-column: span 2;"><span class="tool-card-icon material-symbols-outlined">difference</span>
+          <h3>Git Patch</h3>
+          <p>Extract raw .patch files from commit URLs. Easily apply changes from one repo to another or perform code reviews.</p><span class="card-footer">Launch Tool <span class="material-symbols-outlined">arrow_forward</span></span></a>
+        </div>
+      </div>
+    </section>
+    <section class="home-section">
+      <div class="section-header">
+        <h2>Three steps to ship an update</h2>
+      </div>
+      <div class="steps-grid">
+        <div class="step-card">
+          <span class="step-number">1</span>
+          <h3>Choose a preset</h3>
+          <p>Start from blank templates or import an existing JSON payload to continue where you left off.</p>
+        </div>
+        <div class="step-card">
+          <span class="step-number">2</span>
+          <h3>Edit visually</h3>
+          <p>Add lessons, content blocks, ads, and multimedia assets with contextual helpers that validate required properties.</p>
+        </div>
+        <div class="step-card">
+          <span class="step-number">3</span>
+          <h3>Export & commit</h3>
+          <p>Copy the prettified JSON or download it as a file, then drop it into the appropriate debug or release folder.</p>
+        </div>
+      </div>
+    </section>
+    <section class="home-section">
+      <div class="section-header">
+        <h2>Reference documentation</h2>
+        <p>Keep the official API specs close while you work. The external links below open in a new tab.</p>
+      </div>
+      <div class="docs-grid">
+        <a class="docs-card" href="https://github.com/D4rK7355608/com.d4rk.apis/tree/main/App%20Toolkit" target="_blank" rel="noopener noreferrer">
+          <div class="docs-icon">
+            <span class="material-symbols-outlined">widgets</span>
+          </div>
+          <div>
+            <h3>App Toolkit JSON schema</h3>
+            <p>Understand how catalog entries are structured.</p>
+          </div><span class="material-symbols-outlined" aria-hidden="true">open_in_new</span></a> <a class="docs-card" href="https://github.com/D4rK7355608/com.d4rk.apis/tree/main/English%20with%20Lidia" target="_blank" rel="noopener noreferrer">
+        <div class="docs-icon">
+          <span class="material-symbols-outlined">translate</span>
+        </div>
+        <div>
+          <h3>English with Lidia docs</h3>
+          <p>Review lesson conventions, ads, and audio usage.</p>
+        </div><span class="material-symbols-outlined" aria-hidden="true">open_in_new</span></a> <a class="docs-card" href="https://github.com/D4rK7355608/com.d4rk.apis/tree/main/Android%20Studio%20Tutorials/docs" target="_blank" rel="noopener noreferrer">
+        <div class="docs-icon">
+          <span class="material-symbols-outlined">article</span>
+        </div>
+        <div>
+          <h3>Android Studio Tutorials docs</h3>
+          <p>Access the home and lesson API specifications maintained for the tutorials app.</p>
+        </div><span class="material-symbols-outlined" aria-hidden="true">open_in_new</span></a>
+      </div>
+    </section>
+  </div>
+</div>
+<footer class="app-footer">
+  <span id="copyright-message"></span>
+</footer>
+<script type="module" src="../main/main.js"></script>
+</body>
 </html>
