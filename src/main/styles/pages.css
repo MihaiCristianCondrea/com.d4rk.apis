@@ -67,6 +67,40 @@
   gap: 1rem;
 }
 
+.hero-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.85rem 1.25rem;
+  border-radius: 999px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: transform 140ms ease, box-shadow 140ms ease,
+    background-color 140ms ease, border-color 140ms ease;
+}
+
+.hero-button.primary {
+  background-color: var(--md-sys-color-primary);
+  color: var(--md-sys-color-on-primary);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.16);
+}
+
+.hero-button.secondary {
+  border: 1px solid color-mix(in srgb, var(--md-sys-color-outline) 35%, transparent);
+  background: color-mix(in srgb, var(--md-sys-color-surface-container-high) 75%, transparent);
+  color: var(--app-text-color);
+}
+
+.hero-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.12);
+}
+
+.hero-button.secondary:hover {
+  border-color: color-mix(in srgb, var(--md-sys-color-primary) 45%, transparent);
+  color: var(--md-sys-color-primary);
+}
+
 .home-section {
   margin-bottom: 3.5rem;
   display: grid;
@@ -188,7 +222,7 @@
 }
 
 .workspace-list-item {
-  display: contents;
+  display: block;
 }
 
 .workspace-dashboard {
@@ -387,6 +421,9 @@
   border-radius: 24px;
   display: grid;
   gap: 1rem;
+  border: 1px solid color-mix(in srgb, var(--md-sys-color-outline) 14%, transparent);
+  background: color-mix(in srgb, var(--md-sys-color-surface-container-high) 75%, transparent);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.08);
 }
 
 .workspace-card h3 {
@@ -418,6 +455,23 @@
 
 .workspace-action {
   justify-self: start;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  text-decoration: none;
+  font-weight: 600;
+  padding: 0.6rem 0.9rem;
+  border-radius: 12px;
+  color: var(--md-sys-color-primary);
+  background: color-mix(in srgb, var(--md-sys-color-primary) 12%, transparent);
+  border: 1px solid color-mix(in srgb, var(--md-sys-color-primary) 30%, transparent);
+  transition: transform 130ms ease, box-shadow 130ms ease, border-color 130ms ease;
+}
+
+.workspace-action:hover {
+  transform: translateY(-1px);
+  border-color: color-mix(in srgb, var(--md-sys-color-primary) 48%, transparent);
+  box-shadow: 0 12px 22px rgba(0, 0, 0, 0.08);
 }
 
 .steps-grid {
