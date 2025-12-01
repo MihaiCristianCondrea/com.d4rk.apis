@@ -77,8 +77,50 @@
 }
 
 /* Floating field pattern ------------------------------------------------- */
-.gh-floating-field,
-.floating-field {
+.gh-floating-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.gh-floating-field {
+  --floating-surface: var(
+    --gh-card-strong,
+    color-mix(in srgb, var(--md-sys-color-surface-container-high, #1d1b20) 85%, transparent)
+  );
+  --floating-border: color-mix(
+    in srgb,
+    var(--gh-outline, var(--app-border-color, #49454f)) 55%,
+    transparent
+  );
+  position: relative;
+  flex: 1;
+  background: var(--floating-surface);
+  border: 1px solid var(--floating-border);
+  border-radius: var(--gh-radius-sm, var(--app-field-shape));
+  padding: 0.25rem 0.5rem 0.35rem;
+  transition: background var(--gh-transition, 160ms ease),
+    border-color var(--gh-transition, 160ms ease),
+    box-shadow var(--gh-transition, 160ms ease);
+}
+
+.gh-floating-field:hover,
+.gh-floating-field:focus-within {
+  background: color-mix(
+    in srgb,
+    var(--md-sys-color-primary, #e6e1e5) 6%,
+    var(--floating-surface)
+  );
+  border-color: color-mix(
+    in srgb,
+    var(--md-sys-color-primary, #e6e1e5) 35%,
+    var(--gh-outline, var(--app-border-color, #49454f))
+  );
+  box-shadow: 0 12px 38px -28px rgba(0, 0, 0, 0.8);
+}
+
+.floating-field,
+.gh-floating-field {
   position: relative;
 }
 
@@ -104,8 +146,10 @@
   left: 0.85rem;
   font-size: 0.95rem;
   color: var(--app-secondary-text-color, #cac4d0);
-  transition: transform 160ms ease, font-size 160ms ease, top 160ms ease,
-    color 160ms ease;
+  transition: transform var(--gh-transition, 160ms ease),
+    font-size var(--gh-transition, 160ms ease),
+    top var(--gh-transition, 160ms ease),
+    color var(--gh-transition, 160ms ease);
   pointer-events: none;
 }
 
@@ -122,4 +166,51 @@
   top: 0.45rem;
   font-size: 0.75rem;
   color: var(--app-text-color, #e6e1e5);
+}
+
+.gh-underline {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  height: 2px;
+  background: var(--md-sys-color-primary, #e6e1e5);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--gh-transition, 160ms ease);
+}
+
+.gh-floating-input:focus ~ .gh-underline,
+.gh-floating-input:not(:placeholder-shown) ~ .gh-underline {
+  transform: scaleX(1);
+}
+
+.gh-helper-text {
+  margin: 0.25rem 0 0;
+  color: var(--app-secondary-text-color, #cac4d0);
+  font-size: 0.9rem;
+}
+
+.gh-error-text {
+  margin: 0.15rem 0 0;
+  color: var(--md-sys-color-error, #b3261e);
+  font-size: 0.85rem;
+}
+
+.gh-floating-field.error {
+  border-color: var(--md-sys-color-error, #b3261e);
+  box-shadow: 0 12px 36px -28px color-mix(
+    in srgb,
+    var(--md-sys-color-error, #b3261e) 35%,
+    transparent
+  );
+}
+
+.gh-floating-field.error label {
+  color: var(--md-sys-color-error, #b3261e);
+}
+
+.gh-floating-field.error .gh-underline {
+  background: var(--md-sys-color-error, #b3261e);
+  transform: scaleX(1);
 }

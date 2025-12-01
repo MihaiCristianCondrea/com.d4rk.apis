@@ -9,49 +9,58 @@
     <div class="gh-card">
       <form id="releases-form" class="gh-form" autocomplete="off">
         <div class="gh-field-row">
-          <md-outlined-text-field
-            id="releases-url"
-            type="url"
-            label="Repository URL"
-            placeholder="https://github.com/owner/repo or owner/repo"
-            supporting-text="Use the repo URL or slug for the project"
-            required
-            autocomplete="off"
-          >
-            <md-icon slot="leading-icon"
-              ><span class="material-symbols-outlined">link</span></md-icon
-            >
-          </md-outlined-text-field>
+          <div class="gh-floating-field">
+            <input
+              id="releases-url"
+              type="url"
+              class="gh-floating-input"
+              placeholder=" "
+              required
+              autocomplete="off"
+              aria-describedby="releases-url-helper releases-url-error"
+            />
+            <label for="releases-url">Repository URL</label>
+            <div class="gh-underline"></div>
+          </div>
           <button type="button" id="releases-fav-btn" class="gh-pill-button" hidden aria-pressed="false">
             <span class="material-symbols-outlined">star</span>
             <span class="favorite-label">Favorite</span>
           </button>
         </div>
+        <p id="releases-url-helper" class="gh-helper-text">Use the repo URL or slug for the project.</p>
+        <p id="releases-url-error" class="gh-error-text" hidden>Invalid repository URL.</p>
 
-        <div class="gh-token-dropdown" id="releases-token-settings">
-          <button type="button" class="gh-chip-button token-toggle" id="releases-token-reveal" aria-expanded="false">
+        <details class="gh-token-dropdown gh-token-settings" id="releases-token-settings">
+          <summary class="gh-chip-button token-toggle" id="releases-token-reveal" aria-expanded="false">
             <span class="material-symbols-outlined">vpn_key</span>
             <span class="favorite-label">Token settings</span>
             <span class="material-symbols-outlined chevron" aria-hidden="true">expand_more</span>
-          </button>
-          <div class="gh-collapsible" id="releases-token-wrapper" hidden>
-            <md-outlined-text-field
-              id="releases-token"
-              type="password"
-              label="Personal Access Token (optional)"
-              placeholder="ghp_exampletoken"
-              autocomplete="off"
-            >
-              <md-icon slot="leading-icon"
-                ><span class="material-symbols-outlined">shield_lock</span></md-icon
-              >
-            </md-outlined-text-field>
+          </summary>
+          <div class="gh-collapsible" id="releases-token-wrapper">
+            <div class="gh-floating-field">
+              <input
+                id="releases-token"
+                type="password"
+                class="gh-floating-input"
+                placeholder=" "
+                autocomplete="off"
+                aria-describedby="releases-token-helper releases-token-error"
+              />
+              <label for="releases-token">Personal Access Token (optional)</label>
+              <div class="gh-underline"></div>
+            </div>
+            <p id="releases-token-helper" class="gh-helper-text">Include when querying private repositories.</p>
+            <p id="releases-token-error" class="gh-error-text" hidden>Token required for private repos.</p>
             <label class="gh-token-visibility" for="releases-token-toggle">
               <input type="checkbox" id="releases-token-toggle" />
+              <span class="gh-visibility-icons" aria-hidden="true">
+                <span class="material-symbols-outlined visibility-on">visibility</span>
+                <span class="material-symbols-outlined visibility-off">visibility_off</span>
+              </span>
               <span data-token-visibility-label>Show token</span>
             </label>
           </div>
-        </div>
+        </details>
 
         <div class="gh-actions end">
           <button type="submit" id="releases-submit" class="gh-primary-button">

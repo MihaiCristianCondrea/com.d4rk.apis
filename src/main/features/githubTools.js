@@ -59,8 +59,32 @@ function setFieldError(target, message = '') {
   }
 
   if (inputEl) {
+    const fieldWrapper = inputEl.closest('.gh-floating-field');
+    const errorEl = document.getElementById(`${inputEl.id}-error`);
     inputEl.classList.toggle('has-error', hasError);
     inputEl.setAttribute('aria-invalid', hasError ? 'true' : 'false');
+
+    if (fieldWrapper) {
+      fieldWrapper.classList.toggle('error', hasError);
+    }
+    if (errorEl) {
+      errorEl.textContent = message || errorEl.textContent || '';
+      errorEl.toggleAttribute('hidden', !hasError);
+    }
+
+    const describedBy = new Set(
+      (inputEl.getAttribute('aria-describedby') || '')
+        .split(/\s+/)
+        .filter(Boolean),
+    );
+    const helperId = `${inputEl.id}-helper`;
+    const errorId = `${inputEl.id}-error`;
+    if (document.getElementById(helperId)) describedBy.add(helperId);
+    if (document.getElementById(errorId)) describedBy.add(errorId);
+    if (describedBy.size) {
+      inputEl.setAttribute('aria-describedby', Array.from(describedBy).join(' '));
+    }
+
     if (!hasError) {
       inputEl.removeAttribute('aria-invalid');
     }
@@ -99,6 +123,7 @@ function readCookieFavorites() {
     const value = decodeURIComponent(cookie.split('=')[1] || '');
     return JSON.parse(value);
   } catch (error) {
+    clearStoredFavorites();
     return null;
   }
 }
@@ -159,8 +184,14 @@ function readStoredFavorites() {
 }
 
 function loadFavorites() {
-  const parsed = sanitizeFavorites(readStoredFavorites());
-  state.favorites = Array.isArray(parsed) ? parsed : [];
+  try {
+    const parsed = sanitizeFavorites(readStoredFavorites());
+    state.favorites = Array.isArray(parsed) ? parsed : [];
+  } catch (error) {
+    clearStoredFavorites();
+    state.favorites = [];
+  }
+
   memoryFavorites = [...state.favorites];
   return [...state.favorites];
 }
@@ -538,9 +569,13 @@ function toggleTokenVisibility(toggleId, inputId) {
   const label = isCheckbox
     ? toggle.closest('label')?.querySelector('[data-token-visibility-label]')
     : toggle.querySelector('span:last-child');
+  const visibilityWrapper = toggle.closest('.gh-token-visibility');
 
   if (icon) icon.textContent = showing ? 'visibility_off' : 'visibility';
   if (label) label.textContent = showing ? 'Hide token' : 'Show token';
+  if (visibilityWrapper) {
+    visibilityWrapper.classList.toggle('is-visible', showing);
+  }
 }
 
 function initMapperFavorites(urlInputId, favoriteButtonId) {
@@ -558,8 +593,10 @@ function initMapperFavorites(urlInputId, favoriteButtonId) {
   favButton.addEventListener('click', () => {
     const parsed = parseGithubUrl(urlInput.value || '');
     state.mapper.parsedRepo = parsed;
-    setFavoriteButtonState(favButton, parsed);
-    if (!parsed) return;
+    if (!parsed) {
+      setFavoriteButtonState(favButton, parsed);
+      return;
+    }
     toggleFavorite(parsed.owner, parsed.repo);
     setFavoriteButtonState(favButton, parsed);
   });
@@ -582,8 +619,10 @@ function initReleaseFavorites(urlInputId, favoriteButtonId) {
   favButton.addEventListener('click', () => {
     const parsed = parseGithubUrl(urlInput.value || '');
     state.releases.parsedRepo = parsed;
-    setFavoriteButtonState(favButton, parsed);
-    if (!parsed) return;
+    if (!parsed) {
+      setFavoriteButtonState(favButton, parsed);
+      return;
+    }
     toggleFavorite(parsed.owner, parsed.repo);
     setFavoriteButtonState(favButton, parsed);
   });
@@ -606,8 +645,10 @@ function initPatchFavorites(urlInputId, favoriteButtonId) {
   favButton.addEventListener('click', () => {
     const parsed = parseGithubCommitUrl(urlInput.value || '');
     state.patch.parsedRepo = parsed;
-    setFavoriteButtonState(favButton, parsed);
-    if (!parsed) return;
+    if (!parsed) {
+      setFavoriteButtonState(favButton, parsed);
+      return;
+    }
     toggleFavorite(parsed.owner, parsed.repo);
     setFavoriteButtonState(favButton, parsed);
   });
@@ -987,11 +1028,15 @@ export function initGitPatch() {
   });
 }
 
-export function initGithubFavorites() {
+export function initFavoritesPage() {
   loadFavorites();
   hydrateDatalists();
   renderFavoritesGrid();
   renderQuickFavorites();
+}
+
+export function initGithubFavorites() {
+  initFavoritesPage();
 }
 
 export async function runMapper(url, token = '', format = 'ascii') {
