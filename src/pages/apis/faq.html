@@ -22,40 +22,31 @@
           when you pick a mode.
         </p>
       </div>
-      <div class="faq-onboarding__actions">
-        <md-filled-tonal-button
-          class="faq-mode-button"
-          data-faq-mode="catalog"
-          has-icon
-          aria-pressed="false"
-        >
-          <md-icon slot="icon"
-            ><span class="material-symbols-outlined">inventory_2</span></md-icon
-          >
-          Edit catalog.json
-        </md-filled-tonal-button>
-        <md-filled-tonal-button
-          class="faq-mode-button"
-          data-faq-mode="new"
-          has-icon
-          aria-pressed="false"
-        >
-          <md-icon slot="icon"
-            ><span class="material-symbols-outlined">post_add</span></md-icon
-          >
-          Add new FAQ
-        </md-filled-tonal-button>
-        <md-filled-tonal-button
-          class="faq-mode-button"
-          data-faq-mode="edit"
-          has-icon
-          aria-pressed="false"
-        >
-          <md-icon slot="icon"
-            ><span class="material-symbols-outlined">edit_note</span></md-icon
-          >
-          Edit existing FAQ
-        </md-filled-tonal-button>
+      <div class="faq-onboarding__grid">
+        <button type="button" class="faq-landing-card" data-faq-mode="catalog" aria-pressed="false">
+          <span class="faq-landing-card__icon material-symbols-outlined">inventory_2</span>
+          <div class="faq-landing-card__body">
+            <p class="faq-landing-card__eyebrow">Catalog</p>
+            <p class="faq-landing-card__title">Edit catalog.json</p>
+            <p class="faq-landing-card__copy">Refresh product presets and merge sources before exporting.</p>
+          </div>
+        </button>
+        <button type="button" class="faq-landing-card" data-faq-mode="new" aria-pressed="false">
+          <span class="faq-landing-card__icon material-symbols-outlined">post_add</span>
+          <div class="faq-landing-card__body">
+            <p class="faq-landing-card__eyebrow">New entry</p>
+            <p class="faq-landing-card__title">Add new FAQ</p>
+            <p class="faq-landing-card__copy">Start with a blank form that mirrors the live schema.</p>
+          </div>
+        </button>
+        <button type="button" class="faq-landing-card" data-faq-mode="edit" aria-pressed="false">
+          <span class="faq-landing-card__icon material-symbols-outlined">edit_note</span>
+          <div class="faq-landing-card__body">
+            <p class="faq-landing-card__eyebrow">Existing</p>
+            <p class="faq-landing-card__title">Edit existing FAQ</p>
+            <p class="faq-landing-card__copy">Import or fetch a JSON to keep iterating in the builder.</p>
+          </div>
+        </button>
       </div>
       <p id="faqModeStatus" class="faq-onboarding__status" role="status">
         Pick a mode to get personalized guidance.
@@ -143,122 +134,168 @@
     </div>
   </section>
 
-  <md-filled-card class="guidance-card">
-    <div class="card-body">
-      <h2>Before you start</h2>
-      <ul>
-        <li>
-          Required fields include <strong>id</strong>, <strong>question</strong>,
-          and <strong>answer</strong>. The builder enforces export readiness.
-        </li>
-        <li>
-          Use the <strong>Categories</strong> dropdown to tag FAQs across
-          General topics and individual apps as needed. Leave it blank when the
-          entry is universal.
-        </li>
-        <li>
-          Add <strong>tags</strong> for quick search and filtering in the web
-          workspace.
-        </li>
-        <li>
-          Use <strong>Import JSON</strong> to iterate on the existing payload or
-          <strong>Fetch from URL</strong> to review published builds.
-        </li>
-      </ul>
-    </div>
-  </md-filled-card>
-
-  <md-filled-card class="builder-remote-card" id="faqRemoteImport">
-    <div class="card-body">
-      <div class="builder-remote-header">
-        <div>
-          <h2>Fetch existing JSON</h2>
-          <p>
-            Load a deployed payload directly into the workspace or choose a preset
-            API endpoint from the picker.
-          </p>
-        </div>
-      </div>
-    <div class="builder-remote-controls">
-      <md-outlined-text-field
-        id="faqFetchInput"
-        type="url"
-        label="JSON URL"
-        placeholder="./api/faq/v1/debug/en/questions/general/general.json"
-        supporting-text="Paste the live GitHub Pages payload URL or select one of the presets"
-        spellcheck="false"
+  <section class="faq-nav" aria-label="FAQ workspace navigation">
+    <div class="faq-segmented" role="tablist">
+      <button
+        type="button"
+        class="faq-segmented__button active"
+        data-faq-panel-control="catalog"
+        role="tab"
+        aria-selected="true"
+        aria-controls="faqPanelCatalog"
       >
-        <md-icon slot="leading-icon"
-          ><span class="material-symbols-outlined">link</span></md-icon
-        >
-      </md-outlined-text-field>
-      <md-filled-tonal-button id="faqFetchButton" has-icon>
-        <md-icon slot="icon"
-          ><span class="material-symbols-outlined">cloud_download</span></md-icon
-        >
-        Fetch single JSON
-      </md-filled-tonal-button>
-    </div>
-    <div
-      class="builder-remote-presets builder-remote-picker"
-      aria-label="Catalog selector"
-    >
-      <span class="builder-remote-presets-label">Catalog products</span>
-      <div id="faqCatalogSelect" class="builder-remote-picker-select"></div>
-      <md-filled-tonal-button
-        id="faqCatalogFetchButton"
-        has-icon
-        data-faq-product=""
+        <span class="material-symbols-outlined">inventory_2</span>
+        <span>Catalog</span>
+      </button>
+      <button
+        type="button"
+        class="faq-segmented__button"
+        data-faq-panel-control="faqs"
+        role="tab"
+        aria-selected="false"
+        aria-controls="faqPanelFaqs"
       >
-        <md-icon slot="icon"
-          ><span class="material-symbols-outlined">fact_check</span></md-icon
-        >
-        <span id="faqCatalogButtonLabel">Fetch selected product</span>
-      </md-filled-tonal-button>
-      <md-text-button id="faqCatalogRefresh" has-icon>
-        <md-icon slot="icon"
-          ><span class="material-symbols-outlined">refresh</span></md-icon
-        >
-        Refresh catalog
-      </md-text-button>
+        <span class="material-symbols-outlined">help_center</span>
+        <span>FAQs</span>
+      </button>
+      <button
+        type="button"
+        class="faq-segmented__button"
+        data-faq-panel-control="settings"
+        role="tab"
+        aria-selected="false"
+        aria-controls="faqPanelSettings"
+      >
+        <span class="material-symbols-outlined">tune</span>
+        <span>Settings</span>
+      </button>
     </div>
-    <p id="faqFetchStatus" class="builder-remote-status" role="status">
-      Ready to fetch.
+    <p class="faq-segmented__helper">
+      Choose a lane to focus the workspace. Each view keeps its own helpers and validation.
     </p>
-    <p id="faqCatalogStatus" class="builder-remote-status" role="status">
-      Loading catalog…
-    </p>
-  </div>
-</md-filled-card>
+  </section>
 
-  <md-filled-card class="builder-remote-card" id="faqIconsCard">
-    <div class="card-body">
-      <div class="builder-remote-header">
-        <div>
-          <h2>Google icons catalog</h2>
-          <p>
-            Pull the latest Material Symbols index to power the icon autocomplete
-            menu.
-          </p>
-        </div>
+  <section class="faq-panel" data-faq-panel="catalog" id="faqPanelCatalog">
+    <md-filled-card class="guidance-card">
+      <div class="card-body">
+        <h2>Before you start</h2>
+        <ul>
+          <li>
+            Required fields include <strong>id</strong>, <strong>question</strong>,
+            and <strong>answer</strong>. The builder enforces export readiness.
+          </li>
+          <li>
+            Use the <strong>Categories</strong> dropdown to tag FAQs across
+            General topics and individual apps as needed. Leave it blank when the
+            entry is universal.
+          </li>
+          <li>
+            Add <strong>tags</strong> for quick search and filtering in the web
+            workspace.
+          </li>
+          <li>
+            Use <strong>Import JSON</strong> to iterate on the existing payload or
+            <strong>Fetch from URL</strong> to review published builds.
+          </li>
+        </ul>
       </div>
+    </md-filled-card>
+
+    <md-filled-card class="builder-remote-card" id="faqRemoteImport">
+      <div class="card-body">
+        <div class="builder-remote-header">
+          <div>
+            <h2>Fetch existing JSON</h2>
+            <p>
+              Load a deployed payload directly into the workspace or choose a preset
+              API endpoint from the picker.
+            </p>
+          </div>
+        </div>
       <div class="builder-remote-controls">
-        <md-filled-tonal-button id="faqRefreshIcons" has-icon>
+        <md-outlined-text-field
+          id="faqFetchInput"
+          type="url"
+          label="JSON URL"
+          placeholder="./api/faq/v1/debug/en/questions/general/general.json"
+          supporting-text="Paste the live GitHub Pages payload URL or select one of the presets"
+          spellcheck="false"
+        >
+          <md-icon slot="leading-icon"
+            ><span class="material-symbols-outlined">link</span></md-icon
+          >
+        </md-outlined-text-field>
+        <md-filled-tonal-button id="faqFetchButton" has-icon>
+          <md-icon slot="icon"
+            ><span class="material-symbols-outlined">cloud_download</span></md-icon
+          >
+          Fetch single JSON
+        </md-filled-tonal-button>
+      </div>
+      <div
+        class="builder-remote-presets builder-remote-picker"
+        aria-label="Catalog selector"
+      >
+        <span class="builder-remote-presets-label">Catalog products</span>
+        <div id="faqCatalogSelect" class="builder-remote-picker-select"></div>
+        <md-filled-tonal-button
+          id="faqCatalogFetchButton"
+          has-icon
+          data-faq-product=""
+        >
+          <md-icon slot="icon"
+            ><span class="material-symbols-outlined">fact_check</span></md-icon
+          >
+          <span id="faqCatalogButtonLabel">Fetch selected product</span>
+        </md-filled-tonal-button>
+        <md-text-button id="faqCatalogRefresh" has-icon>
           <md-icon slot="icon"
             ><span class="material-symbols-outlined">refresh</span></md-icon
           >
-          Refresh icon list
-        </md-filled-tonal-button>
-        <span class="builder-remote-helper"
-          >Loaded icons: <span id="faqIconCount">0</span></span
-        >
+          Refresh catalog
+        </md-text-button>
       </div>
-      <p id="faqIconStatus" class="builder-remote-status" role="status">
-        Fetching Material Symbols catalog…
+      <p id="faqFetchStatus" class="builder-remote-status" role="status">
+        Ready to fetch.
+      </p>
+      <p id="faqCatalogStatus" class="builder-remote-status" role="status">
+        Loading catalog…
       </p>
     </div>
   </md-filled-card>
+  </section>
 
+  <section class="faq-panel" data-faq-panel="settings" id="faqPanelSettings" hidden>
+    <md-filled-card class="builder-remote-card" id="faqIconsCard">
+      <div class="card-body">
+        <div class="builder-remote-header">
+          <div>
+            <h2>Google icons catalog</h2>
+            <p>
+              Pull the latest Material Symbols index to power the icon autocomplete
+              menu.
+            </p>
+          </div>
+        </div>
+        <div class="builder-remote-controls">
+          <md-filled-tonal-button id="faqRefreshIcons" has-icon>
+            <md-icon slot="icon"
+              ><span class="material-symbols-outlined">refresh</span></md-icon
+            >
+            Refresh icon list
+          </md-filled-tonal-button>
+          <span class="builder-remote-helper"
+            >Loaded icons: <span id="faqIconCount">0</span></span
+          >
+        </div>
+        <p id="faqIconStatus" class="builder-remote-status" role="status">
+          Fetching Material Symbols catalog…
+        </p>
+      </div>
+    </md-filled-card>
+  </section>
+
+  <section class="faq-panel" data-faq-panel="faqs" id="faqPanelFaqs" hidden>
   <section class="api-builder" id="faqBuilder" data-builder-type="faq">
     <div class="builder-toolbar">
       <div class="builder-toolbar-actions">
@@ -409,4 +446,5 @@
       </div>
     </div>
   </div>
+</section>
 </div>

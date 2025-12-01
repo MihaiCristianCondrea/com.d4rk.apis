@@ -1,4 +1,4 @@
-import { initGithubFavorites, initGitPatch, initReleaseStats, initRepoMapper } from '../features/githubTools.js';
+import { initFavoritesPage, initGitPatch, initReleaseStats, initRepoMapper } from '../features/githubTools.js';
 
 const DEFAULT_ROUTE_TITLE = 'API Console';
 const DEFAULT_METADATA_DESCRIPTION = 'Explore Mihai-Cristian Condrea\'s Android developer portfolio featuring Jetpack Compose apps, Material Design systems, and open-source tools.';
@@ -357,7 +357,7 @@ const defaultRoutes = [
         id: 'github-favorites',
         path: 'pages/github/github-favorites.html',
         title: 'Favorites',
-        onLoad: initGithubFavorites,
+        onLoad: initFavoritesPage,
         metadata: {
             description: 'Quick access to repositories saved from Repo Mapper and Release Stats.',
             keywords: ['favorites', 'GitHub tools'],

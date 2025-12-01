@@ -129,12 +129,44 @@
         const workspacePulseEl = document.getElementById('faqWorkspacePulse');
         const modeButtons = document.querySelectorAll('[data-faq-mode]');
         const modeStatus = document.getElementById('faqModeStatus');
+        const panelButtons = document.querySelectorAll('[data-faq-panel-control]');
+        const panels = document.querySelectorAll('[data-faq-panel]');
 
         const modeTargets = {
             catalog: catalogSelectRoot?.closest('.builder-remote-card') || catalogSelectRoot,
             new: entriesContainer,
             edit: document.getElementById('faqRemoteImport')
         };
+
+        const panelByMode = {
+            catalog: 'catalog',
+            new: 'faqs',
+            edit: 'catalog'
+        };
+
+        const setPanel = (panel) => {
+            const availablePanels = Array.from(panels);
+            const activePanel = availablePanels.find((panelEl) => panelEl.dataset.faqPanel === panel)
+                ? panel
+                : availablePanels[0]?.dataset.faqPanel;
+
+            availablePanels.forEach((panelEl) => {
+                const isActive = panelEl.dataset.faqPanel === activePanel;
+                panelEl.toggleAttribute('hidden', !isActive);
+            });
+
+            panelButtons.forEach((button) => {
+                const isActive = button.dataset.faqPanelControl === activePanel;
+                button.classList.toggle('is-active', isActive);
+                button.setAttribute('aria-selected', isActive ? 'true' : 'false');
+            });
+        };
+
+        panelButtons.forEach((button) => {
+            button.addEventListener('click', () => setPanel(button.dataset.faqPanelControl));
+        });
+
+        setPanel(panels[0]?.dataset.faqPanel || 'catalog');
 
         const modeMessages = {
             catalog: 'Update catalog.json and refresh products before exporting.',
@@ -144,6 +176,7 @@
 
         const setMode = (mode) => {
             const selectedMode = modeMessages[mode] ? mode : 'catalog';
+            setPanel(panelByMode[selectedMode] || 'catalog');
             modeButtons.forEach((button) => {
                 const isActive = button.dataset.faqMode === selectedMode;
                 button.classList.toggle('is-active', isActive);

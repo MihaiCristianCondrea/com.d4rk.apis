@@ -95,60 +95,11 @@
   gap: 1.25rem;
 }
 
-.gh-floating-row {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-}
-
 .gh-field-row {
   display: grid;
   grid-template-columns: 1fr auto;
   gap: 0.75rem;
   align-items: flex-start;
-}
-
-.gh-floating-field {
-  --floating-surface: var(--gh-card-strong);
-  --floating-border: color-mix(in srgb, var(--gh-outline) 55%, transparent);
-  position: relative;
-  flex: 1;
-  background: var(--floating-surface);
-  border: 1px solid var(--floating-border);
-  border-radius: var(--gh-radius-sm);
-  padding: 0.25rem 0.5rem 0.35rem;
-  transition: background var(--gh-transition), border-color var(--gh-transition), box-shadow var(--gh-transition);
-}
-
-.gh-floating-field:hover,
-.gh-floating-field:focus-within {
-  background: color-mix(in srgb, var(--gh-card-strong) 85%, var(--gh-card));
-  box-shadow: 0 10px 30px -22px rgba(0, 0, 0, 0.65);
-}
-
-.gh-field-row md-outlined-text-field {
-  width: 100%;
-  --md-outlined-text-field-container-shape: var(--gh-radius-sm);
-  --md-outlined-text-field-container-color: color-mix(
-    in srgb,
-    var(--gh-card-strong) 82%,
-    transparent
-  );
-  --md-outlined-text-field-outline-color: color-mix(
-    in srgb,
-    var(--gh-outline) 55%,
-    transparent
-  );
-  --md-outlined-text-field-focus-outline-color: var(--md-sys-color-primary);
-  --md-outlined-text-field-hover-outline-color: color-mix(
-    in srgb,
-    var(--md-sys-color-primary) 35%,
-    var(--gh-outline)
-  );
-  --md-outlined-text-field-input-text-color: var(--gh-text);
-  --md-outlined-text-field-supporting-text-color: var(--gh-subtext);
-  --md-outlined-text-field-label-text-color: var(--gh-subtext);
-  --md-outlined-text-field-caret-color: var(--md-sys-color-primary);
 }
 
 .gh-token-dropdown {
@@ -160,66 +111,6 @@
 .gh-token-dropdown .token-toggle {
   justify-content: space-between;
   width: 100%;
-}
-
-.gh-token-dropdown .token-toggle .chevron {
-  transition: transform var(--gh-transition);
-}
-
-.gh-token-dropdown .token-toggle.is-open .chevron {
-  transform: rotate(180deg);
-}
-
-.gh-floating-input {
-  width: 100%;
-  background: transparent;
-  border: none;
-  padding: 1rem 0.75rem 0.35rem;
-  color: var(--gh-text);
-  font: inherit;
-}
-
-.gh-floating-input:focus {
-  outline: none;
-}
-
-.gh-floating-field label {
-  position: absolute;
-  top: 1.05rem;
-  left: 0.85rem;
-  color: var(--gh-subtext);
-  font-size: 0.95rem;
-  transition: transform var(--gh-transition), font-size var(--gh-transition), top var(--gh-transition), color var(--gh-transition);
-  pointer-events: none;
-}
-
-.gh-floating-input:placeholder-shown + label {
-  top: 1.1rem;
-  font-size: 0.95rem;
-}
-
-.gh-floating-input:focus + label,
-.gh-floating-input:not(:placeholder-shown) + label {
-  top: 0.45rem;
-  font-size: 0.75rem;
-  color: var(--gh-text);
-}
-
-.gh-underline {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: -1px;
-  height: 2px;
-  background: var(--md-sys-color-primary, #e6e1e5);
-  transform: scaleX(0);
-  transform-origin: left;
-  transition: transform var(--gh-transition);
-}
-
-.gh-floating-input:focus ~ .gh-underline,
-.gh-floating-input:not(:placeholder-shown) ~ .gh-underline {
-  transform: scaleX(1);
 }
 
 .gh-control-row {
@@ -240,6 +131,7 @@
   list-style: none;
   display: inline-flex;
   align-items: center;
+  justify-content: space-between;
   gap: 0.35rem;
   cursor: pointer;
   border-radius: 999px;
@@ -264,6 +156,14 @@
   box-shadow: 0 12px 36px -26px rgba(0, 0, 0, 0.75);
 }
 
+.gh-token-settings summary .chevron {
+  transition: transform var(--gh-transition);
+}
+
+.gh-token-settings[open] summary .chevron {
+  transform: rotate(180deg);
+}
+
 .gh-token-settings .material-symbols-outlined {
   font-size: 20px;
 }
@@ -284,6 +184,38 @@
   width: 1rem;
   height: 1rem;
   accent-color: var(--md-sys-color-primary, #e6e1e5);
+  margin: 0;
+}
+
+.gh-visibility-icons {
+  position: relative;
+  width: 24px;
+  height: 24px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.gh-visibility-icons .visibility-off,
+.gh-visibility-icons .visibility-on {
+  position: absolute;
+  inset: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity var(--gh-transition);
+}
+
+.gh-visibility-icons .visibility-off {
+  opacity: 0;
+}
+
+.gh-token-visibility.is-visible .visibility-off {
+  opacity: 1;
+}
+
+.gh-token-visibility.is-visible .visibility-on {
+  opacity: 0;
 }
 
 .gh-collapsible {
@@ -292,12 +224,21 @@
   background: color-mix(in srgb, var(--gh-card-strong) 85%, var(--gh-card));
   border: var(--gh-border);
   border-radius: var(--gh-radius-md);
-  padding: 0.75rem;
+  padding: 0 0.75rem;
   box-shadow: 0 12px 36px -26px rgba(0, 0, 0, 0.65);
   overflow: hidden;
-  opacity: 1;
-  transition: height var(--gh-transition), opacity var(--gh-transition),
+  opacity: 0;
+  max-height: 0;
+  pointer-events: none;
+  transition: max-height var(--gh-transition), opacity var(--gh-transition),
     padding var(--gh-transition);
+}
+
+.gh-token-settings[open] .gh-collapsible {
+  opacity: 1;
+  max-height: 400px;
+  padding: 0.75rem;
+  pointer-events: auto;
 }
 
 .gh-inline-actions {

@@ -77,16 +77,17 @@ export const parseGithubUrl = (inputUrl) => {
       .replace(/^https?:\/\//i, '')
       .replace(/^www\./i, '')
       .replace(/^github\.com\//i, 'github.com/');
+    const normalizedLower = normalized.toLowerCase();
 
     const urlPattern = /github\.com\/([^/]+)\/([^/?#]+)/i;
     const slugPattern = /^([^/\s]+)\/([^/\s]+)$/i;
 
-    const urlMatch = normalized.toLowerCase().match(urlPattern);
+    const urlMatch = normalizedLower.match(urlPattern);
     if (urlMatch) {
       return { owner: urlMatch[1], repo: urlMatch[2] };
     }
 
-    const slugMatch = normalized.match(slugPattern);
+    const slugMatch = normalizedLower.match(slugPattern);
     if (slugMatch) {
       return { owner: slugMatch[1], repo: slugMatch[2] };
     }
@@ -104,17 +105,18 @@ export const parseGithubCommitUrl = (inputUrl) => {
       .replace(/^https?:\/\//i, '')
       .replace(/^www\./i, '')
       .replace(/^github\.com\//i, 'github.com/');
+    const normalizedLower = normalized.toLowerCase();
 
     // Matches .../owner/repo/commit/sha or owner/repo/commit/sha
     const pattern = /github\.com\/([^/]+)\/([^/]+)\/commit\/([a-fA-F0-9]+)/i;
     const slugPattern = /^([^/]+)\/([^/]+)\/commit\/([a-fA-F0-9]+)/i;
 
-    const urlMatch = normalized.toLowerCase().match(pattern);
+    const urlMatch = normalizedLower.match(pattern);
     if (urlMatch) {
       return { owner: urlMatch[1], repo: urlMatch[2], commitSha: urlMatch[3] };
     }
 
-    const slugMatch = normalized.toLowerCase().match(slugPattern);
+    const slugMatch = normalizedLower.match(slugPattern);
     if (slugMatch) {
       return { owner: slugMatch[1], repo: slugMatch[2], commitSha: slugMatch[3] };
     }
