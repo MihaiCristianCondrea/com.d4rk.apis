@@ -281,9 +281,12 @@ function setButtonLoading(button, isLoading, idleLabel, busyLabel, iconName) {
 }
 
 function bindCollapsibleToggle(buttonId, wrapperId, labels = {}) {
-  const button = document.getElementById(buttonId);
   const wrapper = document.getElementById(wrapperId);
-  if (!button || !wrapper) return;
+  if (!wrapper) return;
+
+  const details = wrapper.closest('details');
+  const button = document.getElementById(buttonId) || details?.querySelector('summary');
+  if (!button) return;
 
   const icon = button.querySelector('.material-symbols-outlined');
   const label =
@@ -292,6 +295,20 @@ function bindCollapsibleToggle(buttonId, wrapperId, labels = {}) {
   const openLabel = labels.openLabel || 'Hide token';
   const closedLabel = labels.closedLabel || 'Token settings';
   const { openIcon = 'expand_less', closedIcon = 'settings' } = labels;
+
+  if (details) {
+    const syncState = () => {
+      const isOpen = Boolean(details.open);
+      wrapper.classList.toggle('is-open', isOpen);
+      details.classList.toggle('is-open', isOpen);
+      button.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+      if (label) label.textContent = isOpen ? openLabel : closedLabel;
+      if (icon) icon.textContent = isOpen ? openIcon : closedIcon;
+    };
+    details.addEventListener('toggle', syncState);
+    syncState();
+    return;
+  }
 
   const isOpen = () => !wrapper.hasAttribute('hidden');
 
@@ -436,12 +453,18 @@ function toggleTokenVisibility(toggleId, inputId) {
   const toggle = document.getElementById(toggleId);
   const input = document.getElementById(inputId);
   if (!toggle || !input) return;
-  const showing = input.getAttribute('type') === 'text';
-  input.setAttribute('type', showing ? 'password' : 'text');
-  const icon = toggle.querySelector('.material-symbols-outlined');
-  const label = toggle.querySelector('span:last-child');
-  if (icon) icon.textContent = showing ? 'visibility' : 'visibility_off';
-  if (label) label.textContent = showing ? 'Show token' : 'Hide token';
+
+  const isCheckbox = toggle instanceof HTMLInputElement && toggle.type === 'checkbox';
+  const showing = isCheckbox ? toggle.checked : input.getAttribute('type') === 'text';
+  input.setAttribute('type', showing ? 'text' : 'password');
+
+  const icon = isCheckbox ? null : toggle.querySelector('.material-symbols-outlined');
+  const label = isCheckbox
+    ? toggle.closest('label')?.querySelector('[data-token-visibility-label]')
+    : toggle.querySelector('span:last-child');
+
+  if (icon) icon.textContent = showing ? 'visibility_off' : 'visibility';
+  if (label) label.textContent = showing ? 'Hide token' : 'Show token';
 }
 
 function initMapperFavorites(urlInputId, favoriteButtonId) {
@@ -457,9 +480,12 @@ function initMapperFavorites(urlInputId, favoriteButtonId) {
 
   urlInput.addEventListener('input', update);
   favButton.addEventListener('click', () => {
-    if (!state.mapper.parsedRepo) return;
-    toggleFavorite(state.mapper.parsedRepo.owner, state.mapper.parsedRepo.repo);
-    setFavoriteButtonState(favButton, state.mapper.parsedRepo);
+    const parsed = parseGithubUrl(urlInput.value || '');
+    state.mapper.parsedRepo = parsed;
+    setFavoriteButtonState(favButton, parsed);
+    if (!parsed) return;
+    toggleFavorite(parsed.owner, parsed.repo);
+    setFavoriteButtonState(favButton, parsed);
   });
 
   update();
@@ -478,9 +504,12 @@ function initReleaseFavorites(urlInputId, favoriteButtonId) {
 
   urlInput.addEventListener('input', update);
   favButton.addEventListener('click', () => {
-    if (!state.releases.parsedRepo) return;
-    toggleFavorite(state.releases.parsedRepo.owner, state.releases.parsedRepo.repo);
-    setFavoriteButtonState(favButton, state.releases.parsedRepo);
+    const parsed = parseGithubUrl(urlInput.value || '');
+    state.releases.parsedRepo = parsed;
+    setFavoriteButtonState(favButton, parsed);
+    if (!parsed) return;
+    toggleFavorite(parsed.owner, parsed.repo);
+    setFavoriteButtonState(favButton, parsed);
   });
 
   update();
@@ -499,9 +528,12 @@ function initPatchFavorites(urlInputId, favoriteButtonId) {
 
   urlInput.addEventListener('input', update);
   favButton.addEventListener('click', () => {
-    if (!state.patch.parsedRepo) return;
-    toggleFavorite(state.patch.parsedRepo.owner, state.patch.parsedRepo.repo);
-    setFavoriteButtonState(favButton, state.patch.parsedRepo);
+    const parsed = parseGithubCommitUrl(urlInput.value || '');
+    state.patch.parsedRepo = parsed;
+    setFavoriteButtonState(favButton, parsed);
+    if (!parsed) return;
+    toggleFavorite(parsed.owner, parsed.repo);
+    setFavoriteButtonState(favButton, parsed);
   });
 
   update();
@@ -584,7 +616,7 @@ export function initRepoMapper() {
 
   document
     .getElementById('mapper-token-toggle')
-    ?.addEventListener('click', () =>
+    ?.addEventListener('change', () =>
       toggleTokenVisibility('mapper-token-toggle', 'mapper-token'),
     );
 
@@ -676,7 +708,7 @@ export function initReleaseStats() {
 
   document
     .getElementById('releases-token-toggle')
-    ?.addEventListener('click', () =>
+    ?.addEventListener('change', () =>
       toggleTokenVisibility('releases-token-toggle', 'releases-token'),
     );
 
@@ -824,7 +856,7 @@ export function initGitPatch() {
 
   document
     .getElementById('patch-token-toggle')
-    ?.addEventListener('click', () =>
+    ?.addEventListener('change', () =>
       toggleTokenVisibility('patch-token-toggle', 'patch-token'),
     );
 
@@ -876,6 +908,7 @@ export function initGithubFavorites() {
   loadFavorites();
   hydrateDatalists();
   renderFavoritesGrid();
+  renderQuickFavorites();
 }
 
 export async function runMapper(url, token = '', format = 'ascii') {

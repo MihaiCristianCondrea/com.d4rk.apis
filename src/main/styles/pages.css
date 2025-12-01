@@ -86,8 +86,8 @@
 .github-tools-header {
   display: flex;
   justify-content: flex-start;
-  align-items: baseline;
-  gap: 0.85rem;
+  align-items: center;
+  gap: 0.65rem;
   flex-wrap: nowrap;
   min-width: 0;
   color: var(--app-text-color);
