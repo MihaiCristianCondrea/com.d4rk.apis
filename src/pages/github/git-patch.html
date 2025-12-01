@@ -28,38 +28,29 @@
           </button>
         </div>
 
-        <div class="gh-control-row">
-          <button
-            type="button"
-            id="patch-token-reveal"
-            class="gh-chip-button token-toggle"
-            aria-controls="patch-token-wrapper"
-            aria-expanded="false"
-          >
+        <details class="gh-token-settings" id="patch-token-settings">
+          <summary id="patch-token-reveal">
             <span class="material-symbols-outlined" aria-hidden="true">settings</span>
             <span class="favorite-label">Token settings</span>
-          </button>
-        </div>
-
-        <div class="gh-collapsible" id="patch-token-wrapper" hidden>
-          <div class="gh-floating-field">
-            <input
-              id="patch-token"
-              type="password"
-              class="gh-floating-input"
-              placeholder=" "
-              autocomplete="off"
-            />
-            <label for="patch-token">Personal Access Token (optional)</label>
-            <span class="gh-underline"></span>
+          </summary>
+          <div class="gh-collapsible" id="patch-token-wrapper">
+            <div class="gh-floating-field">
+              <input
+                id="patch-token"
+                type="password"
+                class="gh-floating-input"
+                placeholder=" "
+                autocomplete="off"
+              />
+              <label for="patch-token">Personal Access Token (optional)</label>
+              <span class="gh-underline"></span>
+            </div>
+            <label class="gh-token-visibility" for="patch-token-toggle">
+              <input type="checkbox" id="patch-token-toggle" />
+              <span data-token-visibility-label>Show token</span>
+            </label>
           </div>
-          <div class="gh-inline-actions">
-            <button type="button" id="patch-token-toggle" class="gh-chip-button ghost">
-              <span class="material-symbols-outlined">visibility</span>
-              <span>Show token</span>
-            </button>
-          </div>
-        </div>
+        </details>
 
         <div class="gh-actions end">
           <button type="submit" id="patch-submit" class="gh-primary-button">

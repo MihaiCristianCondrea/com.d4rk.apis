@@ -179,6 +179,62 @@
   gap: 0.75rem;
 }
 
+/* Use native disclosure so token inputs stay accessible even if JS fails to load. */
+.gh-token-settings {
+  border: none;
+  padding: 0;
+}
+
+.gh-token-settings summary {
+  list-style: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  cursor: pointer;
+  border-radius: 999px;
+  padding: 0.35rem 0.9rem;
+  background: var(--gh-card-strong);
+  color: var(--gh-text);
+  border: var(--gh-border);
+  transition: background var(--gh-transition), color var(--gh-transition),
+    box-shadow var(--gh-transition);
+}
+
+.gh-token-settings summary::-webkit-details-marker {
+  display: none;
+}
+
+.gh-token-settings[open] summary {
+  background: color-mix(
+    in srgb,
+    var(--md-sys-color-primary, #e6e1e5) 25%,
+    var(--gh-card-strong)
+  );
+  box-shadow: 0 12px 36px -26px rgba(0, 0, 0, 0.75);
+}
+
+.gh-token-settings .material-symbols-outlined {
+  font-size: 20px;
+}
+
+.gh-token-settings .gh-collapsible {
+  margin-top: 0.75rem;
+}
+
+.gh-token-visibility {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  color: var(--gh-text);
+  font-size: 0.95rem;
+}
+
+.gh-token-visibility input[type='checkbox'] {
+  width: 1rem;
+  height: 1rem;
+  accent-color: var(--md-sys-color-primary, #e6e1e5);
+}
+
 .gh-collapsible {
   display: grid;
   gap: 0.75rem;

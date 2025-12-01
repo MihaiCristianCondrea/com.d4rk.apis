@@ -179,25 +179,23 @@ export class NavigationDrawerController {
   }
 
   syncDrawerState(isOpened) {
-    if (!this.navDrawer) {
+    const hasDrawer = Boolean(this.navDrawer);
+    const isDrawerOpen = Boolean(isOpened && hasDrawer);
+
+    // Always clean up global scroll locking even if the drawer element is missing
+    // (e.g., during fast navigations) so pages never stay stuck with overflow hidden.
+    this.drawerOverlay?.classList.toggle('open', isDrawerOpen);
+    this.drawerOverlay?.setAttribute('aria-hidden', isDrawerOpen ? 'false' : 'true');
+    document.body.classList.toggle('drawer-is-open', isDrawerOpen);
+    this.menuButton?.setAttribute('aria-expanded', isDrawerOpen ? 'true' : 'false');
+
+    this.updateModalAccessibilityState(isDrawerOpen);
+
+    if (!hasDrawer) {
       return;
     }
 
-    const isDrawerOpen = Boolean(isOpened);
     this.updateNavDrawerAriaModal();
-    this.updateModalAccessibilityState(isDrawerOpen);
-
-    if (isDrawerOpen) {
-      this.drawerOverlay?.classList.add('open');
-      this.drawerOverlay?.setAttribute('aria-hidden', 'false');
-      document.body.classList.add('drawer-is-open');
-      this.menuButton?.setAttribute('aria-expanded', 'true');
-    } else {
-      this.drawerOverlay?.classList.remove('open');
-      this.drawerOverlay?.setAttribute('aria-hidden', 'true');
-      document.body.classList.remove('drawer-is-open');
-      this.menuButton?.setAttribute('aria-expanded', 'false');
-    }
   }
 
   updateNavDrawerAriaModal() {
@@ -212,7 +210,7 @@ export class NavigationDrawerController {
     if (inert) {
       this.redirectFocusAwayFromInertAreas();
     }
-    this.drawerOverlay?.toggleAttribute('aria-hidden', !inert);
+    this.drawerOverlay?.setAttribute('aria-hidden', inert ? 'false' : 'true');
 
     this.inertTargets.forEach((element) => {
       if (!element) {

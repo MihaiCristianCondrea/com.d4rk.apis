@@ -30,16 +30,30 @@
         </div>
 
         <div class="gh-control-row">
-          <button
-            type="button"
-            id="mapper-token-reveal"
-            class="gh-chip-button token-toggle"
-            aria-controls="mapper-token-wrapper"
-            aria-expanded="false"
-          >
-            <span class="material-symbols-outlined" aria-hidden="true">settings</span>
-            <span class="favorite-label">Token settings</span>
-          </button>
+          <details class="gh-token-settings" id="mapper-token-settings">
+            <summary id="mapper-token-reveal">
+              <span class="material-symbols-outlined" aria-hidden="true">settings</span>
+              <span class="favorite-label">Token settings</span>
+            </summary>
+            <div class="gh-collapsible" id="mapper-token-wrapper">
+              <div class="gh-floating-field">
+                <input
+                  id="mapper-token"
+                  name="mapper-token"
+                  type="password"
+                  class="gh-floating-input"
+                  placeholder=" "
+                  autocomplete="off"
+                />
+                <label for="mapper-token">Personal Access Token (optional)</label>
+                <span class="gh-underline"></span>
+              </div>
+              <label class="gh-token-visibility" for="mapper-token-toggle">
+                <input type="checkbox" id="mapper-token-toggle" />
+                <span data-token-visibility-label>Show token</span>
+              </label>
+            </div>
+          </details>
           <div class="gh-segmented" id="mapper-format">
             <button type="button" id="btn-format-ascii" class="active">
               <span class="material-symbols-outlined">terminal</span>
@@ -49,27 +63,6 @@
             <button type="button" id="btn-format-paths">
               <span class="material-symbols-outlined">view_list</span>
               <span>Paths</span>
-            </button>
-          </div>
-        </div>
-
-        <div class="gh-collapsible" id="mapper-token-wrapper" hidden>
-          <div class="gh-floating-field">
-            <input
-              id="mapper-token"
-              name="mapper-token"
-              type="password"
-              class="gh-floating-input"
-              placeholder=" "
-              autocomplete="off"
-            />
-            <label for="mapper-token">Personal Access Token (optional)</label>
-            <span class="gh-underline"></span>
-          </div>
-          <div class="gh-inline-actions">
-            <button type="button" id="mapper-token-toggle" class="gh-chip-button ghost">
-              <span class="material-symbols-outlined">visibility</span>
-              <span>Show token</span>
             </button>
           </div>
         </div>

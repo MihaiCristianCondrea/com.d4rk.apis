@@ -4,6 +4,8 @@ body {
   color: var(--app-text-color);
   margin: 0;
   padding: 0;
+  overflow-y: auto;
+  overscroll-behavior-y: contain;
   transition:
     background-color var(--app-motion-duration-medium, 300ms)
       var(--app-motion-ease-standard, cubic-bezier(0, 0, 0.2, 1)),
@@ -12,6 +14,14 @@ body {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+}
+
+main {
+  /* Keep primary content scrollable so navigation overlays can't trap the page. */
+  flex: 1 1 auto;
+  min-height: 100vh;
+  overflow-y: auto;
+  overscroll-behavior: contain;
 }
 
 * {
@@ -38,6 +48,7 @@ body {
   background-color: var(--md-sys-color-outline);
 }
 
+/* Only lock scrolling when the drawer overlay is visible; otherwise keep the page scrollable. */
 body.drawer-is-open {
   overflow: hidden;
 }
