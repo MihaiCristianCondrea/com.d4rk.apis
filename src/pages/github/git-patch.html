@@ -8,49 +8,50 @@
 
     <div class="gh-card">
       <form id="patch-form" class="gh-form" autocomplete="off">
-        <div class="gh-floating-row">
-          <div class="gh-floating-field">
-            <input
-              id="patch-url"
-              type="url"
-              class="gh-floating-input"
-              placeholder=" "
-              list="patch-datalist"
-              required
-              autocomplete="off"
-            />
-            <label for="patch-url">Commit URL</label>
-            <span class="gh-underline"></span>
-          </div>
+        <div class="gh-field-row">
+          <md-outlined-text-field
+            id="patch-url"
+            type="url"
+            label="Commit URL"
+            placeholder="https://github.com/owner/repo/commit/sha or owner/repo/commit/sha"
+            supporting-text="Accepts full GitHub URLs or shorthand commit paths"
+            required
+            autocomplete="off"
+          >
+            <md-icon slot="leading-icon"
+              ><span class="material-symbols-outlined">link</span></md-icon
+            >
+          </md-outlined-text-field>
           <button type="button" id="patch-fav-btn" class="gh-pill-button" hidden aria-pressed="false">
             <span class="material-symbols-outlined">star</span>
             <span class="favorite-label">Favorite</span>
           </button>
         </div>
 
-        <details class="gh-token-settings" id="patch-token-settings">
-          <summary id="patch-token-reveal">
-            <span class="material-symbols-outlined" aria-hidden="true">settings</span>
+        <div class="gh-token-dropdown" id="patch-token-settings">
+          <button type="button" class="gh-chip-button token-toggle" id="patch-token-reveal" aria-expanded="false">
+            <span class="material-symbols-outlined">vpn_key</span>
             <span class="favorite-label">Token settings</span>
-          </summary>
-          <div class="gh-collapsible" id="patch-token-wrapper">
-            <div class="gh-floating-field">
-              <input
-                id="patch-token"
-                type="password"
-                class="gh-floating-input"
-                placeholder=" "
-                autocomplete="off"
-              />
-              <label for="patch-token">Personal Access Token (optional)</label>
-              <span class="gh-underline"></span>
-            </div>
+            <span class="material-symbols-outlined chevron" aria-hidden="true">expand_more</span>
+          </button>
+          <div class="gh-collapsible" id="patch-token-wrapper" hidden>
+            <md-outlined-text-field
+              id="patch-token"
+              type="password"
+              label="Personal Access Token (optional)"
+              placeholder="ghp_exampletoken"
+              autocomplete="off"
+            >
+              <md-icon slot="leading-icon"
+                ><span class="material-symbols-outlined">shield_lock</span></md-icon
+              >
+            </md-outlined-text-field>
             <label class="gh-token-visibility" for="patch-token-toggle">
               <input type="checkbox" id="patch-token-toggle" />
               <span data-token-visibility-label>Show token</span>
             </label>
           </div>
-        </details>
+        </div>
 
         <div class="gh-actions end">
           <button type="submit" id="patch-submit" class="gh-primary-button">

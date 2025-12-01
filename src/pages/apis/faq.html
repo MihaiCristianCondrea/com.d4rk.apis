@@ -11,6 +11,58 @@
     </p>
   </header>
 
+  <section class="faq-onboarding" aria-label="Quick start">
+    <md-elevated-card class="faq-onboarding-card">
+      <div class="faq-onboarding__header">
+        <p class="faq-onboarding__eyebrow">Choose your track</p>
+        <h2>Jump into catalog or question editing</h2>
+        <p class="faq-onboarding__helper">
+          Start with the catalog, add a brand new FAQ entry, or fetch an existing
+          JSON to continue editing. The workspace will scroll to the right tool
+          when you pick a mode.
+        </p>
+      </div>
+      <div class="faq-onboarding__actions">
+        <md-filled-tonal-button
+          class="faq-mode-button"
+          data-faq-mode="catalog"
+          has-icon
+          aria-pressed="false"
+        >
+          <md-icon slot="icon"
+            ><span class="material-symbols-outlined">inventory_2</span></md-icon
+          >
+          Edit catalog.json
+        </md-filled-tonal-button>
+        <md-filled-tonal-button
+          class="faq-mode-button"
+          data-faq-mode="new"
+          has-icon
+          aria-pressed="false"
+        >
+          <md-icon slot="icon"
+            ><span class="material-symbols-outlined">post_add</span></md-icon
+          >
+          Add new FAQ
+        </md-filled-tonal-button>
+        <md-filled-tonal-button
+          class="faq-mode-button"
+          data-faq-mode="edit"
+          has-icon
+          aria-pressed="false"
+        >
+          <md-icon slot="icon"
+            ><span class="material-symbols-outlined">edit_note</span></md-icon
+          >
+          Edit existing FAQ
+        </md-filled-tonal-button>
+      </div>
+      <p id="faqModeStatus" class="faq-onboarding__status" role="status">
+        Pick a mode to get personalized guidance.
+      </p>
+    </md-elevated-card>
+  </section>
+
   <section class="workspace-dashboard" aria-label="Workspace overview">
     <div class="workspace-insight-grid">
       <md-elevated-card class="insight-card">

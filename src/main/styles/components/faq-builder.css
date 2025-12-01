@@ -1,4 +1,64 @@
 /* --- FAQ builder enhancements --- */
+.faq-onboarding {
+  margin: 1.5rem 0;
+}
+
+.faq-onboarding-card {
+  padding: 1.25rem;
+  display: grid;
+  gap: 1rem;
+}
+
+.faq-onboarding__header h2 {
+  margin: 0 0 0.35rem;
+}
+
+.faq-onboarding__eyebrow {
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 0.85rem;
+  color: var(--app-secondary-text-color);
+}
+
+.faq-onboarding__helper {
+  margin: 0;
+  color: var(--app-secondary-text-color);
+}
+
+.faq-onboarding__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+}
+
+.faq-mode-button {
+  --md-filled-tonal-button-container-shape: 18px;
+  transition: transform 150ms ease, box-shadow 150ms ease;
+}
+
+.faq-mode-button.is-active {
+  box-shadow: 0 14px 42px -24px rgba(0, 0, 0, 0.4);
+  transform: translateY(-1px);
+}
+
+.faq-onboarding__status {
+  margin: 0;
+  color: var(--app-secondary-text-color);
+}
+
+.faq-mode-pulse {
+  animation: faq-mode-pulse 600ms ease;
+}
+
+@keyframes faq-mode-pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.45);
+  }
+  100% {
+    box-shadow: 0 0 0 18px rgba(99, 102, 241, 0);
+  }
+}
 .faq-icon-meta {
   display: flex;
   align-items: center;

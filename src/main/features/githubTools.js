@@ -38,6 +38,35 @@ const storageTargets =
     : [];
 let memoryFavorites = [];
 
+function resolveInputElement(target) {
+  if (!target) return null;
+  if (target instanceof HTMLInputElement || target instanceof HTMLTextAreaElement) {
+    return target;
+  }
+  return target.shadowRoot?.querySelector('input') || null;
+}
+
+function setFieldError(target, message = '') {
+  const inputEl = resolveInputElement(target);
+  if (!inputEl && !target) return;
+
+  const hasError = Boolean(message);
+  if (target && 'error' in target) {
+    target.error = hasError;
+    if ('errorText' in target) {
+      target.errorText = message || '';
+    }
+  }
+
+  if (inputEl) {
+    inputEl.classList.toggle('has-error', hasError);
+    inputEl.setAttribute('aria-invalid', hasError ? 'true' : 'false');
+    if (!hasError) {
+      inputEl.removeAttribute('aria-invalid');
+    }
+  }
+}
+
 function sanitizeFavorites(entries) {
   if (!Array.isArray(entries)) return [];
   const seen = new Set();
@@ -104,14 +133,18 @@ function readStoredFavorites() {
     try {
       const stored = store.getItem(STORAGE_KEY);
       if (stored) {
-          const parsed = sanitizeFavorites(JSON.parse(stored));
-          if (parsed.length) {
-            return parsed;
-          }
-          store.removeItem(STORAGE_KEY);
+        const parsed = sanitizeFavorites(JSON.parse(stored));
+        if (parsed.length) {
+          return parsed;
+        }
+        store.removeItem(STORAGE_KEY);
       }
     } catch (error) {
-      // Ignore store failures and try the next target.
+      try {
+        store.removeItem(STORAGE_KEY);
+      } catch (cleanupError) {
+        // ignore cleanup failures
+      }
     }
   }
   const cookieRaw = readCookieFavorites();
@@ -189,10 +222,26 @@ function hydrateDatalist(listId, suffix = '') {
   });
 }
 
+function attachDatalistToField(fieldId, listId) {
+  const field = document.getElementById(fieldId);
+  const input = resolveInputElement(field);
+  if (!input) return;
+
+  if (listId) {
+    input.setAttribute('list', listId);
+  } else {
+    input.removeAttribute('list');
+  }
+}
+
 function hydrateDatalists() {
   hydrateDatalist('mapper-datalist');
   hydrateDatalist('releases-datalist');
   hydrateDatalist('patch-datalist', '/commit/');
+
+  attachDatalistToField('mapper-url', 'mapper-datalist');
+  attachDatalistToField('releases-url', 'releases-datalist');
+  attachDatalistToField('patch-url', 'patch-datalist');
 }
 
 function setFavoriteButtonState(button, parsedRepo) {
@@ -247,18 +296,21 @@ async function copyWithFeedback(buttonId, text) {
   copyResetTimers.set(button, resetTimer);
 }
 
-function showError(elementId, message) {
+function showError(elementId, message, inputIds = []) {
   const container = document.getElementById(elementId);
   if (!container) return;
   container.removeAttribute('hidden');
   const text = container.querySelector('[data-error-text]');
   if (text) text.textContent = message;
+
+  inputIds.forEach((id) => setFieldError(document.getElementById(id), message));
 }
 
-function hideError(elementId) {
+function hideError(elementId, inputIds = []) {
   const container = document.getElementById(elementId);
   if (!container) return;
   container.setAttribute('hidden', 'hidden');
+  inputIds.forEach((id) => setFieldError(document.getElementById(id), ''));
 }
 
 function setButtonLoading(button, isLoading, idleLabel, busyLabel, iconName) {
@@ -313,7 +365,27 @@ function bindCollapsibleToggle(buttonId, wrapperId, labels = {}) {
   const isOpen = () => !wrapper.hasAttribute('hidden');
 
   const setOpen = (value) => {
-    wrapper.toggleAttribute('hidden', !value);
+    const currentHeight = wrapper.scrollHeight;
+    wrapper.style.overflow = 'hidden';
+
+    if (value) {
+      wrapper.removeAttribute('hidden');
+      const targetHeight = wrapper.scrollHeight;
+      wrapper.style.height = '0px';
+      requestAnimationFrame(() => {
+        wrapper.style.height = `${targetHeight}px`;
+      });
+    } else {
+      wrapper.style.height = `${currentHeight}px`;
+      requestAnimationFrame(() => {
+        wrapper.style.height = '0px';
+      });
+      setTimeout(() => {
+        wrapper.setAttribute('hidden', 'hidden');
+        wrapper.style.height = '';
+      }, 220);
+    }
+
     wrapper.classList.toggle('is-open', value);
     button.classList.toggle('is-open', value);
     button.setAttribute('aria-expanded', value ? 'true' : 'false');
@@ -322,6 +394,9 @@ function bindCollapsibleToggle(buttonId, wrapperId, labels = {}) {
     if (value) {
       const focusable = wrapper.querySelector('input, button, select, textarea');
       focusable?.focus({ preventScroll: true });
+      setTimeout(() => {
+        wrapper.style.height = 'auto';
+      }, 220);
     }
   };
 
@@ -452,11 +527,12 @@ function renderQuickFavorites() {
 function toggleTokenVisibility(toggleId, inputId) {
   const toggle = document.getElementById(toggleId);
   const input = document.getElementById(inputId);
-  if (!toggle || !input) return;
+  const inputEl = resolveInputElement(input);
+  if (!toggle || !inputEl) return;
 
   const isCheckbox = toggle instanceof HTMLInputElement && toggle.type === 'checkbox';
-  const showing = isCheckbox ? toggle.checked : input.getAttribute('type') === 'text';
-  input.setAttribute('type', showing ? 'text' : 'password');
+  const showing = isCheckbox ? toggle.checked : inputEl.getAttribute('type') === 'text';
+  inputEl.setAttribute('type', showing ? 'text' : 'password');
 
   const icon = isCheckbox ? null : toggle.querySelector('.material-symbols-outlined');
   const label = isCheckbox
@@ -595,6 +671,10 @@ export function initRepoMapper() {
     state.mapper.parsedRepo = null;
     state.mapper.format = 'ascii';
     form.reset();
+    if (urlInput) urlInput.value = '';
+    if (tokenInput) tokenInput.value = '';
+    setFieldError(urlInput, '');
+    setFieldError(tokenInput, '');
     hideError('mapper-error');
     resultEl?.setAttribute('hidden', 'hidden');
     if (codeEl) codeEl.textContent = '';
@@ -612,6 +692,7 @@ export function initRepoMapper() {
   bindCollapsibleToggle('mapper-token-reveal', 'mapper-token-wrapper', {
     closedLabel: 'Token settings',
     openLabel: 'Hide token',
+    closedIcon: 'vpn_key',
   });
 
   document
@@ -654,11 +735,11 @@ export function initRepoMapper() {
     const parsed = parseGithubUrl(urlInput?.value || '');
     state.mapper.parsedRepo = parsed;
     if (!parsed) {
-      showError('mapper-error', 'Invalid GitHub URL');
+      showError('mapper-error', 'Invalid GitHub URL', ['mapper-url']);
       return;
     }
 
-    hideError('mapper-error');
+    hideError('mapper-error', ['mapper-url']);
     resultEl?.setAttribute('hidden', 'hidden');
     setButtonLoading(submitBtn, true, 'Generate Map', 'Processing...', 'terminal');
 
@@ -704,6 +785,7 @@ export function initReleaseStats() {
   bindCollapsibleToggle('releases-token-reveal', 'releases-token-wrapper', {
     closedLabel: 'Token settings',
     openLabel: 'Hide token',
+    closedIcon: 'vpn_key',
   });
 
   document
@@ -809,11 +891,11 @@ export function initReleaseStats() {
     const parsed = parseGithubUrl(urlInput?.value || '');
     state.releases.parsedRepo = parsed;
     if (!parsed) {
-      showError('releases-error', 'Invalid GitHub URL');
+      showError('releases-error', 'Invalid GitHub URL', ['releases-url']);
       return;
     }
 
-    hideError('releases-error');
+    hideError('releases-error', ['releases-url']);
     resultEl?.setAttribute('hidden', 'hidden');
     setButtonLoading(submitBtn, true, 'Analyze', 'Processing...', 'analytics');
 
@@ -852,6 +934,7 @@ export function initGitPatch() {
   bindCollapsibleToggle('patch-token-reveal', 'patch-token-wrapper', {
     closedLabel: 'Token settings',
     openLabel: 'Hide token',
+    closedIcon: 'vpn_key',
   });
 
   document
@@ -882,11 +965,11 @@ export function initGitPatch() {
     const parsed = parseGithubCommitUrl(urlInput?.value || '');
     state.patch.parsedRepo = parsed;
     if (!parsed) {
-      showError('patch-error', 'Invalid Commit URL');
+      showError('patch-error', 'Invalid Commit URL', ['patch-url']);
       return;
     }
 
-    hideError('patch-error');
+    hideError('patch-error', ['patch-url']);
     resultEl?.setAttribute('hidden', 'hidden');
     setButtonLoading(submitBtn, true, 'Get Patch', 'Fetching...', 'difference');
 
