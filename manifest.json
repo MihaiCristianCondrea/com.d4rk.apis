@@ -1,16 +1,46 @@
 {
-  "name": "Mihai's Profile",
-  "short_name": "Mihai",
-  "start_url": "./#home",
+  "id": "/",
+  "name": "MCC Developer Workspace",
+  "short_name": "Developer Workspace",
+  "description": "Profile, tools, and APIs for Mihai-Cristian Condrea (D4rK Rekords): Android apps, web APIs, and documentation.",
+  "lang": "en",
+  "start_url": "./?source=pwa#home",
   "scope": "./",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#3DDC84",
+  "categories": [
+    "productivity",
+    "developer-tools",
+    "education"
+  ],
   "icons": [
-    { "src": "mipmap/favicon.ico", "type": "image/x-icon", "sizes": "16x16 32x32" },
-    { "src": "mipmap/icon-192.png", "type": "image/png", "sizes": "192x192" },
-    { "src": "mipmap/icon-512.png", "type": "image/png", "sizes": "512x512" },
-    { "src": "mipmap/icon-192-maskable.png", "type": "image/png", "sizes": "192x192", "purpose": "maskable" },
-    { "src": "mipmap/icon-512-maskable.png", "type": "image/png", "sizes": "512x512", "purpose": "maskable" }
+    {
+      "src": "mipmap/favicon.ico",
+      "type": "image/x-icon",
+      "sizes": "16x16 32x32"
+    },
+    {
+      "src": "mipmap/icon-192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "mipmap/icon-512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    },
+    {
+      "src": "mipmap/icon-192-maskable.png",
+      "type": "image/png",
+      "sizes": "192x192",
+      "purpose": "maskable"
+    },
+    {
+      "src": "mipmap/icon-512-maskable.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "maskable"
+    }
   ]
 }
