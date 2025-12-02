@@ -1,5 +1,5 @@
-const { RouterAnimation, fadeIn, fadeOut } = require('../src/main/router/animation.js');
-const { RouterHistory, updateTitle, pushState } = require('../src/main/router/history.js');
+const { RouterAnimation, fadeIn, fadeOut } = require('../app/src/main/js/router/animation.js');
+const { RouterHistory, updateTitle, pushState } = require('../app/src/main/js/router/history.js');
 
 describe('router helper modules', () => {
   beforeEach(() => {

@@ -3,8 +3,10 @@ import { resolve, join, extname } from 'path';
 import fs from 'fs';
 import tailwindcss from '@tailwindcss/vite';
 
-const pagesDir = resolve(__dirname, 'src/pages');
-const workersDir = resolve(__dirname, 'src/main/workers');
+const pagesDir = resolve(__dirname, 'app/src/main/res/layout');
+const workersDir = resolve(__dirname, 'app/src/main/js/workers');
+const mipmapDir = resolve(__dirname, 'app/src/main/res/mipmap');
+const drawableDir = resolve(__dirname, 'app/src/main/res/drawable');
 
 const mimeTypes = {
   '.html': 'text/html',
@@ -55,6 +57,41 @@ function staticPagesPlugin() {
 
         next();
       });
+
+      server.middlewares.use((req, res, next) => {
+        if (!req.url.startsWith('/mipmap/')) {
+          return next();
+        }
+
+        const cleanPath = decodeURIComponent(req.url.replace('/mipmap/', ''));
+        const filePath = join(mipmapDir, cleanPath);
+
+        if (fs.existsSync(filePath) && fs.statSync(filePath).isFile()) {
+          res.setHeader('Content-Type', 'image/png');
+          fs.createReadStream(filePath).pipe(res);
+          return;
+        }
+
+        next();
+      });
+
+      server.middlewares.use((req, res, next) => {
+        if (!req.url.startsWith('/drawable/')) {
+          return next();
+        }
+
+        const cleanPath = decodeURIComponent(req.url.replace('/drawable/', ''));
+        const filePath = join(drawableDir, cleanPath);
+
+        if (fs.existsSync(filePath) && fs.statSync(filePath).isFile()) {
+          const extension = extname(filePath).toLowerCase();
+          res.setHeader('Content-Type', mimeTypes[extension] || 'image/svg+xml');
+          fs.createReadStream(filePath).pipe(res);
+          return;
+        }
+
+        next();
+      });
     },
     closeBundle() {
       if (!outDir) {
@@ -86,14 +123,22 @@ function staticPagesPlugin() {
         fs.cpSync(workersDir, resolve(__dirname, outDir, 'workers'), { recursive: true });
       }
 
-      const builtIndex = resolve(__dirname, outDir, 'src/pages/index.html');
+      if (fs.existsSync(mipmapDir)) {
+        fs.cpSync(mipmapDir, resolve(__dirname, outDir, 'mipmap'), { recursive: true });
+      }
+
+      if (fs.existsSync(drawableDir)) {
+        fs.cpSync(drawableDir, resolve(__dirname, outDir, 'drawable'), { recursive: true });
+      }
+
+      const builtIndex = resolve(__dirname, outDir, 'app/src/main/res/layout/index.html');
       if (fs.existsSync(builtIndex)) {
         const builtHtml = fs.readFileSync(builtIndex, 'utf-8');
         const rewrittenHtml = builtHtml
           .replaceAll('../../assets/', './assets/')
-          .replaceAll('"icons/', '"./icons/')
-          .replaceAll('"../icons/', '"./icons/')
-          .replaceAll('"../../icons/', '"./icons/');
+          .replaceAll('"mipmap/', '"./mipmap/')
+          .replaceAll('"../mipmap/', '"./mipmap/')
+          .replaceAll('"../../mipmap/', '"./mipmap/');
         fs.writeFileSync(resolve(__dirname, outDir, 'index.html'), rewrittenHtml, 'utf-8');
       }
     },
@@ -103,11 +148,11 @@ function staticPagesPlugin() {
 export default defineConfig({
   root: '.',
   base: './',
-  publicDir: resolve(__dirname, 'src/assets'),
+  publicDir: resolve(__dirname, 'app/src/assets'),
   plugins: [tailwindcss(), staticPagesPlugin()],
   resolve: {
     alias: {
-      '@': resolve(__dirname, 'src/main'),
+      '@': resolve(__dirname, 'app/src/main/js'),
     },
   },
   build: {
@@ -115,7 +160,7 @@ export default defineConfig({
     emptyOutDir: true,
     rollupOptions: {
       input: {
-        main: resolve(__dirname, 'src/pages/index.html'),
+        main: resolve(__dirname, 'app/src/main/res/layout/index.html'),
       },
     },
   },

@@ -2,8 +2,8 @@ const mockUtils = {
   getDynamicElement: jest.fn(),
   rafThrottle: (fn) => fn,
 };
-jest.mock('../src/main/domain/utils.js', () => {
-  const actual = jest.requireActual('../src/main/domain/utils.js');
+jest.mock('../app/src/main/js/domain/utils.js', () => {
+  const actual = jest.requireActual('../app/src/main/js/domain/utils.js');
   return {
     __esModule: true,
     ...actual,
@@ -12,7 +12,7 @@ jest.mock('../src/main/domain/utils.js', () => {
   };
 });
 
-const { initNavigationDrawer } = require('../src/main/services/navigationDrawerService.js');
+const { initNavigationDrawer } = require('../app/src/main/js/services/navigationDrawerService.js');
 
 function createDrawerMarkup() {
   document.body.innerHTML = `

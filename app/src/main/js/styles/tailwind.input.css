@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 @config "../../tailwind.config.js";
-@source "../../index.html";
-@source "../../pages/**/*.{html,js}";
-@source "../../assets/js/**/*.js";
-@source "../../src/**/*.{html,js,css}";
+@source "../../res/layout/index.html";
+@source "../../res/layout/**/*.{html,js}";
+@source "../**/*.js";
+@source "../../../assets/**/*.{html,js,css}";

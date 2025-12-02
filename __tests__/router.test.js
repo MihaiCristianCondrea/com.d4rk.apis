@@ -4,7 +4,7 @@ const mockRoutes = {
   PAGE_ROUTES: {},
 };
 
-jest.mock('../src/main/router/routes.js', () => ({
+jest.mock('../app/src/main/js/router/routes.js', () => ({
   __esModule: true,
   default: mockRoutes,
 }));
@@ -14,7 +14,7 @@ const mockAnimation = {
   fadeOut: jest.fn(() => Promise.resolve()),
 };
 
-jest.mock('../src/main/router/animation.js', () => ({
+jest.mock('../app/src/main/js/router/animation.js', () => ({
   __esModule: true,
   default: mockAnimation,
   RouterAnimation: mockAnimation,
@@ -28,7 +28,7 @@ const mockHistory = {
   DOCUMENT_TITLE_SUFFIX: ' - API Console',
 };
 
-jest.mock('../src/main/router/history.js', () => ({
+jest.mock('../app/src/main/js/router/history.js', () => ({
   __esModule: true,
   default: mockHistory,
   RouterHistory: mockHistory,
@@ -42,7 +42,7 @@ const mockContentLoader = {
   DEFAULT_PAGE_TITLE: 'API Console',
 };
 
-jest.mock('../src/main/router/contentLoader.js', () => ({
+jest.mock('../app/src/main/js/router/contentLoader.js', () => ({
   __esModule: true,
   default: mockContentLoader,
   RouterContentLoader: mockContentLoader,
@@ -81,7 +81,7 @@ beforeEach(() => {
   mockHistory.pushState.mockReset();
   mockContentLoader.fetchPageMarkup.mockReset();
 
-  routerModule = require('../src/main/router/index.js');
+  routerModule = require('../app/src/main/js/router/index.js');
   ({ initRouter, loadPageContent, normalizePageId, updateActiveNavLink } = routerModule);
 
   setupDom();
