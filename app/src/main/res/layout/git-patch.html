@@ -9,32 +9,47 @@
       <form id="patch-form" class="gh-form" autocomplete="off" name="patch-form">
         <div class="gh-field-row">
           <div class="gh-floating-field">
-            <input id="patch-url" type="url" class="gh-floating-input" placeholder="" required="" autocomplete="off" aria-describedby="patch-url-helper patch-url-error"> <label for="patch-url">Commit URL</label>
+            <input id="patch-url" type="url" class="gh-floating-input" placeholder="" required="" autocomplete="off" aria-describedby="patch-url-helper patch-url-error">
+            <label for="patch-url">Commit URL</label>
             <div class="gh-underline"></div>
-          </div><button type="button" id="patch-fav-btn" class="gh-pill-button" hidden="" aria-pressed="false"><span class="material-symbols-outlined">star</span> <span class="favorite-label">Favorite</span></button>
+          </div>
+          <button type="button" id="patch-fav-btn" class="gh-pill-button" hidden="" aria-pressed="false">
+            <span class="material-symbols-outlined">star</span>
+            <span class="favorite-label">Favorite</span>
+          </button>
         </div>
         <p id="patch-url-helper" class="gh-helper-text">Accepts full GitHub URLs or shorthand commit paths.</p>
         <p id="patch-url-error" class="gh-error-text" hidden="">Invalid commit URL.</p>
-        <details class="gh-token-dropdown gh-token-settings" id="patch-token-settings">
-          <summary class="gh-chip-button token-toggle" id="patch-token-reveal" aria-expanded="false">
-            <span class="material-symbols-outlined">vpn_key</span> <span class="favorite-label">Token settings</span> <span class="material-symbols-outlined chevron" aria-hidden="true">expand_more</span>
-          </summary>
-          <div class="gh-collapsible" id="patch-token-wrapper">
+        <div class="gh-token-settings" id="patch-token-settings">
+          <md-filled-tonal-button class="token-toggle" id="patch-token-reveal" aria-expanded="false">
+            <md-icon slot="icon">vpn_key</md-icon>
+            <span class="favorite-label">Token settings</span>
+            <md-icon slot="trailing-icon">expand_more</md-icon>
+          </md-filled-tonal-button>
+          <div class="gh-collapsible" id="patch-token-wrapper" hidden>
             <div class="gh-floating-field">
-              <input id="patch-token" type="password" class="gh-floating-input" placeholder="" autocomplete="off" aria-describedby="patch-token-helper patch-token-error"> <label for="patch-token">Personal Access Token (optional)</label>
-              <div class="gh-underline"></div>
+              <md-outlined-text-field id="patch-token" type="password" class="gh-floating-input" label="Personal Access Token (optional)" autocomplete="off" aria-describedby="patch-token-helper patch-token-error" spellcheck="false"></md-outlined-text-field>
             </div>
             <p id="patch-token-helper" class="gh-helper-text">Required when fetching private commits.</p>
-            <p id="patch-token-error" class="gh-error-text" hidden="">Token required for private repos.</p><label class="gh-token-visibility" for="patch-token-toggle"><input type="checkbox" id="patch-token-toggle"> <span class="gh-visibility-icons" aria-hidden="true"><span class="material-symbols-outlined visibility-on">visibility</span> <span class="material-symbols-outlined visibility-off">visibility_off</span></span> <span data-token-visibility-label="">Show token</span></label>
+            <p id="patch-token-error" class="gh-error-text" hidden="">Token required for private repos.</p>
+            <div class="gh-token-visibility">
+              <md-checkbox id="patch-token-toggle">
+                <span slot="label" data-token-visibility-label>Show token</span>
+              </md-checkbox>
+            </div>
           </div>
-        </details>
+        </div>
         <div class="gh-actions end">
-          <button type="submit" id="patch-submit" class="gh-primary-button"><span class="material-symbols-outlined">difference</span> <span>Get Patch</span></button>
+          <button type="submit" id="patch-submit" class="gh-primary-button">
+            <span class="material-symbols-outlined">difference</span>
+            <span>Get Patch</span>
+          </button>
         </div>
       </form>
     </div>
     <div id="patch-error" class="gh-error" hidden="">
-      <span class="material-symbols-outlined">error</span> <span data-error-text="">Unable to fetch patch.</span>
+      <span class="material-symbols-outlined">error</span>
+      <span data-error-text="">Unable to fetch patch.</span>
     </div>
     <div id="patch-result" class="gh-result" hidden="">
       <div class="gh-result-bar">
@@ -42,16 +57,24 @@
           <span class="gh-stat-pill"><span class="material-symbols-outlined">check</span> <span>Ready to apply</span></span>
         </div>
         <div class="gh-action-row">
-          <button type="button" id="patch-download-btn" class="gh-ghost-button"><span class="material-symbols-outlined">download</span> <span>Download</span></button> <button type="button" id="patch-copy-btn" class="gh-ghost-button"><span class="material-symbols-outlined">content_copy</span> <span>Copy</span></button>
+          <button type="button" id="patch-download-btn" class="gh-ghost-button">
+            <span class="material-symbols-outlined">download</span>
+            <span>Download</span>
+          </button>
+          <button type="button" id="patch-copy-btn" class="gh-ghost-button">
+            <span class="material-symbols-outlined">content_copy</span>
+            <span>Copy</span>
+          </button>
         </div>
       </div>
       <div class="gh-output">
         <div class="gh-output-header">
-          <span class="material-symbols-outlined">integration_instructions</span> <span>Patch</span>
+          <span class="material-symbols-outlined">integration_instructions</span>
+          <span>Patch</span>
         </div>
         <pre><code id="patch-code"></code></pre>
       </div>
     </div>
   </section>
-</div><datalist id="patch-datalist">
-</datalist>
+</div>
+<datalist id="patch-datalist"></datalist>

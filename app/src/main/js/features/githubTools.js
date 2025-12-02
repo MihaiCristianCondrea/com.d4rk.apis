@@ -561,13 +561,19 @@ function toggleTokenVisibility(toggleId, inputId) {
   const inputEl = resolveInputElement(input);
   if (!toggle || !inputEl) return;
 
-  const isCheckbox = toggle instanceof HTMLInputElement && toggle.type === 'checkbox';
-  const showing = isCheckbox ? toggle.checked : inputEl.getAttribute('type') === 'text';
+  const isMaterialCheckbox = toggle.tagName === 'MD-CHECKBOX';
+  const isCheckbox =
+    (toggle instanceof HTMLInputElement && toggle.type === 'checkbox') || isMaterialCheckbox;
+  const showing = isCheckbox
+    ? Boolean(isMaterialCheckbox ? toggle.checked ?? toggle.hasAttribute('checked') : toggle.checked)
+    : inputEl.getAttribute('type') === 'text';
   inputEl.setAttribute('type', showing ? 'text' : 'password');
 
   const icon = isCheckbox ? null : toggle.querySelector('.material-symbols-outlined');
   const label = isCheckbox
-    ? toggle.closest('label')?.querySelector('[data-token-visibility-label]')
+    ? toggle.querySelector('[data-token-visibility-label]') ||
+      toggle.shadowRoot?.querySelector('[data-token-visibility-label]') ||
+      toggle.closest('label')?.querySelector('[data-token-visibility-label]')
     : toggle.querySelector('span:last-child');
   const visibilityWrapper = toggle.closest('.gh-token-visibility');
 

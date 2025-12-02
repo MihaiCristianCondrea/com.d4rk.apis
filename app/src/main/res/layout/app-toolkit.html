@@ -61,25 +61,59 @@
       <li>Use <strong>Fetch existing JSON</strong> to pull the latest data from a remote file before editing.</li>
     </ul>
   </div>
-  <section class="api-builder" id="appToolkitBuilder" data-builder-type="app-toolkit">
+  <section class="api-builder" id="appToolkitBuilder" data-builder-type="app-toolkit" data-layout="flow" data-channel="both">
     <div class="builder-toolbar">
       <div class="builder-toolbar-actions">
-        <span class="material-symbols-outlined">add</span> Add app <span class="material-symbols-outlined">sort</span> <span class="builder-sort-label">Sort · <span id="appToolkitSortLabel">App name (A–Z)</span></span> <span class="material-symbols-outlined">arrow_drop_down</span>
-        <div slot="headline">
-          App name (A–Z)
-        </div>
-        <div slot="headline">
-          Category (A–Z)
-        </div>
-        <div slot="headline">
-          Screenshot count (high to low)
-        </div><span class="material-symbols-outlined">refresh</span> Clear workspace
+        <md-filled-tonal-button id="appToolkitAddApp">
+          <md-icon slot="icon">add</md-icon>
+          <span>Add app</span>
+        </md-filled-tonal-button>
+        <md-outlined-button id="appToolkitSortButton" aria-haspopup="menu" aria-expanded="false">
+          <md-icon slot="icon">sort</md-icon>
+          <span class="builder-sort-label">Sort · <span id="appToolkitSortLabel">App name (A–Z)</span></span>
+          <md-icon slot="trailing-icon">arrow_drop_down</md-icon>
+        </md-outlined-button>
+        <md-icon-button id="appToolkitResetButton" aria-label="Clear workspace">
+          <md-icon>refresh</md-icon>
+        </md-icon-button>
       </div>
       <div class="builder-toolbar-meta">
         <div class="toolbar-status" role="status" aria-live="polite">
           <span class="toolbar-status-label">Workspace pulse</span> <span class="toolbar-status-value" id="appToolkitToolbarPulse">Awaiting input</span>
         </div>
       </div>
+    </div>
+    <md-menu id="appToolkitSortMenu" positioning="popover">
+      <md-menu-item data-sort-key="name" aria-label="Sort by app name" aria-checked="true" selected>
+        <div slot="headline">App name (A–Z)</div>
+      </md-menu-item>
+      <md-menu-item data-sort-key="category" aria-label="Sort by category">
+        <div slot="headline">Category (A–Z)</div>
+      </md-menu-item>
+      <md-menu-item data-sort-key="screenshots" aria-label="Sort by screenshot count">
+        <div slot="headline">Screenshot count (high to low)</div>
+      </md-menu-item>
+    </md-menu>
+    <div class="builder-toolbar builder-toolbar--secondary">
+      <div class="segmented-controls">
+        <label class="segmented-label" for="appToolkitChannelSegments">Channel focus</label>
+        <md-segmented-button-set id="appToolkitChannelSegments" value="both">
+          <md-segmented-button value="debug">Debug</md-segmented-button>
+          <md-segmented-button value="release">Release</md-segmented-button>
+          <md-segmented-button value="both" selected>Both</md-segmented-button>
+        </md-segmented-button-set>
+      </div>
+      <div class="segmented-controls">
+        <label class="segmented-label" for="appToolkitLayoutSegments">Layout</label>
+        <md-segmented-button-set id="appToolkitLayoutSegments" value="flow">
+          <md-segmented-button value="flow" selected>Flow</md-segmented-button>
+          <md-segmented-button value="compact">Compact</md-segmented-button>
+        </md-segmented-button-set>
+      </div>
+      <md-filter-chip-set id="appToolkitFilterChips" aria-label="Filter app cards">
+        <md-filter-chip data-app-toolkit-filter="hasScreenshots" label="Has screenshots"></md-filter-chip>
+        <md-filter-chip data-app-toolkit-filter="isReleaseReady" label="Release ready"></md-filter-chip>
+      </md-filter-chip-set>
     </div>
     <div class="card-body">
       <div class="builder-remote-header">
@@ -88,14 +122,18 @@
           <p>Pull the latest payload before you start editing entries.</p>
         </div>
       </div>
-      <div class="builder-remote-controls">
-        <div class="builder-remote-inline-action" id="appToolkitFetchFieldset">
-          <span class="material-symbols-outlined">link</span> <span class="material-symbols-outlined">cloud_download</span> Load JSON
-        </div>
-        <p class="builder-remote-feedback" id="appToolkitFetchStatus" data-status="idle" role="status" aria-live="polite"><span class="material-symbols-outlined builder-remote-feedback-icon" aria-hidden="true">info</span> <span class="builder-remote-feedback-text">Paste a JSON URL to load the latest data.</span></p>
+      <div class="builder-remote-controls" id="appToolkitFetchFieldset">
+        <md-outlined-text-field id="appToolkitFetchInput" label="JSON URL" type="url" placeholder="https://example.com/api_android_apps.json" supporting-text="Paste a JSON URL to load the latest data." aria-describedby="appToolkitFetchStatus" spellcheck="false"></md-outlined-text-field>
+        <md-filled-button id="appToolkitFetchButton">
+          <md-icon slot="icon">cloud_download</md-icon>
+          <span>Load JSON</span>
+        </md-filled-button>
       </div>
+      <p class="builder-remote-feedback" id="appToolkitFetchStatus" data-status="idle" role="status" aria-live="polite"><span class="material-symbols-outlined builder-remote-feedback-icon" aria-hidden="true">info</span> <span class="builder-remote-feedback-text">Paste a JSON URL to load the latest data.</span></p>
       <div class="builder-remote-presets" aria-label="Quick fetch shortcuts">
-        <span class="builder-remote-presets-label">Quick links</span> <span class="material-symbols-outlined">download</span> Debug · EN <span class="material-symbols-outlined">download</span> Release · EN
+        <span class="builder-remote-presets-label">Quick links</span>
+        <md-assist-chip data-app-toolkit-preset="api/app_toolkit/v2/debug/en/home/api_android_apps.json" label="Debug · EN"></md-assist-chip>
+        <md-assist-chip data-app-toolkit-preset="api/app_toolkit/v2/release/en/home/api_android_apps.json" label="Release · EN"></md-assist-chip>
       </div>
     </div>
     <div class="card-body">
@@ -114,7 +152,11 @@
         </ul>
       </div>
       <div class="builder-github-launch">
-        <span class="material-symbols-outlined">rocket_launch</span> Open publish wizard
+        <md-icon>rocket_launch</md-icon>
+        <md-filled-button id="appToolkitGithubWizardButton">
+          <span>Open publish wizard</span>
+          <md-icon slot="trailing-icon">arrow_forward</md-icon>
+        </md-filled-button>
         <p class="builder-github-helper">Validate the preview first, then follow the guided steps to publish.</p>
       </div>
     </div>
@@ -128,7 +170,14 @@
         <textarea id="appToolkitPreview" class="preview-textarea" readonly spellcheck="false" aria-label="App Toolkit JSON preview"></textarea>
         <div class="preview-validation" id="appToolkitValidation" role="status" aria-live="polite"></div>
         <div class="preview-actions">
-          <span class="material-symbols-outlined">content_copy</span> Copy JSON Download <span class="material-symbols-outlined">download</span>
+          <md-filled-tonal-button id="appToolkitCopyButton">
+            <md-icon slot="icon">content_copy</md-icon>
+            <span>Copy JSON</span>
+          </md-filled-tonal-button>
+          <md-outlined-button id="appToolkitDownloadButton">
+            <md-icon slot="icon">download</md-icon>
+            <span>Download</span>
+          </md-outlined-button>
         </div>
       </aside>
       <div slot="headline">
@@ -142,24 +191,43 @@
       </div>
     </div>
   </section>
-  <div slot="headline">
-    Publish to GitHub
-  </div>
-  <div slot="content" class="github-dialog-content">
-    <div class="github-step" data-step="authenticate">
-      <div class="github-step-actions">
-        <input type="file" id="appToolkitGithubTokenFile" accept="text/plain,.txt,.token" hidden=""> <span class="material-symbols-outlined">description</span> Load token from file
+  <md-dialog id="appToolkitGithubDialog">
+    <div slot="headline">Publish to GitHub</div>
+    <div slot="content" class="github-dialog-content">
+      <div class="github-stepper" id="appToolkitGithubStepper" value="authenticate" aria-live="polite"></div>
+      <div class="github-step" data-step="authenticate">
+        <div class="github-step-actions">
+          <md-filled-tonal-button id="appToolkitGithubTokenFileButton">
+            <md-icon slot="icon">description</md-icon>
+            <span>Load token from file</span>
+          </md-filled-tonal-button>
+          <input type="file" id="appToolkitGithubTokenFile" accept="text/plain,.txt,.token" hidden>
+          <md-outlined-text-field id="appToolkitGithubToken" label="GitHub token" type="password" supporting-text="Fine-grained token with Contents: read & write" spellcheck="false"></md-outlined-text-field>
+        </div>
+      </div>
+      <div class="github-step" data-step="target" hidden>
+        <div class="github-grid">
+          <md-outlined-text-field id="appToolkitGithubRepo" label="Repository" placeholder="owner/repo" spellcheck="false"></md-outlined-text-field>
+          <md-outlined-text-field id="appToolkitGithubBranch" label="Branch" placeholder="main" spellcheck="false"></md-outlined-text-field>
+          <label class="api-field">
+            <span class="api-field-label">Channel</span>
+            <select id="appToolkitGithubChannel">
+              <option value="debug">Debug</option>
+              <option value="release">Release</option>
+              <option value="both" selected>Debug & Release</option>
+            </select>
+          </label>
+          <md-outlined-text-field id="appToolkitGithubMessage" label="Commit message" placeholder="Update App Toolkit catalog" spellcheck="false"></md-outlined-text-field>
+        </div>
+      </div>
+      <div class="github-step" data-step="review" hidden>
+        <p class="github-review-copy">Confirm the diff in the side sheet and publish when ready.</p>
+        <div class="github-status" id="appToolkitGithubStatus" role="status" aria-live="polite"></div>
       </div>
     </div>
-    <div class="github-step" data-step="target">
-      Debug Release Debug & Release
+    <div slot="actions" class="github-dialog-actions">
+      <md-text-button id="appToolkitGithubBack">Back</md-text-button>
+      <md-filled-button id="appToolkitGithubNext">Next</md-filled-button>
     </div>
-    <div class="github-step" data-step="review">
-      <p class="github-review-copy">Confirm the diff in the side sheet and publish when ready.</p>
-      <div class="github-status" id="appToolkitGithubStatus" role="status" aria-live="polite"></div>
-    </div>
-  </div>
-  <div slot="actions" class="github-dialog-actions">
-    Cancel Back Next
-  </div>
+  </md-dialog>
 </div>
