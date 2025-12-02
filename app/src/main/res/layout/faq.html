@@ -11,17 +11,22 @@
         <p class="faq-onboarding__helper">Pick the path that matches your goal. The workspace will open the matching screen and keep you on one focused flow.</p>
       </div>
       <div class="faq-onboarding__grid">
-        <button type="button" class="faq-landing-card" data-faq-mode="catalog" aria-pressed="false"><span class="faq-landing-card__icon material-symbols-outlined">inventory_2</span></button>
-        <div class="faq-landing-card__body">
-          <p class="faq-landing-card__eyebrow"><button type="button" class="faq-landing-card" data-faq-mode="catalog" aria-pressed="false">Catalog</button></p>
-          <p class="faq-landing-card__title"><button type="button" class="faq-landing-card" data-faq-mode="catalog" aria-pressed="false">Edit catalog.json</button></p>
-          <p class="faq-landing-card__copy"><button type="button" class="faq-landing-card" data-faq-mode="catalog" aria-pressed="false">Switch between debug or release and manage the source list.</button></p>
-        </div><button type="button" class="faq-landing-card" data-faq-mode="faqs" aria-pressed="false"><span class="faq-landing-card__icon material-symbols-outlined">help_center</span></button>
-        <div class="faq-landing-card__body">
-          <p class="faq-landing-card__eyebrow"><button type="button" class="faq-landing-card" data-faq-mode="faqs" aria-pressed="false">Product FAQs</button></p>
-          <p class="faq-landing-card__title"><button type="button" class="faq-landing-card" data-faq-mode="faqs" aria-pressed="false">Edit per-product FAQs</button></p>
-          <p class="faq-landing-card__copy"><button type="button" class="faq-landing-card" data-faq-mode="faqs" aria-pressed="false">Load a product from the catalog and add or edit its FAQ entries.</button></p>
-        </div>
+        <button type="button" class="faq-landing-card" data-faq-mode="catalog" aria-pressed="false">
+          <span class="faq-landing-card__icon material-symbols-outlined">inventory_2</span>
+          <div class="faq-landing-card__body">
+            <p class="faq-landing-card__eyebrow">Catalog</p>
+            <p class="faq-landing-card__title">Edit catalog.json</p>
+            <p class="faq-landing-card__copy">Switch between debug or release and manage the source list.</p>
+          </div>
+        </button>
+        <button type="button" class="faq-landing-card" data-faq-mode="faqs" aria-pressed="false">
+          <span class="faq-landing-card__icon material-symbols-outlined">help_center</span>
+          <div class="faq-landing-card__body">
+            <p class="faq-landing-card__eyebrow">Product FAQs</p>
+            <p class="faq-landing-card__title">Edit per-product FAQs</p>
+            <p class="faq-landing-card__copy">Load a product from the catalog and add or edit its FAQ entries.</p>
+          </div>
+        </button>
       </div>
       <p id="faqModeStatus" class="faq-onboarding__status" role="status">Select a workflow to continue.</p>
     </section>

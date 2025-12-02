@@ -9,32 +9,47 @@
       <form id="releases-form" class="gh-form" autocomplete="off" name="releases-form">
         <div class="gh-field-row">
           <div class="gh-floating-field">
-            <input id="releases-url" type="url" class="gh-floating-input" placeholder="" required="" autocomplete="off" aria-describedby="releases-url-helper releases-url-error"> <label for="releases-url">Repository URL</label>
+            <input id="releases-url" type="url" class="gh-floating-input" placeholder="" required="" autocomplete="off" aria-describedby="releases-url-helper releases-url-error">
+            <label for="releases-url">Repository URL</label>
             <div class="gh-underline"></div>
-          </div><button type="button" id="releases-fav-btn" class="gh-pill-button" hidden="" aria-pressed="false"><span class="material-symbols-outlined">star</span> <span class="favorite-label">Favorite</span></button>
+          </div>
+          <button type="button" id="releases-fav-btn" class="gh-pill-button" hidden="" aria-pressed="false">
+            <span class="material-symbols-outlined">star</span>
+            <span class="favorite-label">Favorite</span>
+          </button>
         </div>
         <p id="releases-url-helper" class="gh-helper-text">Use the repo URL or slug for the project.</p>
         <p id="releases-url-error" class="gh-error-text" hidden="">Invalid repository URL.</p>
-        <details class="gh-token-dropdown gh-token-settings" id="releases-token-settings">
-          <summary class="gh-chip-button token-toggle" id="releases-token-reveal" aria-expanded="false">
-            <span class="material-symbols-outlined">vpn_key</span> <span class="favorite-label">Token settings</span> <span class="material-symbols-outlined chevron" aria-hidden="true">expand_more</span>
-          </summary>
-          <div class="gh-collapsible" id="releases-token-wrapper">
+        <div class="gh-token-settings" id="releases-token-settings">
+          <md-filled-tonal-button class="token-toggle" id="releases-token-reveal" aria-expanded="false">
+            <md-icon slot="icon">vpn_key</md-icon>
+            <span class="favorite-label">Token settings</span>
+            <md-icon slot="trailing-icon">expand_more</md-icon>
+          </md-filled-tonal-button>
+          <div class="gh-collapsible" id="releases-token-wrapper" hidden>
             <div class="gh-floating-field">
-              <input id="releases-token" type="password" class="gh-floating-input" placeholder="" autocomplete="off" aria-describedby="releases-token-helper releases-token-error"> <label for="releases-token">Personal Access Token (optional)</label>
-              <div class="gh-underline"></div>
+              <md-outlined-text-field id="releases-token" type="password" class="gh-floating-input" label="Personal Access Token (optional)" autocomplete="off" aria-describedby="releases-token-helper releases-token-error" spellcheck="false"></md-outlined-text-field>
             </div>
             <p id="releases-token-helper" class="gh-helper-text">Include when querying private repositories.</p>
-            <p id="releases-token-error" class="gh-error-text" hidden="">Token required for private repos.</p><label class="gh-token-visibility" for="releases-token-toggle"><input type="checkbox" id="releases-token-toggle"> <span class="gh-visibility-icons" aria-hidden="true"><span class="material-symbols-outlined visibility-on">visibility</span> <span class="material-symbols-outlined visibility-off">visibility_off</span></span> <span data-token-visibility-label="">Show token</span></label>
+            <p id="releases-token-error" class="gh-error-text" hidden="">Token required for private repos.</p>
+            <div class="gh-token-visibility">
+              <md-checkbox id="releases-token-toggle">
+                <span slot="label" data-token-visibility-label>Show token</span>
+              </md-checkbox>
+            </div>
           </div>
-        </details>
+        </div>
         <div class="gh-actions end">
-          <button type="submit" id="releases-submit" class="gh-primary-button"><span class="material-symbols-outlined">analytics</span> <span>Analyze</span></button>
+          <button type="submit" id="releases-submit" class="gh-primary-button">
+            <span class="material-symbols-outlined">analytics</span>
+            <span>Analyze</span>
+          </button>
         </div>
       </form>
     </div>
     <div id="releases-error" class="gh-error" hidden="">
-      <span class="material-symbols-outlined">error</span> <span data-error-text="">Unable to analyze releases.</span>
+      <span class="material-symbols-outlined">error</span>
+      <span data-error-text="">Unable to analyze releases.</span>
     </div>
     <div id="releases-result" class="gh-result-grid" hidden="">
       <div class="gh-result-card">
@@ -42,11 +57,13 @@
           <p class="gh-subtext">Selected release</p>
           <h3 id="rel-detail-name" class="gh-title">—</h3>
           <div class="gh-badge-row">
-            <span id="rel-detail-tag" class="gh-badge">tag</span> <span id="rel-detail-date" class="gh-badge">date</span>
+            <span id="rel-detail-tag" class="gh-badge">tag</span>
+            <span id="rel-detail-date" class="gh-badge">date</span>
           </div>
         </div>
         <div class="gh-stat-block">
-          <span class="gh-subtext">Downloads</span> <span id="rel-detail-downloads" class="gh-stat-value">0</span>
+          <span class="gh-subtext">Downloads</span>
+          <span id="rel-detail-downloads" class="gh-stat-value">0</span>
         </div>
         <div class="gh-stack">
           <p class="gh-subtext">Assets</p>
@@ -70,5 +87,5 @@
       </div>
     </div>
   </section>
-</div><datalist id="releases-datalist">
-</datalist>
+</div>
+<datalist id="releases-datalist"></datalist>
