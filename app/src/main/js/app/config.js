@@ -60,7 +60,7 @@ export const appConfig = {
     'https://raw.githubusercontent.com/google/material-design-icons/master/variablefont/MaterialSymbolsOutlined%5BFILL%2CGRA%2Copsz%2Cwght%5D.codepoints',
   ],
   jsonWorkerUrl: resolveAssetUrl('workers/jsonWorker.js'),
-  manifestIconsBase: resolveAssetUrl('icons/'),
+  manifestIconsBase: resolveAssetUrl('mipmap/'),
 };
 
 function exposeConfig() {

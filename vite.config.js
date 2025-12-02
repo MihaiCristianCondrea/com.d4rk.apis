@@ -144,7 +144,7 @@ function staticPagesPlugin() {
       if (fs.existsSync(builtIndex)) {
         const builtHtml = fs.readFileSync(builtIndex, 'utf-8');
         const rewrittenHtml = builtHtml
-          .replaceAll('../../assets/', './assets/')
+          .replace(/"(?:\.\.\/)+assets\//g, '"./assets/')
           .replaceAll('"mipmap/', '"./mipmap/')
           .replaceAll('"../mipmap/', '"./mipmap/')
           .replaceAll('"../../mipmap/', '"./mipmap/');

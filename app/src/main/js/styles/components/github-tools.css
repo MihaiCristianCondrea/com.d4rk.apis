@@ -28,6 +28,18 @@
   gap: 1.5rem;
 }
 
+.gh-primary-button,
+.gh-chip-button,
+.gh-icon-button,
+.gh-ghost-button,
+.gh-pill-button,
+.gh-button {
+  font: inherit;
+  text-decoration: none;
+  line-height: 1.1;
+  align-items: center;
+}
+
 .gh-tools-header {
   display: grid;
   gap: 0.5rem;
