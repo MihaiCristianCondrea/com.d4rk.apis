@@ -1,4 +1,9 @@
+import { resolveAssetUrl } from '../app/config.js';
 import { initFavoritesPage, initGitPatch, initReleaseStats, initRepoMapper } from '../features/githubTools.js';
+
+function layoutPath(filename) {
+    return resolveAssetUrl(`layout/${filename}`);
+}
 
 const DEFAULT_ROUTE_TITLE = 'API Console';
 const DEFAULT_METADATA_DESCRIPTION = 'Explore Mihai-Cristian Condrea\'s Android developer portfolio featuring Jetpack Compose apps, Material Design systems, and open-source tools.';
@@ -263,7 +268,7 @@ const defaultRoutes = [
     },
     {
         id: 'app-toolkit-api',
-        path: '/layout/app-toolkit.html',
+        path: layoutPath('app-toolkit.html'),
         title: 'App Toolkit API',
         metadata: {
             description: 'Curate App Toolkit catalog entries with visual tools for managing app metadata, screenshots, and package information.',
@@ -286,7 +291,7 @@ const defaultRoutes = [
     },
     {
         id: 'faq-api',
-        path: '/layout/faq.html',
+        path: layoutPath('faq.html'),
         title: 'FAQ API',
         metadata: {
             description: 'Publish structured FAQ answers with featured snippets and Material icon suggestions for web and Android surfaces.',
@@ -309,7 +314,7 @@ const defaultRoutes = [
     },
     {
         id: 'english-with-lidia-api',
-        path: '/layout/english-with-lidia.html',
+        path: layoutPath('english-with-lidia.html'),
         title: 'English with Lidia API',
         metadata: {
             description: 'Build lesson feeds and multimedia content blocks for the English with Lidia Android app.',
@@ -332,7 +337,7 @@ const defaultRoutes = [
     },
     {
         id: 'android-studio-tutorials-api',
-        path: '/layout/android-studio-tutorials.html',
+        path: layoutPath('android-studio-tutorials.html'),
         title: 'Android Studio Tutorials API',
         metadata: {
             description: 'Design home feed cards and Compose-ready lesson content for Android Studio Tutorials.',
@@ -355,7 +360,7 @@ const defaultRoutes = [
     },
     {
         id: 'github-favorites',
-        path: '/layout/github-favorites.html',
+        path: layoutPath('github-favorites.html'),
         title: 'Favorites',
         onLoad: initFavoritesPage,
         metadata: {
@@ -375,7 +380,7 @@ const defaultRoutes = [
     },
     {
         id: 'repo-mapper',
-        path: '/layout/repo-mapper.html',
+        path: layoutPath('repo-mapper.html'),
         title: 'Repo Mapper',
         onLoad: initRepoMapper,
         metadata: {
@@ -395,7 +400,7 @@ const defaultRoutes = [
     },
     {
         id: 'release-stats',
-        path: '/layout/release-stats.html',
+        path: layoutPath('release-stats.html'),
         title: 'Release Stats',
         onLoad: initReleaseStats,
         metadata: {
@@ -415,7 +420,7 @@ const defaultRoutes = [
     },
     {
         id: 'git-patch',
-        path: '/layout/git-patch.html',
+        path: layoutPath('git-patch.html'),
         title: 'Git Patch',
         onLoad: initGitPatch,
         metadata: {
