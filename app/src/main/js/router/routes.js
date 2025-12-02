@@ -263,7 +263,7 @@ const defaultRoutes = [
     },
     {
         id: 'app-toolkit-api',
-        path: 'pages/app-toolkit.html',
+        path: '/layout/app-toolkit.html',
         title: 'App Toolkit API',
         metadata: {
             description: 'Curate App Toolkit catalog entries with visual tools for managing app metadata, screenshots, and package information.',
@@ -286,7 +286,7 @@ const defaultRoutes = [
     },
     {
         id: 'faq-api',
-        path: 'pages/faq.html',
+        path: '/layout/faq.html',
         title: 'FAQ API',
         metadata: {
             description: 'Publish structured FAQ answers with featured snippets and Material icon suggestions for web and Android surfaces.',
@@ -309,7 +309,7 @@ const defaultRoutes = [
     },
     {
         id: 'english-with-lidia-api',
-        path: 'pages/english-with-lidia.html',
+        path: '/layout/english-with-lidia.html',
         title: 'English with Lidia API',
         metadata: {
             description: 'Build lesson feeds and multimedia content blocks for the English with Lidia Android app.',
@@ -332,7 +332,7 @@ const defaultRoutes = [
     },
     {
         id: 'android-studio-tutorials-api',
-        path: 'pages/android-studio-tutorials.html',
+        path: '/layout/android-studio-tutorials.html',
         title: 'Android Studio Tutorials API',
         metadata: {
             description: 'Design home feed cards and Compose-ready lesson content for Android Studio Tutorials.',
@@ -355,7 +355,7 @@ const defaultRoutes = [
     },
     {
         id: 'github-favorites',
-        path: 'pages/github-favorites.html',
+        path: '/layout/github-favorites.html',
         title: 'Favorites',
         onLoad: initFavoritesPage,
         metadata: {
@@ -375,7 +375,7 @@ const defaultRoutes = [
     },
     {
         id: 'repo-mapper',
-        path: 'pages/repo-mapper.html',
+        path: '/layout/repo-mapper.html',
         title: 'Repo Mapper',
         onLoad: initRepoMapper,
         metadata: {
@@ -395,7 +395,7 @@ const defaultRoutes = [
     },
     {
         id: 'release-stats',
-        path: 'pages/release-stats.html',
+        path: '/layout/release-stats.html',
         title: 'Release Stats',
         onLoad: initReleaseStats,
         metadata: {
@@ -415,7 +415,7 @@ const defaultRoutes = [
     },
     {
         id: 'git-patch',
-        path: 'pages/git-patch.html',
+        path: '/layout/git-patch.html',
         title: 'Git Patch',
         onLoad: initGitPatch,
         metadata: {
@@ -430,52 +430,6 @@ const defaultRoutes = [
             twitter: {
                 title: 'Git Patch',
                 description: 'Extract raw .patch files from commit URLs. Easily apply changes from one repo to another or perform code reviews.'
-            }
-        }
-    },
-    {
-        id: 'privacy-policy',
-        path: 'pages/privacy-policy.html',
-        title: 'Privacy Policy',
-        metadata: {
-            description: 'Review how the API Console handles usage data, theme preferences, and integrations with external services.',
-            keywords: [
-                'API Console privacy policy',
-                'data usage',
-                'theme preferences storage'
-            ],
-            canonicalSlug: 'privacy-policy',
-            openGraph: {
-                title: 'Privacy Policy | API Console',
-                description: 'Learn about data handling, analytics, and storage practices used by the API Console.',
-                type: 'article'
-            },
-            twitter: {
-                title: 'Privacy Policy | API Console',
-                description: 'Learn about data handling, analytics, and storage practices used by the API Console.'
-            }
-        }
-    },
-    {
-        id: 'code-of-conduct',
-        path: 'pages/code-of-conduct.html',
-        title: 'Code of Conduct',
-        metadata: {
-            description: 'Understand the collaboration guidelines that keep the API Console productive and respectful.',
-            keywords: [
-                'API Console code of conduct',
-                'collaboration guidelines',
-                'API workspace policy'
-            ],
-            canonicalSlug: 'code-of-conduct',
-            openGraph: {
-                title: 'Code of Conduct | API Console',
-                description: 'Understand the collaboration guidelines that keep the API Console productive and respectful.',
-                type: 'article'
-            },
-            twitter: {
-                title: 'Code of Conduct | API Console',
-                description: 'Understand the collaboration guidelines that keep the API Console productive and respectful.'
             }
         }
     }

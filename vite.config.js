@@ -23,21 +23,27 @@ function staticPagesPlugin() {
       outDir = config.build.outDir;
     },
     configureServer(server) {
-      server.middlewares.use((req, res, next) => {
-        if (!req.url.startsWith('/pages/')) {
-          return next();
+      const serveStaticDir = (req, res, next, prefix, directory) => {
+        if (!req.url.startsWith(prefix)) {
+          return false;
         }
 
-        const cleanPath = decodeURIComponent(req.url.replace('/pages/', ''));
-        const filePath = join(pagesDir, cleanPath);
+        const cleanPath = decodeURIComponent(req.url.replace(prefix, ''));
+        const filePath = join(directory, cleanPath);
 
         if (fs.existsSync(filePath) && fs.statSync(filePath).isFile()) {
           const extension = extname(filePath).toLowerCase();
           res.setHeader('Content-Type', mimeTypes[extension] || 'text/html');
           fs.createReadStream(filePath).pipe(res);
-          return;
+          return true;
         }
 
+        return false;
+      };
+
+      server.middlewares.use((req, res, next) => {
+        if (serveStaticDir(req, res, next, '/layout/', pagesDir)) return;
+        if (serveStaticDir(req, res, next, '/pages/', pagesDir)) return;
         next();
       });
 
@@ -97,9 +103,12 @@ function staticPagesPlugin() {
       if (!outDir) {
         return;
       }
-      const targetDir = resolve(__dirname, outDir, 'pages');
-      fs.mkdirSync(targetDir, { recursive: true });
-      fs.cpSync(pagesDir, targetDir, { recursive: true });
+      const targetDirs = ['pages', 'layout'];
+      targetDirs.forEach((dirName) => {
+        const targetDir = resolve(__dirname, outDir, dirName);
+        fs.mkdirSync(targetDir, { recursive: true });
+        fs.cpSync(pagesDir, targetDir, { recursive: true });
+      });
 
       const staticFiles = [
         'manifest.json',
