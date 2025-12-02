@@ -32,7 +32,7 @@
       "^.+\\.js$": "babel-jest"
     },
     "moduleNameMapper": {
-      "^@/(.*)$": "<rootDir>/src/main/$1"
+      "^@/(.*)$": "<rootDir>/app/src/main/js/$1"
     }
   },
   "dependencies": {

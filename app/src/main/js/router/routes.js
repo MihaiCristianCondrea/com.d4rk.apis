@@ -263,7 +263,7 @@ const defaultRoutes = [
     },
     {
         id: 'app-toolkit-api',
-        path: 'pages/apis/app-toolkit.html',
+        path: 'pages/app-toolkit.html',
         title: 'App Toolkit API',
         metadata: {
             description: 'Curate App Toolkit catalog entries with visual tools for managing app metadata, screenshots, and package information.',
@@ -286,7 +286,7 @@ const defaultRoutes = [
     },
     {
         id: 'faq-api',
-        path: 'pages/apis/faq.html',
+        path: 'pages/faq.html',
         title: 'FAQ API',
         metadata: {
             description: 'Publish structured FAQ answers with featured snippets and Material icon suggestions for web and Android surfaces.',
@@ -309,7 +309,7 @@ const defaultRoutes = [
     },
     {
         id: 'english-with-lidia-api',
-        path: 'pages/apis/english-with-lidia.html',
+        path: 'pages/english-with-lidia.html',
         title: 'English with Lidia API',
         metadata: {
             description: 'Build lesson feeds and multimedia content blocks for the English with Lidia Android app.',
@@ -332,7 +332,7 @@ const defaultRoutes = [
     },
     {
         id: 'android-studio-tutorials-api',
-        path: 'pages/apis/android-studio-tutorials.html',
+        path: 'pages/android-studio-tutorials.html',
         title: 'Android Studio Tutorials API',
         metadata: {
             description: 'Design home feed cards and Compose-ready lesson content for Android Studio Tutorials.',
@@ -355,7 +355,7 @@ const defaultRoutes = [
     },
     {
         id: 'github-favorites',
-        path: 'pages/github/github-favorites.html',
+        path: 'pages/github-favorites.html',
         title: 'Favorites',
         onLoad: initFavoritesPage,
         metadata: {
@@ -375,7 +375,7 @@ const defaultRoutes = [
     },
     {
         id: 'repo-mapper',
-        path: 'pages/github/repo-mapper.html',
+        path: 'pages/repo-mapper.html',
         title: 'Repo Mapper',
         onLoad: initRepoMapper,
         metadata: {
@@ -395,7 +395,7 @@ const defaultRoutes = [
     },
     {
         id: 'release-stats',
-        path: 'pages/github/release-stats.html',
+        path: 'pages/release-stats.html',
         title: 'Release Stats',
         onLoad: initReleaseStats,
         metadata: {
@@ -415,7 +415,7 @@ const defaultRoutes = [
     },
     {
         id: 'git-patch',
-        path: 'pages/github/git-patch.html',
+        path: 'pages/git-patch.html',
         title: 'Git Patch',
         onLoad: initGitPatch,
         metadata: {
@@ -435,7 +435,7 @@ const defaultRoutes = [
     },
     {
         id: 'privacy-policy',
-        path: 'pages/drawer/more/privacy-policy.html',
+        path: 'pages/privacy-policy.html',
         title: 'Privacy Policy',
         metadata: {
             description: 'Review how the API Console handles usage data, theme preferences, and integrations with external services.',
@@ -458,7 +458,7 @@ const defaultRoutes = [
     },
     {
         id: 'code-of-conduct',
-        path: 'pages/settings/code-of-conduct.html',
+        path: 'pages/code-of-conduct.html',
         title: 'Code of Conduct',
         metadata: {
             description: 'Understand the collaboration guidelines that keep the API Console productive and respectful.',
