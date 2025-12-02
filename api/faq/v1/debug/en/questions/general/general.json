@@ -3,7 +3,7 @@
     "id": "faq-privacy",
     "icon": "shield_person",
     "question": "Do you collect personal data?",
-    "answer": "<p>I do not personally collect, store, or sell any individual user data. All analytics and advertising are handled by Google's SDKs under their <a href=\"https://policies.google.com/privacy\" target=\"_blank\" rel=\"noopener noreferrer\">Privacy Policy</a>.</p><p>The dashboards I see only include aggregated, anonymous information—for example, how many people opened an app this week or which device models are crashing after a new release. You can always review the <a href=\"#privacy-policy\">website privacy policy</a> for the full breakdown of how data is processed and how you can opt out.</p>",
+    "answer": "<p>I do not personally collect, store, or sell any individual user data. All analytics and advertising are handled by Google's SDKs under their <a href=\"https://policies.google.com/privacy\" target=\"_blank\" rel=\"noopener noreferrer\">Privacy Policy</a>.</p><p>The dashboards I see only include aggregated, anonymous information—for example, how many people opened an app this week or which device models are crashing after a new release.</p>",
     "featured": true,
     "tags": ["privacy", "data", "google_privacy_policy", "analytics"]
   }
