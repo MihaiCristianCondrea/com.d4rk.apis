@@ -4,12 +4,12 @@ import {
     showPageLoadingOverlay,
     hidePageLoadingOverlay,
     rafThrottle,
-} from '@/domain/utils';
-import { PROFILE_AVATAR_FALLBACK_SRC } from '@/domain/constants';
-import { initThemeControls } from '@/services/themeService';
-import { initNavigationDrawer } from '@/services/navigationDrawerService';
-import { initRouter, loadPageContent, normalizePageId } from '../router/index.js';
-import RouterRoutes from '../router/routes.js';
+} from './utils/utils.js';
+import { PROFILE_AVATAR_FALLBACK_SRC } from './utils/constants.js';
+import { initThemeControls } from '../services/themeService.js';
+import { initNavigationDrawer } from '../services/navigationDrawerService.js';
+import { initRouter, loadPageContent, normalizePageId } from './router/index.js';
+import RouterRoutes from './router/routes.js';
 import { registerGlobalUtilities, registerCompatibilityGlobals } from './globals.js';
 
 let pageContentAreaEl, mainContentPageOriginalEl, appBarHeadlineEl, topAppBarEl;

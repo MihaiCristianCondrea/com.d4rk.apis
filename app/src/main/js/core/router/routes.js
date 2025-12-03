@@ -1,4 +1,4 @@
-import { resolveAssetUrl } from '../app/config.js';
+import { resolveAssetUrl } from '../config.js';
 import { initFavoritesPage, initGitPatch, initReleaseStats, initRepoMapper } from '../features/githubTools.js';
 
 function layoutPath(filename) {

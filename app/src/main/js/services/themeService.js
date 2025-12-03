@@ -1,5 +1,5 @@
-import { MEDIA_QUERY, STORAGE_KEYS } from '@/domain/constants';
-import { getDynamicElement } from '@/domain/utils';
+import { MEDIA_QUERY, STORAGE_KEYS } from '../core/utils/constants.js';
+import { getDynamicElement } from '../core/utils/utils.js';
 
 const THEME_DATA_ATTR = 'data-theme';
 const THEME_OPTIONS = ['light', 'dark', 'auto'];

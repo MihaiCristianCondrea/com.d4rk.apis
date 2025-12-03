@@ -51,6 +51,17 @@
   font-weight: 500;
 }
 
+.gh-md-field,
+.gh-form md-outlined-text-field {
+  width: 100%;
+  --md-outlined-field-container-color: var(--gh-card-strong);
+  --md-outlined-field-outline-color: color-mix(in srgb, var(--gh-outline) 60%, transparent);
+  --md-outlined-field-focus-outline-color: var(--md-sys-color-primary, #e6e1e5);
+  --md-outlined-field-text-color: var(--gh-text);
+  --md-outlined-field-label-text-color: var(--gh-subtext);
+  --md-outlined-field-hover-outline-color: color-mix(in srgb, var(--md-sys-color-primary, #e6e1e5) 32%, transparent);
+}
+
 .filled-icon {
   font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
 }
