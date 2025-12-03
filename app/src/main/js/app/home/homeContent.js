@@ -55,6 +55,13 @@ export const workspaceCards = [
 
 export const githubTools = [
   {
+    id: 'github-favorites',
+    href: '#github-favorites',
+    icon: 'grade',
+    title: 'Favorites',
+    description: 'Open saved repositories from Repo Mapper and Release Stats.',
+  },
+  {
     id: 'repo-mapper',
     href: '#repo-mapper',
     icon: 'terminal',
