@@ -202,8 +202,8 @@
         const diffContent = document.getElementById('appToolkitDiffContent');
         const dialogsToWire = [githubDialog];
         const FETCH_STATE_COPY = {
-            idle: 'Paste a JSON URL to load the latest data.',
-            preset: 'Preset URL ready. Press Enter or Load JSON to import.',
+            idle: 'Pick a quick preset to load the latest data.',
+            preset: 'Preset selected. Tap the preset again to refresh.',
             loading: 'Fetching the latest data…',
             success: 'Data loaded successfully.',
             error: 'Unable to fetch remote JSON.'
@@ -2462,17 +2462,15 @@
             if (fetchFieldset) {
                 fetchFieldset.dataset.state = resolvedState;
                 if (resolvedState === 'success') {
-                    fetchFieldset.classList.add('builder-remote-inline-action--pulse');
+                    fetchFieldset.classList.add('builder-remote-presets--pulse');
                     if (fetchPulseTimeout) {
                         clearTimeout(fetchPulseTimeout);
                     }
                     fetchPulseTimeout = setTimeout(() => {
-                        fetchFieldset.classList.remove(
-                            'builder-remote-inline-action--pulse'
-                        );
+                        fetchFieldset.classList.remove('builder-remote-presets--pulse');
                     }, 1200);
                 } else {
-                    fetchFieldset.classList.remove('builder-remote-inline-action--pulse');
+                    fetchFieldset.classList.remove('builder-remote-presets--pulse');
                 }
             }
         }
@@ -2513,12 +2511,12 @@
             const targetUrl =
                 urlSource || (fetchInput ? fetchInput.value.trim() : '');
             if (!targetUrl) {
-                setFetchState('error', 'Enter a JSON URL to load data.');
+                setFetchState('error', 'Select a preset to load data.');
                 setPreviewStatus({
                     status: 'error',
-                    message: 'Enter a JSON URL to fetch.'
+                    message: 'Choose a preset to fetch the latest JSON.'
                 });
-                alert('Enter a JSON URL to fetch.');
+                alert('Select a preset to fetch the latest JSON.');
                 return;
             }
             if (fetchInput && !urlSource) {

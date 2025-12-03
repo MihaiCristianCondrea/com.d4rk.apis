@@ -114,6 +114,7 @@
   margin-top: 1.5rem;
 }
 
+.builder-remote-card,
 .builder-remote-card .card-body {
   display: flex;
   flex-direction: column;
