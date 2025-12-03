@@ -132,8 +132,14 @@
       <p class="builder-remote-feedback" id="appToolkitFetchStatus" data-status="idle" role="status" aria-live="polite"><span class="material-symbols-outlined builder-remote-feedback-icon" aria-hidden="true">info</span> <span class="builder-remote-feedback-text">Paste a JSON URL to load the latest data.</span></p>
       <div class="builder-remote-presets" aria-label="Quick fetch shortcuts">
         <span class="builder-remote-presets-label">Quick links</span>
-        <md-assist-chip data-app-toolkit-preset="api/app_toolkit/v2/debug/en/home/api_android_apps.json" label="Debug · EN"></md-assist-chip>
-        <md-assist-chip data-app-toolkit-preset="api/app_toolkit/v2/release/en/home/api_android_apps.json" label="Release · EN"></md-assist-chip>
+        <md-outlined-button data-app-toolkit-preset="api/app_toolkit/v2/debug/en/home/api_android_apps.json">
+          <md-icon slot="icon">download</md-icon>
+          <span>Debug · EN</span>
+        </md-outlined-button>
+        <md-outlined-button data-app-toolkit-preset="api/app_toolkit/v2/release/en/home/api_android_apps.json">
+          <md-icon slot="icon">download</md-icon>
+          <span>Release · EN</span>
+        </md-outlined-button>
       </div>
     </div>
     <div class="card-body">

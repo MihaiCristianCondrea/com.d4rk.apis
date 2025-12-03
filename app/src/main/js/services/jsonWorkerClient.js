@@ -1,4 +1,4 @@
-import { resolveAssetUrl } from '@/app/config.js';
+import { resolveAssetUrl } from '../core/config.js';
 
 const DEFAULT_TIMEOUT = 7000;
 const DEFAULT_WORKER_PATH = resolveAssetUrl('workers/jsonWorker.js');

@@ -1,4 +1,4 @@
-import { sharedJsonWorkerClient, JsonWorkerClient } from '@/services/jsonWorkerClient';
+import { sharedJsonWorkerClient, JsonWorkerClient } from '../services/jsonWorkerClient.js';
 
 function exposeGlobal(name, value) {
   if (typeof window === 'undefined') {

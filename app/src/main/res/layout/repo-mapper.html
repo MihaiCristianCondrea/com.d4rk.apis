@@ -8,11 +8,17 @@
     <div class="gh-card">
       <form id="mapper-form" class="gh-form" autocomplete="off" name="mapper-form">
         <div class="gh-field-row">
-          <div class="gh-floating-field">
-            <input id="mapper-url" name="mapper-url" type="url" class="gh-floating-input" placeholder="" required="" autocomplete="off" aria-describedby="mapper-url-helper mapper-url-error">
-            <label for="mapper-url">Repository URL</label>
-            <div class="gh-underline"></div>
-          </div>
+          <md-outlined-text-field
+            id="mapper-url"
+            name="mapper-url"
+            type="url"
+            class="gh-md-field"
+            label="Repository URL"
+            autocomplete="off"
+            aria-describedby="mapper-url-helper mapper-url-error"
+            list="mapper-datalist"
+            required
+          ></md-outlined-text-field>
           <button type="button" id="mapper-fav-btn" class="gh-pill-button" hidden="" aria-pressed="false">
             <span class="material-symbols-outlined">star</span>
             <span class="favorite-label">Favorite</span>

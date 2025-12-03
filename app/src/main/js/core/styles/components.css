@@ -1,17 +1,17 @@
 /* Allow styling custom Material elements across component styles. */
 /* stylelint-disable selector-type-no-unknown */
-@import './components/text-fields.css';
-@import './components/dropdowns.css';
-@import './components/buttons.css';
-@import './components/outlined-buttons.css';
-@import './components/icon-buttons.css';
-@import './components/dialogs.css';
-@import './components/cards.css';
-@import './components/outlined-cards.css';
-@import './components/scroll.css';
+@import './components/native/text-fields.css';
+@import './components/native/dropdowns.css';
+@import './components/native/buttons.css';
+@import './components/native/outlined-buttons.css';
+@import './components/native/icon-buttons.css';
+@import './components/native/dialogs.css';
+@import './components/native/cards.css';
+@import './components/native/outlined-cards.css';
+@import './components/native/scroll.css';
 @import './components/navigation.css';
-@import './components/loading-overlay.css';
-@import './components/inline-buttons.css';
+@import './components/native/loading-overlay.css';
+@import './components/native/inline-buttons.css';
 @import './components/api-builder.css';
 @import './components/faq-builder.css';
 @import './components/collection-rows.css';
