@@ -3,25 +3,31 @@
     <h1>App Toolkit API workspace</h1>
     <p>Configure the JSON payload that powers the App Toolkit catalog. The builder mirrors the production schema so you can manage listings for both debug and release channels with confidence.</p>
   </header>
-  <section class="workspace-dashboard" aria-label="Workspace overview">
-    <div class="workspace-insight-grid">
-      <div class="insight-card-header">
-        <span class="material-symbols-outlined insight-icon">apps</span> <span class="insight-label">Apps in workspace</span>
+    <section class="workspace-dashboard" aria-label="Workspace overview">
+      <div class="workspace-insight-grid">
+        <article class="insight-card">
+          <div class="insight-card-header">
+            <span class="material-symbols-outlined insight-icon">apps</span> <span class="insight-label">Apps in workspace</span>
+          </div>
+          <p class="insight-value" id="appToolkitTrackedCount">0</p>
+          <p class="insight-helper">Live count mirrors the JSON preview.</p>
+        </article>
+        <article class="insight-card">
+          <div class="insight-card-header">
+            <span class="material-symbols-outlined insight-icon">rocket_launch</span> <span class="insight-label">Release ready</span>
+          </div>
+          <p class="insight-value" id="appToolkitReleaseReadyCount">0</p>
+          <p class="insight-helper">Entries with rich media and required fields.</p>
+        </article>
+        <article class="insight-card">
+          <div class="insight-card-header">
+            <span class="material-symbols-outlined insight-icon">photo_library</span> <span class="insight-label">Screenshot average</span>
+          </div>
+          <p class="insight-value" id="appToolkitScreenshotAverage">0</p>
+          <p class="insight-helper">Target three or more images per listing.</p>
+        </article>
       </div>
-      <p class="insight-value" id="appToolkitTrackedCount">0</p>
-      <p class="insight-helper">Live count mirrors the JSON preview.</p>
-      <div class="insight-card-header">
-        <span class="material-symbols-outlined insight-icon">rocket_launch</span> <span class="insight-label">Release ready</span>
-      </div>
-      <p class="insight-value" id="appToolkitReleaseReadyCount">0</p>
-      <p class="insight-helper">Entries with rich media and required fields.</p>
-      <div class="insight-card-header">
-        <span class="material-symbols-outlined insight-icon">photo_library</span> <span class="insight-label">Screenshot average</span>
-      </div>
-      <p class="insight-value" id="appToolkitScreenshotAverage">0</p>
-      <p class="insight-helper">Target three or more images per listing.</p>
-    </div>
-    <div class="workspace-secondary-grid">
+      <div class="workspace-secondary-grid">
       <div class="card-body">
         <div class="plan-header">
           <h2>Today's pipeline</h2><span class="plan-updated">Updated <span id="appToolkitLastEdited">awaiting changes</span></span>
@@ -95,6 +101,13 @@
       </md-menu-item>
     </md-menu>
     <div class="builder-toolbar builder-toolbar--secondary">
+      <div class="builder-toolbar-settings">
+        <span class="material-symbols-outlined" aria-hidden="true">tune</span>
+        <div>
+          <p class="builder-toolbar-title">Workspace display</p>
+          <p class="builder-toolbar-helper">Focus a channel and adjust the layout without leaving edit mode.</p>
+        </div>
+      </div>
       <div class="segmented-controls">
         <label class="segmented-label" for="appToolkitChannelSegments">Channel focus</label>
         <md-segmented-button-set id="appToolkitChannelSegments" value="both">
@@ -110,10 +123,16 @@
           <md-segmented-button value="compact">Compact</md-segmented-button>
         </md-segmented-button-set>
       </div>
-      <md-filter-chip-set id="appToolkitFilterChips" aria-label="Filter app cards">
-        <md-filter-chip data-app-toolkit-filter="hasScreenshots" label="Has screenshots"></md-filter-chip>
-        <md-filter-chip data-app-toolkit-filter="isReleaseReady" label="Release ready"></md-filter-chip>
-      </md-filter-chip-set>
+      <div class="builder-chip-actions">
+        <div class="builder-chip-label">
+          <span class="material-symbols-outlined" aria-hidden="true">filter_alt</span>
+          <span>Filters</span>
+        </div>
+        <md-filter-chip-set id="appToolkitFilterChips" aria-label="Filter app cards">
+          <md-filter-chip data-app-toolkit-filter="pendingReleaseReady" label="Needs release-ready" selected></md-filter-chip>
+          <md-filter-chip data-app-toolkit-filter="needsScreenshots" label="Needs screenshots" selected></md-filter-chip>
+        </md-filter-chip-set>
+      </div>
     </div>
     <div class="card-body builder-remote-card">
       <div class="builder-remote-header builder-remote-header--split">
@@ -178,15 +197,17 @@
           </md-outlined-button>
         </div>
       </aside>
-      <div slot="headline">
-        Workspace diff
-      </div>
-      <div slot="supporting-text">
-        Compare the current workspace against the last exported payload.
-      </div>
-      <div slot="content" class="diff-sheet-content">
-        <div id="appToolkitDiffContent" class="diff-view diff-view--empty" role="status" aria-live="polite"></div>
-      </div>
+      <md-side-sheet id="appToolkitDiffSheet" class="builder-diff-sheet" open>
+        <div slot="headline">
+          Workspace diff
+        </div>
+        <div slot="supporting-text">
+          Compare the current workspace against the last exported payload.
+        </div>
+        <div slot="content" class="diff-sheet-content">
+          <div id="appToolkitDiffContent" class="diff-view diff-view--empty" role="status" aria-live="polite"></div>
+        </div>
+      </md-side-sheet>
     </div>
   </section>
   <md-dialog id="appToolkitGithubDialog">

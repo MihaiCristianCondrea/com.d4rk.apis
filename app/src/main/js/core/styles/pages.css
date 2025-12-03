@@ -113,16 +113,13 @@
   background: radial-gradient(circle at 20% 20%, rgba(88, 101, 242, 0.12), transparent 42%),
     radial-gradient(circle at 80% 10%, rgba(24, 176, 116, 0.12), transparent 38%),
     var(--md-sys-color-surface-container);
-  /* Shared gradient card used for both workspace and GitHub helper sections
-     so they visually align across the home page. Removing the default outline
-     and drop shadow allows the surfaces to blend with the surrounding hero
-     container while keeping the soft radial accents. */
-  border: none;
-  box-shadow: none;
+  box-shadow: 0 18px 40px rgba(15, 20, 25, 0.12);
+  border: 1px solid color-mix(in srgb, var(--md-sys-color-outline) 30%, transparent);
 }
 
+.workspace-surface,
 .github-tools-surface {
-  background: transparent;
+  background: color-mix(in srgb, var(--md-sys-color-surface-container-high) 30%, var(--md-sys-color-surface-container));
 }
 
 .github-tools-header {

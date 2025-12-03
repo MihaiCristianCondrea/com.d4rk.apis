@@ -136,11 +136,73 @@
   --md-segmented-button-container-height: 36px;
 }
 
-.toolbar-segment md-segmented-button-set, 
-.toolbar-filters md-filter-chip-set { 
+.toolbar-segment md-segmented-button-set,
+.toolbar-filters md-filter-chip-set {
   display: flex;
   flex-wrap: wrap;
   gap: 0.35rem;
+}
+
+.builder-toolbar-settings {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: var(--app-text-color);
+}
+
+.builder-toolbar-title {
+  margin: 0;
+  font-weight: 600;
+}
+
+.builder-toolbar-helper {
+  margin: 0;
+  color: var(--app-secondary-text-color);
+  font-size: 0.9rem;
+}
+
+.builder-chip-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.builder-chip-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  color: var(--app-secondary-text-color);
+  font-weight: 600;
+}
+
+.builder-chip-actions md-filter-chip-set {
+  --md-filter-chip-container-shape: 999px;
+  --md-filter-chip-label-text-size: 0.9rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.builder-chip-actions md-filter-chip {
+  transition: transform 150ms ease, box-shadow 150ms ease;
+}
+
+.builder-chip-actions md-filter-chip[selected] {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px rgba(15, 20, 25, 0.18);
+}
+
+.builder-toolbar-fetch {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.builder-toolbar-fetch md-outlined-text-field {
+  flex: 1 1 240px;
+  min-width: min(320px, 100%);
 }
 
 .toolbar-segment md-segmented-button-set { 
@@ -227,6 +289,17 @@
 .builder-remote-controls {
   display: grid;
   gap: 0.75rem;
+}
+
+.builder-remote-controls--stacked {
+  align-content: start;
+}
+
+.builder-remote-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 .builder-remote-presets--buttons {

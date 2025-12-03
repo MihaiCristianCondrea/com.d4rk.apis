@@ -8,11 +8,17 @@
     <div class="gh-card">
       <form id="releases-form" class="gh-form" autocomplete="off" name="releases-form">
         <div class="gh-field-row">
-          <div class="gh-floating-field">
-            <input id="releases-url" type="url" class="gh-floating-input" placeholder="" required="" autocomplete="off" aria-describedby="releases-url-helper releases-url-error">
-            <label for="releases-url">Repository URL</label>
-            <div class="gh-underline"></div>
-          </div>
+          <md-outlined-text-field
+            id="releases-url"
+            name="releases-url"
+            type="url"
+            class="gh-md-field"
+            label="Repository URL"
+            autocomplete="off"
+            aria-describedby="releases-url-helper releases-url-error"
+            spellcheck="false"
+            required
+          ></md-outlined-text-field>
           <button type="button" id="releases-fav-btn" class="gh-pill-button" hidden="" aria-pressed="false">
             <span class="material-symbols-outlined">star</span>
             <span class="favorite-label">Favorite</span>
@@ -21,7 +27,7 @@
         <p id="releases-url-helper" class="gh-helper-text">Use the repo URL or slug for the project.</p>
         <p id="releases-url-error" class="gh-error-text" hidden="">Invalid repository URL.</p>
         <div class="gh-token-settings" id="releases-token-settings">
-          <md-filled-tonal-button class="token-toggle" id="releases-token-reveal" aria-expanded="false">
+          <md-filled-tonal-button class="token-toggle" id="releases-token-reveal" aria-expanded="false" type="button">
             <md-icon slot="icon">vpn_key</md-icon>
             <span class="favorite-label">Token settings</span>
             <md-icon slot="trailing-icon">expand_more</md-icon>
