@@ -31,24 +31,30 @@
       <p id="faqModeStatus" class="faq-onboarding__status" role="status">Select a workflow to continue.</p>
     </section>
   </section>
-  <section class="faq-screen" data-faq-screen="workspace" aria-label="FAQ workspace" hidden="">
+    <section class="faq-screen" data-faq-screen="workspace" aria-label="FAQ workspace" hidden="">
     <section class="workspace-dashboard" aria-label="Workspace overview">
       <div class="workspace-insight-grid">
-        <div class="insight-card-header">
-          <span class="material-symbols-outlined insight-icon">help_center</span> <span class="insight-label">FAQs tracked</span>
-        </div>
-        <p class="insight-value" id="faqTotalCount">0</p>
-        <p class="insight-helper">Live count mirrors the builder list.</p>
-        <div class="insight-card-header">
-          <span class="material-symbols-outlined insight-icon">star</span> <span class="insight-label">Featured answers</span>
-        </div>
-        <p class="insight-value" id="faqFeaturedCount">0</p>
-        <p class="insight-helper">Highlighted in home experiences.</p>
-        <div class="insight-card-header">
-          <span class="material-symbols-outlined insight-icon">symptoms</span> <span class="insight-label">Icon coverage</span>
-        </div>
-        <p class="insight-value" id="faqIconCoverage">0/0</p>
-        <p class="insight-helper">Ensure every entry references a Material icon.</p>
+        <article class="insight-card">
+          <div class="insight-card-header">
+            <span class="material-symbols-outlined insight-icon">help_center</span> <span class="insight-label">FAQs tracked</span>
+          </div>
+          <p class="insight-value" id="faqTotalCount">0</p>
+          <p class="insight-helper">Live count mirrors the builder list.</p>
+        </article>
+        <article class="insight-card">
+          <div class="insight-card-header">
+            <span class="material-symbols-outlined insight-icon">star</span> <span class="insight-label">Featured answers</span>
+          </div>
+          <p class="insight-value" id="faqFeaturedCount">0</p>
+          <p class="insight-helper">Highlighted in home experiences.</p>
+        </article>
+        <article class="insight-card">
+          <div class="insight-card-header">
+            <span class="material-symbols-outlined insight-icon">symptoms</span> <span class="insight-label">Icon coverage</span>
+          </div>
+          <p class="insight-value" id="faqIconCoverage">0/0</p>
+          <p class="insight-helper">Ensure every entry references a Material icon.</p>
+        </article>
       </div>
       <div class="workspace-secondary-grid">
         <div class="card-body">
@@ -61,7 +67,10 @@
             <li><span class="plan-step-title">Validate & export</span> <span class="plan-step-meta">Refresh <code>index.json</code> and category files in the repo.</span></li>
           </ol>
           <div class="plan-actions">
-            <span class="material-symbols-outlined">refresh</span> Clear workspace
+            <md-filled-tonal-button id="faqResetButton">
+              <md-icon slot="icon">refresh</md-icon>
+              <span>Clear workspace</span>
+            </md-filled-tonal-button>
           </div>
         </div>
         <div class="card-body">
@@ -107,11 +116,29 @@
             <p>Pull the debug or release catalog to start editing products and their FAQ modules.</p>
           </div>
         </div>
-        <div class="builder-remote-controls">
-          <span class="material-symbols-outlined">link</span> <span class="material-symbols-outlined">cloud_download</span> Load catalog
+        <div class="builder-remote-controls builder-remote-controls--stacked">
+          <md-outlined-text-field id="faqCatalogSourceInput" label="Catalog source URL" spellcheck="false" autocomplete="off"></md-outlined-text-field>
+          <div class="builder-remote-actions">
+            <md-filled-button id="faqCatalogLoadButton">
+              <md-icon slot="icon">cloud_download</md-icon>
+              <span>Load catalog</span>
+            </md-filled-button>
+            <md-outlined-button id="faqCatalogRefresh">
+              <md-icon slot="icon">refresh</md-icon>
+              <span>Refresh</span>
+            </md-outlined-button>
+          </div>
         </div>
-        <div class="builder-remote-presets builder-remote-picker" aria-label="Catalog presets">
-          <span class="builder-remote-presets-label">Build channel</span> <span class="material-symbols-outlined">download</span> Debug catalog <span class="material-symbols-outlined">download</span> Release catalog <span class="material-symbols-outlined">refresh</span> Refresh catalog
+        <div class="builder-remote-presets builder-remote-presets--buttons" aria-label="Catalog presets">
+          <span class="builder-remote-presets-label">Build channel</span>
+          <md-outlined-button data-faq-catalog-preset="debug">
+            <md-icon slot="icon">download</md-icon>
+            <span>Debug catalog</span>
+          </md-outlined-button>
+          <md-outlined-button data-faq-catalog-preset="release">
+            <md-icon slot="icon">download</md-icon>
+            <span>Release catalog</span>
+          </md-outlined-button>
         </div>
         <p id="faqCatalogStatus" class="builder-remote-status" role="status">Choose debug or release to load the FAQ catalog.</p>
       </div>
@@ -124,7 +151,14 @@
               <p class="catalog-helper">Define every product and the FAQ sources it pulls together.</p>
             </div>
             <div class="catalog-actions__buttons">
-              <span class="material-symbols-outlined">add_circle</span> Add product <span class="material-symbols-outlined">restart_alt</span> Reset catalog
+              <md-filled-tonal-button id="faqCatalogAddProduct">
+                <md-icon slot="icon">add_circle</md-icon>
+                <span>Add product</span>
+              </md-filled-tonal-button>
+              <md-outlined-button id="faqCatalogReset">
+                <md-icon slot="icon">restart_alt</md-icon>
+                <span>Reset catalog</span>
+              </md-outlined-button>
             </div>
           </div>
           <div id="faqCatalogProducts" class="catalog-products" aria-live="polite"></div>
@@ -137,7 +171,14 @@
           <textarea id="faqCatalogPreview" class="preview-textarea" readonly spellcheck="false" aria-label="Catalog JSON preview"></textarea>
           <div class="preview-validation" id="faqCatalogValidation" role="status" aria-live="polite"></div>
           <div class="preview-actions">
-            <span class="material-symbols-outlined">content_copy</span> Copy JSON Download <span class="material-symbols-outlined">download</span>
+            <md-filled-tonal-button id="faqCatalogCopyButton">
+              <md-icon slot="icon">content_copy</md-icon>
+              <span>Copy JSON</span>
+            </md-filled-tonal-button>
+            <md-outlined-button id="faqCatalogDownloadButton">
+              <md-icon slot="icon">download</md-icon>
+              <span>Download</span>
+            </md-outlined-button>
           </div>
         </aside>
       </section>
@@ -152,7 +193,11 @@
             </div>
           </div>
           <div class="builder-remote-picker" aria-label="Product selection">
-            <div class="builder-remote-picker-select" id="faqCatalogSelect"></div><span class="material-symbols-outlined">fact_check</span> <span id="faqCatalogButtonLabel">Fetch selected product</span>
+            <div class="builder-remote-picker-select" id="faqCatalogSelect"></div>
+            <md-filled-tonal-button id="faqCatalogFetchButton">
+              <md-icon slot="icon">fact_check</md-icon>
+              <span id="faqCatalogButtonLabel">Fetch selected product</span>
+            </md-filled-tonal-button>
           </div>
           <p id="faqFetchStatus" class="builder-remote-status" role="status">Ready to fetch.</p>
         </div>
@@ -160,11 +205,26 @@
       <section class="api-builder" id="faqBuilder" data-builder-type="faq">
         <div class="builder-toolbar">
           <div class="builder-toolbar-actions">
-            <span class="material-symbols-outlined">add</span> Add FAQ <span class="material-symbols-outlined">upload</span> Import JSON <input type="file" id="faqImportInput" accept="application/json" hidden="">
+            <md-filled-tonal-button id="faqAddEntry">
+              <md-icon slot="icon">add</md-icon>
+              <span>Add FAQ</span>
+            </md-filled-tonal-button>
+            <md-outlined-button id="faqImportButton">
+              <md-icon slot="icon">upload</md-icon>
+              <span>Import JSON</span>
+            </md-outlined-button>
+            <input type="file" id="faqImportInput" accept="application/json" hidden="">
           </div>
           <div class="builder-toolbar-meta">
             <div class="toolbar-status" role="status" aria-live="polite">
               <span class="toolbar-status-label">Validation</span> <span class="toolbar-status-value" id="faqToolbarStatus">Awaiting input</span>
+            </div>
+            <div class="builder-toolbar-fetch">
+              <md-outlined-text-field id="faqFetchInput" label="Load FAQs from URL" spellcheck="false" autocomplete="off"></md-outlined-text-field>
+              <md-filled-tonal-button id="faqFetchButton">
+                <md-icon slot="icon">cloud_download</md-icon>
+                <span>Fetch</span>
+              </md-filled-tonal-button>
             </div>
           </div>
         </div>
@@ -178,7 +238,14 @@
             <textarea id="faqPreview" class="preview-textarea" readonly spellcheck="false" aria-label="FAQ JSON preview"></textarea>
             <div class="preview-validation" id="faqValidation" role="status" aria-live="polite"></div>
             <div class="preview-actions">
-              <span class="material-symbols-outlined">content_copy</span> Copy JSON Download <span class="material-symbols-outlined">download</span>
+              <md-filled-tonal-button id="faqCopyButton">
+                <md-icon slot="icon">content_copy</md-icon>
+                <span>Copy JSON</span>
+              </md-filled-tonal-button>
+              <md-outlined-button id="faqDownloadButton">
+                <md-icon slot="icon">download</md-icon>
+                <span>Download</span>
+              </md-outlined-button>
             </div>
           </aside>
         </div>
