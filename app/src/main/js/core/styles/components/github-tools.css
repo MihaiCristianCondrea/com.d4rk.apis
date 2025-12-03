@@ -257,6 +257,14 @@
     padding var(--gh-transition);
 }
 
+.gh-collapsible:not([hidden]),
+.gh-token-settings.is-open .gh-collapsible {
+  opacity: 1;
+  max-height: 400px;
+  padding: 0.75rem;
+  pointer-events: auto;
+}
+
 .gh-token-settings[open] .gh-collapsible {
   opacity: 1;
   max-height: 400px;

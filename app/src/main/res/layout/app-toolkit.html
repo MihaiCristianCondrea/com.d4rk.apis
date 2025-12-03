@@ -115,23 +115,15 @@
         <md-filter-chip data-app-toolkit-filter="isReleaseReady" label="Release ready"></md-filter-chip>
       </md-filter-chip-set>
     </div>
-    <div class="card-body">
-      <div class="builder-remote-header">
+    <div class="card-body builder-remote-card">
+      <div class="builder-remote-header builder-remote-header--split">
         <div>
-          <h2>Fetch existing JSON</h2>
-          <p>Pull the latest payload before you start editing entries.</p>
+          <h2>Quick fetch presets</h2>
+          <p>Load the latest catalog JSON instantly from the workspace shortcuts.</p>
         </div>
+        <p class="builder-remote-feedback" id="appToolkitFetchStatus" data-status="idle" role="status" aria-live="polite"><span class="material-symbols-outlined builder-remote-feedback-icon" aria-hidden="true">info</span> <span class="builder-remote-feedback-text">Pick a preset to import the latest data.</span></p>
       </div>
-      <div class="builder-remote-controls" id="appToolkitFetchFieldset">
-        <md-outlined-text-field id="appToolkitFetchInput" label="JSON URL" type="url" placeholder="https://example.com/api_android_apps.json" supporting-text="Paste a JSON URL to load the latest data." aria-describedby="appToolkitFetchStatus" spellcheck="false"></md-outlined-text-field>
-        <md-filled-button id="appToolkitFetchButton">
-          <md-icon slot="icon">cloud_download</md-icon>
-          <span>Load JSON</span>
-        </md-filled-button>
-      </div>
-      <p class="builder-remote-feedback" id="appToolkitFetchStatus" data-status="idle" role="status" aria-live="polite"><span class="material-symbols-outlined builder-remote-feedback-icon" aria-hidden="true">info</span> <span class="builder-remote-feedback-text">Paste a JSON URL to load the latest data.</span></p>
-      <div class="builder-remote-presets" aria-label="Quick fetch shortcuts">
-        <span class="builder-remote-presets-label">Quick links</span>
+      <div class="builder-remote-presets builder-remote-presets--buttons" id="appToolkitFetchFieldset" aria-label="Quick fetch shortcuts">
         <md-outlined-button data-app-toolkit-preset="api/app_toolkit/v2/debug/en/home/api_android_apps.json">
           <md-icon slot="icon">download</md-icon>
           <span>Debug · EN</span>

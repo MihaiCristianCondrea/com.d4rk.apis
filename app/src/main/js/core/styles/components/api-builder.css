@@ -189,9 +189,35 @@
   font-size: 0.95rem;
 }
 
+.builder-remote-header--split {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
 .builder-remote-controls {
   display: grid;
   gap: 0.75rem;
+}
+
+.builder-remote-presets--buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.builder-remote-presets--buttons md-outlined-button {
+  --md-outlined-button-container-shape: 999px;
+  --md-outlined-button-label-text-size: 0.95rem;
+  --md-outlined-button-icon-size: 20px;
+}
+
+.builder-remote-presets--pulse {
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--md-sys-color-primary) 35%, transparent);
+  border-radius: 18px;
+  padding: 0.35rem;
 }
 
 .builder-remote-inline-action {

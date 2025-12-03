@@ -145,16 +145,22 @@ function wireTokenControls({ toggleButtonId, wrapperId, fieldId, visibilityToggl
   const wrapper = document.getElementById(wrapperId);
   const field = document.getElementById(fieldId);
   const visibilityToggle = document.getElementById(visibilityToggleId);
+  const container = toggleButton ? toggleButton.closest('.gh-token-settings') : null;
 
   if (toggleButton && wrapper) {
     const update = (expanded) => {
       toggleButton.setAttribute('aria-expanded', String(expanded));
       wrapper.hidden = !expanded;
+      if (container) {
+        container.classList.toggle('is-open', expanded);
+        container.toggleAttribute('open', expanded);
+      }
     };
     toggleButton.addEventListener('click', () => {
       const isExpanded = toggleButton.getAttribute('aria-expanded') === 'true';
       update(!isExpanded);
     });
+    update(toggleButton.getAttribute('aria-expanded') === 'true');
   }
 
   if (visibilityToggle && field) {
