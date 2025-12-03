@@ -37,6 +37,12 @@
   box-shadow: 0 14px 32px rgba(15, 20, 25, 0.08);
 }
 
+.builder-toolbar--secondary {
+  align-items: center;
+  gap: 1.25rem;
+  justify-content: flex-start;
+}
+
 .builder-toolbar-actions {
   display: flex;
   flex-wrap: wrap;
@@ -107,6 +113,27 @@
   display: grid;
   gap: 0.35rem;
   align-content: start;
+}
+
+.segmented-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.segmented-label {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--app-secondary-text-color);
+}
+
+.segmented-controls md-segmented-button-set {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  --md-segmented-button-container-height: 36px;
 }
 
 .toolbar-segment md-segmented-button-set, 

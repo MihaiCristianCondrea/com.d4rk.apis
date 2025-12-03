@@ -169,10 +169,12 @@ md-top-app-bar .material-symbols-outlined {
   font-size: 0.75rem;
   margin-top: 12px;
   width: 100%;
+  color: var(--app-secondary-text-color);
 }
 
 .drawer-footer .drawer-legal-links a {
   text-decoration: underline;
+  color: inherit;
 }
 
 md-list { 

@@ -107,20 +107,22 @@
   gap: 2rem;
 }
 
-.github-tools-surface {
+.feature-surface {
   padding: clamp(1.5rem, 2vw, 2.5rem);
   border-radius: 20px;
   background: radial-gradient(circle at 20% 20%, rgba(88, 101, 242, 0.12), transparent 42%),
     radial-gradient(circle at 80% 10%, rgba(24, 176, 116, 0.12), transparent 38%),
     var(--md-sys-color-surface-container);
-  /* Remove the default outline and drop shadow on the GitHub tools section so
-     that it blends seamlessly with the surrounding hero container. The
-     original border and shadow created a prominent outline that clashed
-     visually with the "Purpose‑built for Mihai‑Cristian Condrea's apps" hero.
-     Removing the border allows the section to feel more integrated while
-     still respecting the background gradients defined above. */
+  /* Shared gradient card used for both workspace and GitHub helper sections
+     so they visually align across the home page. Removing the default outline
+     and drop shadow allows the surfaces to blend with the surrounding hero
+     container while keeping the soft radial accents. */
   border: none;
   box-shadow: none;
+}
+
+.github-tools-surface {
+  background: transparent;
 }
 
 .github-tools-header {
@@ -429,6 +431,12 @@
   }
 }
 
+@media (max-width: 900px) {
+  .workspace-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 .workspace-card {
   --md-elevated-card-container-color: var(--md-sys-color-surface-container);
   padding: 1.5rem;
@@ -440,18 +448,12 @@
   box-shadow: 0 18px 40px rgba(0, 0, 0, 0.08);
 }
 
-.workspace-surface {
-  background: linear-gradient(135deg, color-mix(in srgb, var(--md-sys-color-primary) 6%, transparent), color-mix(in srgb, var(--md-sys-color-secondary) 8%, transparent));
-  border: 1px solid color-mix(in srgb, var(--md-sys-color-outline) 20%, transparent);
-  border-radius: 28px;
-  padding: clamp(1rem, 3vw, 1.5rem);
-  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.06);
-}
-
 .workspace-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 1rem;
+  align-items: stretch;
+  grid-auto-rows: 1fr;
 }
 
 .workspace-tile {
