@@ -1,3 +1,12 @@
+:root {
+  --app-surface-gradient: radial-gradient(
+      circle at 20% 20%,
+      rgba(88, 101, 242, 0.12),
+      transparent 42%
+    ),
+    radial-gradient(circle at 80% 10%, rgba(24, 176, 116, 0.12), transparent 38%);
+}
+
 .page-header {
   margin-bottom: 2rem;
   display: grid;
@@ -25,12 +34,7 @@
   gap: 2.5rem;
   padding: clamp(1.5rem, 5vw, 3rem);
   margin-bottom: 3rem;
-  background: radial-gradient(
-      circle at top left,
-      rgba(88, 101, 242, 0.12),
-      transparent 55%
-    ),
-    radial-gradient(circle at bottom right, rgba(24, 176, 116, 0.12), transparent 45%);
+  background: var(--app-surface-gradient);
   border-radius: 32px;
 }
 
@@ -110,16 +114,15 @@
 .feature-surface {
   padding: clamp(1.5rem, 2vw, 2.5rem);
   border-radius: 20px;
-  background: radial-gradient(circle at 20% 20%, rgba(88, 101, 242, 0.12), transparent 42%),
-    radial-gradient(circle at 80% 10%, rgba(24, 176, 116, 0.12), transparent 38%),
-    var(--md-sys-color-surface-container);
+  background: var(--app-surface-gradient), var(--md-sys-color-surface-container);
   box-shadow: 0 18px 40px rgba(15, 20, 25, 0.12);
   border: 1px solid color-mix(in srgb, var(--md-sys-color-outline) 30%, transparent);
 }
 
 .workspace-surface,
 .github-tools-surface {
-  background: color-mix(in srgb, var(--md-sys-color-surface-container-high) 30%, var(--md-sys-color-surface-container));
+  background: var(--app-surface-gradient),
+    color-mix(in srgb, var(--md-sys-color-surface-container-high) 30%, var(--md-sys-color-surface-container));
 }
 
 .github-tools-header {
@@ -139,13 +142,27 @@
   flex: 0 1 auto;
 }
 
+.feature-card-grid,
+.workspace-grid,
 .tool-card-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
   gap: 1rem;
 }
 
-.tool-card {
+.workspace-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: stretch;
+  grid-auto-rows: 1fr;
+}
+
+.tool-card-grid {
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+}
+
+.feature-card {
+  --feature-card-gap: 0.5rem;
+  --feature-card-icon-size: 40px;
+  --feature-card-icon-font-size: 24px;
   text-decoration: none;
   color: var(--app-text-color);
   background: color-mix(in srgb, var(--md-sys-color-surface-container-high) 75%, transparent);
@@ -153,25 +170,29 @@
   border-radius: 18px;
   padding: 1.1rem 1.2rem;
   display: grid;
-  gap: 0.5rem;
+  gap: var(--feature-card-gap);
   transition: transform 150ms ease, box-shadow 150ms ease, border-color 150ms ease;
 }
 
-.tool-card:hover {
+.feature-card:hover {
   transform: translateY(-2px);
   border-color: color-mix(in srgb, var(--md-sys-color-primary) 28%, transparent);
   box-shadow: 0 16px 32px rgba(0, 0, 0, 0.08);
 }
 
-.tool-card-icon {
-  width: 40px;
-  height: 40px;
+.feature-card-icon {
+  width: var(--feature-card-icon-size);
+  height: var(--feature-card-icon-size);
   border-radius: 12px;
   background: color-mix(in srgb, var(--md-sys-color-primary) 16%, transparent);
   display: grid;
   place-items: center;
-  font-size: 24px;
+  font-size: var(--feature-card-icon-font-size);
   color: var(--md-sys-color-primary);
+}
+
+.tool-card {
+  --feature-card-gap: 0.5rem;
 }
 
 .tool-card h3 {
@@ -416,21 +437,24 @@
   .workspace-secondary-grid {
     grid-template-columns: 1fr;
   }
+  .workspace-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 @media (max-width: 720px) {
+  .workspace-grid,
   .tool-card-grid {
-    grid-template-columns: 1fr;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .feature-card {
+    width: 100%;
   }
 
   .tool-card-wide {
     grid-column: auto;
-  }
-}
-
-@media (max-width: 900px) {
-  .workspace-grid {
-    grid-template-columns: 1fr;
   }
 }
 
@@ -445,30 +469,10 @@
   box-shadow: 0 18px 40px rgba(0, 0, 0, 0.08);
 }
 
-.workspace-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 1rem;
-  align-items: stretch;
-  grid-auto-rows: 1fr;
-}
-
 .workspace-tile {
-  text-decoration: none;
-  color: var(--app-text-color);
-  background: color-mix(in srgb, var(--md-sys-color-surface-container-high) 75%, transparent);
-  border: 1px solid color-mix(in srgb, var(--md-sys-color-outline) 18%, transparent);
-  border-radius: 18px;
-  padding: 1.1rem 1.2rem;
-  display: grid;
-  gap: 0.55rem;
-  transition: transform 150ms ease, box-shadow 150ms ease, border-color 150ms ease;
-}
-
-.workspace-tile:hover {
-  transform: translateY(-2px);
-  border-color: color-mix(in srgb, var(--md-sys-color-primary) 28%, transparent);
-  box-shadow: 0 16px 32px rgba(0, 0, 0, 0.08);
+  --feature-card-gap: 0.55rem;
+  --feature-card-icon-size: 42px;
+  --feature-card-icon-font-size: 22px;
 }
 
 .workspace-tile-header {
@@ -492,14 +496,8 @@
 }
 
 .workspace-tile-icon {
-  width: 42px;
-  height: 42px;
-  border-radius: 12px;
-  background: color-mix(in srgb, var(--md-sys-color-primary) 16%, transparent);
   display: grid;
   place-items: center;
-  font-size: 22px;
-  color: var(--md-sys-color-primary);
 }
 
 .workspace-tile-body {

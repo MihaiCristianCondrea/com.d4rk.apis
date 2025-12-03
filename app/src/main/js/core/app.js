@@ -112,14 +112,18 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function buildRouterOptions() {
-    const options = {
-        showOverlay: () => showPageLoadingOverlay(),
-        hideOverlay: () => hidePageLoadingOverlay(),
-        closeDrawer: () => navigationController?.close(),
-    };
+  const options = {
+    showOverlay: () => showPageLoadingOverlay(),
+    hideOverlay: () => hidePageLoadingOverlay(),
+    closeDrawer: () => navigationController?.close(),
+  };
 
-    const pageHandlers = {};
-    const globalScope = typeof window !== 'undefined' ? window : globalThis;
+  const pageHandlers = {};
+  const globalScope = typeof window !== 'undefined' ? window : globalThis;
+
+  if (typeof globalScope.initHomePage === 'function') {
+    options.onHomeLoad = globalScope.initHomePage;
+  }
 
     if (typeof globalScope.initAppToolkitWorkspace === 'function') {
         pageHandlers['app-toolkit-api'] = globalScope.initAppToolkitWorkspace;

@@ -76,5 +76,6 @@ import './app/workspaces/androidStudioTutorials/features/androidStudioTutorials.
 import './app/githubTools/repoMapper/features/repoMapper.js';
 import './app/githubTools/releaseStats/features/releaseStats.js';
 import './app/githubTools/gitPatch/features/gitPatch.js';
+import './app/home/homePage.js';
 
 import './core/app.js';
