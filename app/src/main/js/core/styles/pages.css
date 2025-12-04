@@ -141,21 +141,16 @@
   flex: 0 1 auto;
 }
 
-.feature-card-grid,
-.workspace-grid,
-.tool-card-grid {
+.feature-card-grid {
   display: grid;
   gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
 }
 
 .workspace-grid {
   grid-template-columns: repeat(2, minmax(0, 1fr));
   align-items: stretch;
   grid-auto-rows: 1fr;
-}
-
-.tool-card-grid {
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
 }
 
 .feature-card {
@@ -442,8 +437,7 @@
 }
 
 @media (max-width: 720px) {
-  .workspace-grid,
-  .tool-card-grid {
+  .feature-card-grid {
     display: flex;
     flex-direction: column;
   }
