@@ -195,14 +195,15 @@
         const toolbarPulseEl = document.getElementById('appToolkitToolbarPulse');
         const releaseProgressEl = document.getElementById('appToolkitReleaseProgress');
         const lastEditedEl = document.getElementById('appToolkitLastEdited');
-        const channelSegments = document.getElementById('appToolkitChannelSegments');
-        const modeSegments = document.getElementById('appToolkitLayoutSegments');
         const filterChipSet = document.getElementById('appToolkitFilterChips');
         const diffSheet = document.getElementById('appToolkitDiffSheet');
         const diffContent = document.getElementById('appToolkitDiffContent');
+        const githubCard = document.getElementById('appToolkitGithubCard');
+        const githubToggle = document.getElementById('appToolkitGithubToggle');
+        const githubContent = document.getElementById('appToolkitGithubContent');
         const dialogsToWire = [githubDialog];
         const FETCH_STATE_COPY = {
-            idle: 'Pick a quick preset to load the latest data.',
+            idle: 'Paste a JSON URL or choose a quick link.',
             preset: 'Preset selected. Tap the preset again to refresh.',
             loading: 'Fetching the latest data…',
             success: 'Data loaded successfully.',
@@ -1137,41 +1138,36 @@
             startRelativeTimer();
         }
 
-        function syncSegmentedSelection(segmented, value) {
-            if (!segmented) {
-                return;
-            }
-            segmented.value = value;
-            segmented.querySelectorAll('md-segmented-button').forEach((button) => {
-                const buttonValue =
-                    button.getAttribute('value') ||
-                    button.dataset.appToolkitMode ||
-                    button.dataset.appToolkitChannel;
-                if (buttonValue === value) {
-                    button.setAttribute('selected', '');
-                } else {
-                    button.removeAttribute('selected');
+        function setupCollapsibleCard(card, toggle, content, { defaultExpanded = false } = {}) {
+            const applyState = (expanded) => {
+                const isExpanded = Boolean(expanded);
+                if (card) {
+                    card.dataset.collapsed = isExpanded ? 'false' : 'true';
                 }
-            });
-        }
+                if (content) {
+                    content.hidden = !isExpanded;
+                }
+                if (toggle) {
+                    toggle.setAttribute('aria-expanded', String(isExpanded));
+                    const icon = toggle.querySelector('md-icon');
+                    if (icon) {
+                        icon.textContent = isExpanded ? 'unfold_less' : 'unfold_more';
+                    }
+                    const label = toggle.querySelector('span:last-child');
+                    if (label) {
+                        label.textContent = isExpanded ? 'Collapse' : 'Expand';
+                    }
+                }
+            };
 
-        function setLayoutMode(mode) {
-            if (!builderRoot) {
-                return;
-            }
-            const target = mode === 'compact' ? 'compact' : 'flow';
-            builderRoot.dataset.layout = target;
-            syncSegmentedSelection(modeSegments, target);
-        }
+            applyState(defaultExpanded);
 
-        function setChannelFocus(channel) {
-            if (!builderRoot) {
-                return;
+            if (toggle) {
+                toggle.addEventListener('click', () => {
+                    const nextExpanded = toggle.getAttribute('aria-expanded') !== 'true';
+                    applyState(nextExpanded);
+                });
             }
-            const allowed = ['debug', 'release', 'both'];
-            const target = allowed.includes(channel) ? channel : 'both';
-            builderRoot.dataset.channel = target;
-            syncSegmentedSelection(channelSegments, target);
         }
 
         function setPreviewStatus(options) {
@@ -1179,10 +1175,7 @@
             updateToolbarPulse();
         }
 
-        setLayoutMode(builderRoot && builderRoot.dataset ? builderRoot.dataset.layout : 'flow');
-        setChannelFocus(
-            builderRoot && builderRoot.dataset ? builderRoot.dataset.channel : 'both'
-        );
+        setupCollapsibleCard(githubCard, githubToggle, githubContent, { defaultExpanded: false });
         updateLastEditedDisplay();
         if (githubStepper) {
             setGithubStep(0);
@@ -2511,12 +2504,12 @@
             const targetUrl =
                 urlSource || (fetchInput ? fetchInput.value.trim() : '');
             if (!targetUrl) {
-                setFetchState('error', 'Select a preset to load data.');
+                setFetchState('error', 'Enter a JSON URL or pick a quick link to load data.');
                 setPreviewStatus({
                     status: 'error',
-                    message: 'Choose a preset to fetch the latest JSON.'
+                    message: 'Add a JSON URL or use a quick link to fetch the latest data.'
                 });
-                alert('Select a preset to fetch the latest JSON.');
+                alert('Enter a JSON URL or choose a quick link before loading.');
                 return;
             }
             if (fetchInput && !urlSource) {
@@ -3373,36 +3366,6 @@
                 }
                 await publishToGithub();
             });
-        }
-
-        if (channelSegments) {
-            const handleChannelChange = (event) => {
-                const value = event?.target?.value || channelSegments.value || 'both';
-                setChannelFocus(value);
-                if (toolbarPulseEl) {
-                    const label = value === 'both'
-                        ? 'Dual'
-                        : value.charAt(0).toUpperCase() + value.slice(1);
-                    toolbarPulseEl.textContent = `Channel focus · ${label}`;
-                }
-            };
-            channelSegments.addEventListener('change', handleChannelChange);
-            channelSegments.addEventListener('input', handleChannelChange);
-        }
-
-        if (modeSegments) {
-            const handleModeChange = (event) => {
-                const value = event?.target?.value || modeSegments.value || 'flow';
-                setLayoutMode(value);
-                if (toolbarPulseEl) {
-                    toolbarPulseEl.textContent =
-                        value === 'compact'
-                            ? 'Compact view · Focus on one listing at a time'
-                            : 'Flow view · Side-by-side with preview';
-                }
-            };
-            modeSegments.addEventListener('change', handleModeChange);
-            modeSegments.addEventListener('input', handleModeChange);
         }
 
         if (filterChipSet) {

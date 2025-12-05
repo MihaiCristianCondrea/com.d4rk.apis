@@ -67,7 +67,7 @@
       <li>Use <strong>Fetch existing JSON</strong> to pull the latest data from a remote file before editing.</li>
     </ul>
   </div>
-  <section class="api-builder" id="appToolkitBuilder" data-builder-type="app-toolkit" data-layout="flow" data-channel="both">
+  <section class="api-builder" id="appToolkitBuilder" data-builder-type="app-toolkit">
     <div class="builder-toolbar">
       <div class="builder-toolbar-actions">
         <md-filled-tonal-button id="appToolkitAddApp">
@@ -104,77 +104,69 @@
       <div class="builder-toolbar-settings">
         <span class="material-symbols-outlined" aria-hidden="true">tune</span>
         <div>
-          <p class="builder-toolbar-title">Workspace display</p>
-          <p class="builder-toolbar-helper">Focus a channel and adjust the layout without leaving edit mode.</p>
+          <p class="builder-toolbar-title">Workspace filters</p>
+          <p class="builder-toolbar-helper">Use quick toggles to focus on entries that need attention.</p>
         </div>
       </div>
-      <div class="segmented-controls">
-        <label class="segmented-label" for="appToolkitChannelSegments">Channel focus</label>
-        <md-segmented-button-set id="appToolkitChannelSegments" value="both">
-          <md-segmented-button value="debug">Debug</md-segmented-button>
-          <md-segmented-button value="release">Release</md-segmented-button>
-          <md-segmented-button value="both" selected>Both</md-segmented-button>
-        </md-segmented-button-set>
-      </div>
-      <div class="segmented-controls">
-        <label class="segmented-label" for="appToolkitLayoutSegments">Layout</label>
-        <md-segmented-button-set id="appToolkitLayoutSegments" value="flow">
-          <md-segmented-button value="flow" selected>Flow</md-segmented-button>
-          <md-segmented-button value="compact">Compact</md-segmented-button>
-        </md-segmented-button-set>
-      </div>
-      <div class="builder-chip-actions">
-        <div class="builder-chip-label">
-          <span class="material-symbols-outlined" aria-hidden="true">filter_alt</span>
-          <span>Filters</span>
-        </div>
+      <div class="toolbar-filters">
+        <p class="toolbar-label">Filters</p>
         <md-filter-chip-set id="appToolkitFilterChips" aria-label="Filter app cards">
-          <md-filter-chip data-app-toolkit-filter="pendingReleaseReady" label="Needs release-ready" selected></md-filter-chip>
-          <md-filter-chip data-app-toolkit-filter="needsScreenshots" label="Needs screenshots" selected></md-filter-chip>
+          <md-filter-chip data-app-toolkit-filter="pendingReleaseReady" label="Needs release-ready"></md-filter-chip>
+          <md-filter-chip data-app-toolkit-filter="needsScreenshots" label="Needs screenshots"></md-filter-chip>
         </md-filter-chip-set>
       </div>
     </div>
     <div class="card-body builder-remote-card">
-      <div class="builder-remote-header builder-remote-header--split">
+      <div class="builder-remote-header">
         <div>
-          <h2>Quick fetch presets</h2>
-          <p>Load the latest catalog JSON instantly from the workspace shortcuts.</p>
+          <h2>Fetch existing JSON</h2>
+          <p>Pull the latest payload before you start editing entries.</p>
         </div>
-        <p class="builder-remote-feedback" id="appToolkitFetchStatus" data-status="idle" role="status" aria-live="polite"><span class="material-symbols-outlined builder-remote-feedback-icon" aria-hidden="true">info</span> <span class="builder-remote-feedback-text">Pick a preset to import the latest data.</span></p>
+        <p class="builder-remote-feedback" id="appToolkitFetchStatus" data-status="idle" role="status" aria-live="polite"><span class="material-symbols-outlined builder-remote-feedback-icon" aria-hidden="true">info</span> <span class="builder-remote-feedback-text">Paste a JSON URL or pick a quick link.</span></p>
       </div>
-      <div class="builder-remote-presets builder-remote-presets--buttons" id="appToolkitFetchFieldset" aria-label="Quick fetch shortcuts">
-        <md-outlined-button data-app-toolkit-preset="api/app_toolkit/v2/debug/en/home/api_android_apps.json">
-          <md-icon slot="icon">download</md-icon>
-          <span>Debug · EN</span>
-        </md-outlined-button>
-        <md-outlined-button data-app-toolkit-preset="api/app_toolkit/v2/release/en/home/api_android_apps.json">
-          <md-icon slot="icon">download</md-icon>
-          <span>Release · EN</span>
-        </md-outlined-button>
+      <div class="builder-remote-controls" id="appToolkitFetchFieldset">
+        <md-outlined-text-field id="appToolkitFetchInput" label="JSON URL" type="url" placeholder="https://example.com/api_android_apps.json" supporting-text="Paste a JSON URL to load the latest data." aria-describedby="appToolkitFetchStatus" spellcheck="false"></md-outlined-text-field>
+        <div class="builder-remote-actions">
+          <md-filled-button id="appToolkitFetchButton">
+            <md-icon slot="icon">cloud_download</md-icon>
+            <span>Load JSON</span>
+          </md-filled-button>
+        </div>
+      </div>
+      <div class="builder-remote-presets" aria-label="Quick fetch shortcuts">
+        <span class="builder-remote-presets-label">Quick links</span>
+        <md-assist-chip data-app-toolkit-preset="api/app_toolkit/v2/debug/en/home/api_android_apps.json" label="Debug · EN"></md-assist-chip>
+        <md-assist-chip data-app-toolkit-preset="api/app_toolkit/v2/release/en/home/api_android_apps.json" label="Release · EN"></md-assist-chip>
       </div>
     </div>
-    <div class="card-body">
-      <div class="builder-remote-header">
+    <div class="card-body collapsible-card" id="appToolkitGithubCard" data-collapsed="true">
+      <div class="collapsible-card__header">
         <div>
           <h2>Publish to GitHub</h2>
           <p>Use the GitHub Contents API to update the catalog once the JSON preview is valid. Tokens are used only for this request and never stored.</p>
         </div>
+        <md-tonal-button id="appToolkitGithubToggle" class="collapsible-card__toggle" aria-expanded="false" aria-controls="appToolkitGithubContent">
+          <md-icon slot="icon">unfold_more</md-icon>
+          <span>Expand</span>
+        </md-tonal-button>
       </div>
-      <div class="builder-github-note" role="note">
-        <p><strong>Create a personal access token</strong> from <em>GitHub → Settings → Developer settings → Personal access tokens</em>. Choose a fine-grained token when possible and limit it to the repository you are publishing.</p>
-        <ul>
-          <li>Fine-grained tokens: enable <strong>Repository permissions → Contents: Read & write</strong> (Metadata is added automatically).</li>
-          <li>Classic tokens: select only <code>public_repo</code> for public catalogs or <code>repo</code> for private catalogs.</li>
-          <li>Copy the token once and keep it outside of source control.</li>
-        </ul>
-      </div>
-      <div class="builder-github-launch">
-        <md-icon>rocket_launch</md-icon>
-        <md-filled-button id="appToolkitGithubWizardButton">
-          <span>Open publish wizard</span>
-          <md-icon slot="trailing-icon">arrow_forward</md-icon>
-        </md-filled-button>
-        <p class="builder-github-helper">Validate the preview first, then follow the guided steps to publish.</p>
+      <div class="collapsible-card__content" id="appToolkitGithubContent" hidden>
+        <div class="builder-github-note" role="note">
+          <p><strong>Create a personal access token</strong> from <em>GitHub → Settings → Developer settings → Personal access tokens</em>. Choose a fine-grained token when possible and limit it to the repository you are publishing.</p>
+          <ul>
+            <li>Fine-grained tokens: enable <strong>Repository permissions → Contents: Read & write</strong> (Metadata is added automatically).</li>
+            <li>Classic tokens: select only <code>public_repo</code> for public catalogs or <code>repo</code> for private catalogs.</li>
+            <li>Copy the token once and keep it outside of source control.</li>
+          </ul>
+        </div>
+        <div class="builder-github-launch">
+          <md-icon>rocket_launch</md-icon>
+          <md-filled-button id="appToolkitGithubWizardButton">
+            <span>Open publish wizard</span>
+            <md-icon slot="trailing-icon">arrow_forward</md-icon>
+          </md-filled-button>
+          <p class="builder-github-helper">Validate the preview first, then follow the guided steps to publish.</p>
+        </div>
       </div>
     </div>
     <div class="builder-layout builder-columns">
