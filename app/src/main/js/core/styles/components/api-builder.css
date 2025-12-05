@@ -108,35 +108,11 @@
   color: var(--app-secondary-text-color);
 }
 
-.toolbar-segment,
 .toolbar-filters {
   display: grid;
   gap: 0.35rem;
   align-content: start;
 }
-
-.segmented-controls {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  flex-wrap: wrap;
-}
-
-.segmented-label {
-  margin: 0;
-  font-size: 0.95rem;
-  font-weight: 600;
-  color: var(--app-secondary-text-color);
-}
-
-.segmented-controls md-segmented-button-set {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  --md-segmented-button-container-height: 36px;
-}
-
-.toolbar-segment md-segmented-button-set,
 .toolbar-filters md-filter-chip-set {
   display: flex;
   flex-wrap: wrap;
@@ -161,38 +137,6 @@
   font-size: 0.9rem;
 }
 
-.builder-chip-actions {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.75rem;
-}
-
-.builder-chip-label {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
-  color: var(--app-secondary-text-color);
-  font-weight: 600;
-}
-
-.builder-chip-actions md-filter-chip-set {
-  --md-filter-chip-container-shape: 999px;
-  --md-filter-chip-label-text-size: 0.9rem;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.35rem;
-}
-
-.builder-chip-actions md-filter-chip {
-  transition: transform 150ms ease, box-shadow 150ms ease;
-}
-
-.builder-chip-actions md-filter-chip[selected] {
-  transform: translateY(-2px);
-  box-shadow: 0 10px 24px rgba(15, 20, 25, 0.18);
-}
-
 .builder-toolbar-fetch {
   display: flex;
   flex-wrap: wrap;
@@ -205,18 +149,39 @@
   min-width: min(320px, 100%);
 }
 
-.toolbar-segment md-segmented-button-set { 
-  --md-segmented-button-container-shape: 999px;
-  --md-segmented-button-container-height: 36px;
-}
-
-.toolbar-filters md-filter-chip-set { 
+.toolbar-filters md-filter-chip-set {
   --md-filter-chip-container-shape: 999px;
   --md-filter-chip-label-text-size: 0.82rem;
 }
 
-.toolbar-filters md-filter-chip[selected] { 
+.toolbar-filters md-filter-chip[selected] {
   --md-filter-chip-label-text-color: var(--md-sys-color-primary);
+}
+
+.collapsible-card {
+  display: grid;
+  gap: 1rem;
+}
+
+.collapsible-card__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.collapsible-card__toggle md-icon {
+  transition: transform 160ms ease;
+}
+
+.collapsible-card[data-collapsed='false'] .collapsible-card__toggle md-icon {
+  transform: rotate(180deg);
+}
+
+.collapsible-card__content {
+  display: grid;
+  gap: 1rem;
 }
 
 @media (max-width: 960px) {
@@ -293,6 +258,18 @@
 
 .builder-remote-controls--stacked {
   align-content: start;
+}
+
+.builder-remote-presets {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.builder-remote-presets-label {
+  font-weight: 600;
+  color: var(--app-secondary-text-color);
 }
 
 .builder-remote-actions {
