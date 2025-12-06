@@ -283,6 +283,7 @@ export function createScreenshotField({
   onMeta,
 }) {
   const element = document.createElement('app-toolkit-screenshot-field');
+  element.classList.add('screenshot-item');
   element.dataset.appIndex = String(appIndex);
   element.dataset.screenshotIndex = String(screenshotIndex);
   element.dataset.position = String(screenshotIndex + 1);

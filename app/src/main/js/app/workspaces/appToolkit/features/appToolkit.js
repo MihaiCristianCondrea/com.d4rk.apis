@@ -1127,6 +1127,66 @@
             startRelativeTimer();
         }
 
+        function createCollapsibleAnimator(content) {
+            if (!content) {
+                return {
+                    jumpTo: () => {},
+                    animateTo: () => {}
+                };
+            }
+            let currentAnimation = null;
+            const prefersReducedMotion = () =>
+                typeof window !== 'undefined' &&
+                window.matchMedia &&
+                window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            const cleanup = () => {
+                content.style.removeProperty('height');
+                content.style.removeProperty('opacity');
+                content.style.removeProperty('overflow');
+            };
+            const jumpTo = (expanded) => {
+                cleanup();
+                content.hidden = !expanded;
+            };
+            const animateTo = (expanded) => {
+                if (prefersReducedMotion()) {
+                    jumpTo(expanded);
+                    return;
+                }
+                if (currentAnimation) {
+                    currentAnimation.cancel();
+                }
+                const wasHidden = content.hidden;
+                const startHeight = expanded ? 0 : content.getBoundingClientRect().height;
+                content.hidden = false;
+                const endHeight = expanded ? content.scrollHeight : 0;
+                content.style.overflow = 'hidden';
+                content.style.height = `${startHeight}px`;
+                content.style.opacity = expanded ? '0' : '1';
+                currentAnimation = content.animate(
+                    [
+                        { height: `${startHeight}px`, opacity: expanded ? 0 : 1 },
+                        { height: `${endHeight}px`, opacity: expanded ? 1 : 0 }
+                    ],
+                    {
+                        duration: 220,
+                        easing: 'cubic-bezier(0.2, 0, 0, 1)'
+                    }
+                );
+                currentAnimation.onfinish = () => {
+                    jumpTo(expanded);
+                    cleanup();
+                    currentAnimation = null;
+                };
+                currentAnimation.oncancel = () => {
+                    cleanup();
+                    currentAnimation = null;
+                    content.hidden = wasHidden;
+                };
+            };
+            return { jumpTo, animateTo };
+        }
+
         function resetWorkspace({ preserveBaseline = false, message } = {}) {
             state.apps = [createEmptyApp()];
             lastPreviewState = { success: false, payload: null };
@@ -1155,6 +1215,7 @@
         function setupCollapsibleCard(card, toggle, content, { defaultExpanded } = {}) {
             const resolvedToggle = toggle || card?.querySelector('[data-collapsible-toggle]');
             const resolvedContent = content || card?.querySelector('[data-collapsible-content]');
+            const animator = createCollapsibleAnimator(resolvedContent);
             const deriveExpanded = () => {
                 if (typeof defaultExpanded === 'boolean') {
                     return defaultExpanded;
@@ -1162,21 +1223,24 @@
                 return card?.dataset?.collapsed === 'false';
             };
 
-            const applyState = (expanded) => {
+            const applyState = (expanded, { animate = true } = {}) => {
                 const isExpanded = Boolean(expanded);
                 if (card) {
                     card.dataset.collapsed = isExpanded ? 'false' : 'true';
                 }
                 if (resolvedContent) {
-                    resolvedContent.hidden = !isExpanded;
+                    if (animate) {
+                        animator.animateTo(isExpanded);
+                    } else {
+                        animator.jumpTo(isExpanded);
+                    }
                 }
                 if (resolvedToggle) {
                     resolvedToggle.setAttribute('aria-expanded', String(isExpanded));
-                    const icon =
-                        resolvedToggle.querySelector('[data-collapsible-indicator]') ||
-                        resolvedToggle.querySelector('md-icon');
-                    if (icon) {
-                        icon.textContent = isExpanded ? 'unfold_less' : 'unfold_more';
+                    const icon = resolvedToggle.querySelector('[data-collapsible-indicator]');
+                    const iconGlyph = icon?.querySelector('.material-symbols-outlined') || icon;
+                    if (iconGlyph) {
+                        iconGlyph.textContent = isExpanded ? 'arrow_drop_up' : 'arrow_drop_down';
                     }
                     const label = resolvedToggle.querySelector('.collapsible-card__label');
                     if (label) {
@@ -1185,7 +1249,7 @@
                 }
             };
 
-            applyState(deriveExpanded());
+            applyState(deriveExpanded(), { animate: false });
 
             if (resolvedToggle) {
                 resolvedToggle.addEventListener('click', () => {
@@ -3253,6 +3317,13 @@
                 item.addEventListener('click', () => {
                     handleSortSelection(item.dataset.sortKey || '');
                 });
+            });
+            sortMenu.addEventListener('action', (event) => {
+                const index = typeof event.detail?.index === 'number' ? event.detail.index : -1;
+                const selectedItem = index >= 0 ? sortMenuItems[index] : null;
+                if (selectedItem) {
+                    handleSortSelection(selectedItem.dataset.sortKey || '');
+                }
             });
             sortMenu.addEventListener('closed', () => {
                 if (sortButton) {
