@@ -2,7 +2,7 @@ import {probeImage} from '@/services/appToolkit/imageProbeService.js';
 import {formatAspectRatio, formatDimensionLabel, normalizeImageUrl} from '@/app/workspaces/appToolkit/domain/images.js';
 import screenshotFieldTemplate from '../layout/screenshot-field.html?raw';
 
-const styleHref = new URL('../../../styles/appToolkit/screenshot-field.css', import.meta.url);
+const styleHref = new URL('../../../../../core/styles/appToolkit/screenshot-field.css', import.meta.url);
 
 const template = document.createElement('template');
 template.innerHTML = screenshotFieldTemplate;
@@ -209,7 +209,7 @@ export class AppToolkitScreenshotField extends HTMLElement {
     if (meta && meta.width && meta.height) {
       this.style.setProperty('--app-toolkit-thumb-aspect', `${meta.width} / ${meta.height}`);
     } else {
-      this.style.removeProperty('--app-toolkit-thumb-aspect');
+      this.style.setProperty('--app-toolkit-thumb-aspect', '9 / 16');
     }
     const detailMeta = meta && meta.width && meta.height
       ? { width: meta.width, height: meta.height, ratio: formatAspectRatio(meta.width, meta.height) }
