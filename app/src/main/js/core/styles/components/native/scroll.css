@@ -246,7 +246,7 @@
   color: var(--md-sys-color-on-surface);
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.18);
   cursor: pointer;
-  opacity: 0;
+  opacity: 1;
   transition: opacity 180ms ease, transform 160ms ease, box-shadow 160ms ease;
 }
 
@@ -271,10 +271,6 @@
   cursor: default;
   opacity: 0.35;
   box-shadow: none;
-}
-
-.screenshot-carousel[data-has-nav='true'] .screenshot-carousel__nav {
-  opacity: 1;
 }
 
 @media (hover: none) {

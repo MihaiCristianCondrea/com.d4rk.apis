@@ -161,16 +161,7 @@
         const downloadButton = document.getElementById('appToolkitDownloadButton');
         const previewArea = document.getElementById('appToolkitPreview');
         const validationStatus = document.getElementById('appToolkitValidation');
-        const fetchInput = document.getElementById('appToolkitFetchInput');
-        const fetchButton = document.getElementById('appToolkitFetchButton');
         const fetchFieldset = document.getElementById('appToolkitFetchFieldset');
-        const fetchStatus = document.getElementById('appToolkitFetchStatus');
-        const fetchStatusIcon = fetchStatus
-            ? fetchStatus.querySelector('.builder-remote-feedback-icon')
-            : null;
-        const fetchStatusText = fetchStatus
-            ? fetchStatus.querySelector('.builder-remote-feedback-text')
-            : null;
         const presetButtons = Array.from(
             document.querySelectorAll('[data-app-toolkit-preset]')
         );
@@ -203,18 +194,10 @@
         const githubContent = document.getElementById('appToolkitGithubContent');
         const dialogsToWire = [githubDialog];
         const FETCH_STATE_COPY = {
-            idle: 'Paste a JSON URL or choose a quick link.',
-            preset: 'Preset selected. Tap the preset again to refresh.',
+            idle: 'Choose a quick link to load the latest data.',
             loading: 'Fetching the latest data…',
             success: 'Data loaded successfully.',
             error: 'Unable to fetch remote JSON.'
-        };
-        const FETCH_STATE_ICONS = {
-            idle: 'info',
-            preset: 'north_east',
-            loading: 'hourglass_top',
-            success: 'check_circle',
-            error: 'error'
         };
         let fetchPulseTimeout = null;
 
@@ -1160,9 +1143,6 @@
                     message: message || 'Workspace reset. Add an app to start building.'
                 });
             }
-            if (fetchInput) {
-                fetchInput.value = '';
-            }
             setFetchState('idle');
             if (builderLayout) {
                 builderLayout.classList.remove('builder-columns--with-diff');
@@ -1192,13 +1172,13 @@
                 }
                 if (resolvedToggle) {
                     resolvedToggle.setAttribute('aria-expanded', String(isExpanded));
-                    const icon = resolvedToggle.querySelector('md-icon');
+                    const icon =
+                        resolvedToggle.querySelector('[data-collapsible-indicator]') ||
+                        resolvedToggle.querySelector('md-icon');
                     if (icon) {
                         icon.textContent = isExpanded ? 'unfold_less' : 'unfold_more';
                     }
-                    const label =
-                        resolvedToggle.querySelector('.collapsible-card__label') ||
-                        resolvedToggle.querySelector('span:last-child');
+                    const label = resolvedToggle.querySelector('.collapsible-card__label');
                     if (label) {
                         label.textContent = isExpanded ? 'Collapse' : 'Expand';
                     }
@@ -2020,12 +2000,17 @@
             };
 
             const handleWheel = (event) => {
-                if (Math.abs(event.deltaY) <= Math.abs(event.deltaX)) {
-                    return;
-                }
                 event.preventDefault();
                 dismissHint();
-                const delta = event.deltaMode === 1 ? event.deltaY * 32 : event.deltaY;
+                const normalizedDeltaX = event.deltaMode === 1 ? event.deltaX * 32 : event.deltaX;
+                const normalizedDeltaY = event.deltaMode === 1 ? event.deltaY * 32 : event.deltaY;
+                const delta =
+                    Math.abs(normalizedDeltaX) > Math.abs(normalizedDeltaY)
+                        ? normalizedDeltaX
+                        : normalizedDeltaY;
+                if (!delta) {
+                    return;
+                }
                 screenshotsList.scrollBy({
                     left: delta,
                     behavior: Math.abs(delta) > 40 ? 'smooth' : 'auto'
@@ -2085,6 +2070,7 @@
             screenshotsList.addEventListener('drop', handleDrop);
             screenshotsList.addEventListener('scroll', handleScroll, { passive: true });
             screenshotsList.addEventListener('wheel', handleWheel, { passive: false });
+            carousel.addEventListener('wheel', handleWheel, { passive: false });
             screenshotsList.addEventListener('pointerdown', dismissHint);
             screenshotsList.addEventListener('touchstart', dismissHint, { passive: true });
             screenshotsList.addEventListener('mouseenter', dismissHint);
@@ -2200,6 +2186,7 @@
                 scheduleCarouselUpdate({ announce });
             };
 
+            updateCarouselState();
             updateScreenshotsState();
             const screenshotGroup = utils.createElement('li', {
                 classNames: [
@@ -2503,19 +2490,9 @@
 
         function setFetchState(state = 'idle', message) {
             const resolvedState = FETCH_STATE_COPY[state] ? state : 'idle';
-            if (fetchStatus) {
-                fetchStatus.dataset.status = resolvedState;
-            }
-            if (fetchStatusIcon) {
-                fetchStatusIcon.textContent =
-                    FETCH_STATE_ICONS[resolvedState] || FETCH_STATE_ICONS.idle;
-            }
-            if (fetchStatusText) {
-                fetchStatusText.textContent =
-                    message || FETCH_STATE_COPY[resolvedState] || FETCH_STATE_COPY.idle;
-            }
             if (fetchFieldset) {
                 fetchFieldset.dataset.state = resolvedState;
+                fetchFieldset.title = message || FETCH_STATE_COPY[resolvedState];
                 if (resolvedState === 'success') {
                     fetchFieldset.classList.add('builder-remote-presets--pulse');
                     if (fetchPulseTimeout) {
@@ -2562,26 +2539,19 @@
             }
         }
 
-        async function fetchRemoteJson(urlSource, { fromPreset = false } = {}) {
-            const targetUrl =
-                urlSource || (fetchInput ? fetchInput.value.trim() : '');
+        async function fetchRemoteJson(urlSource, { fromPreset = false, sourceButton } = {}) {
+            const targetUrl = utils.trimString(urlSource || '');
             if (!targetUrl) {
-                setFetchState('error', 'Enter a JSON URL or pick a quick link to load data.');
+                setFetchState('error', 'Choose a quick link to load data.');
                 setPreviewStatus({
                     status: 'error',
-                    message: 'Add a JSON URL or use a quick link to fetch the latest data.'
+                    message: 'Select a quick link to fetch the latest data before editing.'
                 });
-                alert('Enter a JSON URL or choose a quick link before loading.');
+                alert('Choose a quick link before loading.');
                 return;
             }
-            if (fetchInput && !urlSource) {
-                fetchInput.value = targetUrl;
-            }
-            if (fetchInput && fromPreset) {
-                fetchInput.value = targetUrl;
-            }
-            if (fetchButton) {
-                setLoadingState(fetchButton, true);
+            if (sourceButton) {
+                setLoadingState(sourceButton, true, 'Loading…');
             }
             setFetchState('loading');
             try {
@@ -2589,8 +2559,8 @@
                 if (!response.ok) {
                     const message = `Request failed: ${response.status} ${response.statusText}`;
                     console.error('AppToolkit: Remote fetch failed.', message);
-                    if (fetchButton) {
-                        setLoadingState(fetchButton, false);
+                    if (sourceButton) {
+                        setLoadingState(sourceButton, false);
                     }
                     setFetchState('error', message);
                     return;
@@ -2601,18 +2571,18 @@
                     ? utils.cloneJson(lastPreviewState.payload)
                     : null;
                 updateDiffSheet();
-                if (fetchButton) {
-                    setLoadingState(fetchButton, false);
+                if (sourceButton) {
+                    setLoadingState(sourceButton, false);
                     flashButton(
-                        fetchButton,
+                        sourceButton,
                         '<span class="material-symbols-outlined">check</span><span>Loaded</span>'
                     );
                 }
                 setFetchState('success');
             } catch (error) {
                 console.error('AppToolkit: Remote fetch failed.', error);
-                if (fetchButton) {
-                    setLoadingState(fetchButton, false);
+                if (sourceButton) {
+                    setLoadingState(sourceButton, false);
                 }
                 setFetchState('error', error.message || FETCH_STATE_COPY.error);
                 setPreviewStatus({
@@ -3256,31 +3226,6 @@
             });
         }
 
-        if (fetchButton) {
-            fetchButton.addEventListener('click', () => {
-                void fetchRemoteJson();
-            });
-        }
-
-        if (fetchInput) {
-            fetchInput.addEventListener('keydown', (event) => {
-                if (event.key === 'Enter') {
-                    event.preventDefault();
-                    fetchRemoteJson();
-                }
-            });
-            fetchInput.addEventListener('input', () => {
-                if (!fetchStatus || fetchStatus.dataset.status === 'loading') {
-                    return;
-                }
-                if (!fetchInput.value.trim()) {
-                    setFetchState('idle');
-                } else if (fetchStatus.dataset.status !== 'success') {
-                    setFetchState('preset', 'Press Enter or Load JSON to import this URL.');
-                }
-            });
-        }
-
         if (presetButtons.length) {
             presetButtons.forEach((button) => {
                 button.addEventListener('click', () => {
@@ -3290,16 +3235,7 @@
                     if (!presetUrl) {
                         return;
                     }
-                    if (fetchInput) {
-                        fetchInput.value = presetUrl;
-                        if (typeof fetchInput.focus === 'function') {
-                            fetchInput.focus();
-                        }
-                        if (typeof fetchInput.select === 'function') {
-                            fetchInput.select();
-                        }
-                    }
-                    fetchRemoteJson(presetUrl, { fromPreset: true });
+                    fetchRemoteJson(presetUrl, { fromPreset: true, sourceButton: button });
                 });
             });
         }

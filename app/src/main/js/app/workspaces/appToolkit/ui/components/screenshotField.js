@@ -1,6 +1,6 @@
 import {probeImage} from '@/services/appToolkit/imageProbeService.js';
 import {formatAspectRatio, formatDimensionLabel, normalizeImageUrl} from '@/app/workspaces/appToolkit/domain/images.js';
-import screenshotFieldTemplate from '../layout/screenshot-field.html?raw';
+import screenshotFieldTemplate from '../../../../../../res/layout/screenshot-field.html?raw';
 
 const styleHref = new URL('../../../../../core/styles/appToolkit/screenshot-field.css', import.meta.url);
 
