@@ -313,12 +313,12 @@
         let githubTokenFallbackFile = null;
 
         function createEmptyScreenshotEntry() {
-            return { url: '', aspectRatio: '' };
+            return { url: '', aspectRatio: '9:16' };
         }
 
         function normalizeScreenshotEntry(value, previous = null) {
             const base = previous && typeof previous === 'object' ? previous : createEmptyScreenshotEntry();
-            const next = { ...createEmptyScreenshotEntry(), aspectRatio: base.aspectRatio || '' };
+            const next = { ...createEmptyScreenshotEntry(), aspectRatio: base.aspectRatio || '9:16' };
             if (typeof value === 'string') {
                 next.url = utils.trimString(value);
             } else if (value && typeof value === 'object') {
@@ -329,6 +329,7 @@
             } else {
                 next.url = '';
             }
+            next.aspectRatio = utils.trimString(next.aspectRatio || '') || '9:16';
             return next;
         }
 
@@ -357,7 +358,8 @@
             }
             const existing = list[screenshotIndex];
             const entry = normalizeScreenshotEntry(existing);
-            entry.aspectRatio = utils.trimString(ratio || '');
+            const normalizedRatio = utils.trimString(ratio || '') || '9:16';
+            entry.aspectRatio = normalizedRatio;
             list[screenshotIndex] = entry;
         }
 

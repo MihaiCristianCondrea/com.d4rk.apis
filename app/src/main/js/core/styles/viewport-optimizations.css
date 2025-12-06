@@ -22,8 +22,8 @@
 .screenshot-carousel__viewport img {
   aspect-ratio: 9 / 16;
   width: 100%;
-  height: auto;
-  object-fit: cover;
+  height: 100%;
+  object-fit: contain;
 }
 
 .carousel .carousel-slide {
