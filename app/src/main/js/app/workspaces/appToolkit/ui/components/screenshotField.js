@@ -1,39 +1,12 @@
 import {probeImage} from '@/services/appToolkit/imageProbeService.js';
 import {formatAspectRatio, formatDimensionLabel, normalizeImageUrl} from '@/app/workspaces/appToolkit/domain/images.js';
+import screenshotFieldTemplate from '../layout/screenshot-field.html?raw';
 
 const styleHref = new URL('../../../styles/appToolkit/screenshot-field.css', import.meta.url);
 
 const template = document.createElement('template');
-template.innerHTML = `
-  <div class="actions" part="actions">
-    <slot name="drag">
-      <md-icon-button class="drag-handle" aria-label="Reorder screenshot" part="drag-handle">
-        <span class="material-symbols-outlined">drag_indicator</span>
-      </md-icon-button>
-    </slot>
-    <div class="actions-end" part="actions-end">
-      <md-icon-button class="remove-button" aria-label="Remove screenshot" part="remove-button">
-        <span class="material-symbols-outlined">delete</span>
-      </md-icon-button>
-    </div>
-  </div>
-  <div class="thumbnail" data-state="empty" part="thumbnail">
-    <img
-      part="image"
-      alt=""
-      loading="lazy"
-      decoding="async"
-      referrerpolicy="no-referrer"
-      src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw=="
-    />
-  </div>
-  <div class="info" part="info">
-    <md-outlined-text-field class="input" label="Screenshot" placeholder="https://example.com/screenshot.png" part="input"></md-outlined-text-field>
-    <div class="meta" data-state="info" part="meta">
-      <span class="meta__hint" part="meta-hint">Drop an image or paste a URL to preview size.</span>
-    </div>
-  </div>
-`;
+template.innerHTML = screenshotFieldTemplate;
+const EMPTY_THUMBNAIL_SRC = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==';
 
 export class AppToolkitScreenshotField extends HTMLElement {
   static get observedAttributes() {
@@ -76,6 +49,9 @@ export class AppToolkitScreenshotField extends HTMLElement {
     this._image = this.shadowRoot.querySelector('img');
     this._meta = this.shadowRoot.querySelector('.meta');
     this._removeButton = this.shadowRoot.querySelector('.remove-button');
+    if (this._image) {
+      this._image.src = EMPTY_THUMBNAIL_SRC;
+    }
 
     this._value = '';
     this._position = 1;
@@ -259,7 +235,9 @@ export class AppToolkitScreenshotField extends HTMLElement {
     const url = this._value;
     if (!url) {
       this._setThumbnailState('empty');
-      this._image?.removeAttribute('src');
+      if (this._image) {
+        this._image.src = EMPTY_THUMBNAIL_SRC;
+      }
       this._setMeta(null);
       return;
     }
@@ -280,7 +258,9 @@ export class AppToolkitScreenshotField extends HTMLElement {
       if (controller.signal.aborted) {
         return;
       }
-      this._image?.removeAttribute('src');
+      if (this._image) {
+        this._image.src = EMPTY_THUMBNAIL_SRC;
+      }
       this._setThumbnailState('error');
       this._setMeta(null, { error: error.message || 'Preview unavailable — check the link.' });
     } finally {
