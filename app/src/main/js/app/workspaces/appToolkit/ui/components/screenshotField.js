@@ -1,5 +1,5 @@
-import {probeImage} from '../../../../../services/appToolkit/imageProbeService.js';
-import {formatAspectRatio, formatDimensionLabel, normalizeImageUrl} from '../../domain/images.js';
+import {probeImage} from '@/services/appToolkit/imageProbeService.js';
+import {formatAspectRatio, formatDimensionLabel, normalizeImageUrl} from '@/app/workspaces/appToolkit/domain/images.js';
 
 const styleHref = new URL('../../../styles/appToolkit/screenshot-field.css', import.meta.url);
 
