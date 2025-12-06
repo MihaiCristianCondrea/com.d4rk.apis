@@ -1,244 +1,434 @@
 <div id="appToolkitPage" class="page-section app-shell-panel active">
   <header class="page-header">
-    <h1>API Workspace</h1>
-    <p>Configure the JSON payload that powers the App Toolkit catalog. The builder mirrors the production schema so you can manage listings for both debug and release channels with confidence.</p>
+    <h1>App Toolkit API workspace</h1>
+    <p>
+      Configure the JSON payload that powers the App Toolkit catalog. The
+      builder mirrors the production schema so you can manage listings for both
+      debug and release channels with confidence.
+    </p>
   </header>
-    <section class="workspace-dashboard" aria-label="Workspace overview">
-      <div class="workspace-insight-grid">
-        <article class="insight-card">
-          <div class="insight-card-header">
-            <span class="material-symbols-outlined insight-icon">apps</span> <span class="insight-label">Apps in workspace</span>
-          </div>
-          <p class="insight-value" id="appToolkitTrackedCount">0</p>
-          <p class="insight-helper">Live count mirrors the JSON preview.</p>
-        </article>
-        <article class="insight-card">
-          <div class="insight-card-header">
-            <span class="material-symbols-outlined insight-icon">rocket_launch</span> <span class="insight-label">Release ready</span>
-          </div>
-          <p class="insight-value" id="appToolkitReleaseReadyCount">0</p>
-          <p class="insight-helper">Entries with rich media and required fields.</p>
-        </article>
-        <article class="insight-card">
-          <div class="insight-card-header">
-            <span class="material-symbols-outlined insight-icon">photo_library</span> <span class="insight-label">Screenshot average</span>
-          </div>
-          <p class="insight-value" id="appToolkitScreenshotAverage">0</p>
-          <p class="insight-helper">Target three or more images per listing.</p>
-        </article>
-      </div>
-      <div class="workspace-secondary-grid">
-      <div class="card-body">
-        <div class="plan-header">
-          <h2>Today's pipeline</h2><span class="plan-updated">Updated <span id="appToolkitLastEdited">awaiting changes</span></span>
+
+  <section class="workspace-dashboard" aria-label="Workspace overview">
+    <div class="workspace-insight-grid">
+      <md-elevated-card class="insight-card">
+        <div class="insight-card-header">
+          <span class="material-symbols-outlined insight-icon">apps</span>
+          <span class="insight-label">Apps in workspace</span>
         </div>
-        <ol class="plan-list">
-          <li><span class="plan-step-title">Curate metadata</span> <span class="plan-step-meta" id="appToolkitReviewCount">0 entries queued</span></li>
-          <li><span class="plan-step-title">Validate JSON preview</span> <span class="plan-step-meta">Keep status green before publishing.</span></li>
-          <li><span class="plan-step-title">Publish to GitHub</span> <span class="plan-step-meta">Ship debug and release catalogs together.</span></li>
-        </ol>
-      </div>
-      <div class="card-body">
-        <div class="release-header">
-          <h2>Release readiness</h2>
-          <p id="appToolkitWorkspacePulse">Review entries to unlock insights.</p>
+        <p class="insight-value" id="appToolkitTrackedCount">0</p>
+        <p class="insight-helper">Live count mirrors the JSON preview.</p>
+      </md-elevated-card>
+      <md-elevated-card class="insight-card">
+        <div class="insight-card-header">
+          <span class="material-symbols-outlined insight-icon">rocket_launch</span>
+          <span class="insight-label">Release ready</span>
         </div>
-        <div class="release-progress" role="img" aria-label="Release readiness progress">
-          <div class="release-progress-track">
-            <div class="release-progress-bar" id="appToolkitReleaseProgress"></div>
-          </div>
-          <div class="release-progress-legend">
-            <span>Debug</span> <span>Release</span>
-          </div>
+        <p class="insight-value" id="appToolkitReleaseReadyCount">0</p>
+        <p class="insight-helper">Entries with rich media and required fields.</p>
+      </md-elevated-card>
+      <md-elevated-card class="insight-card">
+        <div class="insight-card-header">
+          <span class="material-symbols-outlined insight-icon">photo_library</span>
+          <span class="insight-label">Screenshot average</span>
         </div>
-        <ul class="release-tips">
-          <li>Add icons and three screenshots to unlock release readiness.</li>
-          <li>Use quick presets below to pull the latest production data.</li>
-        </ul>
-      </div>
+        <p class="insight-value" id="appToolkitScreenshotAverage">0</p>
+        <p class="insight-helper">Target three or more images per listing.</p>
+      </md-elevated-card>
+    </div>
+
+    <div class="workspace-secondary-grid">
+      <md-filled-card class="workspace-plan">
+        <div class="card-body">
+          <div class="plan-header">
+            <h2>Today's pipeline</h2>
+            <span class="plan-updated">Updated <span id="appToolkitLastEdited">awaiting changes</span></span>
+          </div>
+          <ol class="plan-list">
+            <li>
+              <span class="plan-step-title">Curate metadata</span>
+              <span class="plan-step-meta" id="appToolkitReviewCount">0 entries queued</span>
+            </li>
+            <li>
+              <span class="plan-step-title">Validate JSON preview</span>
+              <span class="plan-step-meta">Keep status green before publishing.</span>
+            </li>
+            <li>
+              <span class="plan-step-title">Publish to GitHub</span>
+              <span class="plan-step-meta">Ship debug and release catalogs together.</span>
+            </li>
+          </ol>
+        </div>
+      </md-filled-card>
+
+      <md-filled-card class="workspace-release">
+        <div class="card-body">
+          <div class="release-header">
+            <h2>Release readiness</h2>
+            <p id="appToolkitWorkspacePulse">Review entries to unlock insights.</p>
+          </div>
+          <div class="release-progress" role="img" aria-label="Release readiness progress">
+            <div class="release-progress-track">
+              <div class="release-progress-bar" id="appToolkitReleaseProgress"></div>
+            </div>
+            <div class="release-progress-legend">
+              <span>Debug</span>
+              <span>Release</span>
+            </div>
+          </div>
+          <ul class="release-tips">
+            <li>Add icons and three screenshots to unlock release readiness.</li>
+            <li>Use quick presets below to pull the latest production data.</li>
+          </ul>
+        </div>
+      </md-filled-card>
     </div>
   </section>
-  <div class="card-body">
-    <h2>Before you start</h2>
-    <ul>
-      <li>Each app entry must include <strong>name</strong>, <strong>packageName</strong>, a <strong>category</strong> with <code>label</code> and <code>category_id</code>, and an <strong>iconLogo</strong> URL.</li>
-      <li>Screenshots appear in the same order they are added. Provide at least three URLs for release builds.</li>
-      <li>When you are done, export the JSON and replace the existing file in <code>api/app_toolkit/v2/[debug|release]/en/home/api_android_apps.json</code> to mirror the production structure.</li>
-      <li>Use <strong>Fetch existing JSON</strong> to pull the latest data from a remote file before editing.</li>
-    </ul>
-  </div>
-  <section class="api-builder" id="appToolkitBuilder" data-builder-type="app-toolkit">
+
+  <md-filled-card class="guidance-card">
+    <div class="card-body">
+      <h2>Before you start</h2>
+      <ul>
+        <li>
+          Each app entry must include <strong>name</strong>,
+          <strong>packageName</strong>, a <strong>category</strong> with
+          <code>label</code> and <code>category_id</code>, and an
+          <strong>iconLogo</strong> URL.
+        </li>
+        <li>
+          Screenshots appear in the same order they are added. Provide at least
+          three URLs for release builds.
+        </li>
+        <li>
+          When you are done, export the JSON and replace the existing file in
+          <code>api/app_toolkit/v2/[debug|release]/en/home/api_android_apps.json</code>
+          to mirror the production structure.
+        </li>
+        <li>
+          Use <strong>Fetch existing JSON</strong> to pull the latest data from a
+          remote file before editing.
+        </li>
+      </ul>
+    </div>
+  </md-filled-card>
+
+  <section
+          class="api-builder"
+          id="appToolkitBuilder"
+          data-builder-type="app-toolkit"
+  >
     <div class="builder-toolbar">
       <div class="builder-toolbar-actions">
-        <md-filled-tonal-button id="appToolkitAddApp">
-          <md-icon slot="icon">add</md-icon>
-          <span>Add app</span>
-        </md-filled-tonal-button>
-        <md-outlined-button id="appToolkitSortButton" aria-haspopup="menu" aria-expanded="false">
-          <md-icon slot="icon">sort</md-icon>
-          <span class="builder-sort-label">Sort · <span id="appToolkitSortLabel">App name (A–Z)</span></span>
-          <md-icon slot="trailing-icon">arrow_drop_down</md-icon>
+        <md-filled-button id="appToolkitAddApp" has-icon>
+          <md-icon slot="icon"
+          ><span class="material-symbols-outlined">add</span></md-icon
+          >
+          Add app
+        </md-filled-button>
+        <md-outlined-button
+                id="appToolkitSortButton"
+                has-icon
+                trailing-icon
+                aria-haspopup="menu"
+                aria-expanded="false"
+        >
+          <md-icon slot="icon"
+          ><span class="material-symbols-outlined">sort</span></md-icon
+          >
+          <span class="builder-sort-label"
+          >Sort · <span id="appToolkitSortLabel">App name (A–Z)</span></span
+          >
+          <md-icon slot="trailing-icon"
+          ><span class="material-symbols-outlined">arrow_drop_down</span></md-icon
+          >
         </md-outlined-button>
-        <md-icon-button id="appToolkitResetButton" aria-label="Clear workspace">
-          <md-icon>refresh</md-icon>
-        </md-icon-button>
+        <md-menu id="appToolkitSortMenu" anchor="appToolkitSortButton">
+          <md-menu-item type="radio" data-sort-key="name" selected>
+            <div slot="headline">App name (A–Z)</div>
+          </md-menu-item>
+          <md-menu-item type="radio" data-sort-key="category">
+            <div slot="headline">Category (A–Z)</div>
+          </md-menu-item>
+          <md-menu-item type="radio" data-sort-key="screenshots">
+            <div slot="headline">Screenshot count (high to low)</div>
+          </md-menu-item>
+        </md-menu>
+        <md-text-button id="appToolkitResetButton" has-icon>
+          <md-icon slot="icon"
+          ><span class="material-symbols-outlined">refresh</span></md-icon
+          >
+          Clear workspace
+        </md-text-button>
       </div>
       <div class="builder-toolbar-meta">
         <div class="toolbar-status" role="status" aria-live="polite">
-          <span class="toolbar-status-label">Workspace pulse</span> <span class="toolbar-status-value" id="appToolkitToolbarPulse">Awaiting input</span>
+          <span class="toolbar-status-label">Workspace pulse</span>
+          <span class="toolbar-status-value" id="appToolkitToolbarPulse">Awaiting input</span>
         </div>
       </div>
     </div>
-    <md-menu id="appToolkitSortMenu" positioning="popover">
-      <md-menu-item data-sort-key="name" aria-label="Sort by app name" aria-checked="true" selected>
-        <div slot="headline">App name (A–Z)</div>
-      </md-menu-item>
-      <md-menu-item data-sort-key="category" aria-label="Sort by category">
-        <div slot="headline">Category (A–Z)</div>
-      </md-menu-item>
-      <md-menu-item data-sort-key="screenshots" aria-label="Sort by screenshot count">
-        <div slot="headline">Screenshot count (high to low)</div>
-      </md-menu-item>
-    </md-menu>
-    <div class="builder-toolbar builder-toolbar--filters" role="group" aria-label="Workspace filters">
-      <div class="builder-toolbar-settings">
-        <span class="material-symbols-outlined" aria-hidden="true">filter_alt</span>
-        <div>
-          <p class="builder-toolbar-title">Workspace filters</p>
-          <p class="builder-toolbar-helper">Use the standard chips to focus on entries that need attention.</p>
+
+    <md-filled-card class="builder-remote-card" id="appToolkitRemoteImport">
+      <div class="card-body">
+        <div class="builder-remote-header">
+          <div>
+            <h2>Fetch existing JSON</h2>
+            <p>Pull the latest payload before you start editing entries.</p>
+          </div>
+        </div>
+        <div class="builder-remote-controls">
+          <div
+                  class="builder-remote-inline-action"
+                  id="appToolkitFetchFieldset"
+          >
+            <md-outlined-text-field
+                    id="appToolkitFetchInput"
+                    type="url"
+                    label="JSON URL"
+                    placeholder="./api/app_toolkit/v2/debug/en/home/api_android_apps.json"
+                    spellcheck="false"
+                    aria-describedby="appToolkitFetchStatus"
+            >
+              <md-icon slot="leading-icon"
+              ><span class="material-symbols-outlined">link</span></md-icon
+              >
+            </md-outlined-text-field>
+            <md-outlined-button
+                    id="appToolkitFetchButton"
+                    class="builder-remote-inline-button"
+                    has-icon
+            >
+              <md-icon slot="icon"
+              ><span class="material-symbols-outlined">cloud_download</span></md-icon
+              >
+              Load JSON
+            </md-outlined-button>
+          </div>
+          <p
+                  class="builder-remote-feedback"
+                  id="appToolkitFetchStatus"
+                  data-status="idle"
+                  role="status"
+                  aria-live="polite"
+          >
+            <span
+                    class="material-symbols-outlined builder-remote-feedback-icon"
+                    aria-hidden="true"
+            >info</span
+            >
+            <span class="builder-remote-feedback-text"
+            >Paste a JSON URL to load the latest data.</span
+            >
+          </p>
+        </div>
+        <div class="builder-remote-presets" aria-label="Quick fetch shortcuts">
+          <span class="builder-remote-presets-label">Quick links</span>
+          <md-text-button
+                  has-icon
+                  data-app-toolkit-preset="./api/app_toolkit/v2/debug/en/home/api_android_apps.json"
+                  id="appToolkitDebugPreset"
+          >
+            <md-icon slot="icon"
+            ><span class="material-symbols-outlined">download</span></md-icon
+            >
+            Debug · EN
+          </md-text-button>
+          <md-text-button
+                  has-icon
+                  data-app-toolkit-preset="./api/app_toolkit/v2/release/en/home/api_android_apps.json"
+                  id="appToolkitReleasePreset"
+          >
+            <md-icon slot="icon"
+            ><span class="material-symbols-outlined">download</span></md-icon
+            >
+            Release · EN
+          </md-text-button>
         </div>
       </div>
-      <md-filter-chip-set id="appToolkitFilterChips" aria-label="Filter app cards" class="builder-filter-chips">
-        <md-filter-chip data-app-toolkit-filter="pendingReleaseReady" label="Needs release-ready"></md-filter-chip>
-        <md-filter-chip data-app-toolkit-filter="needsScreenshots" label="Needs screenshots"></md-filter-chip>
-      </md-filter-chip-set>
-    </div>
-    <div class="card-body builder-remote-card">
-      <div class="builder-remote-header">
-        <div>
-          <h2>Fetch existing JSON</h2>
-          <p>Pull the latest payload before you start editing entries.</p>
+    </md-filled-card>
+
+    <md-filled-card class="builder-remote-card" id="appToolkitGithubCard">
+      <div class="card-body">
+        <div class="builder-remote-header">
+          <div>
+            <h2>Publish to GitHub</h2>
+            <p>
+              Use the GitHub Contents API to update the catalog once the JSON
+              preview is valid. Tokens are used only for this request and never
+              stored.
+            </p>
+          </div>
         </div>
-        <p class="builder-remote-feedback" id="appToolkitFetchStatus" data-status="idle" role="status" aria-live="polite"><span class="material-symbols-outlined builder-remote-feedback-icon" aria-hidden="true">info</span> <span class="builder-remote-feedback-text">Paste a JSON URL or pick a quick link.</span></p>
-      </div>
-      <div class="builder-remote-controls" id="appToolkitFetchFieldset">
-        <md-outlined-text-field id="appToolkitFetchInput" label="JSON URL" type="url" placeholder="https://example.com/api_android_apps.json" supporting-text="Paste a JSON URL to load the latest data." aria-describedby="appToolkitFetchStatus" spellcheck="false"></md-outlined-text-field>
-        <div class="builder-remote-actions">
-          <md-filled-button id="appToolkitFetchButton">
-            <md-icon slot="icon">cloud_download</md-icon>
-            <span>Load JSON</span>
-          </md-filled-button>
-        </div>
-      </div>
-      <div class="builder-remote-presets" aria-label="Quick fetch shortcuts">
-        <span class="builder-remote-presets-label">Quick links</span>
-        <md-assist-chip data-app-toolkit-preset="api/app_toolkit/v2/debug/en/home/api_android_apps.json" label="Debug · EN"></md-assist-chip>
-        <md-assist-chip data-app-toolkit-preset="api/app_toolkit/v2/release/en/home/api_android_apps.json" label="Release · EN"></md-assist-chip>
-      </div>
-    </div>
-    <div class="card-body collapsible-card" id="appToolkitGithubCard" data-collapsed="true" data-collapsible-card>
-      <div class="collapsible-card__header">
-        <div>
-          <h2>Publish to GitHub</h2>
-          <p>Use the GitHub Contents API to update the catalog once the JSON preview is valid. Tokens are used only for this request and never stored.</p>
-        </div>
-        <md-tonal-button id="appToolkitGithubToggle" class="collapsible-card__toggle" aria-expanded="false" aria-controls="appToolkitGithubContent" data-collapsible-toggle type="button">
-          <md-icon slot="icon">unfold_more</md-icon>
-          <span class="collapsible-card__label">Expand</span>
-        </md-tonal-button>
-      </div>
-      <div class="collapsible-card__content" id="appToolkitGithubContent" data-collapsible-content hidden>
         <div class="builder-github-note" role="note">
-          <p><strong>Create a personal access token</strong> from <em>GitHub → Settings → Developer settings → Personal access tokens</em>. Choose a fine-grained token when possible and limit it to the repository you are publishing.</p>
+          <p>
+            <strong>Create a personal access token</strong> from
+            <em>GitHub → Settings → Developer settings → Personal access tokens</em>.
+            Choose a fine-grained token when possible and limit it to the
+            repository you are publishing.
+          </p>
           <ul>
-            <li>Fine-grained tokens: enable <strong>Repository permissions → Contents: Read & write</strong> (Metadata is added automatically).</li>
-            <li>Classic tokens: select only <code>public_repo</code> for public catalogs or <code>repo</code> for private catalogs.</li>
+            <li>
+              Fine-grained tokens: enable
+              <strong>Repository permissions → Contents: Read &amp; write</strong>
+              (Metadata is added automatically).
+            </li>
+            <li>
+              Classic tokens: select only
+              <code>public_repo</code> for public catalogs or
+              <code>repo</code> for private catalogs.
+            </li>
             <li>Copy the token once and keep it outside of source control.</li>
           </ul>
         </div>
         <div class="builder-github-launch">
-          <md-icon>rocket_launch</md-icon>
-          <md-filled-button id="appToolkitGithubWizardButton">
-            <span>Open publish wizard</span>
-            <md-icon slot="trailing-icon">arrow_forward</md-icon>
+          <md-filled-button id="appToolkitGithubWizardButton" has-icon>
+            <md-icon slot="icon"
+            ><span class="material-symbols-outlined">rocket_launch</span></md-icon
+            >
+            Open publish wizard
           </md-filled-button>
-          <p class="builder-github-helper">Validate the preview first, then follow the guided steps to publish.</p>
+          <p class="builder-github-helper">
+            Validate the preview first, then follow the guided steps to publish.
+          </p>
         </div>
       </div>
-    </div>
+    </md-filled-card>
+
     <div class="builder-layout builder-columns">
       <div class="builder-forms" id="appToolkitEntries" aria-live="polite"></div>
       <aside class="builder-preview" aria-label="JSON preview">
         <div class="preview-header">
-          <h2>Preview & export</h2>
+          <h2>Preview &amp; export</h2>
           <p>Changes update automatically as you edit entries.</p>
         </div>
-        <textarea id="appToolkitPreview" class="preview-textarea" readonly spellcheck="false" aria-label="App Toolkit JSON preview"></textarea>
-        <div class="preview-validation" id="appToolkitValidation" role="status" aria-live="polite"></div>
+        <textarea
+                id="appToolkitPreview"
+                class="preview-textarea"
+                readonly
+                spellcheck="false"
+                aria-label="App Toolkit JSON preview"
+        ></textarea>
+        <div
+                class="preview-validation"
+                id="appToolkitValidation"
+                role="status"
+                aria-live="polite"
+        ></div>
         <div class="preview-actions">
-          <md-filled-tonal-button id="appToolkitCopyButton">
-            <md-icon slot="icon">content_copy</md-icon>
-            <span>Copy JSON</span>
+          <md-filled-tonal-button id="appToolkitCopyButton" has-icon>
+            <md-icon slot="icon"
+            ><span class="material-symbols-outlined">content_copy</span></md-icon
+            >
+            Copy JSON
           </md-filled-tonal-button>
-          <md-outlined-button id="appToolkitDownloadButton">
-            <md-icon slot="icon">download</md-icon>
-            <span>Download</span>
+          <md-outlined-button
+                  id="appToolkitDownloadButton"
+                  has-icon
+                  trailing-icon
+          >
+            Download
+            <md-icon slot="icon"
+            ><span class="material-symbols-outlined">download</span></md-icon
+            >
           </md-outlined-button>
         </div>
       </aside>
-      <md-side-sheet id="appToolkitDiffSheet" class="builder-diff-sheet">
-        <div slot="headline">
-          Workspace diff
-        </div>
+      <md-side-sheet
+              id="appToolkitDiffSheet"
+              class="builder-diff-sheet"
+              aria-label="Workspace diff"
+      >
+        <div slot="headline">Workspace diff</div>
         <div slot="supporting-text">
           Compare the current workspace against the last exported payload.
         </div>
         <div slot="content" class="diff-sheet-content">
-          <div id="appToolkitDiffContent" class="diff-view diff-view--empty" role="status" aria-live="polite"></div>
+          <div
+                  id="appToolkitDiffContent"
+                  class="diff-view diff-view--empty"
+                  role="status"
+                  aria-live="polite"
+          ></div>
         </div>
       </md-side-sheet>
     </div>
   </section>
-  <md-dialog id="appToolkitGithubDialog">
+
+  <md-dialog id="appToolkitGithubDialog" class="app-dialog github-dialog">
     <div slot="headline">Publish to GitHub</div>
     <div slot="content" class="github-dialog-content">
-      <div class="github-stepper" id="appToolkitGithubStepper" value="authenticate" aria-live="polite"></div>
-      <div class="github-step" data-step="authenticate">
-        <div class="github-step-actions">
-          <md-filled-tonal-button id="appToolkitGithubTokenFileButton">
-            <md-icon slot="icon">description</md-icon>
-            <span>Load token from file</span>
-          </md-filled-tonal-button>
-          <input type="file" id="appToolkitGithubTokenFile" accept="text/plain,.txt,.token" hidden>
-          <md-outlined-text-field id="appToolkitGithubToken" label="GitHub token" type="password" supporting-text="Fine-grained token with Contents: read & write" spellcheck="false"></md-outlined-text-field>
-        </div>
-      </div>
-      <div class="github-step" data-step="target" hidden>
-        <div class="github-grid">
-          <md-outlined-text-field id="appToolkitGithubRepo" label="Repository" placeholder="owner/repo" spellcheck="false"></md-outlined-text-field>
-          <md-outlined-text-field id="appToolkitGithubBranch" label="Branch" placeholder="main" spellcheck="false"></md-outlined-text-field>
-          <md-outlined-select id="appToolkitGithubChannel" label="Channel">
-            <md-select-option value="debug">
-              <div slot="headline">Debug</div>
-            </md-select-option>
-            <md-select-option value="release">
-              <div slot="headline">Release</div>
-            </md-select-option>
-            <md-select-option value="both" selected>
-              <div slot="headline">Debug & Release</div>
-            </md-select-option>
-          </md-outlined-select>
-          <md-outlined-text-field id="appToolkitGithubMessage" label="Commit message" placeholder="Update App Toolkit catalog" spellcheck="false"></md-outlined-text-field>
-        </div>
-      </div>
-      <div class="github-step" data-step="review" hidden>
-        <p class="github-review-copy">Confirm the diff in the side sheet and publish when ready.</p>
-        <div class="github-status" id="appToolkitGithubStatus" role="status" aria-live="polite"></div>
-      </div>
+      <md-steppers id="appToolkitGithubStepper" value="authenticate">
+        <md-step value="authenticate" label="Authenticate">
+          <div class="github-step" data-step="authenticate">
+            <md-outlined-text-field
+                    id="appToolkitGithubToken"
+                    label="Personal access token"
+                    type="password"
+                    autocomplete="off"
+                    spellcheck="false"
+                    supporting-text="Tokens require Contents: Read &amp; write access."
+            ></md-outlined-text-field>
+            <div class="github-step-actions">
+              <input
+                      type="file"
+                      id="appToolkitGithubTokenFile"
+                      accept="text/plain,.txt,.token"
+                      hidden
+              />
+              <md-outlined-button id="appToolkitGithubTokenFileButton" has-icon>
+                <md-icon slot="icon"
+                ><span class="material-symbols-outlined">description</span></md-icon
+                >
+                Load token from file
+              </md-outlined-button>
+            </div>
+          </div>
+        </md-step>
+        <md-step value="target" label="Target">
+          <div class="github-step" data-step="target">
+            <md-outlined-text-field
+                    id="appToolkitGithubRepo"
+                    label="Repository (owner/name)"
+                    value="MihaiCristianCondrea/com.d4rk.apis"
+                    supporting-text="Use owner/name format."
+                    spellcheck="false"
+            ></md-outlined-text-field>
+            <md-outlined-text-field
+                    id="appToolkitGithubBranch"
+                    label="Branch"
+                    value="main"
+                    spellcheck="false"
+            ></md-outlined-text-field>
+            <md-outlined-text-field
+                    id="appToolkitGithubMessage"
+                    label="Commit message"
+                    value="chore(app-toolkit): update catalog"
+                    spellcheck="false"
+            ></md-outlined-text-field>
+            <md-outlined-select
+                    id="appToolkitGithubChannel"
+                    label="Target channel"
+                    value="debug"
+            >
+              <md-select-option value="debug">Debug</md-select-option>
+              <md-select-option value="release">Release</md-select-option>
+              <md-select-option value="both">Debug &amp; Release</md-select-option>
+            </md-outlined-select>
+          </div>
+        </md-step>
+        <md-step value="review" label="Review">
+          <div class="github-step" data-step="review">
+            <p class="github-review-copy">
+              Confirm the diff in the side sheet and publish when ready.
+            </p>
+            <div class="github-status" id="appToolkitGithubStatus" role="status" aria-live="polite"></div>
+          </div>
+        </md-step>
+      </md-steppers>
     </div>
     <div slot="actions" class="github-dialog-actions">
+      <md-text-button dialog-action="close">Cancel</md-text-button>
       <md-text-button id="appToolkitGithubBack">Back</md-text-button>
-      <md-filled-button id="appToolkitGithubNext">Next</md-filled-button>
+      <md-filled-button id="appToolkitGithubNext" data-dialog-initial-focus>Next</md-filled-button>
     </div>
   </md-dialog>
 </div>
