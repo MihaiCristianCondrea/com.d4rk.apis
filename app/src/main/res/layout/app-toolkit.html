@@ -220,14 +220,17 @@
         <div class="github-grid">
           <md-outlined-text-field id="appToolkitGithubRepo" label="Repository" placeholder="owner/repo" spellcheck="false"></md-outlined-text-field>
           <md-outlined-text-field id="appToolkitGithubBranch" label="Branch" placeholder="main" spellcheck="false"></md-outlined-text-field>
-          <label class="api-field">
-            <span class="api-field-label">Channel</span>
-            <select id="appToolkitGithubChannel">
-              <option value="debug">Debug</option>
-              <option value="release">Release</option>
-              <option value="both" selected>Debug & Release</option>
-            </select>
-          </label>
+          <md-outlined-select id="appToolkitGithubChannel" label="Channel">
+            <md-select-option value="debug">
+              <div slot="headline">Debug</div>
+            </md-select-option>
+            <md-select-option value="release">
+              <div slot="headline">Release</div>
+            </md-select-option>
+            <md-select-option value="both" selected>
+              <div slot="headline">Debug & Release</div>
+            </md-select-option>
+          </md-outlined-select>
           <md-outlined-text-field id="appToolkitGithubMessage" label="Commit message" placeholder="Update App Toolkit catalog" spellcheck="false"></md-outlined-text-field>
         </div>
       </div>
