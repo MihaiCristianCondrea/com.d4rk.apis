@@ -171,56 +171,15 @@
       <div class="card-body">
         <div class="builder-remote-header">
           <div>
-            <h2>Fetch existing JSON</h2>
-            <p>Pull the latest payload before you start editing entries.</p>
+            <h2>Quick fetch</h2>
+            <p>Use shortcuts to pull the latest catalog before editing entries.</p>
           </div>
         </div>
-        <div class="builder-remote-controls">
-          <div
-                  class="builder-remote-inline-action"
-                  id="appToolkitFetchFieldset"
-          >
-            <md-outlined-text-field
-                    id="appToolkitFetchInput"
-                    type="url"
-                    label="JSON URL"
-                    placeholder="./api/app_toolkit/v2/debug/en/home/api_android_apps.json"
-                    spellcheck="false"
-                    aria-describedby="appToolkitFetchStatus"
-            >
-              <md-icon slot="leading-icon"
-              ><span class="material-symbols-outlined">link</span></md-icon
-              >
-            </md-outlined-text-field>
-            <md-outlined-button
-                    id="appToolkitFetchButton"
-                    class="builder-remote-inline-button"
-                    has-icon
-            >
-              <md-icon slot="icon"
-              ><span class="material-symbols-outlined">cloud_download</span></md-icon
-              >
-              Load JSON
-            </md-outlined-button>
-          </div>
-          <p
-                  class="builder-remote-feedback"
-                  id="appToolkitFetchStatus"
-                  data-status="idle"
-                  role="status"
-                  aria-live="polite"
-          >
-            <span
-                    class="material-symbols-outlined builder-remote-feedback-icon"
-                    aria-hidden="true"
-            >info</span
-            >
-            <span class="builder-remote-feedback-text"
-            >Paste a JSON URL to load the latest data.</span
-            >
-          </p>
-        </div>
-        <div class="builder-remote-presets" aria-label="Quick fetch shortcuts">
+        <div
+                class="builder-remote-presets builder-remote-presets--buttons"
+                aria-label="Quick fetch shortcuts"
+                id="appToolkitFetchFieldset"
+        >
           <span class="builder-remote-presets-label">Quick links</span>
           <md-text-button
                   has-icon
@@ -246,49 +205,72 @@
       </div>
     </md-filled-card>
 
-    <md-filled-card class="builder-remote-card" id="appToolkitGithubCard">
+    <md-filled-card class="builder-remote-card" id="appToolkitGithubCard" data-collapsible-card data-collapsed="true">
       <div class="card-body">
-        <div class="builder-remote-header">
+        <div class="builder-remote-header builder-remote-header--split">
           <div>
             <h2>Publish to GitHub</h2>
+            <p>Push catalog updates directly from the workspace.</p>
+          </div>
+          <md-outlined-button
+                  id="appToolkitGithubToggle"
+                  data-collapsible-toggle
+                  aria-expanded="false"
+                  has-icon
+                  trailing-icon
+          >
+            <md-icon slot="icon"
+            ><span class="material-symbols-outlined">arrow_outward</span></md-icon
+            >
+            <span class="collapsible-card__title">Publish to GitHub</span>
+            <span class="collapsible-card__label">Expand</span>
+            <md-icon slot="trailing-icon" data-collapsible-indicator>
+              <span class="material-symbols-outlined">unfold_more</span>
+            </md-icon>
+          </md-outlined-button>
+        </div>
+        <div class="builder-github-content" id="appToolkitGithubContent" data-collapsible-content hidden>
+          <div class="builder-remote-header">
+            <div>
+              <p>
+                Use the GitHub Contents API to update the catalog once the JSON
+                preview is valid. Tokens are used only for this request and never
+                stored.
+              </p>
+            </div>
+          </div>
+          <div class="builder-github-note" role="note">
             <p>
-              Use the GitHub Contents API to update the catalog once the JSON
-              preview is valid. Tokens are used only for this request and never
-              stored.
+              <strong>Create a personal access token</strong> from
+              <em>GitHub → Settings → Developer settings → Personal access tokens</em>.
+              Choose a fine-grained token when possible and limit it to the
+              repository you are publishing.
+            </p>
+            <ul>
+              <li>
+                Fine-grained tokens: enable
+                <strong>Repository permissions → Contents: Read &amp; write</strong>
+                (Metadata is added automatically).
+              </li>
+              <li>
+                Classic tokens: select only
+                <code>public_repo</code> for public catalogs or
+                <code>repo</code> for private catalogs.
+              </li>
+              <li>Copy the token once and keep it outside of source control.</li>
+            </ul>
+          </div>
+          <div class="builder-github-launch">
+            <md-filled-button id="appToolkitGithubWizardButton" has-icon>
+              <md-icon slot="icon"
+              ><span class="material-symbols-outlined">rocket_launch</span></md-icon
+              >
+              Open publish wizard
+            </md-filled-button>
+            <p class="builder-github-helper">
+              Validate the preview first, then follow the guided steps to publish.
             </p>
           </div>
-        </div>
-        <div class="builder-github-note" role="note">
-          <p>
-            <strong>Create a personal access token</strong> from
-            <em>GitHub → Settings → Developer settings → Personal access tokens</em>.
-            Choose a fine-grained token when possible and limit it to the
-            repository you are publishing.
-          </p>
-          <ul>
-            <li>
-              Fine-grained tokens: enable
-              <strong>Repository permissions → Contents: Read &amp; write</strong>
-              (Metadata is added automatically).
-            </li>
-            <li>
-              Classic tokens: select only
-              <code>public_repo</code> for public catalogs or
-              <code>repo</code> for private catalogs.
-            </li>
-            <li>Copy the token once and keep it outside of source control.</li>
-          </ul>
-        </div>
-        <div class="builder-github-launch">
-          <md-filled-button id="appToolkitGithubWizardButton" has-icon>
-            <md-icon slot="icon"
-            ><span class="material-symbols-outlined">rocket_launch</span></md-icon
-            >
-            Open publish wizard
-          </md-filled-button>
-          <p class="builder-github-helper">
-            Validate the preview first, then follow the guided steps to publish.
-          </p>
         </div>
       </div>
     </md-filled-card>
