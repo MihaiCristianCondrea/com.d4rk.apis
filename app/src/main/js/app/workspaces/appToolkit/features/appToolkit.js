@@ -218,35 +218,6 @@
         };
         let fetchPulseTimeout = null;
 
-        function createCollapsibleCardController(card, toggle, content) {
-            if (!card || !toggle || !content) {
-                return () => {};
-            }
-
-            const icon = toggle.querySelector('md-icon');
-            const label = toggle.querySelector('.collapsible-card__label') || toggle.querySelector('span');
-
-            const setExpanded = (expanded) => {
-                const isExpanded = Boolean(expanded);
-                card.dataset.collapsed = isExpanded ? 'false' : 'true';
-                content.hidden = !isExpanded;
-                toggle.setAttribute('aria-expanded', isExpanded ? 'true' : 'false');
-                if (icon) {
-                    icon.textContent = isExpanded ? 'unfold_less' : 'unfold_more';
-                }
-                if (label) {
-                    label.textContent = isExpanded ? 'Collapse' : 'Expand';
-                }
-            };
-
-            toggle.addEventListener('click', () => {
-                const nextState = card.dataset.collapsed === 'true';
-                setExpanded(nextState);
-            });
-
-            setExpanded(card.dataset.collapsed === 'false');
-            return setExpanded;
-        }
         dialogsToWire.forEach((dialog) => {
             if (!dialog || dialog.dataset.dialogCloseInit === 'true') {
                 return;
@@ -340,7 +311,6 @@
         let githubTokenFileHandle = null;
         let githubTokenHandleLoaded = false;
         let githubTokenFallbackFile = null;
-        createCollapsibleCardController(githubCard, githubToggle, githubContent);
 
         function createEmptyScreenshotEntry() {
             return { url: '', aspectRatio: '' };
@@ -975,7 +945,7 @@
             if (!diffContent) {
                 return;
             }
-            const setEmptyState = (message) => {
+            const setEmptyState = (message, { openSheet = false } = {}) => {
                 diffContent.innerHTML = '';
                 diffContent.classList.add('diff-view--empty');
                 diffContent.textContent = message;
@@ -983,27 +953,31 @@
                     builderLayout.classList.remove('builder-columns--with-diff');
                 }
                 if (diffSheet) {
-                    diffSheet.open = false;
+                    diffSheet.open = openSheet;
                     diffSheet.classList.add('is-empty');
                 }
             };
 
             diffContent.classList.remove('diff-view--empty');
             diffContent.innerHTML = '';
+            if (diffSheet) {
+                diffSheet.classList.remove('is-empty');
+                diffSheet.open = false;
+            }
 
             if (!remoteBaselinePayload) {
-                setEmptyState('Load a baseline JSON file to compare changes.');
+                setEmptyState('Load a baseline JSON file to compare changes.', { openSheet: false });
                 return;
             }
 
             if (!lastPreviewState.success || !lastPreviewState.payload) {
-                setEmptyState('Resolve preview errors to view the diff.');
+                setEmptyState('Resolve preview errors to view the diff.', { openSheet: true });
                 return;
             }
 
             const diffLib = typeof window !== 'undefined' && window.jsondiffpatch ? window.jsondiffpatch : null;
             if (!diffLib || typeof diffLib.create !== 'function' || !diffLib.formatters?.html) {
-                setEmptyState('Diff viewer unavailable. Ensure jsondiffpatch is loaded.');
+                setEmptyState('Diff viewer unavailable. Ensure jsondiffpatch is loaded.', { openSheet: true });
                 return;
             }
 
@@ -1032,7 +1006,7 @@
             const delta = differ?.diff ? differ.diff(baseline, current) : null;
 
             if (!delta || (typeof delta === 'object' && !Object.keys(delta).length)) {
-                setEmptyState('No differences detected since the last import.');
+                setEmptyState('No differences detected since the last import.', { openSheet: true });
                 return;
             }
 
@@ -1169,33 +1143,72 @@
             startRelativeTimer();
         }
 
-        function setupCollapsibleCard(card, toggle, content, { defaultExpanded = false } = {}) {
+        function resetWorkspace({ preserveBaseline = false, message } = {}) {
+            state.apps = [createEmptyApp()];
+            lastPreviewState = { success: false, payload: null };
+            lastExportEvaluation = { valid: false, reasons: [] };
+            if (!preserveBaseline) {
+                remoteBaselinePayload = null;
+            }
+            if (previewArea) {
+                previewArea.value = '';
+            }
+            if (validationStatus) {
+                utils.setValidationStatus(validationStatus, {
+                    status: 'info',
+                    message: message || 'Workspace reset. Add an app to start building.'
+                });
+            }
+            if (fetchInput) {
+                fetchInput.value = '';
+            }
+            setFetchState('idle');
+            if (builderLayout) {
+                builderLayout.classList.remove('builder-columns--with-diff');
+            }
+            updateDiffSheet();
+            touchWorkspace();
+            render({ skipPreview: true });
+        }
+
+        function setupCollapsibleCard(card, toggle, content, { defaultExpanded } = {}) {
+            const resolvedToggle = toggle || card?.querySelector('[data-collapsible-toggle]');
+            const resolvedContent = content || card?.querySelector('[data-collapsible-content]');
+            const deriveExpanded = () => {
+                if (typeof defaultExpanded === 'boolean') {
+                    return defaultExpanded;
+                }
+                return card?.dataset?.collapsed === 'false';
+            };
+
             const applyState = (expanded) => {
                 const isExpanded = Boolean(expanded);
                 if (card) {
                     card.dataset.collapsed = isExpanded ? 'false' : 'true';
                 }
-                if (content) {
-                    content.hidden = !isExpanded;
+                if (resolvedContent) {
+                    resolvedContent.hidden = !isExpanded;
                 }
-                if (toggle) {
-                    toggle.setAttribute('aria-expanded', String(isExpanded));
-                    const icon = toggle.querySelector('md-icon');
+                if (resolvedToggle) {
+                    resolvedToggle.setAttribute('aria-expanded', String(isExpanded));
+                    const icon = resolvedToggle.querySelector('md-icon');
                     if (icon) {
                         icon.textContent = isExpanded ? 'unfold_less' : 'unfold_more';
                     }
-                    const label = toggle.querySelector('span:last-child');
+                    const label =
+                        resolvedToggle.querySelector('.collapsible-card__label') ||
+                        resolvedToggle.querySelector('span:last-child');
                     if (label) {
                         label.textContent = isExpanded ? 'Collapse' : 'Expand';
                     }
                 }
             };
 
-            applyState(defaultExpanded);
+            applyState(deriveExpanded());
 
-            if (toggle) {
-                toggle.addEventListener('click', () => {
-                    const nextExpanded = toggle.getAttribute('aria-expanded') !== 'true';
+            if (resolvedToggle) {
+                resolvedToggle.addEventListener('click', () => {
+                    const nextExpanded = resolvedToggle.getAttribute('aria-expanded') !== 'true';
                     applyState(nextExpanded);
                 });
             }
@@ -1207,6 +1220,13 @@
         }
 
         setupCollapsibleCard(githubCard, githubToggle, githubContent, { defaultExpanded: false });
+        if (builderRoot) {
+            builderRoot.querySelectorAll('[data-collapsible-card]').forEach((card) => {
+                if (card !== githubCard) {
+                    setupCollapsibleCard(card);
+                }
+            });
+        }
         updateLastEditedDisplay();
         if (githubStepper) {
             setGithubStep(0);
@@ -1252,7 +1272,7 @@
             }
         }
 
-        function render() {
+        function render({ skipPreview = false } = {}) {
             if (!entriesContainer) return;
             const screenshotScrollState = captureScreenshotScrollPositions();
             utils.clearElement(entriesContainer);
@@ -1266,7 +1286,13 @@
                 entriesContainer.appendChild(createAppCard(app, index));
             });
             restoreScreenshotScrollPositions(screenshotScrollState);
-            requestPreviewUpdate();
+            if (skipPreview) {
+                updateWorkspaceMetrics();
+                updateToolbarPulse();
+                updateExportControls();
+            } else {
+                requestPreviewUpdate();
+            }
             applyCardFilters();
         }
 
@@ -1770,6 +1796,8 @@
             const updateCarouselState = ({ announce = false } = {}) => {
                 const items = getScreenshotItems();
                 const total = items.length;
+                carousel.dataset.count = String(total);
+                carousel.dataset.hasNav = total > 1 ? 'true' : 'false';
                 if (!total) {
                     carouselStatus.textContent = '0/0';
                     carouselStatus.dataset.count = '0';
@@ -1822,6 +1850,8 @@
                 const navDisabled = total <= 1;
                 previousButton.disabled = atStart || navDisabled;
                 nextButton.disabled = atEnd || navDisabled;
+                previousButton.hidden = navDisabled;
+                nextButton.hidden = navDisabled;
                 if (navDisabled) {
                     liveRegion.textContent = '';
                 }
@@ -3207,11 +3237,7 @@
 
         if (resetButton) {
             resetButton.addEventListener('click', () => {
-                state.apps = [createEmptyApp()];
-                touchWorkspace();
-                render();
-                remoteBaselinePayload = null;
-                updateDiffSheet();
+                resetWorkspace({ message: 'Workspace reset. Start fresh with a new app entry.' });
             });
         }
 
@@ -3225,6 +3251,7 @@
         if (downloadButton && previewArea) {
             downloadButton.addEventListener('click', () => {
                 utils.downloadJson(DEFAULT_FILENAME, previewArea.value);
+                resetWorkspace({ message: 'Export complete. Workspace cleared.' });
             });
         }
 

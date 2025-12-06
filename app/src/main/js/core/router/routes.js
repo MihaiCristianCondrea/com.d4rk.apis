@@ -269,7 +269,7 @@ const defaultRoutes = [
     {
         id: 'app-toolkit-api',
         path: layoutPath('app-toolkit.html'),
-        title: 'App Toolkit API',
+        title: 'API Workspace',
         metadata: {
             description: 'Curate App Toolkit catalog entries with visual tools for managing app metadata, screenshots, and package information.',
             keywords: [
@@ -279,12 +279,12 @@ const defaultRoutes = [
             ],
             canonicalSlug: 'app-toolkit-api',
             openGraph: {
-                title: 'App Toolkit API workspace',
+                title: 'API Workspace',
                 description: 'Curate App Toolkit catalog entries with visual tools for managing app metadata, screenshots, and package information.',
                 type: 'website'
             },
             twitter: {
-                title: 'App Toolkit API workspace',
+                title: 'API Workspace',
                 description: 'Curate App Toolkit catalog entries with visual tools for managing app metadata, screenshots, and package information.'
             }
         }

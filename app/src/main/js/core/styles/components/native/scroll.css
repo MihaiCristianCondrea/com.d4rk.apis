@@ -8,13 +8,13 @@
   display: grid;
   grid-auto-flow: column;
   grid-auto-columns: clamp(220px, 75vw, 320px);
-  gap: var(--screenshot-inline-gap);
+  gap: var(--screenshot-inline-gap, var(--app-screenshot-gap));
   padding-block: 0.5rem;
-  padding-inline: 0;
+  padding-inline: var(--screenshot-scroll-padding, var(--app-screenshot-padding));
   overflow-x: auto;
   overflow-y: hidden;
   scroll-snap-type: x mandatory;
-  scroll-padding-inline: var(--screenshot-scroll-padding);
+  scroll-padding-inline: var(--screenshot-scroll-padding, var(--app-screenshot-padding));
   scroll-snap-stop: always;
   overscroll-behavior-inline: contain;
   -webkit-overflow-scrolling: touch;
@@ -47,7 +47,7 @@
 
 .screenshot-item {
   background: var(--md-sys-color-surface-container-low);
-  border-radius: 20px;
+  border-radius: var(--app-screenshot-radius);
   padding: 1rem;
   display: grid;
   gap: 0.75rem;
@@ -100,7 +100,7 @@
 .screenshot-thumbnail {
   width: 100%;
   aspect-ratio: 9 / 16;
-  border-radius: 16px;
+  border-radius: var(--app-screenshot-radius);
   background: var(--md-sys-color-surface-container-highest);
   display: flex;
   align-items: center;
@@ -182,6 +182,8 @@
   position: relative;
   overflow: hidden;
   border-radius: 18px;
+  padding-inline: var(--app-screenshot-padding);
+  scrollbar-gutter: stable both-edges;
 }
 
 .screenshot-carousel__viewport::before,
@@ -216,6 +218,11 @@
 
 .screenshot-carousel[data-edge-start='true'] .screenshot-carousel__viewport::before,
 .screenshot-carousel[data-edge-end='true'] .screenshot-carousel__viewport::after {
+  opacity: 0;
+}
+
+.screenshot-carousel[data-has-nav='false'] .screenshot-carousel__viewport::before,
+.screenshot-carousel[data-has-nav='false'] .screenshot-carousel__viewport::after {
   opacity: 0;
 }
 
@@ -262,8 +269,7 @@
   box-shadow: none;
 }
 
-.screenshot-carousel:focus-within .screenshot-carousel__nav,
-.screenshot-carousel:hover .screenshot-carousel__nav {
+.screenshot-carousel[data-has-nav='true'] .screenshot-carousel__nav {
   opacity: 1;
 }
 
