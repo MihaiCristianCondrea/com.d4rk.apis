@@ -217,6 +217,36 @@
             error: 'error'
         };
         let fetchPulseTimeout = null;
+
+        function createCollapsibleCardController(card, toggle, content) {
+            if (!card || !toggle || !content) {
+                return () => {};
+            }
+
+            const icon = toggle.querySelector('md-icon');
+            const label = toggle.querySelector('.collapsible-card__label') || toggle.querySelector('span');
+
+            const setExpanded = (expanded) => {
+                const isExpanded = Boolean(expanded);
+                card.dataset.collapsed = isExpanded ? 'false' : 'true';
+                content.hidden = !isExpanded;
+                toggle.setAttribute('aria-expanded', isExpanded ? 'true' : 'false');
+                if (icon) {
+                    icon.textContent = isExpanded ? 'unfold_less' : 'unfold_more';
+                }
+                if (label) {
+                    label.textContent = isExpanded ? 'Collapse' : 'Expand';
+                }
+            };
+
+            toggle.addEventListener('click', () => {
+                const nextState = card.dataset.collapsed === 'true';
+                setExpanded(nextState);
+            });
+
+            setExpanded(card.dataset.collapsed === 'false');
+            return setExpanded;
+        }
         dialogsToWire.forEach((dialog) => {
             if (!dialog || dialog.dataset.dialogCloseInit === 'true') {
                 return;
@@ -310,6 +340,7 @@
         let githubTokenFileHandle = null;
         let githubTokenHandleLoaded = false;
         let githubTokenFallbackFile = null;
+        createCollapsibleCardController(githubCard, githubToggle, githubContent);
 
         function createEmptyScreenshotEntry() {
             return { url: '', aspectRatio: '' };
