@@ -6,8 +6,8 @@ import {
     rafThrottle,
 } from './utils/utils.js';
 import { PROFILE_AVATAR_FALLBACK_SRC } from './utils/constants.js';
-import { initThemeControls } from '../services/themeService.js';
-import { initNavigationDrawer } from '../services/navigationDrawerService.js';
+import { initThemeControls } from '@/services/themeService';
+import { initNavigationDrawer } from '@/services/navigationDrawerService';
 import { initRouter, loadPageContent, normalizePageId } from './router/index.js';
 import RouterRoutes from './router/routes.js';
 import { registerGlobalUtilities, registerCompatibilityGlobals } from './globals.js';

@@ -358,8 +358,7 @@
             }
             const existing = list[screenshotIndex];
             const entry = normalizeScreenshotEntry(existing);
-            const normalizedRatio = utils.trimString(ratio || '') || '9:16';
-            entry.aspectRatio = normalizedRatio;
+            entry.aspectRatio = utils.trimString(ratio || '') || '9:16';
             list[screenshotIndex] = entry;
         }
 
