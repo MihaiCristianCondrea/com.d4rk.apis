@@ -1,7 +1,7 @@
 :host {
-  --app-toolkit-screenshot-padding: 1rem;
-  --app-toolkit-screenshot-gap: 0.75rem;
-  --app-toolkit-screenshot-radius: 20px;
+  --app-toolkit-screenshot-padding: var(--app-screenshot-padding, 1rem);
+  --app-toolkit-screenshot-gap: var(--app-screenshot-gap, 0.75rem);
+  --app-toolkit-screenshot-radius: var(--app-screenshot-radius, 20px);
   --app-toolkit-thumb-aspect: 9 / 16;
   --app-toolkit-thumb-placeholder: 'No image';
   display: grid;

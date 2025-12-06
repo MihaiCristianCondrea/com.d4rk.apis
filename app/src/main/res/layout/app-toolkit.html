@@ -1,6 +1,6 @@
 <div id="appToolkitPage" class="page-section app-shell-panel active">
   <header class="page-header">
-    <h1>App Toolkit API workspace</h1>
+    <h1>API Workspace</h1>
     <p>Configure the JSON payload that powers the App Toolkit catalog. The builder mirrors the production schema so you can manage listings for both debug and release channels with confidence.</p>
   </header>
     <section class="workspace-dashboard" aria-label="Workspace overview">
@@ -100,21 +100,18 @@
         <div slot="headline">Screenshot count (high to low)</div>
       </md-menu-item>
     </md-menu>
-    <div class="builder-toolbar builder-toolbar--secondary">
+    <div class="builder-toolbar builder-toolbar--filters" role="group" aria-label="Workspace filters">
       <div class="builder-toolbar-settings">
-        <span class="material-symbols-outlined" aria-hidden="true">tune</span>
+        <span class="material-symbols-outlined" aria-hidden="true">filter_alt</span>
         <div>
           <p class="builder-toolbar-title">Workspace filters</p>
-          <p class="builder-toolbar-helper">Use quick toggles to focus on entries that need attention.</p>
+          <p class="builder-toolbar-helper">Use the standard chips to focus on entries that need attention.</p>
         </div>
       </div>
-      <div class="toolbar-filters">
-        <p class="toolbar-label">Filters</p>
-        <md-filter-chip-set id="appToolkitFilterChips" aria-label="Filter app cards">
-          <md-filter-chip data-app-toolkit-filter="pendingReleaseReady" label="Needs release-ready"></md-filter-chip>
-          <md-filter-chip data-app-toolkit-filter="needsScreenshots" label="Needs screenshots"></md-filter-chip>
-        </md-filter-chip-set>
-      </div>
+      <md-filter-chip-set id="appToolkitFilterChips" aria-label="Filter app cards" class="builder-filter-chips">
+        <md-filter-chip data-app-toolkit-filter="pendingReleaseReady" label="Needs release-ready"></md-filter-chip>
+        <md-filter-chip data-app-toolkit-filter="needsScreenshots" label="Needs screenshots"></md-filter-chip>
+      </md-filter-chip-set>
     </div>
     <div class="card-body builder-remote-card">
       <div class="builder-remote-header">
@@ -139,18 +136,18 @@
         <md-assist-chip data-app-toolkit-preset="api/app_toolkit/v2/release/en/home/api_android_apps.json" label="Release · EN"></md-assist-chip>
       </div>
     </div>
-    <div class="card-body collapsible-card" id="appToolkitGithubCard" data-collapsed="true">
+    <div class="card-body collapsible-card" id="appToolkitGithubCard" data-collapsed="true" data-collapsible-card>
       <div class="collapsible-card__header">
         <div>
           <h2>Publish to GitHub</h2>
           <p>Use the GitHub Contents API to update the catalog once the JSON preview is valid. Tokens are used only for this request and never stored.</p>
         </div>
-        <md-tonal-button id="appToolkitGithubToggle" class="collapsible-card__toggle" aria-expanded="false" aria-controls="appToolkitGithubContent">
+        <md-tonal-button id="appToolkitGithubToggle" class="collapsible-card__toggle" aria-expanded="false" aria-controls="appToolkitGithubContent" data-collapsible-toggle type="button">
           <md-icon slot="icon">unfold_more</md-icon>
           <span class="collapsible-card__label">Expand</span>
         </md-tonal-button>
       </div>
-      <div class="collapsible-card__content" id="appToolkitGithubContent" hidden>
+      <div class="collapsible-card__content" id="appToolkitGithubContent" data-collapsible-content hidden>
         <div class="builder-github-note" role="note">
           <p><strong>Create a personal access token</strong> from <em>GitHub → Settings → Developer settings → Personal access tokens</em>. Choose a fine-grained token when possible and limit it to the repository you are publishing.</p>
           <ul>
@@ -189,7 +186,7 @@
           </md-outlined-button>
         </div>
       </aside>
-      <md-side-sheet id="appToolkitDiffSheet" class="builder-diff-sheet" open>
+      <md-side-sheet id="appToolkitDiffSheet" class="builder-diff-sheet">
         <div slot="headline">
           Workspace diff
         </div>
