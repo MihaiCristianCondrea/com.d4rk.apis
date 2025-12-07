@@ -2249,7 +2249,11 @@
                 }
             });
 
-            screenshotActions.appendChild(urlField);
+            const urlFieldContainer = document.createElement('div');
+            urlFieldContainer.classList.add('screenshot-actions__field');
+            urlFieldContainer.appendChild(urlField);
+
+            screenshotActions.appendChild(urlFieldContainer);
             screenshotActions.appendChild(addUrlButton);
 
             const handleScreenshotImport = async (event) => {

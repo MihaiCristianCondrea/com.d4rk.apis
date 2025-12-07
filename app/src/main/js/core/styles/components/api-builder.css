@@ -968,18 +968,28 @@
   gap: 0.5rem;
   align-items: center;
   justify-content: flex-start;
+  width: 100%;
   max-width: 100%;
+  box-sizing: border-box;
+  padding-inline: var(--screenshot-scroll-padding, var(--app-screenshot-padding));
   --screenshot-action-control-height: 40px;
   --md-outlined-text-field-container-height: var(--screenshot-action-control-height);
   --md-outlined-text-field-container-shape: var(--app-field-shape);
   --control-row-height: var(--screenshot-action-control-height);
 }
 
-.screenshot-actions md-outlined-text-field {
-  flex: 0 1 min(520px, 100%);
+.screenshot-actions__field {
+  flex: 1 1 min(520px, 100%);
   min-width: min(260px, 100%);
   max-width: min(520px, 100%);
   width: min(520px, 100%);
+}
+
+.screenshot-actions md-outlined-text-field {
+  flex: 1 1 auto;
+  min-width: 0;
+  max-width: 100%;
+  width: 100%;
 }
 
 .builder-field-group--screenshots .builder-subsection {
