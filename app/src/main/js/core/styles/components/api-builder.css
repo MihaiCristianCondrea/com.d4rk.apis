@@ -215,7 +215,7 @@
 }
 
 .builder-github-launch {
-  padding-top: 0.35rem;
+  padding-top: 0.85rem;
 }
 
 .builder-remote-header h2 {
@@ -921,7 +921,10 @@
 }
 
 .screenshot-actions md-outlined-text-field {
-  min-width: min(320px, 100%);
+  flex: 1 1 280px;
+  min-width: min(260px, 100%);
+  max-width: min(520px, 100%);
+  width: 100%;
 }
 
 .builder-field-group--screenshots .builder-subsection {

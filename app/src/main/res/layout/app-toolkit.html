@@ -213,6 +213,8 @@
                     id="appToolkitGithubToggle"
                     data-collapsible-toggle
                     aria-expanded="false"
+                    aria-controls="appToolkitGithubContent"
+                    type="button"
                     has-icon
                     trailing-icon
             >
@@ -221,7 +223,7 @@
               >
               <span class="collapsible-card__title">Publish to GitHub</span>
               <span class="collapsible-card__label">Expand</span>
-              <md-icon slot="trailing-icon" data-collapsible-indicator>
+              <md-icon slot="trailing-icon" data-collapsible-indicator aria-hidden="true">
                 <span class="material-symbols-outlined">arrow_drop_down</span>
               </md-icon>
             </md-filled-tonal-button>
