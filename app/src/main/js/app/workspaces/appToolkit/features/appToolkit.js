@@ -1237,6 +1237,9 @@
                 }
                 if (resolvedToggle) {
                     resolvedToggle.setAttribute('aria-expanded', String(isExpanded));
+                    if (resolvedContent?.id) {
+                        resolvedToggle.setAttribute('aria-controls', resolvedContent.id);
+                    }
                     const icon = resolvedToggle.querySelector('[data-collapsible-indicator]');
                     const iconGlyph = icon?.querySelector('.material-symbols-outlined') || icon;
                     if (iconGlyph) {
@@ -3319,6 +3322,13 @@
                 });
             });
             sortMenu.addEventListener('action', (event) => {
+                const index = typeof event.detail?.index === 'number' ? event.detail.index : -1;
+                const selectedItem = index >= 0 ? sortMenuItems[index] : null;
+                if (selectedItem) {
+                    handleSortSelection(selectedItem.dataset.sortKey || '');
+                }
+            });
+            sortMenu.addEventListener('selected', (event) => {
                 const index = typeof event.detail?.index === 'number' ? event.detail.index : -1;
                 const selectedItem = index >= 0 ? sortMenuItems[index] : null;
                 if (selectedItem) {

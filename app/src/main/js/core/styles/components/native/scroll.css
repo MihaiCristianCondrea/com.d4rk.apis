@@ -19,6 +19,8 @@
   overscroll-behavior-inline: contain;
   -webkit-overflow-scrolling: touch;
   direction: ltr;
+  scrollbar-gutter: stable both-edges;
+  touch-action: pan-x;
 }
 
 .screenshot-list:focus-visible {
@@ -176,13 +178,16 @@
 
 .screenshot-carousel {
   position: relative;
+  overflow: visible;
 }
 
 .screenshot-carousel__viewport {
   position: relative;
-  overflow: hidden;
+  overflow-x: auto;
+  overflow-y: hidden;
   border-radius: 18px;
   padding-inline: var(--app-screenshot-padding);
+  overscroll-behavior-x: contain;
   scrollbar-gutter: stable both-edges;
 }
 
