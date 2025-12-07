@@ -63,7 +63,8 @@
   resize: vertical;
 }
 
-.api-field md-outlined-select {
+.api-field md-outlined-select,
+.builder-field-group md-outlined-select {
   width: 100%;
   box-sizing: border-box;
   --md-outlined-select-container-shape: var(--app-field-shape);

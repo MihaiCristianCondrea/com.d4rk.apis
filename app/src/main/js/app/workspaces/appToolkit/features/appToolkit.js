@@ -199,6 +199,22 @@
             success: 'Data loaded successfully.',
             error: 'Unable to fetch remote JSON.'
         };
+        const applyBuilderButtonStyle = (...elements) => {
+            elements
+                .filter(Boolean)
+                .forEach((element) => element.classList.add('builder-button'));
+        };
+
+        applyBuilderButtonStyle(
+            addButton,
+            sortButton,
+            resetButton,
+            copyButton,
+            downloadButton,
+            githubWizardButton,
+            githubBackButton,
+            githubNextButton
+        );
         let fetchPulseTimeout = null;
 
         dialogsToWire.forEach((dialog) => {
@@ -591,6 +607,39 @@
                 .map((segment) => segment.trim())
                 .filter(Boolean);
             return appendScreenshots(appIndex, urls);
+        }
+
+        function verifyScreenshotUrlLoads(url) {
+            return new Promise((resolve, reject) => {
+                const trimmed = utils.trimString(url);
+                if (!trimmed) {
+                    reject(new Error('Enter a screenshot URL first.'));
+                    return;
+                }
+                const image = new Image();
+                const cleanup = (timer) => {
+                    image.onload = null;
+                    image.onerror = null;
+                    if (timer) {
+                        clearTimeout(timer);
+                    }
+                };
+                const timeout = setTimeout(() => {
+                    cleanup(timeout);
+                    reject(new Error('Timed out while loading screenshot. Check the URL.'));
+                }, 8000);
+                image.onload = () => {
+                    cleanup(timeout);
+                    resolve();
+                };
+                image.onerror = () => {
+                    cleanup(timeout);
+                    reject(new Error('Unable to load screenshot. Check the link or CORS.'));
+                };
+                image.decoding = 'async';
+                image.referrerPolicy = 'no-referrer';
+                image.src = trimmed;
+            });
         }
 
         function readFileAsDataUrl(file) {
@@ -1757,6 +1806,16 @@
             screenshotsList.setAttribute('aria-describedby', statusId);
             screenshotsList.tabIndex = 0;
 
+            const attachScreenshotItem = (screenshotItem) => {
+                screenshotItem.setAttribute('role', 'listitem');
+                screenshotItem.tabIndex = -1;
+                screenshotItem.addEventListener('focusin', () => {
+                    activeScreenshotIndex = Number(screenshotItem.dataset.screenshotIndex) || 0;
+                    scheduleCarouselUpdate();
+                });
+                screenshotsList.appendChild(screenshotItem);
+            };
+
             const carousel = utils.createElement('div', {
                 classNames: ['screenshot-carousel'],
                 attrs: {
@@ -1919,13 +1978,20 @@
                 );
                 const atStart = scrollLeft <= 2;
                 const atEnd = scrollLeft >= maxScrollLeft - 2;
-                carousel.dataset.edgeStart = atStart ? 'true' : 'false';
-                carousel.dataset.edgeEnd = atEnd ? 'true' : 'false';
                 const navDisabled = total <= 1;
-                previousButton.disabled = atStart || navDisabled;
-                nextButton.disabled = atEnd || navDisabled;
-                previousButton.hidden = navDisabled;
-                nextButton.hidden = navDisabled;
+                const startEdge = navDisabled ? true : atStart;
+                const endEdge = navDisabled ? true : atEnd;
+                carousel.dataset.edgeStart = startEdge ? 'true' : 'false';
+                carousel.dataset.edgeEnd = endEdge ? 'true' : 'false';
+                previousButton.disabled = startEdge;
+                nextButton.disabled = endEdge;
+                previousButton.hidden = total === 0;
+                nextButton.hidden = total === 0;
+                const disabledHint = navDisabled
+                    ? 'Add more screenshots to enable navigation'
+                    : '';
+                previousButton.title = disabledHint || 'Show previous screenshots';
+                nextButton.title = disabledHint || 'Show next screenshots';
                 if (indicatorCount !== total) {
                     utils.clearElement(indicatorList);
                     for (let i = 0; i < total; i += 1) {
@@ -1963,6 +2029,26 @@
                     window.cancelAnimationFrame(scheduledCarouselUpdate);
                 }
                 scheduledCarouselUpdate = window.requestAnimationFrame(run);
+            };
+
+            const addScreenshotsToCarousel = (sources, { announce = false } = {}) => {
+                const previousLength = state.apps[index].screenshots.length;
+                const additions = appendScreenshots(index, sources);
+                if (!additions.length) {
+                    return [];
+                }
+                const startIndex = previousLength;
+                additions.forEach((entry, offset) => {
+                    const screenshotItem = createScreenshotField(index, startIndex + offset, entry, {
+                        onChange: () => updateScreenshotsState()
+                    });
+                    attachScreenshotItem(screenshotItem);
+                });
+                activeScreenshotIndex = state.apps[index].screenshots.length - 1;
+                touchWorkspace();
+                requestPreviewUpdate();
+                updateScreenshotsState({ announce });
+                return additions;
             };
 
             const getCarouselStep = () => {
@@ -2211,13 +2297,7 @@
                 const screenshotItem = createScreenshotField(index, screenshotIndex, entry, {
                     onChange: () => updateScreenshotsState()
                 });
-                screenshotItem.setAttribute('role', 'listitem');
-                screenshotItem.tabIndex = -1;
-                screenshotItem.addEventListener('focusin', () => {
-                    activeScreenshotIndex = Number(screenshotItem.dataset.screenshotIndex) || 0;
-                    scheduleCarouselUpdate();
-                });
-                screenshotsList.appendChild(screenshotItem);
+                attachScreenshotItem(screenshotItem);
             });
 
             screenshotsSection.appendChild(carousel);
@@ -2230,8 +2310,10 @@
             urlField.setAttribute('label', 'Screenshot URL');
             urlField.setAttribute('placeholder', 'https://example.com/screenshot.png');
             urlField.setAttribute('inputmode', 'url');
+            urlField.supportingText = 'Paste an HTTPS link and click Add URL';
+
             const addUrlButton = document.createElement('md-outlined-button');
-            addUrlButton.classList.add('builder-remote-inline-button');
+            addUrlButton.classList.add('builder-remote-inline-button', 'builder-button');
             const addUrlIcon = document.createElement('md-icon');
             addUrlIcon.setAttribute('slot', 'icon');
             addUrlIcon.innerHTML =
@@ -2240,22 +2322,44 @@
             addUrlButton.appendChild(addUrlIcon);
             addUrlButton.appendChild(document.createTextNode('Add URL'));
 
-            const commitUrl = () => {
-                const additions = appendScreenshots(index, [urlField.value]);
+            const setUrlFeedback = (message, { isError = false } = {}) => {
+                urlField.supportingText = message || '';
+                urlField.error = Boolean(isError && message);
+            };
+
+            const commitUrl = async () => {
+                const trimmed = utils.trimString(urlField.value || '');
+                if (!trimmed) {
+                    setUrlFeedback('Enter a screenshot URL to add.', { isError: true });
+                    return;
+                }
+                setUrlFeedback('');
+                try {
+                    await verifyScreenshotUrlLoads(trimmed);
+                } catch (error) {
+                    setUrlFeedback(
+                        error.message || 'Unable to load screenshot. Check the link.',
+                        { isError: true }
+                    );
+                    return;
+                }
+                const additions = addScreenshotsToCarousel([trimmed], { announce: true });
                 if (additions.length) {
                     urlField.value = '';
-                    touchWorkspace();
-                    render();
+                } else {
+                    setUrlFeedback('Enter a valid screenshot URL starting with http or https.', {
+                        isError: true
+                    });
                 }
             };
 
             addUrlButton.addEventListener('click', () => {
-                commitUrl();
+                void commitUrl();
             });
             urlField.addEventListener('keydown', (event) => {
                 if (event.key === 'Enter') {
                     event.preventDefault();
-                    commitUrl();
+                    void commitUrl();
                 }
             });
 
@@ -2268,20 +2372,33 @@
 
             const handleScreenshotImport = async (event) => {
                 event.preventDefault();
-                let added = 0;
+                const sources = [];
                 const files = event.dataTransfer?.files;
                 if (files && files.length) {
-                    added += (await appendScreenshotsFromFiles(index, files)).length;
+                    const fileUrls = await Promise.all(
+                        Array.from(files)
+                            .filter((file) => !file.type || file.type.startsWith('image/'))
+                            .map((file) =>
+                                readFileAsDataUrl(file).catch(() => {
+                                    console.warn('AppToolkit: Unable to read dropped image file.');
+                                    return null;
+                                })
+                            )
+                    );
+                    fileUrls.filter(Boolean).forEach((value) => sources.push(String(value)));
                 }
                 const textData =
                     event.dataTransfer?.getData('text/uri-list') ||
                     event.dataTransfer?.getData('text/plain');
                 if (textData) {
-                    added += appendScreenshotsFromText(index, textData).length;
+                    textData
+                        .split(/\s+/)
+                        .map((segment) => segment.trim())
+                        .filter(Boolean)
+                        .forEach((value) => sources.push(value));
                 }
-                if (added) {
-                    touchWorkspace();
-                    render();
+                if (sources.length) {
+                    addScreenshotsToCarousel(sources, { announce: true });
                 }
             };
             screenshotActions.addEventListener('dragover', (event) => {
@@ -2295,10 +2412,12 @@
                     const text = event.clipboardData?.getData('text');
                     if (text) {
                         event.preventDefault();
-                        const added = appendScreenshotsFromText(index, text).length;
-                        if (added) {
-                            touchWorkspace();
-                            render();
+                        const pastedUrls = text
+                            .split(/\s+/)
+                            .map((segment) => segment.trim())
+                            .filter(Boolean);
+                        if (pastedUrls.length) {
+                            addScreenshotsToCarousel(pastedUrls, { announce: true });
                         }
                     }
                 }
@@ -2306,7 +2425,7 @@
 
             screenshotsSection.appendChild(screenshotActions);
 
-            const updateScreenshotsState = ({ announce = false } = {}) => {
+            function updateScreenshotsState({ announce = false } = {}) {
                 const count = getFilledScreenshotCount(index);
                 if (count >= 3) {
                     screenshotsSection.dataset.countState = 'ready';
@@ -2318,7 +2437,7 @@
                     screenshotCountChip.textContent = `${count}/3 screenshots added`;
                 }
                 scheduleCarouselUpdate({ announce });
-            };
+            }
 
             updateCarouselState();
             updateScreenshotsState();

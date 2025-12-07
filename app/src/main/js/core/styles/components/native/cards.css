@@ -110,6 +110,17 @@
   --md-filled-field-container-shape: var(--builder-field-container-shape);
 }
 
+.builder-field-group > :where(
+    md-filled-text-field,
+    md-outlined-text-field,
+    md-outlined-select,
+    md-filled-select,
+    md-assist-chip-set
+  ) {
+  max-width: min(720px, 100%);
+  justify-self: start;
+}
+
 .builder-remote-card {
   margin-top: 1.5rem;
 }
