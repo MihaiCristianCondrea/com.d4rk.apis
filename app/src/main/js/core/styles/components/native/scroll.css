@@ -5,9 +5,10 @@
 }
 
 .screenshot-list {
-  display: grid;
-  grid-auto-flow: column;
-  grid-auto-columns: clamp(220px, 75vw, 320px);
+  --screenshot-item-width: clamp(220px, 75vw, 320px);
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: stretch;
   gap: var(--screenshot-inline-gap, var(--app-screenshot-gap));
   padding-block: 0.5rem;
   padding-inline: 0;
@@ -15,7 +16,8 @@
   scroll-snap-stop: always;
   direction: ltr;
   touch-action: pan-x;
-  min-width: 0;
+  min-width: 100%;
+  box-sizing: border-box;
 }
 
 .screenshot-list:focus-visible {
@@ -25,19 +27,19 @@
 
 @media (min-width: 768px) {
   .screenshot-list {
-    grid-auto-columns: clamp(240px, 45vw, 340px);
-  }
-}
-
-@media (min-width: 1280px) {
-  .screenshot-list {
-    grid-auto-columns: clamp(260px, 32vw, 380px);
+    --screenshot-item-width: clamp(240px, 45vw, 340px);
   }
 }
 
 @media (min-width: 1024px) {
   .screenshot-list {
-    grid-auto-columns: minmax(280px, 1fr);
+    --screenshot-item-width: clamp(280px, 34vw, 420px);
+  }
+}
+
+@media (min-width: 1280px) {
+  .screenshot-list {
+    --screenshot-item-width: clamp(260px, 32vw, 380px);
   }
 }
 
@@ -49,7 +51,9 @@
   gap: 0.75rem;
   transition: box-shadow 140ms ease, transform 140ms ease;
   border: 1px solid transparent;
-  min-width: 0;
+  min-width: min(var(--screenshot-item-width), 100%);
+  width: min(var(--screenshot-item-width), 100%);
+  flex: 0 0 min(var(--screenshot-item-width), 100%);
   scroll-snap-align: start center;
   scroll-snap-stop: always;
 }
@@ -179,6 +183,9 @@
   position: relative;
   overflow-x: auto;
   overflow-y: hidden;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
   border-radius: 18px;
   padding-inline: var(--app-screenshot-padding);
   scroll-snap-type: x mandatory;
