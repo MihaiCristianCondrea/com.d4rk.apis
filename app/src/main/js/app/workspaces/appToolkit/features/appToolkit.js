@@ -529,9 +529,11 @@
                 return;
             }
             currentSortKey = normalizedKey;
+            sortAppsInPlace();
             updateSortUi();
             touchWorkspace();
-            render();
+            render({ skipPreview: true });
+            requestPreviewUpdate();
             if (sortMenu) {
                 sortMenu.open = false;
             }
@@ -1794,6 +1796,11 @@
             const previousButton = createNavButton('previous');
             const nextButton = createNavButton('next');
 
+            const indicatorList = utils.createElement('div', {
+                classNames: ['screenshot-carousel__indicators'],
+                attrs: { role: 'tablist', 'aria-label': 'Screenshot progress' }
+            });
+
             const carouselStatus = utils.createElement('div', {
                 classNames: ['screenshot-carousel__status'],
                 attrs: { id: statusId },
@@ -1808,6 +1815,7 @@
             carousel.appendChild(previousButton);
             carousel.appendChild(carouselViewport);
             carousel.appendChild(nextButton);
+            carousel.appendChild(indicatorList);
             carousel.appendChild(carouselStatus);
             carousel.appendChild(liveRegion);
 
@@ -1851,6 +1859,7 @@
 
             let activeScreenshotIndex = 0;
             let scheduledCarouselUpdate = null;
+            let indicatorCount = 0;
 
             const updateCarouselState = ({ announce = false } = {}) => {
                 const items = getScreenshotItems();
@@ -1865,6 +1874,9 @@
                     nextButton.disabled = true;
                     carousel.dataset.edgeStart = 'true';
                     carousel.dataset.edgeEnd = 'true';
+                    indicatorCount = 0;
+                    utils.clearElement(indicatorList);
+                    indicatorList.hidden = true;
                     return;
                 }
                 if (activeScreenshotIndex >= total) {
@@ -1914,6 +1926,25 @@
                 nextButton.disabled = atEnd || navDisabled;
                 previousButton.hidden = navDisabled;
                 nextButton.hidden = navDisabled;
+                if (indicatorCount !== total) {
+                    utils.clearElement(indicatorList);
+                    for (let i = 0; i < total; i += 1) {
+                        const indicator = utils.createElement('button', {
+                            classNames: ['screenshot-carousel__indicator'],
+                            attrs: {
+                                type: 'button',
+                                'aria-label': `Go to screenshot ${i + 1}`
+                            }
+                        });
+                        indicator.addEventListener('click', () => scrollToScreenshot(i));
+                        indicatorList.appendChild(indicator);
+                    }
+                    indicatorCount = total;
+                }
+                indicatorList.hidden = total <= 1;
+                indicatorList.querySelectorAll('.screenshot-carousel__indicator').forEach((dot, idx) => {
+                    dot.dataset.active = idx === activeScreenshotIndex ? 'true' : 'false';
+                });
                 if (navDisabled) {
                     liveRegion.textContent = '';
                 }
@@ -2157,6 +2188,14 @@
             screenshotsList.addEventListener('mouseenter', dismissHint);
             screenshotsList.addEventListener('focus', dismissHint, true);
             screenshotsList.addEventListener('keydown', handleKeydown);
+
+            const resizeObserver =
+                typeof ResizeObserver !== 'undefined'
+                    ? new ResizeObserver(() => scheduleCarouselUpdate())
+                    : null;
+            if (resizeObserver) {
+                resizeObserver.observe(carouselViewport);
+            }
 
             app.screenshots.forEach((entry, screenshotIndex) => {
                 const screenshotItem = createScreenshotField(index, screenshotIndex, entry, {
