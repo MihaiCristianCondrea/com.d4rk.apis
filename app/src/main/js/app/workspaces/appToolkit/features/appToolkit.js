@@ -1965,29 +1965,41 @@
                 scheduledCarouselUpdate = window.requestAnimationFrame(run);
             };
 
-            const getPageSize = () => {
+            const getCarouselStep = () => {
                 const items = getScreenshotItems();
-                if (items.length <= 1) {
-                    return 1;
-                }
-                const firstRect = items[0].getBoundingClientRect();
-                const secondRect = items[1].getBoundingClientRect();
-                let gap = secondRect.left - firstRect.right;
-                if (!Number.isFinite(gap) || gap < 0) {
-                    try {
-                        const styles = window.getComputedStyle(screenshotsList);
-                        const parsedGap = parseFloat(styles.columnGap || styles.gap || '0');
-                        gap = Number.isFinite(parsedGap) ? parsedGap : 0;
-                    } catch (error) {
-                        gap = 0;
+                if (items.length) {
+                    const firstRect = items[0].getBoundingClientRect();
+                    let gap = 0;
+                    if (items.length > 1) {
+                        const secondRect = items[1].getBoundingClientRect();
+                        gap = Math.max(0, secondRect.left - firstRect.right);
+                    } else {
+                        try {
+                            const styles = window.getComputedStyle(screenshotsList);
+                            const parsedGap = parseFloat(styles.columnGap || styles.gap || '0');
+                            gap = Number.isFinite(parsedGap) ? parsedGap : 0;
+                        } catch (error) {
+                            gap = 0;
+                        }
+                    }
+                    const step = firstRect.width + Math.max(0, gap);
+                    if (step > 0) {
+                        return step;
                     }
                 }
-                const itemWidth = firstRect.width + Math.max(0, gap);
-                if (!itemWidth) {
-                    return 1;
-                }
                 const viewportWidth = carouselViewport.getBoundingClientRect().width;
-                return Math.max(1, Math.round(viewportWidth / itemWidth));
+                return viewportWidth > 0 ? viewportWidth : 320;
+            };
+
+            const scrollCarouselBy = (direction = 1) => {
+                const amount = getCarouselStep();
+                if (!amount) {
+                    return;
+                }
+                carouselViewport.scrollBy({
+                    left: amount * direction,
+                    behavior: 'smooth'
+                });
             };
 
             const scrollToScreenshot = (targetIndex, { announce = true } = {}) => {
@@ -2167,13 +2179,11 @@
 
             previousButton.addEventListener('click', () => {
                 dismissHint();
-                const pageSize = getPageSize();
-                scrollToScreenshot(activeScreenshotIndex - pageSize);
+                scrollCarouselBy(-1);
             });
             nextButton.addEventListener('click', () => {
                 dismissHint();
-                const pageSize = getPageSize();
-                scrollToScreenshot(activeScreenshotIndex + pageSize);
+                scrollCarouselBy(1);
             });
 
             screenshotsList.addEventListener('dragstart', handleDragStart);

@@ -455,6 +455,10 @@
   align-items: start;
 }
 
+.builder-layout md-outlined-select {
+  --md-outlined-select-container-shape: var(--app-field-shape);
+}
+
 .builder-layout > * {
   min-width: 0;
 }
@@ -986,10 +990,11 @@
 }
 
 .screenshot-actions md-outlined-text-field {
-  flex: 1 1 auto;
-  min-width: 0;
-  max-width: 100%;
+  flex: 1 1 280px;
+  min-width: min(260px, 100%);
+  max-width: min(520px, 100%);
   width: 100%;
+  box-sizing: border-box;
 }
 
 .builder-field-group--screenshots .builder-subsection {

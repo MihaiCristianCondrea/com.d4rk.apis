@@ -239,7 +239,7 @@
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  z-index: 3;
+  z-index: 4;
   width: clamp(32px, 8vw, 46px);
   height: clamp(32px, 8vw, 46px);
   display: inline-flex;
