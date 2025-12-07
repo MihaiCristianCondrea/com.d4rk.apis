@@ -209,26 +209,22 @@
       <div class="card-body">
         <div class="builder-remote-header builder-remote-header--split">
           <div class="builder-remote-title">
-            <md-filled-tonal-button
-                    id="appToolkitGithubToggle"
-                    data-collapsible-toggle
-                    aria-expanded="false"
-                    aria-controls="appToolkitGithubContent"
-                    type="button"
-                    has-icon
-                    trailing-icon
-            >
-              <md-icon slot="icon"
-              ><span class="material-symbols-outlined">cloud_upload</span></md-icon
-              >
-              <span class="collapsible-card__title">Publish to GitHub</span>
-              <span class="collapsible-card__label">Expand</span>
-              <md-icon slot="trailing-icon" data-collapsible-indicator aria-hidden="true">
-                <span class="material-symbols-outlined">arrow_drop_down</span>
-              </md-icon>
-            </md-filled-tonal-button>
+            <h2>Publish to GitHub</h2>
             <p>Push catalog updates directly from the workspace.</p>
           </div>
+          <md-icon-button
+                  id="appToolkitGithubToggle"
+                  class="builder-remote-toggle"
+                  data-collapsible-toggle
+                  aria-expanded="false"
+                  aria-controls="appToolkitGithubContent"
+                  type="button"
+                  aria-label="Toggle Publish to GitHub"
+          >
+            <span class="material-symbols-outlined" data-collapsible-indicator aria-hidden="true">
+              arrow_drop_down
+            </span>
+          </md-icon-button>
         </div>
         <div class="builder-github-content" id="appToolkitGithubContent" data-collapsible-content hidden>
           <div class="builder-remote-header">

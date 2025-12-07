@@ -110,10 +110,14 @@
 .info {
   display: grid;
   gap: 0.5rem;
+  min-width: 0;
 }
 
 .input {
   --md-outlined-text-field-container-shape: var(--app-field-shape, 16px);
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
 }
 
 .meta {

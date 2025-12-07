@@ -529,6 +529,7 @@
                 return;
             }
             currentSortKey = normalizedKey;
+            updateSortUi();
             touchWorkspace();
             render();
             if (sortMenu) {
@@ -1286,13 +1287,19 @@
             if (!entriesContainer) {
                 return positions;
             }
-            entriesContainer.querySelectorAll('.screenshot-list').forEach((list) => {
-                const key = list.id || `app-${list.dataset.appIndex || ''}`;
-                positions.set(key, {
-                    left: list.scrollLeft,
-                    top: list.scrollTop
+            entriesContainer
+                .querySelectorAll('.screenshot-carousel__viewport, .screenshot-list')
+                .forEach((list) => {
+                    const key =
+                        list.dataset.scrollKey || list.id || `app-${list.dataset.appIndex || ''}`;
+                    if (!key || positions.has(key)) {
+                        return;
+                    }
+                    positions.set(key, {
+                        left: list.scrollLeft,
+                        top: list.scrollTop
+                    });
                 });
-            });
             return positions;
         }
 
@@ -1301,17 +1308,20 @@
                 return;
             }
             const restore = () => {
-                entriesContainer.querySelectorAll('.screenshot-list').forEach((list) => {
-                    const key = list.id || `app-${list.dataset.appIndex || ''}`;
-                    const scrollPosition = positions.get(key);
-                    if (scrollPosition) {
-                        list.scrollTo({
-                            left: scrollPosition.left,
-                            top: scrollPosition.top,
-                            behavior: 'auto'
-                        });
-                    }
-                });
+                entriesContainer
+                    .querySelectorAll('.screenshot-carousel__viewport, .screenshot-list')
+                    .forEach((list) => {
+                        const key =
+                            list.dataset.scrollKey || list.id || `app-${list.dataset.appIndex || ''}`;
+                        const scrollPosition = key ? positions.get(key) : null;
+                        if (scrollPosition) {
+                            list.scrollTo({
+                                left: scrollPosition.left,
+                                top: scrollPosition.top,
+                                behavior: 'auto'
+                            });
+                        }
+                    });
             };
             if (typeof window !== 'undefined' && typeof window.requestAnimationFrame === 'function') {
                 window.requestAnimationFrame(restore);
@@ -1755,7 +1765,8 @@
                 }
             });
             const carouselViewport = utils.createElement('div', {
-                classNames: ['screenshot-carousel__viewport']
+                classNames: ['screenshot-carousel__viewport'],
+                attrs: { dataset: { scrollKey: screenshotListId } }
             });
             carouselViewport.appendChild(screenshotsList);
 
@@ -1862,7 +1873,7 @@
                 if (activeScreenshotIndex < 0) {
                     activeScreenshotIndex = 0;
                 }
-                const viewportRect = screenshotsList.getBoundingClientRect();
+                const viewportRect = carouselViewport.getBoundingClientRect();
                 let bestIndex = activeScreenshotIndex;
                 let bestDistance = Infinity;
                 items.forEach((item, idx) => {
@@ -1889,8 +1900,11 @@
                 if (announce) {
                     liveRegion.textContent = `Screenshot ${labelIndex} of ${total}`;
                 }
-                const scrollLeft = screenshotsList.scrollLeft;
-                const maxScrollLeft = Math.max(0, screenshotsList.scrollWidth - screenshotsList.clientWidth);
+                const scrollLeft = carouselViewport.scrollLeft;
+                const maxScrollLeft = Math.max(
+                    0,
+                    carouselViewport.scrollWidth - carouselViewport.clientWidth
+                );
                 const atStart = scrollLeft <= 2;
                 const atEnd = scrollLeft >= maxScrollLeft - 2;
                 carousel.dataset.edgeStart = atStart ? 'true' : 'false';
@@ -1941,7 +1955,7 @@
                 if (!itemWidth) {
                     return 1;
                 }
-                const viewportWidth = screenshotsList.getBoundingClientRect().width;
+                const viewportWidth = carouselViewport.getBoundingClientRect().width;
                 return Math.max(1, Math.round(viewportWidth / itemWidth));
             };
 
@@ -2078,7 +2092,7 @@
                 if (!delta) {
                     return;
                 }
-                screenshotsList.scrollBy({
+                carouselViewport.scrollBy({
                     left: delta,
                     behavior: Math.abs(delta) > 40 ? 'smooth' : 'auto'
                 });
@@ -2135,8 +2149,8 @@
             screenshotsList.addEventListener('dragend', handleDragEnd);
             screenshotsList.addEventListener('dragover', handleDragOver);
             screenshotsList.addEventListener('drop', handleDrop);
-            screenshotsList.addEventListener('scroll', handleScroll, { passive: true });
-            screenshotsList.addEventListener('wheel', handleWheel, { passive: false });
+            carouselViewport.addEventListener('scroll', handleScroll, { passive: true });
+            carouselViewport.addEventListener('wheel', handleWheel, { passive: false });
             carousel.addEventListener('wheel', handleWheel, { passive: false });
             screenshotsList.addEventListener('pointerdown', dismissHint);
             screenshotsList.addEventListener('touchstart', dismissHint, { passive: true });

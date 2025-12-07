@@ -10,17 +10,12 @@
   grid-auto-columns: clamp(220px, 75vw, 320px);
   gap: var(--screenshot-inline-gap, var(--app-screenshot-gap));
   padding-block: 0.5rem;
-  padding-inline: var(--screenshot-scroll-padding, var(--app-screenshot-padding));
-  overflow-x: auto;
-  overflow-y: hidden;
-  scroll-snap-type: x mandatory;
-  scroll-padding-inline: var(--screenshot-scroll-padding, var(--app-screenshot-padding));
+  padding-inline: 0;
+  overflow: visible;
   scroll-snap-stop: always;
-  overscroll-behavior-inline: contain;
-  -webkit-overflow-scrolling: touch;
   direction: ltr;
-  scrollbar-gutter: stable both-edges;
   touch-action: pan-x;
+  min-width: 0;
 }
 
 .screenshot-list:focus-visible {
@@ -43,7 +38,6 @@
 @media (min-width: 1024px) {
   .screenshot-list {
     grid-auto-columns: minmax(280px, 1fr);
-    scroll-snap-type: none;
   }
 }
 
@@ -187,8 +181,11 @@
   overflow-y: hidden;
   border-radius: 18px;
   padding-inline: var(--app-screenshot-padding);
+  scroll-snap-type: x mandatory;
+  scroll-padding-inline: var(--app-screenshot-padding);
   overscroll-behavior-x: contain;
   scrollbar-gutter: stable both-edges;
+  -webkit-overflow-scrolling: touch;
 }
 
 .screenshot-carousel__viewport::before,
