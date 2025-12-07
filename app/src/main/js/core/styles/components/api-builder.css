@@ -234,9 +234,24 @@
 .builder-remote-header--split {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
+  align-items: center;
   gap: 1rem;
   flex-wrap: wrap;
+}
+
+.builder-remote-toggle {
+  --md-icon-button-icon-size: 26px;
+  --md-icon-button-state-layer-shape: 12px;
+  --md-focus-ring-shape: 12px;
+  color: var(--app-text-color);
+  background: var(--md-sys-color-surface-container-highest);
+  border-radius: 14px;
+  box-shadow: 0 8px 18px rgba(15, 20, 25, 0.12);
+}
+
+.builder-remote-toggle:focus-visible {
+  outline: 2px solid var(--md-sys-color-primary);
+  outline-offset: 2px;
 }
 
 .builder-remote-controls {
