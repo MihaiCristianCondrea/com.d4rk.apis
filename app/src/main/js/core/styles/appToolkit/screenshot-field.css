@@ -111,6 +111,7 @@
   display: grid;
   gap: 0.5rem;
   min-width: 0;
+  max-width: min(720px, 100%);
 }
 
 .input {

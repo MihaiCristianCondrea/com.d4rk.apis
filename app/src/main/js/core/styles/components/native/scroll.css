@@ -282,6 +282,11 @@
   box-shadow: none;
 }
 
+.screenshot-carousel[data-count='1'] .screenshot-carousel__nav {
+  opacity: 0.35;
+  pointer-events: none;
+}
+
 @media (hover: none) {
   .screenshot-carousel__nav {
     opacity: 1;
