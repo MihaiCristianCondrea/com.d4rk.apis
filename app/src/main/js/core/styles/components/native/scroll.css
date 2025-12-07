@@ -287,6 +287,37 @@
   pointer-events: none;
 }
 
+.screenshot-carousel__indicators {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  padding: 0.35rem 0;
+}
+
+.screenshot-carousel__indicator {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--app-border-color) 50%, transparent);
+  background: color-mix(in srgb, var(--md-sys-color-on-surface) 15%, transparent);
+  opacity: 0.8;
+  cursor: pointer;
+  transition: width 140ms ease, opacity 140ms ease, background 140ms ease;
+}
+
+.screenshot-carousel__indicator[data-active='true'] {
+  width: 24px;
+  opacity: 1;
+  background: color-mix(in srgb, var(--md-sys-color-primary) 40%, transparent);
+  border-color: color-mix(in srgb, var(--md-sys-color-primary) 50%, transparent);
+}
+
+.screenshot-carousel__indicator:focus-visible {
+  outline: 2px solid var(--md-sys-color-primary);
+  outline-offset: 2px;
+}
+
 .screenshot-carousel__status {
   font-size: 0.8rem;
   line-height: 1;

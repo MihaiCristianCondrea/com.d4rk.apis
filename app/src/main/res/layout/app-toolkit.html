@@ -166,22 +166,22 @@
         </div>
       </div>
     </div>
-
-    <md-filled-card class="builder-remote-card" id="appToolkitRemoteImport">
-      <div class="card-body">
-        <div class="builder-remote-header">
-          <div>
-            <h2>Quick fetch</h2>
-            <p>Use shortcuts to pull the latest catalog before editing entries.</p>
-          </div>
+    <div class="builder-remote-inline-action builder-toolbar-fetch-card" id="appToolkitRemoteImport">
+      <div class="builder-toolbar-fetch">
+        <div>
+          <h2 class="builder-toolbar-title">Quick fetch</h2>
+          <p class="builder-toolbar-helper">
+            Use shortcuts to pull the latest catalog before editing entries.
+          </p>
         </div>
         <div
-                class="builder-remote-presets builder-remote-presets--buttons"
+                class="builder-remote-presets builder-remote-presets--buttons builder-toolbar-fetch__presets"
                 aria-label="Quick fetch shortcuts"
                 id="appToolkitFetchFieldset"
         >
           <span class="builder-remote-presets-label">Quick links</span>
           <md-text-button
+                  class="builder-remote-inline-button"
                   has-icon
                   data-app-toolkit-preset="./api/app_toolkit/v2/debug/en/home/api_android_apps.json"
                   id="appToolkitDebugPreset"
@@ -192,6 +192,7 @@
             Debug · EN
           </md-text-button>
           <md-text-button
+                  class="builder-remote-inline-button"
                   has-icon
                   data-app-toolkit-preset="./api/app_toolkit/v2/release/en/home/api_android_apps.json"
                   id="appToolkitReleasePreset"
@@ -203,7 +204,7 @@
           </md-text-button>
         </div>
       </div>
-    </md-filled-card>
+    </div>
 
     <md-filled-card class="builder-remote-card" id="appToolkitGithubCard" data-collapsible-card data-collapsed="true">
       <div class="card-body">
@@ -212,19 +213,27 @@
             <h2>Publish to GitHub</h2>
             <p>Push catalog updates directly from the workspace.</p>
           </div>
-          <md-icon-button
-                  id="appToolkitGithubToggle"
-                  class="builder-remote-toggle"
-                  data-collapsible-toggle
-                  aria-expanded="false"
-                  aria-controls="appToolkitGithubContent"
-                  type="button"
-                  aria-label="Toggle Publish to GitHub"
-          >
-            <span class="material-symbols-outlined" data-collapsible-indicator aria-hidden="true">
-              arrow_drop_down
-            </span>
-          </md-icon-button>
+          <div class="builder-remote-actions">
+            <md-filled-button id="appToolkitGithubWizardButton" class="builder-github-launch-button" has-icon>
+              <md-icon slot="icon"
+              ><span class="material-symbols-outlined">rocket_launch</span></md-icon
+              >
+              Open publish wizard
+            </md-filled-button>
+            <md-icon-button
+                    id="appToolkitGithubToggle"
+                    class="builder-remote-toggle"
+                    data-collapsible-toggle
+                    aria-expanded="false"
+                    aria-controls="appToolkitGithubContent"
+                    type="button"
+                    aria-label="Toggle Publish to GitHub"
+            >
+              <span class="material-symbols-outlined" data-collapsible-indicator aria-hidden="true">
+                arrow_drop_down
+              </span>
+            </md-icon-button>
+          </div>
         </div>
         <div class="builder-github-content" id="appToolkitGithubContent" data-collapsible-content hidden>
           <div class="builder-remote-header">
@@ -258,12 +267,6 @@
             </ul>
           </div>
           <div class="builder-github-launch">
-            <md-filled-button id="appToolkitGithubWizardButton" has-icon>
-              <md-icon slot="icon"
-              ><span class="material-symbols-outlined">rocket_launch</span></md-icon
-              >
-              Open publish wizard
-            </md-filled-button>
             <p class="builder-github-helper">
               Validate the preview first, then follow the guided steps to publish.
             </p>

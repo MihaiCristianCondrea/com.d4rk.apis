@@ -142,6 +142,32 @@
   min-width: min(320px, 100%);
 }
 
+.builder-toolbar-fetch-card {
+  padding: 1rem 1.25rem;
+  border-radius: 18px;
+  background: var(--md-sys-color-surface-container-high);
+  box-shadow: 0 12px 28px rgba(15, 20, 25, 0.1);
+  gap: 1rem;
+  align-items: center;
+}
+
+.builder-toolbar-fetch-card .builder-toolbar-title {
+  margin-bottom: 0.2rem;
+}
+
+.builder-toolbar-fetch__presets {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.builder-toolbar-fetch-card .builder-remote-presets-label {
+  font-weight: 600;
+  color: var(--app-secondary-text-color);
+}
+
 .collapsible-card {
   display: grid;
   gap: 1rem;
@@ -237,6 +263,18 @@
   align-items: center;
   gap: 1rem;
   flex-wrap: wrap;
+}
+
+.builder-remote-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  padding-top: 0.25rem;
+}
+
+.builder-github-launch-button {
+  margin-top: 0.15rem;
 }
 
 .builder-remote-toggle {
@@ -929,6 +967,8 @@
   flex-wrap: wrap;
   gap: 0.5rem;
   align-items: center;
+  justify-content: flex-start;
+  max-width: 100%;
   --screenshot-action-control-height: 40px;
   --md-outlined-text-field-container-height: var(--screenshot-action-control-height);
   --md-outlined-text-field-container-shape: var(--app-field-shape);
@@ -936,10 +976,10 @@
 }
 
 .screenshot-actions md-outlined-text-field {
-  flex: 1 1 280px;
+  flex: 0 1 min(520px, 100%);
   min-width: min(260px, 100%);
   max-width: min(520px, 100%);
-  width: 100%;
+  width: min(520px, 100%);
 }
 
 .builder-field-group--screenshots .builder-subsection {
