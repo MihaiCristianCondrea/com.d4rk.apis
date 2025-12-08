@@ -174,9 +174,19 @@
   border: 1px solid var(--app-border-color);
 }
 
-.screenshot-carousel {
+.screenshot-carousel { 
   position: relative;
   overflow: visible;
+}
+
+.builder-screenshots,
+.builder-screenshots .screenshot-carousel,
+.builder-screenshots .screenshot-carousel__viewport,
+.builder-screenshots .screenshot-list,
+.builder-screenshots .screenshot-carousel__indicator-row {
+  width: 100%;
+  max-width: min(720px, 100%);
+  margin-inline: auto;
 }
 
 .screenshot-carousel__viewport {
