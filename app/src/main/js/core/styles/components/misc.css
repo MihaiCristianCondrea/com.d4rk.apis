@@ -1,8 +1,8 @@
 /* --- Misc --- */
-.preview-actions md-filled-tonal-button, 
-.preview-actions md-outlined-button { 
-  --md-filled-tonal-button-container-shape: 999px;
-  --md-outlined-button-container-shape: 999px;
+.preview-actions md-filled-tonal-button,
+.preview-actions md-outlined-button {
+  --md-filled-tonal-button-container-shape: var(--app-button-shape);
+  --md-outlined-button-container-shape: var(--app-button-shape);
 }
 
 .focus-dialog {

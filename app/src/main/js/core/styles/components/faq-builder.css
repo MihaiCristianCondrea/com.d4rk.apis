@@ -510,8 +510,8 @@
   padding: 0 1.6rem 1.6rem;
 }
 
-.faq-icon-picker__footer md-filled-tonal-button { 
-  --md-filled-tonal-button-container-shape: 18px;
+.faq-icon-picker__footer md-filled-tonal-button {
+  --md-filled-tonal-button-container-shape: var(--app-button-shape);
 }
 
 @media (max-width: 720px) {
@@ -563,8 +563,8 @@
   color: var(--app-secondary-text-color);
 }
 
-.builder-remote-presets md-text-button { 
-  --md-text-button-container-shape: 999px;
+.builder-remote-presets md-text-button {
+  --md-text-button-container-shape: var(--app-button-shape);
   --md-text-button-label-text-size: 0.85rem;
   --md-text-button-hover-label-text-color: var(--md-sys-color-primary);
   --md-text-button-pressed-label-text-color: var(--md-sys-color-primary);
