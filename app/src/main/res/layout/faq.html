@@ -112,35 +112,33 @@
       <div class="card-body">
         <div class="builder-remote-header">
           <div>
-            <h2>Load catalog JSON</h2>
-            <p>Pull the debug or release catalog to start editing products and their FAQ modules.</p>
+            <h2>Quick fetch</h2>
+            <p>Mirror the latest catalog.json for your chosen channel before editing products.</p>
           </div>
         </div>
-        <div class="builder-remote-controls builder-remote-controls--stacked">
-          <md-outlined-text-field id="faqCatalogSourceInput" label="Catalog source URL" spellcheck="false" autocomplete="off"></md-outlined-text-field>
-          <div class="builder-remote-actions">
-            <md-filled-button id="faqCatalogLoadButton">
-              <md-icon slot="icon">cloud_download</md-icon>
-              <span>Load catalog</span>
-            </md-filled-button>
-            <md-outlined-button id="faqCatalogRefresh">
-              <md-icon slot="icon">refresh</md-icon>
-              <span>Refresh</span>
-            </md-outlined-button>
+        <div class="builder-remote-inline-action builder-toolbar-fetch-card" id="faqCatalogRemote">
+          <div class="builder-toolbar-fetch">
+            <div>
+              <h2 class="builder-toolbar-title">Channel presets</h2>
+              <p class="builder-toolbar-helper">Jump straight into the debug or release catalog.</p>
+            </div>
+            <div
+              class="builder-remote-presets builder-remote-presets--buttons builder-toolbar-fetch__presets"
+              aria-label="Catalog presets"
+            >
+              <span class="builder-remote-presets-label">Build channel</span>
+              <md-text-button data-faq-catalog-preset="debug" class="builder-remote-inline-button" has-icon>
+                <md-icon slot="icon">download</md-icon>
+                <span>Debug · EN</span>
+              </md-text-button>
+              <md-text-button data-faq-catalog-preset="release" class="builder-remote-inline-button" has-icon>
+                <md-icon slot="icon">download</md-icon>
+                <span>Release · EN</span>
+              </md-text-button>
+            </div>
           </div>
+          <p id="faqCatalogStatus" class="builder-remote-status" role="status">Choose debug or release to load the FAQ catalog.</p>
         </div>
-        <div class="builder-remote-presets builder-remote-presets--buttons" aria-label="Catalog presets">
-          <span class="builder-remote-presets-label">Build channel</span>
-          <md-outlined-button data-faq-catalog-preset="debug">
-            <md-icon slot="icon">download</md-icon>
-            <span>Debug catalog</span>
-          </md-outlined-button>
-          <md-outlined-button data-faq-catalog-preset="release">
-            <md-icon slot="icon">download</md-icon>
-            <span>Release catalog</span>
-          </md-outlined-button>
-        </div>
-        <p id="faqCatalogStatus" class="builder-remote-status" role="status">Choose debug or release to load the FAQ catalog.</p>
       </div>
       <section class="builder-layout builder-columns" id="faqCatalogBuilder">
         <div class="builder-forms catalog-forms">
@@ -189,7 +187,7 @@
           <div class="builder-remote-header">
             <div>
               <h2>Add new product FAQs</h2>
-              <p>Pick a product from the catalog or paste a single JSON to edit its FAQs.</p>
+              <p>Pick a product from the catalog to edit its FAQs.</p>
             </div>
           </div>
           <div class="builder-remote-picker" aria-label="Product selection">
@@ -218,13 +216,6 @@
           <div class="builder-toolbar-meta">
             <div class="toolbar-status" role="status" aria-live="polite">
               <span class="toolbar-status-label">Validation</span> <span class="toolbar-status-value" id="faqToolbarStatus">Awaiting input</span>
-            </div>
-            <div class="builder-toolbar-fetch">
-              <md-outlined-text-field id="faqFetchInput" label="Load FAQs from URL" spellcheck="false" autocomplete="off"></md-outlined-text-field>
-              <md-filled-tonal-button id="faqFetchButton">
-                <md-icon slot="icon">cloud_download</md-icon>
-                <span>Fetch</span>
-              </md-filled-tonal-button>
             </div>
           </div>
         </div>

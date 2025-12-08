@@ -185,9 +185,71 @@ function hydrateInputs(container) {
   });
 }
 
+function setupRepoMapperForm() {
+  const form = document.getElementById('mapper-form');
+  const urlField = document.getElementById('mapper-url');
+  const errorEl = document.getElementById('mapper-url-error');
+  const submitButton = document.getElementById('mapper-submit');
+
+  if (!form || !urlField || !submitButton) return;
+
+  const hideError = () => {
+    if (errorEl) {
+      errorEl.hidden = true;
+    }
+  };
+
+  const showError = (message) => {
+    if (!errorEl) return;
+    errorEl.hidden = false;
+    if (message) {
+      errorEl.textContent = message;
+    }
+  };
+
+  const validate = () => {
+    const slug = normalizeRepoSlug(urlField.value);
+    const isValid = !!slug;
+    submitButton.disabled = !isValid;
+    if (errorEl) {
+      const hasText = !!urlField.value.trim();
+      errorEl.hidden = isValid || !hasText;
+    }
+    return { slug, isValid };
+  };
+
+  urlField.addEventListener('input', () => {
+    hideError();
+    validate();
+  });
+
+  form.addEventListener('submit', (event) => {
+    event.preventDefault();
+    const { slug, isValid } = validate();
+    if (!isValid) {
+      showError('Invalid repository URL.');
+      urlField.focus();
+      return;
+    }
+
+    form.dataset.repoSlug = slug;
+    form.dispatchEvent(
+      new CustomEvent('repo-mapper:submit', {
+        bubbles: true,
+        detail: { slug },
+      }),
+    );
+  });
+
+  validate();
+}
+
 function initRepoMapper() {
   const page = document.querySelector('.gh-tools-page');
   if (!page) return;
+  if (page.dataset.initialized === 'true') return;
+  page.dataset.initialized = 'true';
+
   wireTokenControls({
     toggleButtonId: 'mapper-token-reveal',
     wrapperId: 'mapper-token-wrapper',
@@ -196,6 +258,7 @@ function initRepoMapper() {
   });
   hydrateInputs(page);
   setupFavoriteButton('mapper-fav-btn', 'mapper-url');
+  setupRepoMapperForm();
 }
 
 function initReleaseStats() {
