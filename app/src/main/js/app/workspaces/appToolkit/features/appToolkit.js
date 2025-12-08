@@ -1855,10 +1855,15 @@
             const previousButton = createNavButton('previous');
             const nextButton = createNavButton('next');
 
+            const indicatorRow = utils.createElement('div', {
+                classNames: ['screenshot-carousel__indicator-row']
+            });
+
             const indicatorList = utils.createElement('div', {
                 classNames: ['screenshot-carousel__indicators'],
                 attrs: { role: 'tablist', 'aria-label': 'Screenshot progress' }
             });
+            indicatorRow.appendChild(indicatorList);
 
             const carouselStatus = utils.createElement('div', {
                 classNames: ['screenshot-carousel__status'],
@@ -1874,7 +1879,7 @@
             carousel.appendChild(previousButton);
             carousel.appendChild(carouselViewport);
             carousel.appendChild(nextButton);
-            carousel.appendChild(indicatorList);
+            carousel.appendChild(indicatorRow);
             carousel.appendChild(carouselStatus);
             carousel.appendChild(liveRegion);
 
