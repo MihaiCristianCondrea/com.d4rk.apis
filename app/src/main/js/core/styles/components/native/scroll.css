@@ -299,8 +299,15 @@
   pointer-events: none;
 }
 
-.screenshot-carousel__indicators {
+.screenshot-carousel__indicator-row {
+  position: relative;
+  width: 100%;
   display: flex;
+  justify-content: center;
+}
+
+.screenshot-carousel__indicators {
+  display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 0.35rem;
