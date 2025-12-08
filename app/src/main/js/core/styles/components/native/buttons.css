@@ -3,6 +3,7 @@
   --app-button-inline-padding: 24px;
   --app-button-icon-leading-padding: 16px;
   --app-button-icon-trailing-padding: 24px;
+  --app-button-shape: 999px;
 }
 
 /* Allow styling custom Material elements throughout this file. */
@@ -19,6 +20,11 @@
   letter-spacing: 0.01em;
   padding-inline-start: var(--app-button-inline-padding);
   padding-inline-end: var(--app-button-inline-padding);
+  --md-filled-button-container-shape: var(--app-button-shape);
+  --md-filled-tonal-button-container-shape: var(--app-button-shape);
+  --md-text-button-container-shape: var(--app-button-shape);
+  --md-elevated-button-container-shape: var(--app-button-shape);
+  --md-outlined-button-container-shape: var(--app-button-shape);
 }
 
 :where(

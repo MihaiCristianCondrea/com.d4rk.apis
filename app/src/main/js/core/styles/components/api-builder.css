@@ -56,9 +56,9 @@
 }
 
 :where(md-filled-button, md-outlined-button, md-text-button).builder-button {
-  --md-filled-button-container-shape: var(--app-field-shape);
-  --md-outlined-button-container-shape: var(--app-field-shape);
-  --md-text-button-container-shape: var(--app-field-shape);
+  --md-filled-button-container-shape: var(--app-button-shape);
+  --md-outlined-button-container-shape: var(--app-button-shape);
+  --md-text-button-container-shape: var(--app-button-shape);
   --md-filled-button-container-height: 44px;
   --md-outlined-button-container-height: 44px;
   --md-text-button-container-height: 44px;
@@ -346,7 +346,7 @@
 }
 
 .builder-remote-presets--buttons md-outlined-button {
-  --md-outlined-button-container-shape: 999px;
+  --md-outlined-button-container-shape: var(--app-button-shape);
   --md-outlined-button-label-text-size: 0.95rem;
   --md-outlined-button-icon-size: 20px;
 }
@@ -498,35 +498,27 @@
   grid-template-columns: minmax(0, 1fr);
 }
 
-@media (min-width: 768px) {
-  .builder-columns,
-  .builder-columns--with-diff {
-    grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
-  }
-}
-
-@media (min-width: 1280px) {
+@media (min-width: 960px) {
   .builder-columns {
-    grid-template-columns: minmax(0, 2.25fr) minmax(0, 1.35fr);
+    grid-template-columns: minmax(0, 1fr) minmax(340px, 420px);
   }
 
   .builder-columns--with-diff {
-    grid-template-columns: minmax(0, 2.25fr) minmax(0, 1.35fr) minmax(0, 1.1fr);
+    grid-template-columns: minmax(0, 1fr) minmax(340px, 420px) minmax(260px, 320px);
   }
 }
 
-@media (min-width: 1280px) and (max-width: 1440px) {
+@media (min-width: 1360px) {
+  .builder-columns {
+    grid-template-columns: minmax(0, 1fr) minmax(360px, 460px);
+  }
+
   .builder-columns--with-diff {
-    grid-template-columns: minmax(0, 2fr) minmax(0, 1.25fr) minmax(0, 1fr);
+    grid-template-columns: minmax(0, 1fr) minmax(360px, 460px) minmax(280px, 340px);
   }
 }
 
 @media (max-width: 1200px) {
-  .builder-columns,
-  .builder-columns--with-diff {
-    grid-template-columns: minmax(0, 1.6fr) minmax(280px, 1fr);
-  }
-
   .builder-diff-sheet {
     display: none;
   }
