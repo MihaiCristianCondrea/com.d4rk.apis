@@ -32,9 +32,6 @@
             return path;
         }
     };
-    const DEFAULT_DATA_URL = withBase(
-        APP_CONFIG.defaultFaqDataUrl || 'api/faq/v1/debug/en/questions/general/general.json'
-    );
     const DEBUG_CATALOG_URL = withBase(
         APP_CONFIG.defaultFaqCatalogUrl || 'api/faq/v1/debug/catalog.json'
     );
@@ -97,17 +94,12 @@
         const resetButton = document.getElementById('faqResetButton');
         const importButton = document.getElementById('faqImportButton');
         const importInput = document.getElementById('faqImportInput');
-        const fetchButton = document.getElementById('faqFetchButton');
-        const fetchInput = document.getElementById('faqFetchInput');
         const fetchStatus = document.getElementById('faqFetchStatus');
         const catalogStatus = document.getElementById('faqCatalogStatus');
         const catalogButton = document.getElementById('faqCatalogFetchButton');
         const catalogButtonLabel = document.getElementById('faqCatalogButtonLabel');
-        const catalogRefreshButton = document.getElementById('faqCatalogRefresh');
         const catalogSelectRoot = document.getElementById('faqCatalogSelect');
         const catalogPresetButtons = document.querySelectorAll('[data-faq-catalog-preset]');
-        const catalogSourceInput = document.getElementById('faqCatalogSourceInput');
-        const catalogLoadButton = document.getElementById('faqCatalogLoadButton');
         const catalogSchemaField = document.getElementById('faqCatalogSchemaField');
         const catalogProductsContainer = document.getElementById('faqCatalogProducts');
         const catalogAddProductButton = document.getElementById('faqCatalogAddProduct');
@@ -221,7 +213,7 @@
 
         const modeMessages = {
             catalog: 'Update catalog.json and refresh products before exporting.',
-            faqs: 'Pick a product to load its FAQs or fetch a standalone JSON.'
+            faqs: 'Pick a product to load its FAQs directly from the catalog.'
         };
 
         const setMode = (mode) => {
@@ -273,13 +265,6 @@
         catalogState.selectedKey = DEFAULT_PRODUCT_KEY;
 
         builderRoot.dataset.initialized = 'true';
-
-        if (fetchInput) {
-            fetchInput.setAttribute('placeholder', DEFAULT_DATA_URL);
-        }
-        if (catalogSourceInput) {
-            catalogSourceInput.setAttribute('placeholder', DEFAULT_CATALOG_URL);
-        }
 
         function sortCategories(values = []) {
             const seen = new Set();
@@ -1691,9 +1676,6 @@
                 catalogState.products = products;
                 catalogState.loaded = true;
                 applyCatalogPayload(parsed);
-                if (catalogSourceInput) {
-                    catalogSourceInput.value = resolved;
-                }
                 renderCatalogPicker(products);
                 if (!silent) {
                     const helper = products.length
@@ -1721,10 +1703,12 @@
                 : [];
             if (!sources.length) {
                 setCatalogStatus('The selected product has no question sources yet.', 'warning');
+                setFetchStatus('Add questionSources to the catalog entry, then try again.', 'warning');
                 return;
             }
             if (!silent) {
                 setCatalogStatus(`Fetching FAQs for ${product.name}…`, 'loading');
+                setFetchStatus(`Loading FAQs for ${product.name}…`, 'loading');
             }
             const aggregated = [];
             for (const source of sources) {
@@ -1755,10 +1739,15 @@
             }
             if (!aggregated.length) {
                 setCatalogStatus('No FAQs were returned for the selected product.', 'warning');
+                setFetchStatus('No FAQs were returned for the selected product.', 'warning');
                 return;
             }
             applyFaqEntries(mergeEntries(aggregated));
             setCatalogStatus(`Loaded ${aggregated.length} FAQs for ${product.name}.`, 'success');
+            setFetchStatus(
+                `Loaded ${aggregated.length} FAQs from ${getCatalogSourceLabel(catalogState.source)}.`,
+                'success'
+            );
         }
 
         function setIconStatus(message, status = 'info') {
@@ -1767,40 +1756,6 @@
             }
             iconStatus.textContent = message;
             iconStatus.dataset.status = status;
-        }
-
-        async function fetchFromUrl(url, { silent = false } = {}) {
-            const trimmed = utils.trimString(url);
-            if (!trimmed) {
-                if (!silent) {
-                    setFetchStatus('Enter a JSON URL to import.', 'warning');
-                }
-                return;
-            }
-            if (!silent) {
-                setFetchStatus('Fetching FAQ JSON…', 'loading');
-            }
-            try {
-                const response = await fetch(trimmed, { cache: 'no-store' });
-                if (!response.ok) {
-                    if (!silent) {
-                        setFetchStatus(`Request failed with status ${response.status}`);
-                    }
-                    return;
-                }
-                const text = await response.text();
-                const parsed = utils.parseJson(text);
-                const entries = await resolveEntriesFromDataset(parsed, response.url || trimmed);
-                applyFaqEntries(entries);
-                if (!silent) {
-                    setFetchStatus('FAQ dataset loaded successfully.', 'success');
-                }
-            } catch (error) {
-                console.error('FaqBuilder: Failed to fetch JSON.', error);
-                if (!silent) {
-                    setFetchStatus('Unable to fetch FAQ dataset. Check the URL and try again.', 'error');
-                }
-            }
         }
 
         function parseIconCatalog(rawText) {
@@ -2101,18 +2056,6 @@
             utils.attachFilePicker(importButton, importInput, handleImport);
         }
 
-        if (fetchButton && fetchInput) {
-            fetchButton.addEventListener('click', () => fetchFromUrl(fetchInput.value));
-        }
-
-        if (catalogLoadButton && catalogSourceInput) {
-            catalogLoadButton.addEventListener('click', () => {
-                const source = utils.trimString(catalogSourceInput.value) || catalogState.source || DEFAULT_CATALOG_URL;
-                catalogState.source = source;
-                void fetchCatalog(source);
-            });
-        }
-
         if (catalogAddProductButton) {
             catalogAddProductButton.addEventListener('click', () => {
                 catalogFormState.products.push(createEmptyCatalogProduct());
@@ -2141,18 +2084,9 @@
                     const preset = button.dataset.faqCatalogPreset;
                     const source = preset === 'release' ? RELEASE_CATALOG_URL : DEBUG_CATALOG_URL;
                     catalogState.source = source;
-                    if (catalogSourceInput) {
-                        catalogSourceInput.value = source;
-                    }
                     setCatalogStatus(`Loading ${getCatalogSourceLabel(source)}…`, 'loading');
                     void fetchCatalog(source);
                 });
-            });
-        }
-
-        if (catalogRefreshButton) {
-            catalogRefreshButton.addEventListener('click', () => {
-                void fetchCatalog(catalogState.source || DEFAULT_CATALOG_URL);
             });
         }
 
@@ -2237,7 +2171,6 @@
                 void fetchCatalogProduct(product.key || product.productId, { silent: true });
             }
         });
-        void fetchFromUrl(DEFAULT_DATA_URL, { silent: true });
     }
 
     global.initFaqWorkspace = initFaqWorkspace;
