@@ -53,20 +53,16 @@
               </div>
             </div>
           </div>
-          <div class="segmented-toggle" data-tone="github" id="mapper-format">
-            <md-filter-chip
-              selected
-              value="ascii"
-              label="ASCII"
-              id="btn-format-ascii"
-              aria-selected="true"
-            >
+          <md-segmented-button-set aria-label="Select mapper output format" id="mapper-format">
+            <md-outlined-segmented-button id="btn-format-ascii" value="ascii" selected>
               <md-icon slot="icon">terminal</md-icon>
-            </md-filter-chip>
-            <md-filter-chip value="paths" label="Paths" id="btn-format-paths" aria-selected="false">
+              <span>ASCII</span>
+            </md-outlined-segmented-button>
+            <md-outlined-segmented-button id="btn-format-paths" value="paths">
               <md-icon slot="icon">view_list</md-icon>
-            </md-filter-chip>
-          </div>
+              <span>Paths</span>
+            </md-outlined-segmented-button>
+          </md-segmented-button-set>
         </div>
         <div class="gh-actions end">
           <button type="submit" id="mapper-submit" class="gh-primary-button">

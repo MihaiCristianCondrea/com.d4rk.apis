@@ -675,24 +675,28 @@ function initRepoMapper() {
   let currentTree = [];
 
   /**
-   * Synchronizes the repo mapper format chips so they use Material's built-in
-   * selected state instead of custom classes.
+   * Synchronizes the repo mapper segmented buttons so they lean on Material's
+   * native selection visuals instead of bespoke classes.
    *
-   * Change Rationale: The original segmented buttons used bespoke styling and
-   * "active" classes, which diverged from the shared button system and caused
-   * inconsistent visuals. Toggling the `selected` state on `md-filter-chip`
-   * elements keeps the control aligned with Material defaults while still
-   * advertising the current format to assistive tech.
+   * Change Rationale: The previous chip-based segmented buttons needed custom
+   * CSS to read as a toggle set. Switching to `md-outlined-segmented-button`
+   * keeps the control consistent with Material defaults and only requires
+   * toggling the `selected` state and ARIA press semantics to broadcast the
+   * active format to assistive tech.
    *
    * @returns {void}
    */
   const updateFormatButtons = () => {
     const isAscii = currentFormat === 'ascii';
     asciiBtn.toggleAttribute('selected', isAscii);
+    asciiBtn.selected = isAscii;
+    asciiBtn.setAttribute('aria-pressed', isAscii ? 'true' : 'false');
     asciiBtn.setAttribute('aria-selected', isAscii ? 'true' : 'false');
 
     const isPaths = currentFormat === 'paths';
     pathsBtn.toggleAttribute('selected', isPaths);
+    pathsBtn.selected = isPaths;
+    pathsBtn.setAttribute('aria-pressed', isPaths ? 'true' : 'false');
     pathsBtn.setAttribute('aria-selected', isPaths ? 'true' : 'false');
   };
 
