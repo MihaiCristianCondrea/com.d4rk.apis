@@ -5,6 +5,7 @@ body {
   margin: 0;
   padding: 0;
   overflow-y: auto;
+  scrollbar-gutter: stable both-edges;
   overscroll-behavior-y: contain;
   transition:
     background-color var(--app-motion-duration-medium, 300ms)

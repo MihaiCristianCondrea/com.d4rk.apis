@@ -81,6 +81,15 @@
   gap: 0.5rem;
 }
 
+.screenshot-item-actions md-icon-button {
+  --md-icon-button-container-height: 38px;
+  --md-icon-button-container-width: 38px;
+  --md-icon-button-icon-size: 22px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .screenshot-item-actions-end {
   display: flex;
   align-items: center;

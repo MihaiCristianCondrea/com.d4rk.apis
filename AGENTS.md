@@ -40,3 +40,8 @@ When asked to generate frontend tools, editors, or dashboards to manage this dat
   2. Run `npm test`.
   3. If successful, verify `api/<app_name>/docs/` is up to date.
   4. Finalize.
+
+## Change log (agent updates)
+- Navigation drawer no longer shifts the page when opened and now supports keeping multiple drawer sections expanded by default (API Workspaces and GitHub Tools stay open). This prevents layout jumps tied to scrollbar removal and improves discoverability for adjacent sections.
+- App Toolkit buttons now share consistent hover/elevation behavior and the "Publish to GitHub" toggle is an outlined pill with its rocket icon, improving alignment with the updated button style guide and keeping icon-only controls vertically centered.
+- FAQ workspace starts with blank previews instead of auto-loaded sample data; catalog and FAQ previews reset until users fetch or edit content. Spacing updates give onboarding copy and fetch controls more breathing room, and catalog previews refresh immediately after fetch/edit without requiring scrolls.
