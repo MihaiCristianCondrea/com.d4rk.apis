@@ -249,6 +249,17 @@
   gap: 0.75rem;
 }
 
+#faqCatalogBuilder {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+@media (min-width: 960px) {
+  #faqCatalogBuilder {
+    grid-template-columns: minmax(0, 1fr) minmax(320px, 380px);
+    align-items: start;
+  }
+}
+
 .catalog-actions {
   display: flex;
   align-items: center;
