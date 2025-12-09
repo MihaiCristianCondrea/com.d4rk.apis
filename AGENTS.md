@@ -23,7 +23,19 @@ When asked to generate frontend tools, editors, or dashboards to manage this dat
   - Use **Vanilla JavaScript** (ES Modules) unless a framework is explicitly requested.
 - **User Experience:** Prioritize "fun and fast" usage. Interfaces should be responsive and provide immediate visual feedback for all actions.
 
-## 4. Data Structure & JSON Guidelines
+## 4 Documentation Requirements
+All generated or modified code must be fully documented. This includes:
+
+- Full JSDoc blocks for every function, class, or module.
+- A "Change Rationale" comment whenever modifying existing code, explaining:
+  - What the code previously did,
+  - Why the change was necessary,
+  - Why the new approach is preferable,
+  - Any Material Design 3 or UX principle that influenced the decision.
+- Updates to AGENTS.md describing major changes, purposes, and architectural notes.
+- Documentation must remain coherent, concise, and reflect the project's design rules. 
+
+## 5. Data Structure & JSON Guidelines
 - **Path Structure:** `api/<app_slug>/v<version>/<build_type>/<language>/<category>/<file>.json`
 - **Build Types:**
   - `debug`: Safe for experimental changes.
@@ -32,7 +44,7 @@ When asked to generate frontend tools, editors, or dashboards to manage this dat
   - Ensure strict JSON syntax (no trailing commas).
   - When generating new JSON files, use the schema from existing sibling files as a template.
 
-## 5. Testing & Quality Assurance
+## 6. Testing & Quality Assurance
 - **Data Integrity:** "Testing" primarily involves ensuring JSON validity and Schema consistency.
 - **Tooling Tests:** If you write JavaScript code for the UI, you must include Jest tests in the `__tests__/` directory.
 - **Workflow:**
@@ -40,8 +52,3 @@ When asked to generate frontend tools, editors, or dashboards to manage this dat
   2. Run `npm test`.
   3. If successful, verify `api/<app_name>/docs/` is up to date.
   4. Finalize.
-
-## Change log (agent updates)
-- Navigation drawer no longer shifts the page when opened and now supports keeping multiple drawer sections expanded by default (API Workspaces and GitHub Tools stay open). This prevents layout jumps tied to scrollbar removal and improves discoverability for adjacent sections.
-- App Toolkit buttons now share consistent hover/elevation behavior and the "Publish to GitHub" toggle is an outlined pill with its rocket icon, improving alignment with the updated button style guide and keeping icon-only controls vertically centered.
-- FAQ workspace starts with blank previews instead of auto-loaded sample data; catalog and FAQ previews reset until users fetch or edit content. Spacing updates give onboarding copy and fetch controls more breathing room, and catalog previews refresh immediately after fetch/edit without requiring scrolls.

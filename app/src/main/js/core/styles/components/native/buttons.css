@@ -4,7 +4,6 @@
   --app-button-icon-leading-padding: 16px;
   --app-button-icon-trailing-padding: 24px;
   --app-button-shape: 999px;
-  --app-button-hover-shadow: 0 10px 24px rgba(15, 20, 25, 0.14);
 }
 
 /* Allow styling custom Material elements throughout this file. */
@@ -121,15 +120,4 @@ md-text-button[has-icon][trailing-icon] {
   transform: translateY(0);
 }
 
-:where(
-    md-filled-button,
-    md-filled-tonal-button,
-    md-text-button,
-    md-elevated-button,
-    md-outlined-button,
-    md-icon-button
-  ):not([disabled]):active {
-  box-shadow: var(--app-button-hover-shadow);
-  transform: translateY(0);
-}
 /* stylelint-enable selector-type-no-unknown */

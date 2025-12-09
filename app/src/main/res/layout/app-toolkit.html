@@ -1,4 +1,35 @@
+<!--
+  App Toolkit API workspace
+
+  Purpose:
+  - This page lets us build and maintain the JSON catalog that powers the App Toolkit app.
+  - It mirrors the production schema (debug + release), so we can safely edit, preview, and publish.
+
+  Integration:
+  - JavaScript logic for this workspace lives in the App Toolkit builder module (appToolkit.js).
+  - JS selects this page by #appToolkitPage and #appToolkitBuilder, then wires:
+    - Insight counters (tracked apps, release ready, screenshot averages)
+    - Builder toolbar actions (add app, sort, reset)
+    - Quick fetch presets (debug / release)
+    - GitHub publish wizard and collapsible controls
+    - JSON preview, validation, and diff side sheet
+
+  Design:
+  - Uses Material Web Components (md-*) for cards, buttons, menus, dialogs, steppers, etc.
+  - Layout is controlled via CSS (api-builder.css, cards.css, text-fields.css, scroll.css).
+  - The builder layout is a two-column grid (forms + preview) with an optional diff side sheet.
+
+  Notes for agents:
+  - When modifying this file, keep IDs and data-* attributes stable unless you also update
+    the corresponding JS (appToolkit.js) and tests.
+  - New structural elements should be documented with a short comment describing:
+    - What the section shows
+    - How JS interacts with it (if at all)
+    - Any UX assumptions (e.g., “insights rely on live preview data”)
+-->
+
 <div id="appToolkitPage" class="page-section app-shell-panel active">
+  <!-- Page header: static description of what this workspace does -->
   <header class="page-header">
     <h1>App Toolkit API workspace</h1>
     <p>
@@ -8,8 +39,14 @@
     </p>
   </header>
 
+  <!--
+    Workspace dashboard:
+    - High-level metrics that summarize the current workspace state.
+    - JS updates the values by ID using the current JSON snapshot from the builder.
+  -->
   <section class="workspace-dashboard" aria-label="Workspace overview">
     <div class="workspace-insight-grid">
+      <!-- Insight: how many apps are currently in the workspace -->
       <md-elevated-card class="insight-card">
         <div class="insight-card-header">
           <span class="material-symbols-outlined insight-icon">apps</span>
@@ -18,6 +55,8 @@
         <p class="insight-value" id="appToolkitTrackedCount">0</p>
         <p class="insight-helper">Live count mirrors the JSON preview.</p>
       </md-elevated-card>
+
+      <!-- Insight: how many entries pass the "release ready" rules -->
       <md-elevated-card class="insight-card">
         <div class="insight-card-header">
           <span class="material-symbols-outlined insight-icon">rocket_launch</span>
@@ -26,6 +65,8 @@
         <p class="insight-value" id="appToolkitReleaseReadyCount">0</p>
         <p class="insight-helper">Entries with rich media and required fields.</p>
       </md-elevated-card>
+
+      <!-- Insight: average screenshot count across all apps -->
       <md-elevated-card class="insight-card">
         <div class="insight-card-header">
           <span class="material-symbols-outlined insight-icon">photo_library</span>
@@ -36,6 +77,12 @@
       </md-elevated-card>
     </div>
 
+    <!--
+      Secondary dashboard:
+      - "Today's pipeline" gives a narrative checklist.
+      - "Release readiness" shows overall progress across debug / release.
+      - Both are driven by counters and validation logic in appToolkit.js.
+    -->
     <div class="workspace-secondary-grid">
       <md-filled-card class="workspace-plan">
         <div class="card-body">
@@ -66,6 +113,11 @@
             <h2>Release readiness</h2>
             <p id="appToolkitWorkspacePulse">Review entries to unlock insights.</p>
           </div>
+          <!--
+            Progress bar:
+            - JS updates #appToolkitReleaseProgress to reflect readiness across channels.
+            - Legend shows how debug vs release contribute to the bar.
+          -->
           <div class="release-progress" role="img" aria-label="Release readiness progress">
             <div class="release-progress-track">
               <div class="release-progress-bar" id="appToolkitReleaseProgress"></div>
@@ -84,6 +136,11 @@
     </div>
   </section>
 
+  <!--
+    Guidance card:
+    - Static checklist of schema and workflow rules.
+    - JS does not mutate this; it's a source of truth for required fields.
+  -->
   <md-filled-card class="guidance-card">
     <div class="card-body">
       <h2>Before you start</h2>
@@ -111,19 +168,36 @@
     </div>
   </md-filled-card>
 
+  <!--
+    Core builder section:
+
+    - Root hook for JS: #appToolkitBuilder (data-builder-type="app-toolkit").
+    - The JS module:
+      - Renders the list of app entries into #appToolkitEntries.
+      - Keeps #appToolkitPreview synced with the current JSON.
+      - Drives validation + toolbar status + diff side sheet.
+  -->
   <section
           class="api-builder"
           id="appToolkitBuilder"
           data-builder-type="app-toolkit"
   >
+    <!--
+      Builder toolbar:
+      - Primary actions: Add app, Sort, Clear workspace.
+      - Secondary status: Workspace pulse text on the right.
+    -->
     <div class="builder-toolbar">
       <div class="builder-toolbar-actions">
+        <!-- Add a new empty app entry -->
         <md-filled-button id="appToolkitAddApp" has-icon>
-          <md-icon slot="icon"
-          ><span class="material-symbols-outlined">add</span></md-icon
-          >
+          <md-icon slot="icon">
+            <span class="material-symbols-outlined">add</span>
+          </md-icon>
           Add app
         </md-filled-button>
+
+        <!-- Sort menu trigger; JS syncs label + menu selection -->
         <md-outlined-button
                 id="appToolkitSortButton"
                 has-icon
@@ -131,16 +205,18 @@
                 aria-haspopup="menu"
                 aria-expanded="false"
         >
-          <md-icon slot="icon"
-          ><span class="material-symbols-outlined">sort</span></md-icon
-          >
-          <span class="builder-sort-label"
-          >Sort · <span id="appToolkitSortLabel">App name (A–Z)</span></span
-          >
-          <md-icon slot="trailing-icon"
-          ><span class="material-symbols-outlined">arrow_drop_down</span></md-icon
-          >
+          <md-icon slot="icon">
+            <span class="material-symbols-outlined">sort</span>
+          </md-icon>
+          <span class="builder-sort-label">
+            Sort · <span id="appToolkitSortLabel">App name (A–Z)</span>
+          </span>
+          <md-icon slot="trailing-icon">
+            <span class="material-symbols-outlined">arrow_drop_down</span>
+          </md-icon>
         </md-outlined-button>
+
+        <!-- Sort options; JS applies 'data-sort-key' to the app list -->
         <md-menu id="appToolkitSortMenu" anchor="appToolkitSortButton">
           <md-menu-item type="radio" data-sort-key="name" selected>
             <div slot="headline">App name (A–Z)</div>
@@ -152,13 +228,17 @@
             <div slot="headline">Screenshot count (high to low)</div>
           </md-menu-item>
         </md-menu>
+
+        <!-- Clear all entries and reset builder state -->
         <md-text-button id="appToolkitResetButton" has-icon>
-          <md-icon slot="icon"
-          ><span class="material-symbols-outlined">refresh</span></md-icon
-          >
+          <md-icon slot="icon">
+            <span class="material-symbols-outlined">refresh</span>
+          </md-icon>
           Clear workspace
         </md-text-button>
       </div>
+
+      <!-- Live textual summary of workspace health -->
       <div class="builder-toolbar-meta">
         <div class="toolbar-status" role="status" aria-live="polite">
           <span class="toolbar-status-label">Workspace pulse</span>
@@ -166,6 +246,13 @@
         </div>
       </div>
     </div>
+
+    <!--
+      Quick fetch:
+      - Preset shortcuts that load JSON from local paths (debug / release).
+      - JS listens on #appToolkitDebugPreset / #appToolkitReleasePreset and
+        populates the builder from those files.
+    -->
     <div class="builder-remote-inline-action builder-toolbar-fetch-card" id="appToolkitRemoteImport">
       <div class="builder-toolbar-fetch">
         <div>
@@ -180,32 +267,41 @@
                 id="appToolkitFetchFieldset"
         >
           <span class="builder-remote-presets-label">Quick links</span>
+
+          <!-- Debug preset: loads the debug catalog for EN -->
           <md-text-button
                   class="builder-remote-inline-button"
                   has-icon
                   data-app-toolkit-preset="./api/app_toolkit/v2/debug/en/home/api_android_apps.json"
                   id="appToolkitDebugPreset"
           >
-            <md-icon slot="icon"
-            ><span class="material-symbols-outlined">download</span></md-icon
-            >
+            <md-icon slot="icon">
+              <span class="material-symbols-outlined">download</span>
+            </md-icon>
             Debug · EN
           </md-text-button>
+
+          <!-- Release preset: loads the release catalog for EN -->
           <md-text-button
                   class="builder-remote-inline-button"
                   has-icon
                   data-app-toolkit-preset="./api/app_toolkit/v2/release/en/home/api_android_apps.json"
                   id="appToolkitReleasePreset"
           >
-            <md-icon slot="icon"
-            ><span class="material-symbols-outlined">download</span></md-icon
-            >
+            <md-icon slot="icon">
+              <span class="material-symbols-outlined">download</span>
+            </md-icon>
             Release · EN
           </md-text-button>
         </div>
       </div>
     </div>
 
+    <!--
+      GitHub publish card:
+      - Collapsible card that holds GitHub-specific guidance and controls.
+      - JS wires the toggle and opens the dialog when "Open publish wizard" is used.
+    -->
     <md-filled-card class="builder-remote-card" id="appToolkitGithubCard" data-collapsible-card data-collapsed="true">
       <div class="card-body">
         <div class="builder-remote-header builder-remote-header--split">
@@ -214,25 +310,28 @@
             <p>Push catalog updates directly from the workspace.</p>
           </div>
           <div class="builder-remote-actions">
+            <!-- Launches the stepper dialog (GitHub wizard) -->
             <md-filled-button id="appToolkitGithubWizardButton" class="builder-github-launch-button" has-icon>
-              <md-icon slot="icon"
-              ><span class="material-symbols-outlined">rocket_launch</span></md-icon
-              >
+              <md-icon slot="icon">
+                <span class="material-symbols-outlined">rocket_launch</span>
+              </md-icon>
               Open publish wizard
             </md-filled-button>
+
+            <!-- Collapsible meta controls for GitHub publishing -->
             <md-outlined-button
-              id="appToolkitGithubToggle"
-              class="builder-remote-toggle"
-              data-collapsible-toggle
-              aria-expanded="false"
-              aria-controls="appToolkitGithubContent"
-              type="button"
-              aria-label="Toggle Publish to GitHub"
-              has-icon
+                    id="appToolkitGithubToggle"
+                    class="builder-remote-toggle"
+                    data-collapsible-toggle
+                    aria-expanded="false"
+                    aria-controls="appToolkitGithubContent"
+                    type="button"
+                    aria-label="Toggle Publish to GitHub"
+                    has-icon
             >
-              <md-icon slot="icon"
-                ><span class="material-symbols-outlined">rocket_launch</span></md-icon
-              >
+              <md-icon slot="icon">
+                <span class="material-symbols-outlined">rocket_launch</span>
+              </md-icon>
               <span>Publish controls</span>
               <span class="material-symbols-outlined" data-collapsible-indicator aria-hidden="true">
                 arrow_drop_down
@@ -240,6 +339,8 @@
             </md-outlined-button>
           </div>
         </div>
+
+        <!-- Collapsible GitHub helper content; initially hidden -->
         <div class="builder-github-content" id="appToolkitGithubContent" data-collapsible-content hidden>
           <div class="builder-remote-header">
             <div>
@@ -280,8 +381,17 @@
       </div>
     </md-filled-card>
 
+    <!--
+      Builder layout grid:
+      - Left: dynamic list of app entries (forms).
+      - Middle/right: JSON preview and validation.
+      - Optional: diff side sheet for comparing current vs last exported payload.
+    -->
     <div class="builder-layout builder-columns">
+      <!-- JS injects app entry forms here -->
       <div class="builder-forms" id="appToolkitEntries" aria-live="polite"></div>
+
+      <!-- JSON preview column -->
       <aside class="builder-preview" aria-label="JSON preview">
         <div class="preview-header">
           <h2>Preview &amp; export</h2>
@@ -301,24 +411,33 @@
                 aria-live="polite"
         ></div>
         <div class="preview-actions">
+          <!-- Copy current JSON to clipboard -->
           <md-filled-tonal-button id="appToolkitCopyButton" has-icon>
-            <md-icon slot="icon"
-            ><span class="material-symbols-outlined">content_copy</span></md-icon
-            >
+            <md-icon slot="icon">
+              <span class="material-symbols-outlined">content_copy</span>
+            </md-icon>
             Copy JSON
           </md-filled-tonal-button>
+
+          <!-- Download current JSON to a file -->
           <md-outlined-button
                   id="appToolkitDownloadButton"
                   has-icon
                   trailing-icon
           >
             Download
-            <md-icon slot="icon"
-            ><span class="material-symbols-outlined">download</span></md-icon
-            >
+            <md-icon slot="icon">
+              <span class="material-symbols-outlined">download</span>
+            </md-icon>
           </md-outlined-button>
         </div>
       </aside>
+
+      <!--
+        Diff side sheet:
+        - Hidden by default, opened when user asks to compare against the last exported payload.
+        - JS populates #appToolkitDiffContent with a diff view.
+      -->
       <md-side-sheet
               id="appToolkitDiffSheet"
               class="builder-diff-sheet"
@@ -340,10 +459,25 @@
     </div>
   </section>
 
+  <!--
+    GitHub publish dialog (wizard):
+
+    - md-steppers guides the user through:
+      1) Authenticate (token)
+      2) Target (repo / branch / message / channel)
+      3) Review & publish
+
+    - appToolkit.js controls:
+      - Step transitions (Next/Back)
+      - Token file loading
+      - API calls to GitHub
+      - Status messaging in #appToolkitGithubStatus
+  -->
   <md-dialog id="appToolkitGithubDialog" class="app-dialog github-dialog">
     <div slot="headline">Publish to GitHub</div>
     <div slot="content" class="github-dialog-content">
       <md-steppers id="appToolkitGithubStepper" value="authenticate">
+        <!-- Step 1: authenticate with a personal access token -->
         <md-step value="authenticate" label="Authenticate">
           <div class="github-step" data-step="authenticate">
             <md-outlined-text-field
@@ -362,14 +496,16 @@
                       hidden
               />
               <md-outlined-button id="appToolkitGithubTokenFileButton" has-icon>
-                <md-icon slot="icon"
-                ><span class="material-symbols-outlined">description</span></md-icon
-                >
+                <md-icon slot="icon">
+                  <span class="material-symbols-outlined">description</span>
+                </md-icon>
                 Load token from file
               </md-outlined-button>
             </div>
           </div>
         </md-step>
+
+        <!-- Step 2: choose repo, branch, commit message, and target channel -->
         <md-step value="target" label="Target">
           <div class="github-step" data-step="target">
             <md-outlined-text-field
@@ -402,6 +538,8 @@
             </md-outlined-select>
           </div>
         </md-step>
+
+        <!-- Step 3: review diff and publish -->
         <md-step value="review" label="Review">
           <div class="github-step" data-step="review">
             <p class="github-review-copy">
@@ -412,6 +550,8 @@
         </md-step>
       </md-steppers>
     </div>
+
+    <!-- Dialog action buttons (Back / Next handled by JS) -->
     <div slot="actions" class="github-dialog-actions">
       <md-text-button dialog-action="close">Cancel</md-text-button>
       <md-text-button id="appToolkitGithubBack">Back</md-text-button>
