@@ -217,6 +217,29 @@
         );
         let fetchPulseTimeout = null;
 
+        const syncDiffLayout = () => {
+            if (!builderLayout) {
+                return;
+            }
+            const diffVisible =
+                diffSheet &&
+                diffSheet.open &&
+                !diffSheet.classList.contains('is-empty') &&
+                diffSheet.offsetParent !== null;
+            builderLayout.classList.toggle('builder-columns--with-diff', Boolean(diffVisible));
+        };
+
+        if (diffSheet) {
+            const diffObserver = new MutationObserver(syncDiffLayout);
+            diffObserver.observe(diffSheet, { attributes: true, attributeFilter: ['open', 'class'] });
+        }
+
+        if (typeof window !== 'undefined') {
+            window.addEventListener('resize', syncDiffLayout, { passive: true });
+        }
+
+        syncDiffLayout();
+
         dialogsToWire.forEach((dialog) => {
             if (!dialog || dialog.dataset.dialogCloseInit === 'true') {
                 return;
@@ -985,13 +1008,11 @@
                 diffContent.innerHTML = '';
                 diffContent.classList.add('diff-view--empty');
                 diffContent.textContent = message;
-                if (builderLayout) {
-                    builderLayout.classList.remove('builder-columns--with-diff');
-                }
                 if (diffSheet) {
                     diffSheet.open = openSheet;
                     diffSheet.classList.add('is-empty');
                 }
+                syncDiffLayout();
             };
 
             diffContent.classList.remove('diff-view--empty');
@@ -1000,6 +1021,7 @@
                 diffSheet.classList.remove('is-empty');
                 diffSheet.open = false;
             }
+            syncDiffLayout();
 
             if (!remoteBaselinePayload) {
                 setEmptyState('Load a baseline JSON file to compare changes.', { openSheet: false });
@@ -1047,13 +1069,11 @@
             }
 
             diffContent.classList.remove('diff-view--empty');
-            if (builderLayout) {
-                builderLayout.classList.add('builder-columns--with-diff');
-            }
             if (diffSheet) {
                 diffSheet.classList.remove('is-empty');
                 diffSheet.open = true;
             }
+            syncDiffLayout();
 
             const body = document.createElement('div');
             body.className = 'diff-view__body';
@@ -1256,9 +1276,11 @@
                 });
             }
             setFetchState('idle');
-            if (builderLayout) {
-                builderLayout.classList.remove('builder-columns--with-diff');
+            if (diffSheet) {
+                diffSheet.open = false;
+                diffSheet.classList.add('is-empty');
             }
+            syncDiffLayout();
             updateDiffSheet();
             touchWorkspace();
             render({ skipPreview: true });

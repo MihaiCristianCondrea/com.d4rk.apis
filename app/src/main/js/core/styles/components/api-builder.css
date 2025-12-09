@@ -500,21 +500,21 @@
 
 @media (min-width: 960px) {
   .builder-columns {
-    grid-template-columns: minmax(0, 1fr) minmax(280px, 340px);
+    grid-template-columns: minmax(0, 1fr) minmax(300px, 360px);
   }
 
   .builder-columns--with-diff {
-    grid-template-columns: minmax(0, 1fr) minmax(280px, 340px) minmax(260px, 320px);
+    grid-template-columns: minmax(0, 1.35fr) minmax(300px, 360px) minmax(280px, 340px);
   }
 }
 
 @media (min-width: 1360px) {
   .builder-columns {
-    grid-template-columns: minmax(0, 1.1fr) minmax(300px, 360px);
+    grid-template-columns: minmax(0, 1.2fr) minmax(320px, 380px);
   }
 
   .builder-columns--with-diff {
-    grid-template-columns: minmax(0, 1.1fr) minmax(300px, 360px) minmax(280px, 340px);
+    grid-template-columns: minmax(0, 1.4fr) minmax(320px, 380px) minmax(300px, 360px);
   }
 }
 
