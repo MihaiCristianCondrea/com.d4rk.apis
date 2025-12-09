@@ -1,10 +1,13 @@
 :root {
-  --gh-surface: var(--md-sys-color-surface, #141218);
-  --gh-card: var(--md-sys-color-surface-container, #1d1b20);
-  --gh-card-strong: var(--md-sys-color-surface-container-high, #2b2930);
-  --gh-outline: var(--md-sys-color-outline, #49454f);
-  --gh-text: var(--app-text-color, #e6e1e5);
-  --gh-subtext: var(--app-secondary-text-color, #cac4d0);
+  --gh-surface: var(--app-bg-color, var(--md-sys-color-surface));
+  --gh-card: var(--app-card-bg-color, var(--md-sys-color-surface-container));
+  --gh-card-strong: var(
+    --app-outlined-card-bg-color,
+    var(--md-sys-color-surface-container-high)
+  );
+  --gh-outline: var(--app-border-color, var(--md-sys-color-outline));
+  --gh-text: var(--app-text-color, #1f1a24);
+  --gh-subtext: var(--app-secondary-text-color, #49454f);
   --gh-error-container: color-mix(in srgb, var(--md-sys-color-error, #b3261e) 55%, transparent);
   --gh-on-error-container: var(--md-sys-color-on-error, #f2b8b5);
   --gh-radius-lg: 24px;
