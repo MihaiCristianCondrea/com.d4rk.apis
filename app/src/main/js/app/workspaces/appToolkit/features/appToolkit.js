@@ -2787,27 +2787,39 @@
             }
         }
 
-        function flashButton(button, label) {
-            if (!button) return;
-            const originalLabel = button.innerHTML;
-            button.disabled = true;
-            button.innerHTML = label;
-            setTimeout(() => {
-                button.innerHTML = originalLabel;
-                button.disabled = false;
-            }, 1500);
+        /**
+         * Generates Material-compliant markup for a leading icon paired with a text label.
+         *
+         * Change Rationale: Previous state swaps injected raw <span> glyphs, which sat off-center on
+         * disabled buttons and diverged from the shared button styles. Rendering with <md-icon> keeps
+         * alignment consistent and respects the `has-icon` layout rules.
+         *
+         * @param {string} iconName The Material symbol name to render.
+         * @param {string} labelText The human-readable label to pair with the icon.
+         * @returns {string} HTML markup for the button label.
+         */
+        function renderButtonLabel(iconName, labelText) {
+            return `<md-icon slot="icon"><span class="material-symbols-outlined">${iconName}</span></md-icon><span>${labelText}</span>`;
         }
 
+        /**
+         * Toggles a button's busy state while preserving its original markup for restoration.
+         *
+         * @param {HTMLElement} button The Material button to update.
+         * @param {boolean} isLoading Whether the button should enter a loading state.
+         * @param {string} [loadingLabel='Fetching…'] The label to display while loading.
+         * @returns {void}
+         */
         function setLoadingState(button, isLoading, loadingLabel = 'Fetching…') {
             if (!button) return;
-            const LOADING_LABEL =
-                `<span class="material-symbols-outlined">hourglass_empty</span><span>${loadingLabel}</span>`;
+            const loadingMarkup = renderButtonLabel('hourglass_empty', loadingLabel);
             if (isLoading) {
                 if (!button.dataset.originalLabel) {
                     button.dataset.originalLabel = button.innerHTML;
                 }
                 button.disabled = true;
-                button.innerHTML = LOADING_LABEL;
+                button.setAttribute('has-icon', '');
+                button.innerHTML = loadingMarkup;
                 button.setAttribute('aria-busy', 'true');
             } else {
                 if (button.dataset.originalLabel) {
@@ -2817,6 +2829,26 @@
                 button.disabled = false;
                 button.removeAttribute('aria-busy');
             }
+        }
+
+        /**
+         * Temporarily shows a success/status label on a button before restoring its prior content.
+         *
+         * @param {HTMLElement} button The target button.
+         * @param {string} iconName The Material symbol name for the transient status.
+         * @param {string} labelText The text label to display alongside the icon.
+         * @returns {void}
+         */
+        function flashButton(button, iconName, labelText) {
+            if (!button) return;
+            const originalLabel = button.innerHTML;
+            button.disabled = true;
+            button.setAttribute('has-icon', '');
+            button.innerHTML = renderButtonLabel(iconName, labelText);
+            setTimeout(() => {
+                button.innerHTML = originalLabel;
+                button.disabled = false;
+            }, 1500);
         }
 
         async function fetchRemoteJson(urlSource, { fromPreset = false, sourceButton } = {}) {
@@ -2853,10 +2885,7 @@
                 updateDiffSheet();
                 if (sourceButton) {
                     setLoadingState(sourceButton, false);
-                    flashButton(
-                        sourceButton,
-                        '<span class="material-symbols-outlined">check</span><span>Loaded</span>'
-                    );
+                    flashButton(sourceButton, 'check', 'Loaded');
                 }
                 setFetchState('success');
             } catch (error) {
@@ -3460,10 +3489,7 @@
                     status: 'success',
                     message: `Published ${summary} to ${repository.owner}/${repository.repo}@${branch}.`
                 });
-                flashButton(
-                    githubNextButton,
-                    '<span class="material-symbols-outlined">check</span><span>Published</span>'
-                );
+                flashButton(githubNextButton, 'check', 'Published');
             } catch (error) {
                 console.error('AppToolkit: Failed to publish via GitHub API.', error);
                 setGithubStatus({
@@ -3495,7 +3521,7 @@
         if (copyButton && previewArea) {
             copyButton.addEventListener('click', async () => {
                 await utils.copyToClipboard(previewArea.value);
-                flashButton(copyButton, '<span class="material-symbols-outlined">check</span><span>Copied</span>');
+                flashButton(copyButton, 'check', 'Copied');
             });
         }
 

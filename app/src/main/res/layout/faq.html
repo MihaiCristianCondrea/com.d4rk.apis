@@ -95,8 +95,28 @@
           </md-outlined-button>
           <p class="faq-segmented__helper">Switch workflows without leaving the FAQ route.</p>
         </div>
-        <div class="faq-segmented" role="tablist">
-          <button type="button" class="faq-segmented__button active" data-faq-panel-control="catalog" role="tab" aria-selected="true" aria-controls="faqPanelCatalog"><span class="material-symbols-outlined">inventory_2</span> <span>Catalog</span></button> <button type="button" class="faq-segmented__button" data-faq-panel-control="faqs" role="tab" aria-selected="false" aria-controls="faqPanelFaqs"><span class="material-symbols-outlined">help_center</span> <span>FAQs</span></button>
+        <div class="segmented-toggle" data-tone="primary" role="tablist">
+          <md-filter-chip
+            selected
+            value="catalog"
+            label="Catalog"
+            role="tab"
+            aria-selected="true"
+            aria-controls="faqPanelCatalog"
+            data-faq-panel-control="catalog"
+          >
+            <md-icon slot="icon">inventory_2</md-icon>
+          </md-filter-chip>
+          <md-filter-chip
+            value="faqs"
+            label="FAQs"
+            role="tab"
+            aria-selected="false"
+            aria-controls="faqPanelFaqs"
+            data-faq-panel-control="faqs"
+          >
+            <md-icon slot="icon">help_center</md-icon>
+          </md-filter-chip>
         </div>
       </div>
     </section>

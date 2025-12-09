@@ -53,15 +53,19 @@
               </div>
             </div>
           </div>
-          <div class="gh-segmented" id="mapper-format">
-            <button type="button" id="btn-format-ascii" class="active">
-              <span class="material-symbols-outlined">terminal</span>
-              <span>ASCII</span>
-            </button>
-            <button type="button" id="btn-format-paths">
-              <span class="material-symbols-outlined">view_list</span>
-              <span>Paths</span>
-            </button>
+          <div class="segmented-toggle" data-tone="github" id="mapper-format">
+            <md-filter-chip
+              selected
+              value="ascii"
+              label="ASCII"
+              id="btn-format-ascii"
+              aria-selected="true"
+            >
+              <md-icon slot="icon">terminal</md-icon>
+            </md-filter-chip>
+            <md-filter-chip value="paths" label="Paths" id="btn-format-paths" aria-selected="false">
+              <md-icon slot="icon">view_list</md-icon>
+            </md-filter-chip>
           </div>
         </div>
         <div class="gh-actions end">

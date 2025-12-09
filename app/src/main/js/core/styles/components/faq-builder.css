@@ -136,49 +136,6 @@
   }
 }
 
-.faq-segmented {
-  display: inline-flex;
-  flex-wrap: wrap;
-  gap: 0.4rem;
-  padding: 0.35rem 0.45rem;
-  border-radius: 999px;
-  border: 1px solid color-mix(in srgb, var(--app-border-color) 75%, transparent);
-  background: color-mix(in srgb, var(--md-sys-color-surface-container-high) 85%, #0f0f13);
-}
-
-.faq-segmented__button {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.45rem;
-  padding: 0.55rem 1.05rem;
-  border: 1px solid transparent;
-  border-radius: 999px;
-  background: transparent;
-  color: var(--app-text-color);
-  cursor: pointer;
-  transition: background-color 150ms ease, color 150ms ease, box-shadow 150ms ease,
-    border-color 150ms ease;
-}
-
-.faq-segmented__button[aria-selected='true'] {
-  background: linear-gradient(
-    135deg,
-    color-mix(in srgb, var(--md-sys-color-primary) 75%, transparent),
-    color-mix(in srgb, var(--md-sys-color-primary) 45%, var(--md-sys-color-surface-container-high))
-  );
-  color: var(--md-sys-color-on-primary);
-  border-color: color-mix(in srgb, var(--md-sys-color-primary) 65%, transparent);
-  box-shadow: 0 10px 32px -20px rgba(0, 0, 0, 0.4);
-}
-
-.faq-segmented__button .material-symbols-outlined {
-  transition: color 150ms ease;
-}
-
-.faq-segmented__button[aria-selected='true'] .material-symbols-outlined {
-  color: var(--md-sys-color-on-primary);
-}
-
 .faq-segmented__helper {
   margin: 0.5rem 0 0;
   color: var(--app-secondary-text-color);
