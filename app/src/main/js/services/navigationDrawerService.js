@@ -353,6 +353,7 @@ export class NavigationDrawerController {
     // (e.g., during fast navigations) so pages never stay stuck with overflow hidden.
     this.drawerOverlay?.classList.toggle('open', isDrawerOpen);
     this.drawerOverlay?.setAttribute('aria-hidden', isDrawerOpen ? 'false' : 'true');
+    this.setBodyScrollbarCompensation(isDrawerOpen);
     document.body.classList.toggle('drawer-is-open', isDrawerOpen);
     this.menuButton?.setAttribute('aria-expanded', isDrawerOpen ? 'true' : 'false');
 
@@ -363,6 +364,26 @@ export class NavigationDrawerController {
     }
 
     this.updateNavDrawerAriaModal();
+  }
+
+  /**
+   * Reserves the scrollbar gutter while the drawer locks page scroll.
+   *
+   * Change Rationale: locking the body with `overflow: hidden` removed the
+   * scrollbar and shifted content horizontally when the drawer opened. By
+   * applying a compensation padding that matches the current scrollbar width,
+   * the layout remains stable while still preventing background scroll,
+   * aligning with Material guidance to avoid disruptive motion.
+   *
+   * @param {boolean} isDrawerOpen - Whether the navigation drawer is open.
+   */
+  setBodyScrollbarCompensation(isDrawerOpen) {
+    if (typeof window === 'undefined' || typeof document === 'undefined') {
+      return;
+    }
+    const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+    const compensation = isDrawerOpen ? Math.max(0, scrollbarWidth) : 0;
+    document.body?.style?.setProperty('--app-scrollbar-compensation', `${compensation}px`);
   }
 
   /**

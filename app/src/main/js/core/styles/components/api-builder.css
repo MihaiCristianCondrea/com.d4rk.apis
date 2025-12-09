@@ -182,6 +182,17 @@
   color: var(--app-secondary-text-color);
 }
 
+/* Change Rationale: When no catalog options are loaded, the fetch area now renders helper copy. These muted status styles keep the placeholder visible without competing with primary actions. */
+.builder-remote-status {
+  margin: 0;
+  color: var(--app-secondary-text-color);
+  font-size: 0.95rem;
+}
+
+.builder-remote-status--muted {
+  color: color-mix(in srgb, var(--app-secondary-text-color) 80%, transparent);
+}
+
 .collapsible-card {
   display: grid;
   gap: 1rem;
@@ -308,6 +319,29 @@
 }
 
 .builder-remote-toggle {
+  color: var(--app-text-color);
+}
+
+/* Change Rationale: Icon-only publish controls were misaligned within their circular surface. We size and center the glyph consistently across states to avoid the vertical drift shown in the previous toolbar. */
+md-icon-button.builder-remote-toggle {
+  --md-icon-button-container-shape: var(--app-button-shape);
+  --md-icon-button-container-height: 44px;
+  --md-icon-button-container-width: 44px;
+  --md-icon-button-icon-size: 24px;
+  --md-focus-ring-shape: var(--app-button-shape);
+  box-shadow: 0 10px 24px rgba(15, 20, 25, 0.12);
+  align-self: center;
+  display: inline-flex;
+}
+
+md-icon-button.builder-remote-toggle md-icon,
+md-icon-button.builder-remote-toggle .material-symbols-outlined {
+  display: grid;
+  place-items: center;
+  line-height: 1;
+}
+
+md-outlined-button.builder-remote-toggle {
   --md-outlined-button-container-shape: var(--app-button-shape);
   --md-outlined-button-container-height: 44px;
   --md-outlined-button-outline-color: color-mix(
@@ -319,7 +353,6 @@
   --md-outlined-button-icon-size: 22px;
   --md-focus-ring-shape: var(--app-button-shape);
   gap: 0.35rem;
-  color: var(--app-text-color);
   box-shadow: 0 10px 24px rgba(15, 20, 25, 0.12);
 }
 

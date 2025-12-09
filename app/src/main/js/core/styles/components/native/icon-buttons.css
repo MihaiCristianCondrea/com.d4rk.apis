@@ -38,3 +38,15 @@
 .theme-button-container md-icon-button.selected .material-symbols-outlined {
   font-family: 'Material Symbols Filled', 'Material Symbols Outlined', sans-serif;
 }
+
+/* Change Rationale: Icon-only buttons were sitting on the text baseline, leaving glyphs visibly off-center inside circular containers across hover and disabled states. Explicit centering keeps the Material icons aligned. */
+md-icon-button md-icon,
+md-icon-button .material-symbols-outlined {
+  display: grid;
+  place-items: center;
+  line-height: 1;
+}
+
+md-icon-button {
+  vertical-align: middle;
+}
