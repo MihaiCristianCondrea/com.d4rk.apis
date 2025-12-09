@@ -120,4 +120,78 @@ md-text-button[has-icon][trailing-icon] {
   transform: translateY(0);
 }
 
+/* Change Rationale: Inline icon swaps were relying on raw <span> elements, leaving glyphs misaligned
+   whenever button states toggled (disabled/loading). Centralizing the layout primitives in the shared
+   button stylesheet keeps icon/text alignment consistent across all UIs while honoring Material defaults. */
+:where(
+    md-filled-button,
+    md-filled-tonal-button,
+    md-text-button,
+    md-elevated-button,
+    md-outlined-button
+  ) md-icon,
+:where(
+    md-filled-button,
+    md-filled-tonal-button,
+    md-text-button,
+    md-elevated-button,
+    md-outlined-button
+  ) .material-symbols-outlined {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  vertical-align: middle;
+  line-height: 1;
+}
+
+.segmented-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+:where(.segmented-toggle) md-filter-chip {
+  --md-filter-chip-container-height: 44px;
+  --md-filter-chip-label-text-weight: 700;
+  --md-filter-chip-label-text-size: 0.95rem;
+  --md-filter-chip-trailing-space: 18px;
+  --md-filter-chip-leading-space: 18px;
+}
+
+.segmented-toggle[data-tone='primary'] md-filter-chip {
+  --md-filter-chip-selected-container-color: color-mix(
+    in srgb,
+    var(--md-sys-color-primary) 20%,
+    var(--md-sys-color-surface-container-highest)
+  );
+  --md-filter-chip-selected-label-text-color: var(--md-sys-color-on-primary);
+  --md-filter-chip-selected-outline-color: color-mix(
+    in srgb,
+    var(--md-sys-color-primary) 40%,
+    transparent
+  );
+}
+
+.segmented-toggle[data-tone='github'] md-filter-chip {
+  --md-filter-chip-container-color: color-mix(
+    in srgb,
+    var(--gh-card) 85%,
+    var(--gh-card-strong)
+  );
+  --md-filter-chip-label-text-color: var(--gh-subtext);
+  --md-filter-chip-selected-container-color: color-mix(
+    in srgb,
+    var(--md-sys-color-primary) 14%,
+    var(--gh-card-strong)
+  );
+  --md-filter-chip-selected-label-text-color: var(--md-sys-color-on-primary, #141218);
+  --md-filter-chip-focus-outline-color: var(--md-sys-color-primary);
+  --md-filter-chip-hover-state-layer-color: color-mix(
+    in srgb,
+    var(--md-sys-color-primary) 18%,
+    transparent
+  );
+}
+
 /* stylelint-enable selector-type-no-unknown */

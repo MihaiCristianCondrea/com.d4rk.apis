@@ -407,54 +407,6 @@
   color: var(--md-sys-color-primary, currentColor);
 }
 
-.gh-segmented {
-  display: inline-flex;
-  align-items: stretch;
-  border-radius: 999px;
-  border: 1px solid color-mix(in srgb, var(--gh-outline) 65%, transparent);
-  background: color-mix(in srgb, var(--gh-card-strong) 85%, var(--gh-card));
-  padding: 0.25rem;
-  gap: 0.4rem;
-}
-
-.gh-segmented button {
-  border: 1px solid transparent;
-  background: transparent;
-  color: var(--gh-subtext);
-  padding: 0.55rem 1.1rem;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-  cursor: pointer;
-  font-weight: 700;
-  border-radius: 999px;
-  transition: background var(--gh-transition), color var(--gh-transition), transform var(--gh-transition), box-shadow var(--gh-transition), border-color var(--gh-transition);
-}
-
-.gh-segmented button.active {
-  background: linear-gradient(
-    120deg,
-    color-mix(in srgb, var(--md-sys-color-primary) 85%, transparent),
-    color-mix(in srgb, var(--md-sys-color-primary) 55%, var(--gh-card-strong))
-  );
-  color: var(--md-sys-color-on-primary, #141218);
-  box-shadow: 0 14px 36px -24px rgba(0, 0, 0, 0.75);
-  transform: translateY(-1px);
-  border-color: color-mix(in srgb, var(--md-sys-color-primary) 65%, transparent);
-}
-
-.gh-segmented button .material-symbols-outlined {
-  transition: color var(--gh-transition);
-}
-
-.gh-segmented button.active .material-symbols-outlined {
-  color: var(--md-sys-color-on-primary, #141218);
-}
-
-.gh-segmented-divider {
-  width: 1px;
-  background: color-mix(in srgb, var(--gh-outline) 55%, transparent);
-}
 
 .gh-result,
 .gh-result-grid {

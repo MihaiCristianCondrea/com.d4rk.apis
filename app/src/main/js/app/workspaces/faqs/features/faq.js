@@ -163,6 +163,17 @@
             }
         };
 
+        /**
+         * Switches the active FAQ view while keeping the segmented Material chips in sync.
+         *
+         * Change Rationale: The previous custom segmented buttons used bespoke classes, which diverged
+         * from Material defaults and produced inconsistent styles across workspaces. Moving to
+         * `md-filter-chip` controls requires explicitly managing the `selected` attribute so the chips
+         * render their built-in states and remain keyboard accessible.
+         *
+         * @param {string} panel The panel key to activate (e.g., "catalog" or "faqs").
+         * @returns {void}
+         */
         const setPanel = (panel) => {
             const availablePanels = Array.from(panels);
             const activePanel = availablePanels.find((panelEl) => panelEl.dataset.faqPanel === panel)
@@ -177,8 +188,7 @@
 
             panelButtons.forEach((button) => {
                 const isActive = button.dataset.faqPanelControl === activePanel;
-                button.classList.toggle('is-active', isActive);
-                button.classList.toggle('active', isActive);
+                button.toggleAttribute('selected', isActive);
                 button.setAttribute('aria-selected', isActive ? 'true' : 'false');
                 button.setAttribute('tabindex', isActive ? '0' : '-1');
             });

@@ -674,9 +674,26 @@ function initRepoMapper() {
   let currentFormat = 'ascii';
   let currentTree = [];
 
+  /**
+   * Synchronizes the repo mapper format chips so they use Material's built-in
+   * selected state instead of custom classes.
+   *
+   * Change Rationale: The original segmented buttons used bespoke styling and
+   * "active" classes, which diverged from the shared button system and caused
+   * inconsistent visuals. Toggling the `selected` state on `md-filter-chip`
+   * elements keeps the control aligned with Material defaults while still
+   * advertising the current format to assistive tech.
+   *
+   * @returns {void}
+   */
   const updateFormatButtons = () => {
-    asciiBtn.classList.toggle('active', currentFormat === 'ascii');
-    pathsBtn.classList.toggle('active', currentFormat === 'paths');
+    const isAscii = currentFormat === 'ascii';
+    asciiBtn.toggleAttribute('selected', isAscii);
+    asciiBtn.setAttribute('aria-selected', isAscii ? 'true' : 'false');
+
+    const isPaths = currentFormat === 'paths';
+    pathsBtn.toggleAttribute('selected', isPaths);
+    pathsBtn.setAttribute('aria-selected', isPaths ? 'true' : 'false');
   };
 
   const renderOutput = () => {
