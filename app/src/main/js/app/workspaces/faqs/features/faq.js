@@ -1505,9 +1505,9 @@
             applyCatalogValidation(payload);
         }
 
+        /* Change Rationale: The catalog preview waited for idle time before rendering, which left the JSON panel stale after fetches until the user interacted. A shorter, non-idle scheduler keeps the preview in sync with data changes immediately. */
         const catalogPreviewTask = utils.createDeferredTask(updateCatalogPreview, {
-            delay: 320,
-            idle: true
+            delay: 160,
         });
 
         function requestCatalogPreviewUpdate(options = {}) {
@@ -1679,7 +1679,8 @@
             catalogPreviewReady = true;
             renderCatalogSchema();
             renderCatalogProducts();
-            requestCatalogPreviewUpdate({ immediate: true });
+            // Change Rationale: Refresh the preview immediately after fetches so the JSON pane reflects remote data without additional interaction.
+            requestCatalogPreviewUpdate({ immediate: true, markDirty: true });
             catalogState.loaded = true;
         }
 
@@ -1720,9 +1721,16 @@
                 return;
             }
             utils.clearElement(catalogSelectRoot);
+            /* Change Rationale: The catalog picker disappeared when no products were available, confusing users about where to fetch. Showing a muted helper keeps the dropdown area visible and clarifies the next action. */
             if (!products.length) {
                 catalogSelectEl = null;
                 updateCatalogButton(null);
+                catalogSelectRoot.appendChild(
+                    utils.createElement('p', {
+                        classNames: 'builder-remote-status builder-remote-status--muted',
+                        text: 'Fetch a catalog to choose a product.',
+                    })
+                );
                 return;
             }
             const options = products.map((product) => ({
@@ -1765,6 +1773,8 @@
                 catalogState.loaded = true;
                 applyCatalogPayload(parsed);
                 renderCatalogPicker(products);
+                // Change Rationale: Tie fetch responses directly to the preview so the catalog JSON refreshes without relying on additional user actions.
+                requestCatalogPreviewUpdate({ immediate: true, markDirty: true });
                 if (!silent) {
                     const helper = products.length
                         ? 'Select a product and fetch its merged FAQ modules.'

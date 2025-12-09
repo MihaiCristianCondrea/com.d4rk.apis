@@ -319,24 +319,21 @@
             </md-filled-button>
 
             <!-- Collapsible meta controls for GitHub publishing -->
-            <md-outlined-button
+            <md-icon-button
                     id="appToolkitGithubToggle"
                     class="builder-remote-toggle"
                     data-collapsible-toggle
                     aria-expanded="false"
                     aria-controls="appToolkitGithubContent"
                     type="button"
-                    aria-label="Toggle Publish to GitHub"
-                    has-icon
+                    aria-label="Toggle Publish to GitHub controls"
             >
-              <md-icon slot="icon">
-                <span class="material-symbols-outlined">rocket_launch</span>
+              <md-icon>
+                <span class="material-symbols-outlined" data-collapsible-indicator aria-hidden="true">
+                  expand_more
+                </span>
               </md-icon>
-              <span>Publish controls</span>
-              <span class="material-symbols-outlined" data-collapsible-indicator aria-hidden="true">
-                arrow_drop_down
-              </span>
-            </md-outlined-button>
+            </md-icon-button>
           </div>
         </div>
 
