@@ -124,37 +124,41 @@ describe('navigationDrawerService', () => {
     });
   });
 
-  test('toggle sections are mutually exclusive and maintain ARIA state', () => {
+  test('toggle sections open independently with default expansions', () => {
     const aboutToggleElement = document.getElementById('aboutToggle');
     const aboutContentElement = document.getElementById('aboutContent');
     const androidToggleElement = document.getElementById('androidAppsToggle');
     const androidContentElement = document.getElementById('androidAppsContent');
+    const githubToggleElement = document.getElementById('githubToolsToggle');
+    const githubContentElement = document.getElementById('githubToolsContent');
+
+    expect(androidToggleElement.getAttribute('aria-expanded')).toBe('true');
+    expect(androidContentElement.classList.contains('open')).toBe(true);
+    if (githubToggleElement && githubContentElement) {
+      expect(githubToggleElement.getAttribute('aria-expanded')).toBe('true');
+      expect(githubContentElement.classList.contains('open')).toBe(true);
+    }
+    expect(aboutContentElement.classList.contains('open')).toBe(false);
 
     aboutToggleElement.click();
 
     expect(aboutToggleElement.classList.contains('expanded')).toBe(true);
     expect(aboutToggleElement.getAttribute('aria-expanded')).toBe('true');
     expect(aboutContentElement.classList.contains('open')).toBe(true);
-    expect(aboutContentElement.getAttribute('aria-hidden')).toBe('false');
+    expect(androidContentElement.classList.contains('open')).toBe(true);
+    if (githubContentElement) {
+      expect(githubContentElement.classList.contains('open')).toBe(true);
+    }
 
-    androidToggleElement.click();
+    aboutToggleElement.click();
 
     expect(aboutToggleElement.classList.contains('expanded')).toBe(false);
     expect(aboutToggleElement.getAttribute('aria-expanded')).toBe('false');
     expect(aboutContentElement.classList.contains('open')).toBe(false);
-    expect(aboutContentElement.getAttribute('aria-hidden')).toBe('true');
-
-    expect(androidToggleElement.classList.contains('expanded')).toBe(true);
-    expect(androidToggleElement.getAttribute('aria-expanded')).toBe('true');
     expect(androidContentElement.classList.contains('open')).toBe(true);
-    expect(androidContentElement.getAttribute('aria-hidden')).toBe('false');
-
-    androidToggleElement.click();
-
-    expect(androidToggleElement.classList.contains('expanded')).toBe(false);
-    expect(androidToggleElement.getAttribute('aria-expanded')).toBe('false');
-    expect(androidContentElement.classList.contains('open')).toBe(false);
-    expect(androidContentElement.getAttribute('aria-hidden')).toBe('true');
+    if (githubContentElement) {
+      expect(githubContentElement.classList.contains('open')).toBe(true);
+    }
   });
 
 });

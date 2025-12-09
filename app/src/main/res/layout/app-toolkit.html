@@ -220,19 +220,24 @@
               >
               Open publish wizard
             </md-filled-button>
-            <md-icon-button
-                    id="appToolkitGithubToggle"
-                    class="builder-remote-toggle"
-                    data-collapsible-toggle
-                    aria-expanded="false"
-                    aria-controls="appToolkitGithubContent"
-                    type="button"
-                    aria-label="Toggle Publish to GitHub"
+            <md-outlined-button
+              id="appToolkitGithubToggle"
+              class="builder-remote-toggle"
+              data-collapsible-toggle
+              aria-expanded="false"
+              aria-controls="appToolkitGithubContent"
+              type="button"
+              aria-label="Toggle Publish to GitHub"
+              has-icon
             >
+              <md-icon slot="icon"
+                ><span class="material-symbols-outlined">rocket_launch</span></md-icon
+              >
+              <span>Publish controls</span>
               <span class="material-symbols-outlined" data-collapsible-indicator aria-hidden="true">
                 arrow_drop_down
               </span>
-            </md-icon-button>
+            </md-outlined-button>
           </div>
         </div>
         <div class="builder-github-content" id="appToolkitGithubContent" data-collapsible-content hidden>

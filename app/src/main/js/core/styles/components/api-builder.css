@@ -287,23 +287,40 @@
   padding-top: 0.25rem;
 }
 
+.builder-remote-picker {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  flex-wrap: wrap;
+}
+
+.builder-remote-picker-select {
+  flex: 1 1 260px;
+  min-width: min(280px, 100%);
+}
+
+.builder-remote-picker md-filled-tonal-button {
+  --md-filled-tonal-button-container-height: 46px;
+}
+
 .builder-github-launch-button {
   margin-top: 0.15rem;
 }
 
 .builder-remote-toggle {
-  --md-icon-button-icon-size: 26px;
-  --md-icon-button-state-layer-shape: 12px;
-  --md-focus-ring-shape: 12px;
+  --md-outlined-button-container-shape: var(--app-button-shape);
+  --md-outlined-button-container-height: 44px;
+  --md-outlined-button-outline-color: color-mix(
+    in srgb,
+    var(--md-sys-color-outline) 65%,
+    transparent
+  );
+  --md-outlined-button-label-text-weight: 700;
+  --md-outlined-button-icon-size: 22px;
+  --md-focus-ring-shape: var(--app-button-shape);
+  gap: 0.35rem;
   color: var(--app-text-color);
-  background: var(--md-sys-color-surface-container-highest);
-  border-radius: 14px;
-  box-shadow: 0 8px 18px rgba(15, 20, 25, 0.12);
-}
-
-.builder-remote-toggle:focus-visible {
-  outline: 2px solid var(--md-sys-color-primary);
-  outline-offset: 2px;
+  box-shadow: 0 10px 24px rgba(15, 20, 25, 0.12);
 }
 
 .builder-remote-controls {

@@ -1,5 +1,9 @@
 import { getDynamicElement, rafThrottle } from '../core/utils/utils.js';
 
+/**
+ * Manages the application navigation drawer, including accessibility state,
+ * open/close interactions, and expandable drawer sections.
+ */
 export class NavigationDrawerController {
   constructor({
     menuButtonId = 'menuButton',
@@ -73,9 +77,15 @@ export class NavigationDrawerController {
 
     document.addEventListener('keydown', this.handleKeydown);
 
-    this.initToggleSection(this.aboutToggle, this.aboutContent);
-    this.initToggleSection(this.androidToggle, this.androidContent);
-    this.initToggleSection(this.githubToggle, this.githubContent);
+    this.initToggleSection(this.aboutToggle, this.aboutContent, {
+      defaultExpanded: false,
+    });
+    this.initToggleSection(this.androidToggle, this.androidContent, {
+      defaultExpanded: true,
+    });
+    this.initToggleSection(this.githubToggle, this.githubContent, {
+      defaultExpanded: true,
+    });
   }
 
   open() {
@@ -102,43 +112,48 @@ export class NavigationDrawerController {
     }
   }
 
-  initToggleSection(toggleButton, contentElement) {
+  /**
+   * Wires an expandable section inside the drawer so it can open and close
+   * independently without collapsing other sections.
+   *
+   * @param {HTMLElement|null} toggleButton - The trigger element that toggles
+   *   the section.
+   * @param {HTMLElement|null} contentElement - The collapsible content node.
+   * @param {{defaultExpanded?: boolean}} [options] - Optional configuration.
+   */
+  initToggleSection(toggleButton, contentElement, { defaultExpanded = false } = {}) {
     if (!toggleButton || !contentElement) {
       return;
     }
 
-    const allSections = [
-      { toggle: this.aboutToggle, content: this.aboutContent },
-      { toggle: this.androidToggle, content: this.androidContent },
-      { toggle: this.githubToggle, content: this.githubContent },
-    ];
+    const applyExpansion = (expanded) =>
+      this.setSectionState(toggleButton, contentElement, Boolean(expanded));
+
+    applyExpansion(defaultExpanded);
 
     toggleButton.addEventListener('click', () => {
-      const wasExpanded = contentElement.classList.contains('open');
-
-      allSections.forEach(({ toggle, content }) => {
-        if (content) {
-          this.collapseSection(toggle, content);
-        }
-      });
-
-      if (!wasExpanded) {
-        contentElement.classList.add('open');
-        toggleButton.classList.add('expanded');
-        toggleButton.setAttribute('aria-expanded', 'true');
-        contentElement.setAttribute('aria-hidden', 'false');
-      }
+      const nextExpanded = !contentElement.classList.contains('open');
+      applyExpansion(nextExpanded);
     });
   }
 
-  collapseSection(toggleButton, contentElement) {
+  /**
+   * Applies the expanded or collapsed state to a drawer section and maintains
+   * the related accessibility attributes.
+   *
+   * @param {HTMLElement} toggleButton - The section toggle control.
+   * @param {HTMLElement} contentElement - The collapsible content element.
+   * @param {boolean} expanded - Whether the section should be open.
+   */
+  setSectionState(toggleButton, contentElement, expanded) {
     if (!toggleButton || !contentElement) {
       return;
     }
-    contentElement.classList.remove('open');
-    toggleButton.setAttribute('aria-expanded', 'false');
-    toggleButton.classList.remove('expanded');
-    contentElement.setAttribute('aria-hidden', 'true');
+
+    contentElement.classList.toggle('open', expanded);
+    toggleButton.classList.toggle('expanded', expanded);
+    toggleButton.setAttribute('aria-expanded', expanded ? 'true' : 'false');
+    contentElement.setAttribute('aria-hidden', expanded ? 'false' : 'true');
   }
 
   focusFirstNavItem() {

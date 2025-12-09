@@ -278,8 +278,57 @@
         const catalogState = { products: [], loaded: false, source: DEFAULT_CATALOG_URL };
         let catalogSelectEl = null;
         catalogState.selectedKey = DEFAULT_PRODUCT_KEY;
+        let faqPreviewReady = false;
+        let catalogPreviewReady = false;
 
         builderRoot.dataset.initialized = 'true';
+
+        /**
+         * Clears the FAQ workspace preview and validation state so users see a
+         * blank slate until they fetch or enter new data.
+         *
+         * @param {string} message - Helper text describing how to enable the preview.
+         */
+        function resetFaqPreviewState(message = 'Add FAQs or fetch a product to see JSON output.') {
+            lastPreviewState = { success: false, payload: [] };
+            lastEvaluation = { errors: [], warnings: [] };
+            faqPreviewReady = false;
+            if (previewArea) {
+                previewArea.value = '';
+            }
+            if (validationStatus) {
+                utils.setValidationStatus(validationStatus, {
+                    status: 'info',
+                    message
+                });
+            }
+            if (toolbarStatus) {
+                toolbarStatus.textContent = 'Awaiting input';
+                toolbarStatus.dataset.state = 'info';
+            }
+            updateWorkspacePulse('Start by fetching FAQs or entering a question.');
+        }
+
+        /**
+         * Clears catalog preview/output so no stale data appears until a catalog
+         * is fetched or edited.
+         *
+         * @param {string} message - Helper text describing the next action.
+         */
+        function resetCatalogPreviewState(message = 'Fetch the catalog before editing products.') {
+            lastCatalogPreviewState = { success: false, payload: {} };
+            lastCatalogEvaluation = { errors: [], warnings: [] };
+            catalogPreviewReady = false;
+            if (catalogPreviewArea) {
+                catalogPreviewArea.value = '';
+            }
+            if (catalogValidationStatus) {
+                utils.setValidationStatus(catalogValidationStatus, {
+                    status: 'info',
+                    message
+                });
+            }
+        }
 
         function sortCategories(values = []) {
             const seen = new Set();
@@ -540,11 +589,11 @@
                 value: String(catalogFormState.schemaVersion ?? 1),
                 helperText: 'Increment for breaking changes between catalog versions.',
                 onInput: (value) => {
-                    const parsed = utils.parseNumber(value, { fallback: 1 });
-                    catalogFormState.schemaVersion = Number.isFinite(parsed) ? parsed : 1;
-                    requestCatalogPreviewUpdate();
-                }
-            });
+                const parsed = utils.parseNumber(value, { fallback: 1 });
+                catalogFormState.schemaVersion = Number.isFinite(parsed) ? parsed : 1;
+                requestCatalogPreviewUpdate({ markDirty: true });
+            }
+        });
             catalogSchemaField.appendChild(schemaField.wrapper);
         }
 
@@ -557,7 +606,7 @@
                 onInput: (value) => {
                     if (catalogFormState.products[productIndex]) {
                         catalogFormState.products[productIndex].questionSources[sourceIndex].url = utils.trimString(value);
-                        requestCatalogPreviewUpdate();
+                        requestCatalogPreviewUpdate({ markDirty: true });
                     }
                 }
             });
@@ -568,7 +617,7 @@
                 onInput: (value) => {
                     if (catalogFormState.products[productIndex]) {
                         catalogFormState.products[productIndex].questionSources[sourceIndex].category = utils.trimString(value);
-                        requestCatalogPreviewUpdate();
+                        requestCatalogPreviewUpdate({ markDirty: true });
                     }
                 }
             });
@@ -588,7 +637,7 @@
                     }
                     product.questionSources = sources;
                     renderCatalogProducts();
-                    requestCatalogPreviewUpdate();
+                    requestCatalogPreviewUpdate({ markDirty: true });
                 }
             });
             actions.appendChild(removeButton);
@@ -612,7 +661,7 @@
                         catalogFormState.products.push(createEmptyCatalogProduct());
                     }
                     renderCatalogProducts();
-                    requestCatalogPreviewUpdate();
+                    requestCatalogPreviewUpdate({ markDirty: true });
                 }
             });
             actions.appendChild(removeButton);
@@ -625,7 +674,7 @@
                 value: product.name,
                 onInput: (value) => {
                     catalogFormState.products[index].name = value;
-                    requestCatalogPreviewUpdate();
+                    requestCatalogPreviewUpdate({ markDirty: true });
                 }
             });
             fields.appendChild(nameField.wrapper);
@@ -636,7 +685,7 @@
                 helperText: 'Use the Android package name or unique identifier.',
                 onInput: (value) => {
                     catalogFormState.products[index].productId = utils.trimString(value);
-                    requestCatalogPreviewUpdate();
+                    requestCatalogPreviewUpdate({ markDirty: true });
                 }
             });
             fields.appendChild(productIdField.wrapper);
@@ -647,7 +696,7 @@
                 helperText: 'Snake_case identifier used by tools and analytics.',
                 onInput: (value) => {
                     catalogFormState.products[index].key = utils.trimString(value);
-                    requestCatalogPreviewUpdate();
+                    requestCatalogPreviewUpdate({ markDirty: true });
                 }
             });
             fields.appendChild(keyField.wrapper);
@@ -660,7 +709,7 @@
                 onClick: () => {
                     catalogFormState.products[index].questionSources.push(createEmptyQuestionSource());
                     renderCatalogProducts();
-                    requestCatalogPreviewUpdate();
+                    requestCatalogPreviewUpdate({ markDirty: true });
                 }
             });
             sourcesHeader.appendChild(addSourceButton);
@@ -752,7 +801,7 @@
                 helperText: 'Use lowercase hyphenated IDs (e.g., faq-gms).',
                 onInput: (value) => {
                     state.entries[index].id = value;
-                    requestPreviewUpdate();
+                    requestPreviewUpdate({ markDirty: true });
                 }
             });
             fields.appendChild(idField.wrapper);
@@ -763,7 +812,7 @@
                 helperText: 'Keep questions concise and specific.',
                 onInput: (value) => {
                     state.entries[index].question = value;
-                    requestPreviewUpdate();
+                    requestPreviewUpdate({ markDirty: true });
                 }
             });
             fields.appendChild(questionField.wrapper);
@@ -780,7 +829,7 @@
                         updateIconPickerSelection(normalized);
                         renderIconPickerOptions(iconPickerSearch ? iconPickerSearch.value : '');
                     }
-                    requestPreviewUpdate();
+                    requestPreviewUpdate({ markDirty: true });
                 }
             });
             if (iconField.input) {
@@ -822,7 +871,7 @@
                         updateIconPickerSelection('');
                         renderIconPickerOptions(iconPickerSearch ? iconPickerSearch.value : '');
                     }
-                    requestPreviewUpdate();
+                    requestPreviewUpdate({ markDirty: true });
                 }
             });
             clearButton.classList.add('faq-icon-button');
@@ -922,7 +971,7 @@
                         }
                         state.entries[index].categories = sortCategories(selected);
                         syncCategorySummary();
-                        requestPreviewUpdate();
+                        requestPreviewUpdate({ markDirty: true });
                     });
                     checkboxRefs.push({ input: checkbox, value: option.value });
                     optionRow.appendChild(checkbox);
@@ -956,7 +1005,7 @@
                 ],
                 onChange: (value) => {
                     state.entries[index].featured = value === 'true';
-                    requestPreviewUpdate();
+                    requestPreviewUpdate({ markDirty: true });
                 }
             });
             fields.appendChild(featuredField.wrapper);
@@ -967,7 +1016,7 @@
                 helperText: 'Used for search and grouping in the web workspace.',
                 onInput: (value) => {
                     state.entries[index].tags = normalizeTags(value.split(','));
-                    requestPreviewUpdate();
+                    requestPreviewUpdate({ markDirty: true });
                 }
             });
             fields.appendChild(tagsField.wrapper);
@@ -982,7 +1031,7 @@
                 onInput: (value) => {
                     state.entries[index].answer = value;
                     renderAnswerPreview();
-                    requestPreviewUpdate();
+                    requestPreviewUpdate({ markDirty: true });
                 }
             });
             fields.appendChild(answerField.wrapper);
@@ -1024,7 +1073,7 @@
                         answerField.textarea.value = state.entries[index].answer;
                     }
                     renderAnswerPreview();
-                    requestPreviewUpdate();
+                    requestPreviewUpdate({ markDirty: true });
                 }
             });
             formatButton.classList.add('faq-html-format-button');
@@ -1218,10 +1267,18 @@
             return mergeEntries(rawEntries);
         }
 
+        /**
+         * Normalizes and applies FAQ entries, enabling the preview pipeline and
+         * refreshing the UI immediately.
+         *
+         * @param {Array<unknown>} entries - Raw FAQ entries from fetch/import actions.
+         */
         function applyFaqEntries(entries) {
             const normalized = Array.isArray(entries) ? entries.map((entry) => normalizeEntry(entry)) : [];
             state.entries = normalized.length ? normalized : [createEmptyEntry()];
+            faqPreviewReady = true;
             render();
+            requestPreviewUpdate({ immediate: true });
         }
 
         function getExportedEntryCount(payload) {
@@ -1299,7 +1356,14 @@
         });
 
         function requestPreviewUpdate(options = {}) {
-            const { immediate = false } = options;
+            const { immediate = false, markDirty = false } = options;
+            if (markDirty) {
+                faqPreviewReady = true;
+            }
+            if (!faqPreviewReady) {
+                resetFaqPreviewState();
+                return undefined;
+            }
             if (immediate) {
                 return previewUpdateTask.flush();
             }
@@ -1447,7 +1511,14 @@
         });
 
         function requestCatalogPreviewUpdate(options = {}) {
-            const { immediate = false } = options;
+            const { immediate = false, markDirty = false } = options;
+            if (markDirty) {
+                catalogPreviewReady = true;
+            }
+            if (!catalogPreviewReady) {
+                resetCatalogPreviewState();
+                return undefined;
+            }
             if (immediate) {
                 return catalogPreviewTask.flush();
             }
@@ -1605,6 +1676,7 @@
             const preferredProduct = mapped.products[0];
             catalogState.selectedKey =
                 preferredProduct?.key || preferredProduct?.productId || DEFAULT_PRODUCT_KEY;
+            catalogPreviewReady = true;
             renderCatalogSchema();
             renderCatalogProducts();
             requestCatalogPreviewUpdate({ immediate: true });
@@ -1615,6 +1687,7 @@
             catalogFormState.schemaVersion = 1;
             catalogFormState.products = [createEmptyCatalogProduct()];
             catalogState.selectedKey = DEFAULT_PRODUCT_KEY;
+            resetCatalogPreviewState();
             renderCatalogSchema();
             renderCatalogProducts();
             requestCatalogPreviewUpdate({ immediate: true });
@@ -2033,7 +2106,7 @@
             }
             updateIconPickerSelection(normalized);
             renderIconPickerOptions(iconPickerSearch ? iconPickerSearch.value : '');
-            requestPreviewUpdate();
+            requestPreviewUpdate({ markDirty: true });
         }
 
         async function handleImport(content) {
@@ -2055,13 +2128,16 @@
         if (addButton) {
             addButton.addEventListener('click', () => {
                 state.entries.push(createEmptyEntry());
+                faqPreviewReady = true;
                 render();
+                requestPreviewUpdate({ markDirty: true });
             });
         }
 
         if (resetButton) {
             resetButton.addEventListener('click', () => {
                 state.entries = [createEmptyEntry()];
+                resetFaqPreviewState('Workspace reset to a blank FAQ.');
                 render();
                 setFetchStatus('Workspace reset to a blank FAQ.', 'info');
             });
@@ -2075,13 +2151,14 @@
             catalogAddProductButton.addEventListener('click', () => {
                 catalogFormState.products.push(createEmptyCatalogProduct());
                 renderCatalogProducts();
-                requestCatalogPreviewUpdate();
+                requestCatalogPreviewUpdate({ markDirty: true });
             });
         }
 
         if (catalogResetButton) {
             catalogResetButton.addEventListener('click', () => {
                 resetCatalogForm();
+                resetCatalogPreviewState('Catalog reset to defaults.');
                 setCatalogStatus('Catalog reset to defaults.', 'info');
             });
         }
@@ -2175,17 +2252,12 @@
             });
         }
 
+        resetCatalogPreviewState('Fetch the catalog to start editing products.');
+        resetFaqPreviewState();
         renderCatalogSchema();
         renderCatalogProducts();
-        requestCatalogPreviewUpdate({ immediate: true });
         render();
         void refreshIcons();
-        fetchCatalog(DEFAULT_CATALOG_URL).then(() => {
-            const product = findCatalogProduct(DEFAULT_PRODUCT_KEY);
-            if (product) {
-                void fetchCatalogProduct(product.key || product.productId, { silent: true });
-            }
-        });
     }
 
     global.initFaqWorkspace = initFaqWorkspace;

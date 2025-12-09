@@ -49,7 +49,7 @@
 }
 
 .faq-onboarding__helper {
-  margin: 0;
+  margin: 0 0 0.75rem;
   color: var(--app-secondary-text-color);
 }
 

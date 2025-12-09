@@ -4,6 +4,7 @@
   --app-button-icon-leading-padding: 16px;
   --app-button-icon-trailing-padding: 24px;
   --app-button-shape: 999px;
+  --app-button-hover-shadow: 0 10px 24px rgba(15, 20, 25, 0.14);
 }
 
 /* Allow styling custom Material elements throughout this file. */
@@ -25,6 +26,15 @@
   --md-text-button-container-shape: var(--app-button-shape);
   --md-elevated-button-container-shape: var(--app-button-shape);
   --md-outlined-button-container-shape: var(--app-button-shape);
+  --md-filled-button-state-layer-shape: var(--app-button-shape);
+  --md-outlined-button-state-layer-shape: var(--app-button-shape);
+  --md-text-button-state-layer-shape: var(--app-button-shape);
+  --md-elevated-button-state-layer-shape: var(--app-button-shape);
+  --md-filled-tonal-button-state-layer-shape: var(--app-button-shape);
+  transition: box-shadow var(--app-motion-duration-short, 200ms)
+      var(--app-motion-ease-standard, cubic-bezier(0, 0, 0.2, 1)),
+    transform var(--app-motion-duration-short, 200ms)
+      var(--app-motion-ease-standard, cubic-bezier(0, 0, 0.2, 1));
 }
 
 :where(
@@ -97,5 +107,29 @@ md-text-button[has-icon]:not([trailing-icon]) {
 md-text-button[has-icon][trailing-icon] {
   padding-inline-start: calc(var(--app-button-icon-trailing-padding) - 8px);
   padding-inline-end: var(--app-button-icon-leading-padding);
+}
+
+:where(
+    md-filled-button,
+    md-filled-tonal-button,
+    md-text-button,
+    md-elevated-button,
+    md-outlined-button,
+    md-icon-button
+  ):not([disabled]):hover {
+  box-shadow: var(--app-button-hover-shadow);
+  transform: translateY(0);
+}
+
+:where(
+    md-filled-button,
+    md-filled-tonal-button,
+    md-text-button,
+    md-elevated-button,
+    md-outlined-button,
+    md-icon-button
+  ):not([disabled]):active {
+  box-shadow: var(--app-button-hover-shadow);
+  transform: translateY(0);
 }
 /* stylelint-enable selector-type-no-unknown */
