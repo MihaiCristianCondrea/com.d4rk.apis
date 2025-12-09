@@ -18,11 +18,18 @@
             aria-describedby="mapper-url-helper mapper-url-error"
             list="mapper-datalist"
             required
-          ></md-outlined-text-field>
-          <button type="button" id="mapper-fav-btn" class="gh-pill-button" hidden="" aria-pressed="false">
-            <span class="material-symbols-outlined">star</span>
-            <span class="favorite-label">Favorite</span>
-          </button>
+          >
+            <md-icon-button
+              id="mapper-fav-btn"
+              slot="trailing-icon"
+              aria-pressed="false"
+              aria-label="Favorite repository"
+              toggle=""
+              hidden=""
+            >
+              <md-icon slot="icon">star</md-icon>
+            </md-icon-button>
+          </md-outlined-text-field>
         </div>
         <p id="mapper-url-helper" class="gh-helper-text">Paste a GitHub repository URL or slug.</p>
         <p id="mapper-url-error" class="gh-error-text" hidden="">Invalid repository URL.</p>

@@ -18,11 +18,18 @@
             aria-describedby="patch-url-helper patch-url-error"
             spellcheck="false"
             required
-          ></md-outlined-text-field>
-          <button type="button" id="patch-fav-btn" class="gh-pill-button" hidden="" aria-pressed="false">
-            <span class="material-symbols-outlined">star</span>
-            <span class="favorite-label">Favorite</span>
-          </button>
+          >
+            <md-icon-button
+              id="patch-fav-btn"
+              slot="trailing-icon"
+              aria-pressed="false"
+              aria-label="Favorite commit"
+              toggle=""
+              hidden=""
+            >
+              <md-icon slot="icon">star</md-icon>
+            </md-icon-button>
+          </md-outlined-text-field>
         </div>
         <p id="patch-url-helper" class="gh-helper-text">Accepts full GitHub URLs or shorthand commit paths.</p>
         <p id="patch-url-error" class="gh-error-text" hidden="">Invalid commit URL.</p>
