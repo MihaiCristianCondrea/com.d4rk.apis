@@ -155,6 +155,14 @@
             faqs: 'faqs'
         };
 
+        const scrollToTop = () => {
+            try {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            } catch (error) {
+                console.warn('FaqBuilder: Unable to reset scroll position.', error);
+            }
+        };
+
         const setPanel = (panel) => {
             const availablePanels = Array.from(panels);
             const activePanel = availablePanels.find((panelEl) => panelEl.dataset.faqPanel === panel)
@@ -164,13 +172,18 @@
             availablePanels.forEach((panelEl) => {
                 const isActive = panelEl.dataset.faqPanel === activePanel;
                 panelEl.toggleAttribute('hidden', !isActive);
+                panelEl.setAttribute('aria-hidden', isActive ? 'false' : 'true');
             });
 
             panelButtons.forEach((button) => {
                 const isActive = button.dataset.faqPanelControl === activePanel;
                 button.classList.toggle('is-active', isActive);
+                button.classList.toggle('active', isActive);
                 button.setAttribute('aria-selected', isActive ? 'true' : 'false');
+                button.setAttribute('tabindex', isActive ? '0' : '-1');
             });
+
+            scrollToTop();
         };
 
         panelButtons.forEach((button) => {
@@ -193,6 +206,8 @@
                 screenEl.toggleAttribute('hidden', !isActive);
                 screenEl.classList.toggle('is-active', isActive);
             });
+
+            scrollToTop();
 
             if (targetScreen === 'chooser') {
                 modeButtons.forEach((button) => {
