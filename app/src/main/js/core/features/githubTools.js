@@ -244,47 +244,63 @@ function setupRepoMapperForm() {
   validate();
 }
 
-function initRepoMapper() {
+function initGhToolsPage({
+  tokenControls,
+  favoriteControl,
+} = {}) {
   const page = document.querySelector('.gh-tools-page');
-  if (!page) return;
-  if (page.dataset.initialized === 'true') return;
-  page.dataset.initialized = 'true';
+  if (!page) return null;
+  if (page.dataset.ghToolsInitialized === 'true') return page;
 
-  wireTokenControls({
-    toggleButtonId: 'mapper-token-reveal',
-    wrapperId: 'mapper-token-wrapper',
-    fieldId: 'mapper-token',
-    visibilityToggleId: 'mapper-token-toggle',
-  });
+  if (tokenControls) {
+    wireTokenControls(tokenControls);
+  }
+
+  if (favoriteControl) {
+    setupFavoriteButton(favoriteControl.buttonId, favoriteControl.inputId);
+  }
+
   hydrateInputs(page);
-  setupFavoriteButton('mapper-fav-btn', 'mapper-url');
+  page.dataset.ghToolsInitialized = 'true';
+  return page;
+}
+
+function initRepoMapper() {
+  const page = initGhToolsPage({
+    tokenControls: {
+      toggleButtonId: 'mapper-token-reveal',
+      wrapperId: 'mapper-token-wrapper',
+      fieldId: 'mapper-token',
+      visibilityToggleId: 'mapper-token-toggle',
+    },
+    favoriteControl: { buttonId: 'mapper-fav-btn', inputId: 'mapper-url' },
+  });
+  if (!page) return;
   setupRepoMapperForm();
 }
 
 function initReleaseStats() {
-  const page = document.querySelector('.gh-tools-page');
-  if (!page) return;
-  wireTokenControls({
-    toggleButtonId: 'releases-token-reveal',
-    wrapperId: 'releases-token-wrapper',
-    fieldId: 'releases-token',
-    visibilityToggleId: 'releases-token-toggle',
+  initGhToolsPage({
+    tokenControls: {
+      toggleButtonId: 'releases-token-reveal',
+      wrapperId: 'releases-token-wrapper',
+      fieldId: 'releases-token',
+      visibilityToggleId: 'releases-token-toggle',
+    },
+    favoriteControl: { buttonId: 'releases-fav-btn', inputId: 'releases-url' },
   });
-  hydrateInputs(page);
-  setupFavoriteButton('releases-fav-btn', 'releases-url');
 }
 
 function initGitPatch() {
-  const page = document.querySelector('.gh-tools-page');
-  if (!page) return;
-  wireTokenControls({
-    toggleButtonId: 'patch-token-reveal',
-    wrapperId: 'patch-token-wrapper',
-    fieldId: 'patch-token',
-    visibilityToggleId: 'patch-token-toggle',
+  initGhToolsPage({
+    tokenControls: {
+      toggleButtonId: 'patch-token-reveal',
+      wrapperId: 'patch-token-wrapper',
+      fieldId: 'patch-token',
+      visibilityToggleId: 'patch-token-toggle',
+    },
+    favoriteControl: { buttonId: 'patch-fav-btn', inputId: 'patch-url' },
   });
-  hydrateInputs(page);
-  setupFavoriteButton('patch-fav-btn', 'patch-url');
 }
 
 function initFavoritesPage() {

@@ -167,7 +167,7 @@ export class PageLoader {
       this.updateTitle(appBarHeadline, pageTitle);
       this.updateHistoryState(normalizedPageId, pageTitle, newUrlFragment, shouldUpdateHistory);
 
-      window.scrollTo(0, 0);
+      window.scrollTo({ top: 0 });
       updateActiveNavLink(newUrlFragment);
 
       await this.fadeInContent(contentArea);
