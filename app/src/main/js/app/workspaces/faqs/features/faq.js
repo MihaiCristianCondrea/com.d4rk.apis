@@ -91,7 +91,7 @@
 
         const entriesContainer = document.getElementById('faqEntries');
         const addButton = document.getElementById('faqAddEntry');
-        const resetButton = document.getElementById('faqResetButton');
+        const startOverButton = document.getElementById('faqStartOverButton');
         const importButton = document.getElementById('faqImportButton');
         const importInput = document.getElementById('faqImportInput');
         const fetchStatus = document.getElementById('faqFetchStatus');
@@ -269,6 +269,38 @@
 
         if (backToChooserButton) {
             backToChooserButton.addEventListener('click', () => setScreen('chooser'));
+        }
+
+        /**
+         * Handles the Start over control by resetting both the FAQ and catalog
+         * states, clearing previews, and returning focus to the workflow
+         * chooser.
+         *
+         * Change Rationale: The Start over button previously rendered without
+         * wiring, leaving users stuck in a partially edited workspace. This
+         * handler now mirrors a fresh session, keeps the segmented navigation in
+         * sync, and reinforces the App Toolkit-style flow where users can
+         * restart confidently.
+         *
+         * @returns {void}
+         */
+        function handleStartOver() {
+            setScreen('chooser');
+            state.entries = [createEmptyEntry()];
+            catalogFormState.schemaVersion = 1;
+            catalogFormState.products = [createEmptyCatalogProduct()];
+            catalogState.products = [];
+            catalogState.loaded = false;
+            catalogState.selectedKey = DEFAULT_PRODUCT_KEY;
+            catalogState.source = DEFAULT_CATALOG_URL;
+            resetFaqPreviewState('Workspace reset to a blank FAQ.');
+            resetCatalogPreviewState('Fetch the catalog to start editing products.');
+            render();
+            renderCatalogSchema();
+            renderCatalogProducts();
+            renderCatalogPicker([]);
+            setFetchStatus('Ready to fetch.', 'info');
+            setCatalogStatus('Select a catalog preset to begin.', 'info');
         }
 
         const state = {
@@ -2147,21 +2179,16 @@
             }
         }
 
+        if (startOverButton) {
+            startOverButton.addEventListener('click', handleStartOver);
+        }
+
         if (addButton) {
             addButton.addEventListener('click', () => {
                 state.entries.push(createEmptyEntry());
                 faqPreviewReady = true;
                 render();
                 requestPreviewUpdate({ markDirty: true });
-            });
-        }
-
-        if (resetButton) {
-            resetButton.addEventListener('click', () => {
-                state.entries = [createEmptyEntry()];
-                resetFaqPreviewState('Workspace reset to a blank FAQ.');
-                render();
-                setFetchStatus('Workspace reset to a blank FAQ.', 'info');
             });
         }
 
