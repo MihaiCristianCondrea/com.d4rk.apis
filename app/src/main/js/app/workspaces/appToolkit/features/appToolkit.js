@@ -1,4 +1,5 @@
 import { createWorkspaceActivationController } from '../domain/workspaceActivationController.js';
+import { renderWorkspaceDashboards } from '../../../../core/ui/templates/workspaceDashboard.js';
 
 (function (global) {
     const utils = global.ApiBuilderUtils;
@@ -147,6 +148,9 @@ import { createWorkspaceActivationController } from '../domain/workspaceActivati
     }
 
     function initAppToolkitWorkspace() {
+        // Change Rationale: Hydrate the shared workspace dashboard partial before wiring JS hooks so
+        // insight IDs exist for controller bindings across all workspaces.
+        renderWorkspaceDashboards(document);
         const builderRoot = document.getElementById('appToolkitBuilder');
         if (!builderRoot || builderRoot.dataset.initialized === 'true') {
             return;
