@@ -52,3 +52,7 @@ All generated or modified code must be fully documented. This includes:
   2. Run `npm test`.
   3. If successful, verify `api/<app_name>/docs/` is up to date.
   4. Finalize.
+
+## 7. App Toolkit workspace visibility
+- Quick fetch now appears above the builder toolbar and the workspace shell starts hidden until a preset import completes.
+- Use `createWorkspaceActivationController` (`app/src/main/js/app/workspaces/appToolkit/domain/workspaceActivationController.js`) to keep mutation controls disabled until data loads and to animate the reveal.
