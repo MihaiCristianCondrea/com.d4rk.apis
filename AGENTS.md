@@ -11,7 +11,7 @@
 ## 2. Documentation Strategy
 The agent is responsible for maintaining technical accuracy in the `api/<app_name>/docs/` directories.
 - **Mandatory Docs:** Every application folder in `api/` must have a `docs/` subdirectory.
-- **Auto-Generation:** If you create a new API endpoint or JSON category and the documentation is missing, you must generate a markdown file explaining the schema (e.g., `lessons_api_documentation.md`).
+- **Auto-Generation:** If you create a new API endpoint or JSON category and the documentation is missing, you must generate a Markdown file explaining the schema (e.g., `lessons_api_documentation.md`).
 - **Schema Updates:** If you modify the structure of a JSON file (e.g., adding keys to `api_get_lessons.json`), you must immediately check the corresponding file in `docs/`. If the documentation is outdated, update the relevant section to match the new JSON schema.
 
 ## 3. UI/UX & Design System
@@ -32,7 +32,6 @@ All generated or modified code must be fully documented. This includes:
   - Why the change was necessary,
   - Why the new approach is preferable,
   - Any Material Design 3 or UX principle that influenced the decision.
-- Updates to AGENTS.md describing major changes, purposes, and architectural notes.
 - Documentation must remain coherent, concise, and reflect the project's design rules. 
 
 ## 5. Data Structure & JSON Guidelines
@@ -52,7 +51,3 @@ All generated or modified code must be fully documented. This includes:
   2. Run `npm test`.
   3. If successful, verify `api/<app_name>/docs/` is up to date.
   4. Finalize.
-
-## 7. App Toolkit workspace visibility
-- Quick fetch now appears above the builder toolbar and the workspace shell starts hidden until a preset import completes.
-- Use `createWorkspaceActivationController` (`app/src/main/js/app/workspaces/appToolkit/domain/workspaceActivationController.js`) to keep mutation controls disabled until data loads and to animate the reveal.
