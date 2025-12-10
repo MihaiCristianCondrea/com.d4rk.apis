@@ -1,29 +1,110 @@
-import { copyToClipboard } from '../../services/clipboardService.js';
-import { downloadJson, downloadText } from '../../services/downloadService.js';
+import { copyToClipboard } from '@/services/clipboardService';
+import { downloadJson, downloadText } from '@/services/downloadService';
 import {
   fetchCommitPatch,
   fetchReleaseStats,
   fetchRepositoryTree,
-} from '../../services/githubService.js';
+} from '@/services/githubService';
 
 const FAVORITES_KEY = 'github_tool_favorites';
 const PREFILL_KEY = 'github_tool_prefill';
 
+/**
+ * A single flattened entry in a GitHub repository tree.
+ *
+ * This mirrors the shape returned by the GitHub "Get a Tree" API.
+ * Only the fields used by this module are documented here.
+ *
+ * @typedef {Object} RepoTreeEntry
+ * @property {string} path Full path of the entry relative to repo root.
+ * @property {'blob'|'tree'} type Git object type. Only `tree` is treated as a folder.
+ */
+
+/**
+ * A node in the in-memory hierarchical tree model used for display/export.
+ *
+ * @typedef {Object} RepoTreeNode
+ * @property {string} name Node name (file or folder name).
+ * @property {'file'|'tree'} type Node type.
+ * @property {Map<string, RepoTreeNode>} children Child nodes keyed by name.
+ */
+
+/**
+ * Hierarchical representation of a repository tree plus high-level statistics.
+ *
+ * @typedef {Object} RepoTreeModel
+ * @property {RepoTreeNode} root Synthetic root node (represents the repo root).
+ * @property {number} fileCount Total number of files (blobs) in the tree.
+ * @property {number} folderCount Total number of distinct folder paths.
+ */
+
+/**
+ * A single asset attached to a GitHub release.
+ *
+ * @typedef {Object} ReleaseAsset
+ * @property {string} name Asset file name.
+ * @property {number} downloads Download count for this asset.
+ * @property {string} browserDownloadUrl Public URL to download the asset.
+ */
+
+/**
+ * A GitHub release with aggregated download statistics.
+ *
+ * @typedef {Object} ReleaseItem
+ * @property {string} name Display name of the release (may be empty).
+ * @property {string} tagName Git tag associated with the release.
+ * @property {string} publishedAt ISO timestamp for the release publication date.
+ * @property {number} totalDownloads Sum of downloads for all assets in this release.
+ * @property {ReleaseAsset[]} assets List of attached assets.
+ */
+
+/**
+ * Aggregated release statistics for a single repository.
+ *
+ * This is the shape expected from `fetchReleaseStats`.
+ *
+ * @typedef {Object} ReleaseStats
+ * @property {string} owner Repository owner (user or organization).
+ * @property {string} repo Repository name.
+ * @property {number} totalDownloads Sum of downloads across all releases.
+ * @property {ReleaseItem[]} releases List of releases with asset stats.
+ */
+
+/**
+ * Normalizes various GitHub repository input formats into a canonical `owner/repo` slug.
+ *
+ * Accepts:
+ * - Raw slugs: `"owner/repo"`
+ * - HTTPS URLs: `"https://github.com/owner/repo"` (with or without `.git`)
+ * - Strings that look like URLs but are missing protocol (treated as GitHub URLs)
+ *
+ * If parsing fails, this function returns an empty string instead of throwing.
+ * Callers should treat an empty string as "invalid repository input".
+ *
+ * @param {string} value Raw user input.
+ * @returns {string} Normalized `owner/repo` slug, or an empty string if invalid.
+ */
 function normalizeRepoSlug(value) {
   const trimmed = (value || '').trim();
   if (!trimmed) return '';
 
   try {
-    const url = new URL(trimmed, trimmed.startsWith('http') ? undefined : 'https://github.com');
+    const url = new URL(
+        trimmed,
+        trimmed.startsWith('http') ? undefined : 'https://github.com',
+    );
     const [, owner, repo] = url.pathname.split('/').filter(Boolean);
     if (owner && repo) {
       return `${owner}/${repo}`.replace(/\.git$/i, '');
     }
   } catch (error) {
-    /* noop */
+    /* noop – fall back to manual parsing below. */
   }
 
-  const parts = trimmed.replace(/^https?:\/\/github.com\//i, '').split('/').filter(Boolean);
+  const parts = trimmed
+      .replace(/^https?:\/\/github.com\//i, '')
+      .split('/')
+      .filter(Boolean);
   if (parts.length >= 2) {
     return `${parts[0]}/${parts[1]}`.replace(/\.git$/i, '');
   }
@@ -31,6 +112,24 @@ function normalizeRepoSlug(value) {
   return '';
 }
 
+/**
+ * Parses a commit input string into owner, repo and commit SHA.
+ *
+ * Supported formats:
+ * - Full commit URL:
+ *   `"https://github.com/owner/repo/commit/<sha>"`
+ * - Minimal URL without protocol:
+ *   `"github.com/owner/repo/commit/<sha>"`
+ * - Slug with SHA:
+ *   `"owner/repo@<sha>"`
+ *
+ * The parser is intentionally forgiving and returns `null` for unrecognized inputs
+ * instead of throwing. Callers must handle a `null` result as "invalid commit input".
+ *
+ * @param {string} value Raw user input representing a commit.
+ * @returns {{ owner: string, repo: string, commitSha: string } | null}
+ * Parsed commit data or `null` if the input cannot be interpreted.
+ */
 function parseCommitInput(value) {
   const trimmed = (value || '').trim();
   if (!trimmed) return null;
@@ -49,7 +148,7 @@ function parseCommitInput(value) {
       };
     }
   } catch (error) {
-    /* noop */
+    /* noop – fall back to slug@sha parsing. */
   }
 
   const fallback = trimmed.replace(/^https?:\/\/github.com\//i, '').split('@');
@@ -63,6 +162,21 @@ function parseCommitInput(value) {
   return null;
 }
 
+/**
+ * Consumes a pending prefill payload for a given tool from `sessionStorage`.
+ *
+ * The prefill mechanism is used to pass a repository slug from the favorites
+ * page into one of the GitHub tools (Repo Mapper, Release Stats, etc.) when
+ * navigating between routes.
+ *
+ * Behavior:
+ * - If a matching prefill exists, it is returned and removed from storage.
+ * - If the stored entry is malformed or does not match the requested tool,
+ *   an empty string is returned.
+ *
+ * @param {string} tool Tool identifier (e.g. `"mapper"`, `"releases"`).
+ * @returns {string} Prefilled slug for that tool, or an empty string if none.
+ */
 function consumePrefill(tool) {
   try {
     const stored = sessionStorage.getItem(PREFILL_KEY);
@@ -73,11 +187,22 @@ function consumePrefill(tool) {
       return parsed.slug;
     }
   } catch (error) {
-    /* noop */
+    /* noop – prefill is considered optional. */
   }
   return '';
 }
 
+/**
+ * Saves a prefill payload for a given tool into `sessionStorage`.
+ *
+ * The stored value is later consumed by {@link consumePrefill} when
+ * initializing a tool page. This is used to provide a "jump into tool
+ * with prefilled repo" experience from the favorites view.
+ *
+ * @param {string} tool Tool identifier (e.g. `"mapper"`, `"releases"`).
+ * @param {string} slug Normalized repository slug (`owner/repo`).
+ * @returns {void}
+ */
 function savePrefill(tool, slug) {
   if (!tool || !slug) return;
   try {
@@ -87,6 +212,17 @@ function savePrefill(tool, slug) {
   }
 }
 
+/**
+ * Reads the list of GitHub favorites from `localStorage`.
+ *
+ * The stored structure is an array of objects with a `slug` property:
+ * `[ { slug: 'owner/repo' }, ... ]`.
+ *
+ * If parsing fails or the shape is unexpected, this function falls back to an
+ * empty array. This ensures that errors in persisted data never break the UI.
+ *
+ * @returns {{ slug: string }[]} List of favorite repository entries.
+ */
 function readFavorites() {
   try {
     const stored = localStorage.getItem(FAVORITES_KEY);
@@ -99,6 +235,16 @@ function readFavorites() {
   }
 }
 
+/**
+ * Persists the full favorites list into `localStorage`.
+ *
+ * This helper overwrites the previous value. Callers are expected to read the
+ * current list via {@link readFavorites}, modify it, and then call this
+ * function with the updated array.
+ *
+ * @param {{ slug: string }[]} items List of favorite entries to persist.
+ * @returns {void}
+ */
 function writeFavorites(items) {
   try {
     localStorage.setItem(FAVORITES_KEY, JSON.stringify(items));
@@ -107,8 +253,32 @@ function writeFavorites(items) {
   }
 }
 
+/**
+ * Builds a hierarchical tree model from a flat GitHub tree listing.
+ *
+ * Input:
+ * - A flat list of {@link RepoTreeEntry} objects, each with a `path` string.
+ *
+ * Output:
+ * - A {@link RepoTreeModel} containing:
+ *   - A root node with nested folder/file nodes.
+ *   - A `fileCount` of all non-tree entries.
+ *   - A `folderCount` of distinct folders derived from paths.
+ *
+ * Notes:
+ * - Entries are sorted by path to ensure deterministic traversal.
+ * - Directories are inferred both from explicit `type === 'tree'` entries and
+ *   from intermediate segments of file paths.
+ *
+ * @param {RepoTreeEntry[]} [tree=[]] Flat tree entries returned from GitHub.
+ * @returns {RepoTreeModel} Hierarchical tree structure and aggregate stats.
+ */
 function buildRepoTreeModel(tree = []) {
-  const root = { name: '', type: 'tree', children: new Map() };
+  const root = /** @type {RepoTreeNode} */ ({
+    name: '',
+    type: 'tree',
+    children: new Map(),
+  });
   const folderSet = new Set();
   let fileCount = 0;
 
@@ -121,6 +291,7 @@ function buildRepoTreeModel(tree = []) {
     if (!parts.length) return;
     const isDirectory = entry.type === 'tree';
 
+    // Collect all folder paths for statistics.
     for (let i = 0; i < parts.length - (isDirectory ? 0 : 1); i += 1) {
       folderSet.add(parts.slice(0, i + 1).join('/'));
     }
@@ -130,20 +301,41 @@ function buildRepoTreeModel(tree = []) {
       fileCount += 1;
     }
 
+    // Walk or create the corresponding node chain.
     let cursor = root;
     parts.forEach((part, index) => {
       const isLeaf = index === parts.length - 1;
       const nodeType = isLeaf && !isDirectory ? 'file' : 'tree';
       if (!cursor.children.has(part)) {
-        cursor.children.set(part, { name: part, type: nodeType, children: new Map() });
+        cursor.children.set(
+            part,
+            /** @type {RepoTreeNode} */ ({
+              name: part,
+              type: nodeType,
+              children: new Map(),
+            }),
+        );
       }
-      cursor = cursor.children.get(part);
+      cursor = /** @type {RepoTreeNode} */ (cursor.children.get(part));
     });
   });
 
   return { root, fileCount, folderCount: folderSet.size };
 }
 
+/**
+ * Returns a sorted array of child nodes for a given tree node.
+ *
+ * Sorting rules:
+ * - Folders (`type === 'tree'`) are listed before files.
+ * - Within the same type, entries are sorted alphabetically by name.
+ *
+ * This ensures a stable, predictable order for both ASCII rendering and
+ * any UI that consumes the tree model.
+ *
+ * @param {RepoTreeNode} node Parent node whose children should be sorted.
+ * @returns {RepoTreeNode[]} Sorted child nodes.
+ */
 function sortTreeChildren(node) {
   return [...node.children.values()].sort((a, b) => {
     if (a.type !== b.type) {
@@ -153,7 +345,30 @@ function sortTreeChildren(node) {
   });
 }
 
+/**
+ * Renders a hierarchical repository tree as an ASCII diagram.
+ *
+ * Example output:
+ *
+ * ├── src
+ * │   ├── index.js
+ * │   └── utils
+ * │       └── helpers.js
+ * └── README.md
+ *
+ * The function relies on a {@link RepoTreeModel} produced by
+ * {@link buildRepoTreeModel} and uses box-drawing characters to represent
+ * folder/file structure.
+ *
+ * @param {RepoTreeModel} treeModel Tree model to render.
+ * @returns {string} Multi-line ASCII representation of the tree.
+ */
 function renderAsciiTree(treeModel) {
+  /**
+   * @param {RepoTreeNode} node
+   * @param {string} prefix
+   * @returns {string[]}
+   */
   const traverse = (node, prefix = '') => {
     const children = sortTreeChildren(node);
     return children.flatMap((child, index) => {
@@ -171,14 +386,55 @@ function renderAsciiTree(treeModel) {
   return traverse(treeModel.root).join('\n');
 }
 
+/**
+ * Renders a flat list of file and folder paths from a GitHub tree.
+ *
+ * The input is the raw `tree` array returned from the GitHub API. Paths are
+ * filtered, sorted lexicographically, and joined by newline characters.
+ *
+ * This is useful for scripts or tools that want a simple "one path per line"
+ * representation instead of an ASCII tree.
+ *
+ * @param {RepoTreeEntry[]} [tree=[]] Flat tree entries returned from GitHub.
+ * @returns {string} Newline-separated list of paths.
+ */
 function renderPathList(tree = []) {
   return tree
-    .filter((entry) => entry?.path)
-    .sort((a, b) => a.path.localeCompare(b.path))
-    .map((entry) => entry.path)
-    .join('\n');
+      .filter((entry) => entry?.path)
+      .sort((a, b) => a.path.localeCompare(b.path))
+      .map((entry) => entry.path)
+      .join('\n');
 }
 
+/**
+ * Produces a compact summary object for release statistics.
+ *
+ * This function takes a {@link ReleaseStats} input and maps it into a
+ * JSON-friendly summary structure with only the fields needed for export:
+ *
+ * {
+ *   repository: "owner/repo",
+ *   totalDownloads: number,
+ *   releases: [
+ *     {
+ *       name: string,
+ *       tag: string,
+ *       publishedAt: string,
+ *       downloads: number,
+ *       assets: [
+ *         {
+ *           name: string,
+ *           downloads: number,
+ *           browserDownloadUrl: string
+ *         }
+ *       ]
+ *     }
+ *   ]
+ * }
+ *
+ * @param {ReleaseStats} data Raw release statistics.
+ * @returns {Object} Summary view optimized for JSON export/clipboard.
+ */
 function formatReleaseSummary(data) {
   return {
     repository: `${data.owner}/${data.repo}`,
@@ -197,6 +453,25 @@ function formatReleaseSummary(data) {
   };
 }
 
+/**
+ * Formats release statistics as a CSV string.
+ *
+ * Output columns:
+ * - Release
+ * - Tag
+ * - Published
+ * - Total Downloads
+ * - Asset
+ * - Asset Downloads
+ *
+ * Each asset generates a separate row. Releases without assets are represented
+ * by a row with `"—"` for the asset name and `0` downloads.
+ *
+ * All cells are CSV-escaped by double-quoting and escaping inner quotes.
+ *
+ * @param {ReleaseStats} data Raw release statistics.
+ * @returns {string} CSV representation suitable for download or clipboard.
+ */
 function formatReleaseCsv(data) {
   const rows = [
     ['Release', 'Tag', 'Published', 'Total Downloads', 'Asset', 'Asset Downloads'],
@@ -228,23 +503,46 @@ function formatReleaseCsv(data) {
   });
 
   return rows
-    .map((row) =>
-      row
-        .map((cell) => {
-          const value = cell ?? '';
-          const safe = String(value).replace(/"/g, '""');
-          return `"${safe}"`;
-        })
-        .join(','),
-    )
-    .join('\n');
+      .map((row) =>
+          row
+              .map((cell) => {
+                const value = cell ?? '';
+                const safe = String(value).replace(/"/g, '""');
+                return `"${safe}"`;
+              })
+              .join(','),
+      )
+      .join('\n');
 }
 
+/**
+ * Checks whether a repository slug is currently favorited.
+ *
+ * This is a thin convenience wrapper over {@link readFavorites}.
+ *
+ * @param {string} slug Normalized repository slug (`owner/repo`).
+ * @returns {boolean} `true` if the slug is present in favorites.
+ */
 function isFavorited(slug) {
   if (!slug) return false;
   return readFavorites().some((item) => item.slug === slug);
 }
 
+/**
+ * Toggles a repository slug in the favorites list.
+ *
+ * Behavior:
+ * - If the slug is present in favorites, it is removed.
+ * - If the slug is not present, it is added.
+ * - The updated list is persisted and the favorites page is re-rendered.
+ *
+ * This function is stateful and has side effects:
+ * - It reads and writes `localStorage`.
+ * - It calls {@link renderFavoritesPage} to update the DOM.
+ *
+ * @param {string} slug Normalized repository slug (`owner/repo`).
+ * @returns {{ slug: string }[]} The updated favorites array.
+ */
 function toggleFavorite(slug) {
   if (!slug) return readFavorites();
   const favorites = readFavorites();
@@ -259,6 +557,23 @@ function toggleFavorite(slug) {
   return favorites;
 }
 
+/**
+ * Renders the favorites page grid based on the current favorites list.
+ *
+ * This function:
+ * - Reads favorites from storage.
+ * - Clears and repopulates the favorites grid DOM.
+ * - Shows or hides the "empty state" message.
+ * - Wires up click handlers for:
+ *   - Removing a favorite.
+ *   - Opening Repo Mapper with a prefilled slug.
+ *   - Opening Release Stats with a prefilled slug.
+ *
+ * Requirements:
+ * - The DOM must contain `#favorites-grid` and `#favorites-empty` elements.
+ *
+ * @returns {void}
+ */
 function renderFavoritesPage() {
   const grid = document.getElementById('favorites-grid');
   const empty = document.getElementById('favorites-empty');
@@ -331,6 +646,21 @@ function renderFavoritesPage() {
   empty.hidden = true;
 }
 
+/**
+ * Wires a "favorite" toggle button to an input field that contains a repository slug.
+ *
+ * The button:
+ * - Is hidden when the input does not contain a valid repository slug.
+ * - Reflects active state (`favorited` CSS class, ARIA attributes, label text).
+ * - Toggles the favorite entry when clicked.
+ *
+ * The input:
+ * - Trigger re-evaluation of the button state on every `input` event.
+ *
+ * @param {string} buttonId DOM id of the favorite button element.
+ * @param {string} inputId DOM id of the associated text input element.
+ * @returns {void}
+ */
 function setupFavoriteButton(buttonId, inputId) {
   const button = document.getElementById(buttonId);
   const input = document.getElementById(inputId);
@@ -364,6 +694,29 @@ function setupFavoriteButton(buttonId, inputId) {
   refreshState();
 }
 
+/**
+ * Wires token UI controls on a tool page.
+ *
+ * Responsibilities:
+ * - Expand/collapse the token settings panel via an "advanced" toggle button.
+ * - Toggle token visibility between password and plain text fields.
+ * - Maintain ARIA attributes and a CSS state (`.is-open`, `[open]`).
+ *
+ * Expected DOM structure:
+ * - A toggle button with `toggleButtonId` living inside `.gh-token-settings`.
+ * - A wrapper element containing the token controls (`wrapperId`).
+ * - An `<input>` field for the token (`fieldId`).
+ * - A visibility toggle control (`visibilityToggleId`) with:
+ *   - A label element annotated via `[data-token-visibility-label]`.
+ *
+ * @param {{
+ *   toggleButtonId: string,
+ *   wrapperId: string,
+ *   fieldId: string,
+ *   visibilityToggleId: string
+ * }} options Configuration linking controls together.
+ * @returns {void}
+ */
 function wireTokenControls({ toggleButtonId, wrapperId, fieldId, visibilityToggleId }) {
   const toggleButton = document.getElementById(toggleButtonId);
   const wrapper = document.getElementById(wrapperId);
@@ -372,6 +725,9 @@ function wireTokenControls({ toggleButtonId, wrapperId, fieldId, visibilityToggl
   const container = toggleButton ? toggleButton.closest('.gh-token-settings') : null;
 
   if (toggleButton && wrapper) {
+    /**
+     * @param {boolean} expanded
+     */
     const update = (expanded) => {
       toggleButton.setAttribute('aria-expanded', String(expanded));
       wrapper.hidden = !expanded;
@@ -389,6 +745,9 @@ function wireTokenControls({ toggleButtonId, wrapperId, fieldId, visibilityToggl
 
   if (visibilityToggle && field) {
     const label = visibilityToggle.querySelector('[data-token-visibility-label]');
+    /**
+     * @param {boolean} visible
+     */
     const setVisible = (visible) => {
       field.type = visible ? 'text' : 'password';
       if (label) {
@@ -402,6 +761,15 @@ function wireTokenControls({ toggleButtonId, wrapperId, fieldId, visibilityToggl
   }
 }
 
+/**
+ * Applies GitHub tools-specific styling to Material text fields within a container.
+ *
+ * This is a cosmetic helper to attach the `.gh-md-field` class to all
+ * `<md-outlined-text-field>` elements under a given DOM subtree.
+ *
+ * @param {HTMLElement | Document | null} container Root element to search under.
+ * @returns {void}
+ */
 function hydrateInputs(container) {
   if (!container) return;
   container.querySelectorAll('md-outlined-text-field').forEach((field) => {
@@ -409,6 +777,25 @@ function hydrateInputs(container) {
   });
 }
 
+/**
+ * Initializes the Repo Mapper form behavior.
+ *
+ * Responsibilities:
+ * - Validates the repository URL/slug using {@link normalizeRepoSlug}.
+ * - Enables/disables the submit button based on validity.
+ * - Manages inline error messages.
+ * - Emits a `repo-mapper:submit` custom event on the form with `{ slug }`
+ *   when submitted and valid.
+ *
+ * Requirements:
+ * - The DOM must provide:
+ *   - `#mapper-form`
+ *   - `#mapper-url`
+ *   - `#mapper-url-error` (optional error container)
+ *   - `#mapper-submit`
+ *
+ * @returns {void}
+ */
 function setupRepoMapperForm() {
   const form = document.getElementById('mapper-form');
   const urlField = document.getElementById('mapper-url');
@@ -423,6 +810,9 @@ function setupRepoMapperForm() {
     }
   };
 
+  /**
+   * @param {string} message
+   */
   const showError = (message) => {
     if (!errorEl) return;
     errorEl.hidden = false;
@@ -458,16 +848,35 @@ function setupRepoMapperForm() {
 
     form.dataset.repoSlug = slug;
     form.dispatchEvent(
-      new CustomEvent('repo-mapper:submit', {
-        bubbles: true,
-        detail: { slug },
-      }),
+        new CustomEvent('repo-mapper:submit', {
+          bubbles: true,
+          detail: { slug },
+        }),
     );
   });
 
   validate();
 }
 
+/**
+ * Initializes the Release Stats form behavior.
+ *
+ * Responsibilities:
+ * - Validates the repository URL/slug via {@link normalizeRepoSlug}.
+ * - Enables/disables the submit button based on validity.
+ * - Manages inline error messages.
+ * - Emits a `release-stats:submit` event on the form with `{ slug }` detail
+ *   when submitted and valid.
+ *
+ * Requirements:
+ * - DOM elements:
+ *   - `#releases-form`
+ *   - `#releases-url`
+ *   - `#releases-url-error` (optional)
+ *   - `#releases-submit`
+ *
+ * @returns {void}
+ */
 function setupReleaseStatsForm() {
   const form = document.getElementById('releases-form');
   const urlField = document.getElementById('releases-url');
@@ -480,6 +889,9 @@ function setupReleaseStatsForm() {
     if (errorEl) errorEl.hidden = true;
   };
 
+  /**
+   * @param {string} message
+   */
   const showError = (message) => {
     if (!errorEl) return;
     errorEl.hidden = false;
@@ -513,16 +925,30 @@ function setupReleaseStatsForm() {
 
     form.dataset.repoSlug = slug;
     form.dispatchEvent(
-      new CustomEvent('release-stats:submit', {
-        bubbles: true,
-        detail: { slug },
-      }),
+        new CustomEvent('release-stats:submit', {
+          bubbles: true,
+          detail: { slug },
+        }),
     );
   });
 
   validate();
 }
 
+/**
+ * Initializes the Git Patch form behavior.
+ *
+ * Responsibilities:
+ * - Validates commit input via {@link parseCommitInput}.
+ * - Enables/disables the submit button based on validity.
+ * - Manages inline error messages.
+ * - Emits a `git-patch:submit` event on the form with parsed commit detail
+ *   when submitted and valid.
+ *
+ * Supported commit input formats are the same as {@link parseCommitInput}.
+ *
+ * @returns {void}
+ */
 function setupPatchForm() {
   const form = document.getElementById('patch-form');
   const urlField = document.getElementById('patch-url');
@@ -535,6 +961,9 @@ function setupPatchForm() {
     if (errorEl) errorEl.hidden = true;
   };
 
+  /**
+   * @param {string} message
+   */
   const showError = (message) => {
     if (!errorEl) return;
     errorEl.hidden = false;
@@ -568,16 +997,36 @@ function setupPatchForm() {
 
     form.dataset.commitSlug = `${parsed.owner}/${parsed.repo}@${parsed.commitSha}`;
     form.dispatchEvent(
-      new CustomEvent('git-patch:submit', {
-        bubbles: true,
-        detail: parsed,
-      }),
+        new CustomEvent('git-patch:submit', {
+          bubbles: true,
+          detail: parsed,
+        }),
     );
   });
 
   validate();
 }
 
+/**
+ * Marks a button as busy and provides a restore function to reset it.
+ *
+ * Behavior:
+ * - Disables the button.
+ * - Optionally replaces the button's `innerHTML` with a busy indicator string.
+ * - Adds the `is-loading` CSS class while busy.
+ *
+ * The function returns a closure that:
+ * - Re-enables the button.
+ * - Removes the `is-loading` class.
+ * - Restores the original `innerHTML`.
+ *
+ * This pattern ensures that asynchronous flows can safely restore button state
+ * in a `finally` block without duplicating cleanup logic.
+ *
+ * @param {HTMLButtonElement | null} button Button element to update.
+ * @param {string} [busy] Optional busy label HTML (e.g. with spinner icon).
+ * @returns {() => void} A function that restores the button to its original state.
+ */
 function setButtonBusy(button, busy) {
   if (!button) return () => {};
   const originalLabel = button.innerHTML;
@@ -593,6 +1042,21 @@ function setButtonBusy(button, busy) {
   };
 }
 
+/**
+ * Renders an error message inside a named error container.
+ *
+ * Expected DOM structure:
+ * - A wrapper element identified by `containerId`.
+ * - An optional child element annotated with `[data-error-text]` to receive
+ *   the text content.
+ *
+ * The wrapper is unhidden regardless of whether `message` is provided; if
+ * `message` is falsy, the previous text will remain.
+ *
+ * @param {string} containerId DOM id of the wrapper element.
+ * @param {string} message Error message to display.
+ * @returns {void}
+ */
 function renderError(containerId, message) {
   const wrapper = document.getElementById(containerId);
   if (!wrapper) return;
@@ -603,6 +1067,14 @@ function renderError(containerId, message) {
   wrapper.hidden = false;
 }
 
+/**
+ * Clears (hides) an error container.
+ *
+ * This does not reset the error text; it only hides the wrapper element.
+ *
+ * @param {string} containerId DOM id of the wrapper element.
+ * @returns {void}
+ */
 function clearError(containerId) {
   const wrapper = document.getElementById(containerId);
   if (wrapper) {
@@ -610,6 +1082,18 @@ function clearError(containerId) {
   }
 }
 
+/**
+ * Formats a date string for display using the user's locale.
+ *
+ * Behavior:
+ * - If `value` is falsy, returns `"Unknown date"`.
+ * - Otherwise, attempts to construct a `Date` and format it using
+ *   `toLocaleDateString` with `year: 'numeric', month: 'short', day: 'numeric'`.
+ * - If parsing fails (invalid date), falls back to the raw input string.
+ *
+ * @param {string | Date | null | undefined} value Date-like value to format.
+ * @returns {string} Human-readable date or a fallback description.
+ */
 function formatDate(value) {
   if (!value) return 'Unknown date';
   try {
@@ -619,14 +1103,40 @@ function formatDate(value) {
       day: 'numeric',
     });
   } catch (error) {
-    return value;
+    return String(value);
   }
 }
 
+/**
+ * Initializes shared GitHub tools page behavior.
+ *
+ * This helper:
+ * - Locates the `.gh-tools-page` root element.
+ * - Ensures the page is only initialized once (via a data attribute).
+ * - Wires token controls and favorite button for the current tool (if provided).
+ * - Hydrates Material text fields for consistent styling.
+ *
+ * It returns the page element when initialization is successful, or `null`
+ * if the tools page is not present in the current view.
+ *
+ * @param {{
+ *   tokenControls?: {
+ *     toggleButtonId: string,
+ *     wrapperId: string,
+ *     fieldId: string,
+ *     visibilityToggleId: string
+ *   },
+ *   favoriteControl?: {
+ *     buttonId: string,
+ *     inputId: string
+ *   }
+ * }} [options={}] Hook-up options for the current tool context.
+ * @returns {HTMLElement | null} The initialized page element, or `null`.
+ */
 function initGhToolsPage({
-  tokenControls,
-  favoriteControl,
-} = {}) {
+                           tokenControls,
+                           favoriteControl,
+                         } = {}) {
   const page = document.querySelector('.gh-tools-page');
   if (!page) return null;
   if (page.dataset.ghToolsInitialized === 'true') return page;
@@ -644,6 +1154,27 @@ function initGhToolsPage({
   return page;
 }
 
+/**
+ * Bootstraps the Repo Mapper tool page.
+ *
+ * Responsibilities:
+ * - Calls {@link initGhToolsPage} with token and favorites wiring.
+ * - Sets up the Repo Mapper form.
+ * - Handles `repo-mapper:submit` events to fetch the repository tree.
+ * - Renders either:
+ *   - An ASCII tree view, or
+ *   - A simple path list,
+ *   depending on the currently selected format.
+ * - Updates file and folder statistics counters.
+ * - Wires copy-to-clipboard behavior for the generated output.
+ * - Applies any pending prefill slug from {@link consumePrefill}.
+ *
+ * Notes:
+ * - This function is safe to call multiple times; internal guards prevent
+ *   double initialization of shared page state.
+ *
+ * @returns {void}
+ */
 function initRepoMapper() {
   const page = initGhToolsPage({
     tokenControls: {
@@ -671,47 +1202,67 @@ function initRepoMapper() {
 
   if (!form || !codeEl || !resultEl || !asciiBtn || !pathsBtn) return;
 
+  /** @type {'ascii'|'paths'} */
   let currentFormat = 'ascii';
+  /** @type {RepoTreeEntry[]} */
   let currentTree = [];
 
   /**
    * Synchronizes the repo mapper segmented buttons so they lean on Material's
    * native selection visuals instead of bespoke classes.
    *
-   * Change Rationale: The previous chip-based segmented buttons needed custom
-   * CSS to read as a toggle set. Switching to `md-outlined-segmented-button`
-   * keeps the control consistent with Material defaults and only requires
-   * toggling the `selected` state and ARIA press semantics to broadcast the
-   * active format to assistive tech.
+   * Change rationale:
+   * - The previous chip-based segmented buttons needed custom CSS to read as
+   *   a toggle set.
+   * - Switching to `md-outlined-segmented-button` keeps the control aligned
+   *   with Material defaults and only requires toggling the `selected` state
+   *   and ARIA attributes to broadcast the active format to assistive tech.
    *
    * @returns {void}
    */
   const updateFormatButtons = () => {
     const isAscii = currentFormat === 'ascii';
     asciiBtn.toggleAttribute('selected', isAscii);
+    // @ts-ignore: Material web components may define `.selected` at runtime.
     asciiBtn.selected = isAscii;
     asciiBtn.setAttribute('aria-pressed', isAscii ? 'true' : 'false');
     asciiBtn.setAttribute('aria-selected', isAscii ? 'true' : 'false');
 
     const isPaths = currentFormat === 'paths';
     pathsBtn.toggleAttribute('selected', isPaths);
+    // @ts-ignore
     pathsBtn.selected = isPaths;
     pathsBtn.setAttribute('aria-pressed', isPaths ? 'true' : 'false');
     pathsBtn.setAttribute('aria-selected', isPaths ? 'true' : 'false');
   };
 
+  /**
+   * Renders the current tree into the output element according to the
+   * selected format, and updates the stats counters.
+   *
+   * @returns {void}
+   */
   const renderOutput = () => {
     if (!currentTree.length) return;
     const model = buildRepoTreeModel(currentTree);
     if (fileCountEl) fileCountEl.textContent = model.fileCount.toLocaleString();
     if (folderCountEl) folderCountEl.textContent = model.folderCount.toLocaleString();
     const output =
-      currentFormat === 'paths' ? renderPathList(currentTree) : renderAsciiTree(model);
+        currentFormat === 'paths' ? renderPathList(currentTree) : renderAsciiTree(model);
     codeEl.textContent = output;
     clearError('mapper-error');
     resultEl.hidden = false;
   };
 
+  /**
+   * Handles the Repo Mapper submission lifecycle:
+   * - Clears previous results and errors.
+   * - Fetches the repository tree via {@link fetchRepositoryTree}.
+   * - Updates local state and re-renders the output.
+   *
+   * @param {string} slug Normalized repository slug (`owner/repo`).
+   * @returns {Promise<void>}
+   */
   const handleSubmit = async (slug) => {
     clearError('mapper-error');
     resultEl.hidden = true;
@@ -719,8 +1270,8 @@ function initRepoMapper() {
 
     const [owner, repo] = slug.split('/');
     const stopLoading = setButtonBusy(
-      submitButton,
-      '<span class="gh-rolling material-symbols-outlined">progress_activity</span> Generating…',
+        submitButton,
+        '<span class="gh-rolling material-symbols-outlined">progress_activity</span> Generating…',
     );
 
     try {
@@ -763,6 +1314,23 @@ function initRepoMapper() {
   }
 }
 
+/**
+ * Bootstraps the Release Stats tool page.
+ *
+ * Responsibilities:
+ * - Calls {@link initGhToolsPage} with token and favorites wiring.
+ * - Sets up the Release Stats form.
+ * - Handles `release-stats:submit` events to fetch and render release data.
+ * - Populates:
+ *   - Total downloads summary and pill.
+ *   - Release count.
+ *   - Release list with clickable items.
+ *   - Asset list for the selected release.
+ * - Wires clipboard and download actions for JSON and CSV exports.
+ * - Applies any pending prefill slug from {@link consumePrefill}.
+ *
+ * @returns {void}
+ */
 function initReleaseStats() {
   const page = initGhToolsPage({
     tokenControls: {
@@ -798,8 +1366,15 @@ function initReleaseStats() {
 
   if (!form || !releaseListEl || !assetsListEl || !resultEl) return;
 
+  /** @type {ReleaseStats | null} */
   let releaseData = null;
 
+  /**
+   * Renders the asset details panel for a single release.
+   *
+   * @param {ReleaseItem} release Release whose assets should be displayed.
+   * @returns {void}
+   */
   const renderReleaseDetail = (release) => {
     if (!release) return;
     detailNameEl.textContent = release.name || release.tagName;
@@ -830,6 +1405,13 @@ function initReleaseStats() {
     });
   };
 
+  /**
+   * Renders the vertical list of releases and wires click handling to
+   * update the detail panel.
+   *
+   * @param {string} [selectedTag] Optional tag name to preselect.
+   * @returns {void}
+   */
   const renderReleaseList = (selectedTag) => {
     if (!releaseData) return;
     releaseListEl.innerHTML = '';
@@ -846,7 +1428,7 @@ function initReleaseStats() {
       `;
       button.addEventListener('click', () => {
         releaseListEl.querySelectorAll('button').forEach((btn) =>
-          btn.classList.toggle('active', btn === button),
+            btn.classList.toggle('active', btn === button),
         );
         renderReleaseDetail(release);
       });
@@ -861,6 +1443,12 @@ function initReleaseStats() {
     }
   };
 
+  /**
+   * Updates the entire Release Stats view with new data.
+   *
+   * @param {ReleaseStats} data Fresh release statistics.
+   * @returns {void}
+   */
   const renderResult = (data) => {
     releaseData = data;
     const totalText = data.totalDownloads.toLocaleString();
@@ -874,19 +1462,28 @@ function initReleaseStats() {
     resultEl.hidden = false;
   };
 
+  /**
+   * Handles the Release Stats submission lifecycle:
+   * - Clears previous result and error state.
+   * - Fetches release stats via {@link fetchReleaseStats}.
+   * - Updates the summary and list views.
+   *
+   * @param {string} slug Normalized repository slug (`owner/repo`).
+   * @returns {Promise<void>}
+   */
   const handleSubmit = async (slug) => {
     resultEl.hidden = true;
     clearError('releases-error');
     const [owner, repo] = slug.split('/');
     const stopLoading = setButtonBusy(
-      submitButton,
-      '<span class="gh-rolling material-symbols-outlined">progress_activity</span> Analyzing…',
+        submitButton,
+        '<span class="gh-rolling material-symbols-outlined">progress_activity</span> Analyzing…',
     );
 
     try {
       const data = await fetchReleaseStats(
-        { owner, repo },
-        tokenField?.value?.trim(),
+          { owner, repo },
+          tokenField?.value?.trim(),
       );
       renderResult(data);
     } catch (error) {
@@ -927,6 +1524,18 @@ function initReleaseStats() {
   }
 }
 
+/**
+ * Bootstraps the Git Patch tool page.
+ *
+ * Responsibilities:
+ * - Calls {@link initGhToolsPage} with token and favorites wiring.
+ * - Sets up the patch form.
+ * - Handles `git-patch:submit` to fetch a commit patch via {@link fetchCommitPatch}.
+ * - Renders the raw patch text into a code block.
+ * - Wires clipboard and download actions for the patch content.
+ *
+ * @returns {void}
+ */
 function initGitPatch() {
   const page = initGhToolsPage({
     tokenControls: {
@@ -951,14 +1560,23 @@ function initGitPatch() {
 
   if (!form || !codeEl || !resultEl) return;
 
+  /**
+   * Handles the Git Patch submission lifecycle:
+   * - Clears previous result and error state.
+   * - Fetches the patch via {@link fetchCommitPatch}.
+   * - Displays the patch text.
+   *
+   * @param {{ owner: string, repo: string, commitSha: string }} detail Parsed commit detail.
+   * @returns {Promise<void>}
+   */
   const handleSubmit = async (detail) => {
     clearError('patch-error');
     resultEl.hidden = true;
     codeEl.textContent = '';
 
     const stopLoading = setButtonBusy(
-      submitButton,
-      '<span class="gh-rolling material-symbols-outlined">progress_activity</span> Fetching…',
+        submitButton,
+        '<span class="gh-rolling material-symbols-outlined">progress_activity</span> Fetching…',
     );
 
     try {
@@ -989,6 +1607,14 @@ function initGitPatch() {
   });
 }
 
+/**
+ * Initializes the GitHub favorites page.
+ *
+ * This is a thin wrapper around {@link renderFavoritesPage} to match
+ * the initialization pattern used across tools.
+ *
+ * @returns {void}
+ */
 function initFavoritesPage() {
   renderFavoritesPage();
 }
