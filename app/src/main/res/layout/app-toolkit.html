@@ -183,75 +183,9 @@
           data-builder-type="app-toolkit"
   >
     <!--
-      Builder toolbar:
-      - Primary actions: Add app, Sort, Clear workspace.
-      - Secondary status: Workspace pulse text on the right.
-    -->
-    <div class="builder-toolbar">
-      <div class="builder-toolbar-actions">
-        <!-- Add a new empty app entry -->
-        <md-filled-button id="appToolkitAddApp" has-icon>
-          <md-icon slot="icon">
-            <span class="material-symbols-outlined">add</span>
-          </md-icon>
-          Add app
-        </md-filled-button>
-
-        <!-- Sort menu trigger; JS syncs label + menu selection -->
-        <md-outlined-button
-                id="appToolkitSortButton"
-                has-icon
-                trailing-icon
-                aria-haspopup="menu"
-                aria-expanded="false"
-        >
-          <md-icon slot="icon">
-            <span class="material-symbols-outlined">sort</span>
-          </md-icon>
-          <span class="builder-sort-label">
-            Sort · <span id="appToolkitSortLabel">App name (A–Z)</span>
-          </span>
-          <md-icon slot="trailing-icon">
-            <span class="material-symbols-outlined">arrow_drop_down</span>
-          </md-icon>
-        </md-outlined-button>
-
-        <!-- Sort options; JS applies 'data-sort-key' to the app list -->
-        <md-menu id="appToolkitSortMenu" anchor="appToolkitSortButton">
-          <md-menu-item type="radio" data-sort-key="name" selected>
-            <div slot="headline">App name (A–Z)</div>
-          </md-menu-item>
-          <md-menu-item type="radio" data-sort-key="category">
-            <div slot="headline">Category (A–Z)</div>
-          </md-menu-item>
-          <md-menu-item type="radio" data-sort-key="screenshots">
-            <div slot="headline">Screenshot count (high to low)</div>
-          </md-menu-item>
-        </md-menu>
-
-        <!-- Clear all entries and reset builder state -->
-        <md-text-button id="appToolkitResetButton" has-icon>
-          <md-icon slot="icon">
-            <span class="material-symbols-outlined">refresh</span>
-          </md-icon>
-          Clear workspace
-        </md-text-button>
-      </div>
-
-      <!-- Live textual summary of workspace health -->
-      <div class="builder-toolbar-meta">
-        <div class="toolbar-status" role="status" aria-live="polite">
-          <span class="toolbar-status-label">Workspace pulse</span>
-          <span class="toolbar-status-value" id="appToolkitToolbarPulse">Awaiting input</span>
-        </div>
-      </div>
-    </div>
-
-    <!--
-      Quick fetch:
-      - Preset shortcuts that load JSON from local paths (debug / release).
-      - JS listens on #appToolkitDebugPreset / #appToolkitReleasePreset and
-        populates the builder from those files.
+      Change Rationale: Quick fetch now leads the workflow so new sessions focus on loading a
+      trusted baseline before interacting with builder controls. This prioritizes data integrity
+      and follows Material motion guidance by revealing controls only after content is ready.
     -->
     <div class="builder-remote-inline-action builder-toolbar-fetch-card" id="appToolkitRemoteImport">
       <div class="builder-toolbar-fetch">
@@ -296,6 +230,77 @@
         </div>
       </div>
     </div>
+
+    <!--
+      Builder toolbar:
+      - Primary actions: Add app, Sort, Clear workspace.
+      - Secondary status: Workspace pulse text on the right.
+    -->
+    <div
+            class="builder-workspace-shell"
+            id="appToolkitWorkspaceContent"
+            data-state="pending"
+            hidden
+    >
+      <div class="builder-toolbar">
+        <div class="builder-toolbar-actions">
+          <!-- Add a new empty app entry -->
+          <md-filled-button id="appToolkitAddApp" has-icon>
+            <md-icon slot="icon">
+              <span class="material-symbols-outlined">add</span>
+            </md-icon>
+            Add app
+          </md-filled-button>
+
+          <!-- Sort menu trigger; JS syncs label + menu selection -->
+          <md-outlined-button
+                  id="appToolkitSortButton"
+                  has-icon
+                  trailing-icon
+                  aria-haspopup="menu"
+                  aria-expanded="false"
+          >
+            <md-icon slot="icon">
+              <span class="material-symbols-outlined">sort</span>
+            </md-icon>
+            <span class="builder-sort-label">
+              Sort · <span id="appToolkitSortLabel">App name (A–Z)</span>
+            </span>
+            <md-icon slot="trailing-icon">
+              <span class="material-symbols-outlined">arrow_drop_down</span>
+            </md-icon>
+          </md-outlined-button>
+
+          <!-- Sort options; JS applies 'data-sort-key' to the app list -->
+          <md-menu id="appToolkitSortMenu" anchor="appToolkitSortButton">
+            <md-menu-item type="radio" data-sort-key="name" selected>
+              <div slot="headline">App name (A–Z)</div>
+            </md-menu-item>
+            <md-menu-item type="radio" data-sort-key="category">
+              <div slot="headline">Category (A–Z)</div>
+            </md-menu-item>
+            <md-menu-item type="radio" data-sort-key="screenshots">
+              <div slot="headline">Screenshot count (high to low)</div>
+            </md-menu-item>
+          </md-menu>
+
+          <!-- Clear all entries and reset builder state -->
+          <md-text-button id="appToolkitResetButton" has-icon>
+            <md-icon slot="icon">
+              <span class="material-symbols-outlined">refresh</span>
+            </md-icon>
+            Clear workspace
+          </md-text-button>
+        </div>
+
+        <!-- Live textual summary of workspace health -->
+        <div class="builder-toolbar-meta">
+          <div class="toolbar-status" role="status" aria-live="polite">
+            <span class="toolbar-status-label">Workspace pulse</span>
+            <span class="toolbar-status-value" id="appToolkitToolbarPulse">Awaiting input</span>
+          </div>
+        </div>
+      </div>
 
     <!--
       GitHub publish card:
@@ -453,6 +458,7 @@
           ></div>
         </div>
       </md-side-sheet>
+    </div>
     </div>
   </section>
 

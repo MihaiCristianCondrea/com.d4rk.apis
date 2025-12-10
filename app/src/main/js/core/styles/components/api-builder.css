@@ -512,6 +512,25 @@ md-outlined-button.builder-remote-toggle {
   font-size: 1.1rem;
 }
 
+/* Change Rationale: Builder controls now stay hidden until a preset loads so editors focus on
+   fetching canonical data first; these states control the reveal and align with M3 motion tokens. */
+.builder-workspace-shell {
+  display: grid;
+  gap: 1.25rem;
+}
+
+.builder-workspace-shell[data-state='pending'] {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.builder-workspace-shell[data-state='ready'] {
+  opacity: 1;
+  transition:
+    opacity var(--app-motion-duration-medium, 260ms)
+      var(--app-motion-easing-emphasized, cubic-bezier(0.2, 0, 0, 1));
+}
+
 .builder-layout {
   display: grid;
   grid-template-columns: minmax(0, 1fr);

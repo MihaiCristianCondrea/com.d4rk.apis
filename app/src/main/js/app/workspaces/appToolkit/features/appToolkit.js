@@ -1,3 +1,5 @@
+import { createWorkspaceActivationController } from '../domain/workspaceActivationController.js';
+
 (function (global) {
     const utils = global.ApiBuilderUtils;
     if (!utils) {
@@ -151,6 +153,7 @@
         }
 
         const entriesContainer = document.getElementById('appToolkitEntries');
+        const workspaceContainer = document.getElementById('appToolkitWorkspaceContent');
         const builderLayout = builderRoot.querySelector('.builder-layout');
         const addButton = document.getElementById('appToolkitAddApp');
         const sortButton = document.getElementById('appToolkitSortButton');
@@ -216,6 +219,36 @@
             githubNextButton
         );
         let fetchPulseTimeout = null;
+
+        const workspaceActivation = createWorkspaceActivationController({
+            container: workspaceContainer,
+            buttons: [addButton, sortButton, resetButton],
+            prefersReducedMotion: () =>
+                typeof window !== 'undefined' &&
+                window.matchMedia &&
+                window.matchMedia('(prefers-reduced-motion: reduce)').matches
+        });
+
+        /**
+         * Synchronizes the builder's ready state so mutation controls stay disabled until a
+         * baseline payload is loaded.
+         *
+         * Change Rationale: The builder previously flashed empty fields and active controls before
+         * quick fetch completed, encouraging edits on incomplete data. Toggling readiness keeps the
+         * focus on loading debug/release JSON first, matching Material's staged reveal guidance.
+         *
+         * @param {boolean} isReady Whether the workspace should be interactive.
+         * @param {{ animate?: boolean }} [options] Optional reveal animation control.
+         * @returns {void}
+         */
+        function setWorkspaceReadyState(isReady, options = {}) {
+            workspaceActivation.setReady(isReady, options);
+            if (builderRoot) {
+                builderRoot.dataset.workspaceReady = isReady ? 'true' : 'false';
+            }
+        }
+
+        setWorkspaceReadyState(false, { animate: false });
 
         const syncDiffLayout = () => {
             if (!builderLayout) {
@@ -2742,6 +2775,7 @@
                 });
                 touchWorkspace();
                 render();
+                setWorkspaceReadyState(true);
             } catch (error) {
                 console.error('AppToolkit: Failed to import JSON.', error);
                 setPreviewStatus({
