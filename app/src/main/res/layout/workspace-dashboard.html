@@ -1,0 +1,66 @@
+<template data-slot="workspace-dashboard">
+  <section class="workspace-dashboard" aria-label="Workspace overview">
+    <div class="workspace-insight-grid">
+      <div class="insight-card" data-slot-target="insight-home">
+        <div class="insight-card-header">
+          <span class="material-symbols-outlined insight-icon" data-slot-target="home-icon">insights</span>
+          <span class="insight-label" data-slot-target="home-label">Home cards tracked</span>
+        </div>
+        <p class="insight-value" data-slot-target="home-count">0</p>
+        <p class="insight-helper" data-slot-target="home-helper">Live count mirrors the JSON preview.</p>
+      </div>
+      <div class="insight-card" data-slot-target="insight-release">
+        <div class="insight-card-header">
+          <span class="material-symbols-outlined insight-icon" data-slot-target="release-icon">task_alt</span>
+          <span class="insight-label" data-slot-target="release-label">Release ready</span>
+        </div>
+        <p class="insight-value" data-slot-target="release-count">0</p>
+        <p class="insight-helper" data-slot-target="release-helper">Entries ready for publishing.</p>
+      </div>
+      <div class="insight-card" data-slot-target="insight-blocks">
+        <div class="insight-card-header">
+          <span class="material-symbols-outlined insight-icon" data-slot-target="blocks-icon">view_list</span>
+          <span class="insight-label" data-slot-target="blocks-label">Blocks per lesson</span>
+        </div>
+        <p class="insight-value" data-slot-target="blocks-count">0</p>
+        <p class="insight-helper" data-slot-target="blocks-helper">Average content blocks per entry.</p>
+      </div>
+    </div>
+    <div class="workspace-secondary-grid">
+      <div class="workspace-plan">
+        <div class="card-body">
+          <div class="plan-header">
+            <h2>Today's pipeline</h2>
+            <span class="plan-updated">Updated <span data-slot-target="last-edited">awaiting changes</span></span>
+          </div>
+          <ol class="plan-list" data-slot-target="plan-list"></ol>
+          <div class="plan-actions">
+            <span class="material-symbols-outlined">timelapse</span>
+            Start focus session
+            <span class="material-symbols-outlined">edit_note</span>
+            Capture notes
+            <span class="note-indicator" aria-hidden="true">●</span>
+          </div>
+        </div>
+      </div>
+      <div class="workspace-release">
+        <div class="card-body">
+          <div class="release-header">
+            <h2>Release readiness</h2>
+            <p data-slot-target="workspace-pulse">Review entries to unlock insights.</p>
+          </div>
+          <div class="release-progress" role="img" aria-label="Release readiness progress">
+            <div class="release-progress-track">
+              <div class="release-progress-bar" data-slot-target="release-progress"></div>
+            </div>
+            <div class="release-progress-legend">
+              <span data-slot-target="legend-primary">Home</span>
+              <span data-slot-target="legend-secondary">Lesson</span>
+            </div>
+          </div>
+          <ul class="release-tips" data-slot-target="release-tips"></ul>
+        </div>
+      </div>
+    </div>
+  </section>
+</template>

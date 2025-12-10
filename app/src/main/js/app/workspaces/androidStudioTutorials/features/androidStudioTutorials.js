@@ -1,5 +1,6 @@
 import { createFocusTimerController } from '../../../../services/focusTimerController.js';
 import { createGithubWizardController } from '../../../../services/githubWizardController.js';
+import { renderWorkspaceDashboards } from '../../../../core/ui/templates/workspaceDashboard.js';
 
 // Change Rationale: Consolidated focus timer and GitHub wizard wiring through shared controllers to ensure consistent UX
 // across workspaces and reduce duplicated logic while keeping Material-inspired controls predictable.
@@ -143,6 +144,9 @@ import { createGithubWizardController } from '../../../../services/githubWizardC
         }
         const alreadyInitialized = workspaceRoot.dataset.initialized === 'true';
 
+        // Change Rationale: Render the shared workspace dashboard partial before caching DOM nodes so
+        // insight IDs exist for focus, diff, and GitHub controllers.
+        renderWorkspaceDashboards(workspaceRoot);
         cacheWorkspaceElements();
         wireDialogDismissHandlers();
         focusController.probeSessionStorage();

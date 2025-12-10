@@ -3,57 +3,40 @@
     <h1>Android Studio Tutorials API workspace</h1>
     <p>Create home feed listings and lesson content with the same workflow as the App Toolkit builder. Track metadata quality, compare diffs, and publish updates without leaving the workspace.</p>
   </header>
-  <section class="workspace-dashboard" aria-label="Workspace overview">
-    <div class="workspace-insight-grid">
-      <div class="insight-card-header">
-        <span class="material-symbols-outlined insight-icon">view_list</span> <span class="insight-label">Home lessons tracked</span>
-      </div>
-      <p class="insight-value" id="androidHomeCardCount">0</p>
-      <p class="insight-helper">Live count mirrors the JSON preview.</p>
-      <div class="insight-card-header">
-        <span class="material-symbols-outlined insight-icon">assignment_turned_in</span> <span class="insight-label">Release ready</span>
-      </div>
-      <p class="insight-value" id="androidReleaseReadyCount">0</p>
-      <p class="insight-helper">Entries with required metadata completed.</p>
-      <div class="insight-card-header">
-        <span class="material-symbols-outlined insight-icon">extension</span> <span class="insight-label">Blocks per lesson</span>
-      </div>
-      <p class="insight-value" id="androidLessonBlockAverage">0</p>
-      <p class="insight-helper">Average content blocks in the active lesson.</p>
-    </div>
-    <div class="workspace-secondary-grid">
-      <div class="card-body">
-        <div class="plan-header">
-          <h2>Today's pipeline</h2><span class="plan-updated">Updated <span id="androidLastEdited">awaiting changes</span></span>
-        </div>
-        <ol class="plan-list">
-          <li><span class="plan-step-title">Curate home feed metadata</span> <span class="plan-step-meta" id="androidReviewCount">0 lessons needing attention</span></li>
-          <li><span class="plan-step-title">Validate lesson structure</span> <span class="plan-step-meta">Ensure code, assets, and copy are balanced.</span></li>
-          <li><span class="plan-step-title">Publish to GitHub</span> <span class="plan-step-meta">Ship debug and release payloads together.</span></li>
-        </ol>
-        <div class="plan-actions">
-          <span class="material-symbols-outlined">timelapse</span> Start focus session <span class="material-symbols-outlined">edit_note</span> Capture notes <span class="note-indicator" aria-hidden="true">●</span>
-        </div>
-      </div>
-      <div class="card-body">
-        <div class="release-header">
-          <h2>Release readiness</h2>
-          <p id="androidWorkspacePulse">Review entries to unlock insights.</p>
-        </div>
-        <div class="release-progress" role="img" aria-label="Release readiness progress">
-          <div class="release-progress-track">
-            <div class="release-progress-bar" id="androidReleaseProgress"></div>
-          </div>
-          <div class="release-progress-legend">
-            <span>Home</span> <span>Lesson</span>
-          </div>
-        </div>
-        <ul class="release-tips">
-          <li>Populate lesson_id, lesson_type, and hero imagery for each home card.</li>
-          <li>Include at least four content blocks per lesson, mixing copy, images, and code.</li>
-        </ul>
-      </div>
-    </div>
+  <!-- Change Rationale: The workspace dashboard now uses a shared partial to keep metrics, pipeline copy, and release tips
+       consistent across workspaces while allowing IDs and helper text to stay configurable. -->
+  <section
+    class="workspace-dashboard"
+    data-slot="workspace-dashboard"
+    data-home-icon="view_list"
+    data-home-label="Home lessons tracked"
+    data-home-helper="Live count mirrors the JSON preview."
+    data-home-count-id="androidHomeCardCount"
+    data-release-icon="assignment_turned_in"
+    data-release-label="Release ready"
+    data-release-helper="Entries with required metadata completed."
+    data-release-ready-id="androidReleaseReadyCount"
+    data-blocks-icon="extension"
+    data-blocks-label="Blocks per lesson"
+    data-blocks-helper="Average content blocks in the active lesson."
+    data-blocks-count-id="androidLessonBlockAverage"
+    data-last-edited-id="androidLastEdited"
+    data-last-edited-default="awaiting changes"
+    data-pulse-id="androidWorkspacePulse"
+    data-pulse-default-text="Review entries to unlock insights."
+    data-progress-id="androidReleaseProgress"
+    data-legend-primary-text="Home"
+    data-legend-secondary-text="Lesson"
+  >
+    <template slot="plan-steps">
+      <li><span class="plan-step-title">Curate home feed metadata</span> <span class="plan-step-meta" id="androidReviewCount">0 lessons needing attention</span></li>
+      <li><span class="plan-step-title">Validate lesson structure</span> <span class="plan-step-meta">Ensure code, assets, and copy are balanced.</span></li>
+      <li><span class="plan-step-title">Publish to GitHub</span> <span class="plan-step-meta">Ship debug and release payloads together.</span></li>
+    </template>
+    <template slot="release-tips">
+      <li>Populate lesson_id, lesson_type, and hero imagery for each home card.</li>
+      <li>Include at least four content blocks per lesson, mixing copy, images, and code.</li>
+    </template>
   </section>
   <div class="card-body">
     <h2>Before you start</h2>
