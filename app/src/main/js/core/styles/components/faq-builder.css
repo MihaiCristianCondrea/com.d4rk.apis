@@ -16,6 +16,11 @@
   margin: 1.25rem 0 1rem;
 }
 
+.faq-nav-card {
+  display: block;
+  padding: 0.85rem 1rem 1rem;
+}
+
 .faq-nav__header {
   display: flex;
   align-items: center;
