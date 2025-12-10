@@ -1,3 +1,9 @@
+import { createFocusTimerController } from '../../../../services/focusTimerController.js';
+import { createGithubWizardController } from '../../../../services/githubWizardController.js';
+
+// Change Rationale: Consolidated focus timer and GitHub wizard wiring through shared controllers to ensure consistent UX
+// across workspaces and reduce duplicated logic while keeping Material-inspired controls predictable.
+
 (function (global) {
     const utils = global.ApiBuilderUtils;
     if (!utils) {
@@ -52,6 +58,65 @@
         sessionStorageAvailable: false
     };
 
+    const focusController = createFocusTimerController({
+        storageKey: FOCUS_STORAGE_KEY,
+        durationSeconds: FOCUS_SESSION_DURATION,
+        state: workspace.focus,
+        elementGetters: {
+            focusButton: () => workspace.elements.focusButton,
+            notesButton: () => workspace.elements.notesButton,
+            focusDialog: () => workspace.elements.focusDialog,
+            focusTimer: () => workspace.elements.focusTimer,
+            focusStart: () => workspace.elements.focusStart,
+            focusPause: () => workspace.elements.focusPause,
+            focusReset: () => workspace.elements.focusReset,
+            focusSave: () => workspace.elements.focusSave,
+            focusNotesField: () => workspace.elements.focusNotesField
+        },
+        onTimerComplete: () => updateToolbarPulses('focusComplete')
+    });
+
+    const githubWizardController = createGithubWizardController({
+        steps: ['authenticate', 'target', 'review'],
+        state: { index: workspace.githubStepIndex },
+        elementGetters: {
+            openButton: () => workspace.elements.githubWizardButton,
+            dialog: () => workspace.elements.githubDialog,
+            backButton: () => workspace.elements.githubBack,
+            nextButton: () => workspace.elements.githubNext,
+            targetSelect: () => workspace.elements.githubTarget,
+            stepper: () => workspace.elements.githubStepper
+        },
+        onStepChange: (index) => {
+            workspace.githubStepIndex = index;
+        },
+        onOpen: () => {
+            clearGithubStatus();
+            updateDiffSheet();
+        },
+        onNext: async (index) => {
+            clearGithubStatus();
+            if (index === 0) {
+                validateGithubToken(workspace.elements.githubToken?.value || '');
+                return 1;
+            }
+            if (index === 1) {
+                ensureGithubTargetReady();
+                return 2;
+            }
+            if (index === 2) {
+                await publishToGithub();
+                return false;
+            }
+            return index + 1;
+        },
+        onBack: (index) => {
+            clearGithubStatus();
+            return Math.max(index - 1, 0);
+        },
+        onTargetChange: () => clearGithubStatus()
+    });
+
     const ANDROID_BLOCK_FIELDS = {
         content_text: [
             { key: 'content_text', label: 'Text', type: 'textarea', helperText: 'Supports HTML formatting.' }
@@ -80,18 +145,17 @@
 
         cacheWorkspaceElements();
         wireDialogDismissHandlers();
-        prepareSessionStorage();
-        restoreFocusNotes();
-        wireFocusControls();
+        focusController.probeSessionStorage();
+        focusController.restoreNotes();
+        focusController.wireControls();
         wireRemoteFetch();
-        wireGithubWizard();
+        githubWizardController.wire();
         initHomeBuilder();
         initLessonBuilder();
         updateWorkspaceMetrics();
         updateToolbarPulses();
         updateDiffSheet();
-        updateFocusTimerDisplay();
-        updateFocusControls();
+        focusController.reset();
         workspaceRoot.dataset.initialized = 'true';
         workspace.initialized = true;
 
@@ -164,187 +228,6 @@
             });
             dialog.dataset.dialogCloseInit = 'true';
         });
-    }
-
-    function prepareSessionStorage() {
-        if (workspace.sessionStorageAvailable) {
-            return;
-        }
-        if (typeof sessionStorage === 'undefined') {
-            return;
-        }
-        try {
-            const probeKey = `${FOCUS_STORAGE_KEY}__probe`;
-            sessionStorage.setItem(probeKey, '1');
-            sessionStorage.removeItem(probeKey);
-            workspace.sessionStorageAvailable = true;
-        } catch (error) {
-            workspace.sessionStorageAvailable = false;
-        }
-        if (!workspace.sessionStorageAvailable && workspace.elements.focusSave) {
-            workspace.elements.focusSave.disabled = true;
-        }
-    }
-
-    function restoreFocusNotes() {
-        if (!workspace.sessionStorageAvailable) {
-            return;
-        }
-        try {
-            workspace.focus.notes = sessionStorage.getItem(FOCUS_STORAGE_KEY) || '';
-        } catch (error) {
-            workspace.focus.notes = '';
-        }
-        if (workspace.elements.focusNotesField) {
-            workspace.elements.focusNotesField.value = workspace.focus.notes;
-        }
-        updateNoteIndicator();
-    }
-
-    function updateNoteIndicator() {
-        const { notesButton } = workspace.elements;
-        if (!notesButton) {
-            return;
-        }
-        if (workspace.focus.notes && workspace.focus.notes.trim()) {
-            notesButton.dataset.noteState = 'saved';
-        } else {
-            delete notesButton.dataset.noteState;
-        }
-    }
-
-    function wireFocusControls() {
-        const {
-            focusButton,
-            notesButton,
-            focusDialog,
-            focusStart,
-            focusPause,
-            focusReset,
-            focusSave,
-            focusNotesField
-        } = workspace.elements;
-        if (focusButton && !focusButton.dataset.wired) {
-            focusButton.addEventListener('click', () => openFocusDialog({ autoStart: true }));
-            focusButton.dataset.wired = 'true';
-        }
-        if (notesButton && !notesButton.dataset.wired) {
-            notesButton.addEventListener('click', () => openFocusDialog({ autoStart: false }));
-            notesButton.dataset.wired = 'true';
-        }
-        if (focusStart && !focusStart.dataset.wired) {
-            focusStart.addEventListener('click', () => startFocusTimer());
-            focusStart.dataset.wired = 'true';
-        }
-        if (focusPause && !focusPause.dataset.wired) {
-            focusPause.addEventListener('click', () => pauseFocusTimer());
-            focusPause.dataset.wired = 'true';
-        }
-        if (focusReset && !focusReset.dataset.wired) {
-            focusReset.addEventListener('click', () => resetFocusTimer());
-            focusReset.dataset.wired = 'true';
-        }
-        if (focusSave && !focusSave.dataset.wired) {
-            focusSave.addEventListener('click', () => {
-                const value = focusNotesField ? focusNotesField.value || '' : '';
-                workspace.focus.notes = value;
-                if (workspace.sessionStorageAvailable) {
-                    try {
-                        sessionStorage.setItem(FOCUS_STORAGE_KEY, value);
-                    } catch (error) {
-                        // ignore storage errors
-                    }
-                }
-                updateNoteIndicator();
-                flashButton(
-                    focusSave,
-                    '<span class="material-symbols-outlined">check</span><span>Saved</span>'
-                );
-            });
-            focusSave.dataset.wired = 'true';
-        }
-        if (focusDialog && !focusDialog.dataset.focusInit) {
-            focusDialog.addEventListener('close', () => pauseFocusTimer());
-            focusDialog.dataset.focusInit = 'true';
-        }
-    }
-
-    function openFocusDialog({ autoStart = false } = {}) {
-        const { focusDialog, focusNotesField } = workspace.elements;
-        if (!focusDialog) {
-            return;
-        }
-        focusDialog.open = true;
-        if (focusNotesField) {
-            focusNotesField.value = workspace.focus.notes || '';
-        }
-        if (autoStart) {
-            resetFocusTimer();
-            startFocusTimer();
-        } else {
-            updateFocusTimerDisplay();
-            updateFocusControls();
-        }
-    }
-
-    function startFocusTimer() {
-        if (workspace.focus.interval) {
-            return;
-        }
-        if (workspace.focus.remaining <= 0) {
-            workspace.focus.remaining = FOCUS_SESSION_DURATION;
-        }
-        workspace.focus.interval = setInterval(() => {
-            workspace.focus.remaining -= 1;
-            if (workspace.focus.remaining <= 0) {
-                workspace.focus.remaining = 0;
-                pauseFocusTimer();
-                updateToolbarPulses('focusComplete');
-            }
-            updateFocusTimerDisplay();
-            updateFocusControls();
-        }, 1000);
-        updateFocusTimerDisplay();
-        updateFocusControls();
-    }
-
-    function pauseFocusTimer() {
-        if (workspace.focus.interval) {
-            clearInterval(workspace.focus.interval);
-            workspace.focus.interval = null;
-        }
-        updateFocusControls();
-    }
-
-    function resetFocusTimer() {
-        pauseFocusTimer();
-        workspace.focus.remaining = FOCUS_SESSION_DURATION;
-        updateFocusTimerDisplay();
-        updateFocusControls();
-    }
-
-    function updateFocusTimerDisplay() {
-        const { focusTimer } = workspace.elements;
-        if (!focusTimer) {
-            return;
-        }
-        const remaining = Math.max(workspace.focus.remaining, 0);
-        const minutes = Math.floor(remaining / 60)
-            .toString()
-            .padStart(2, '0');
-        const seconds = (remaining % 60).toString().padStart(2, '0');
-        focusTimer.textContent = `${minutes}:${seconds}`;
-    }
-
-    function updateFocusControls() {
-        const { focusStart, focusPause } = workspace.elements;
-        const running = Boolean(workspace.focus.interval);
-        if (focusStart) {
-            focusStart.disabled = running;
-        }
-        if (focusPause) {
-            focusPause.disabled = !running;
-        }
     }
 
     function wireRemoteFetch() {
@@ -448,61 +331,6 @@
         }
     }
 
-    function wireGithubWizard() {
-        const { githubWizardButton, githubDialog, githubBack, githubNext, githubTarget } = workspace.elements;
-        if (githubWizardButton && !githubWizardButton.dataset.wired) {
-            githubWizardButton.addEventListener('click', () => {
-                setGithubStep(0);
-                clearGithubStatus();
-                if (githubDialog) {
-                    githubDialog.open = true;
-                }
-                updateDiffSheet();
-            });
-            githubWizardButton.dataset.wired = 'true';
-        }
-        if (githubBack && !githubBack.dataset.wired) {
-            githubBack.addEventListener('click', () => {
-                if (workspace.githubStepIndex > 0) {
-                    setGithubStep(workspace.githubStepIndex - 1);
-                    clearGithubStatus();
-                }
-            });
-            githubBack.dataset.wired = 'true';
-        }
-        if (githubNext && !githubNext.dataset.wired) {
-            githubNext.addEventListener('click', async () => {
-                clearGithubStatus();
-                if (workspace.githubStepIndex === 0) {
-                    try {
-                        validateGithubToken(workspace.elements.githubToken?.value || '');
-                        setGithubStep(1);
-                    } catch (error) {
-                        setGithubStatus({ status: 'error', message: error.message });
-                    }
-                    return;
-                }
-                if (workspace.githubStepIndex === 1) {
-                    try {
-                        ensureGithubTargetReady();
-                        setGithubStep(2);
-                    } catch (error) {
-                        setGithubStatus({ status: 'error', message: error.message });
-                    }
-                    return;
-                }
-                if (workspace.githubStepIndex === 2) {
-                    await publishToGithub();
-                }
-            });
-            githubNext.dataset.wired = 'true';
-        }
-        if (githubTarget && !githubTarget.dataset.wired) {
-            githubTarget.addEventListener('change', () => clearGithubStatus());
-            githubTarget.dataset.wired = 'true';
-        }
-    }
-
     function ensureGithubTargetReady() {
         const { githubTarget, githubLessonSlug } = workspace.elements;
         const targetKey = githubTarget?.value || 'home-debug';
@@ -521,22 +349,6 @@
             throw new Error('Resolve preview validation issues before publishing.');
         }
         updateDiffSheet();
-    }
-
-    function setGithubStep(index) {
-        const steps = ['authenticate', 'target', 'review'];
-        const clamped = Math.max(0, Math.min(index, steps.length - 1));
-        workspace.githubStepIndex = clamped;
-        if (workspace.elements.githubStepper) {
-            workspace.elements.githubStepper.value = steps[clamped];
-        }
-        if (workspace.elements.githubBack) {
-            workspace.elements.githubBack.disabled = clamped === 0;
-        }
-        if (workspace.elements.githubNext) {
-            workspace.elements.githubNext.textContent =
-                clamped === steps.length - 1 ? 'Publish' : 'Next';
-        }
     }
 
     function clearGithubStatus() {
