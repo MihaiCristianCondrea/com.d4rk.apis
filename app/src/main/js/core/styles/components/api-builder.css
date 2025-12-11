@@ -190,7 +190,7 @@
 }
 
 /* Change Rationale: The workspace dashboard now hydrates from a shared partial, so styling hooks target structural classes instead of page-specific wrappers to keep cards consistent across workspaces. */
-.workspace-dashboard .insight-card {
+.workspace-dashboard .workspace-insight-card {
   background: var(--md-sys-color-surface-container);
   border: 1px solid color-mix(in srgb, var(--md-sys-color-outline) 12%, transparent);
   box-shadow: 0 12px 28px rgba(15, 20, 25, 0.08);

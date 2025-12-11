@@ -89,6 +89,12 @@
             return;
         }
 
+        // Change Rationale: Hydrate FAQ insight cards through the shared workspace partial to keep Material 3 spacing matched
+        // to other dashboards without duplicating HTML.
+        if (typeof global.renderWorkspaceInsightCards === 'function') {
+            global.renderWorkspaceInsightCards(document);
+        }
+
         const entriesContainer = document.getElementById('faqEntries');
         const addButton = document.getElementById('faqAddEntry');
         const startOverButton = document.getElementById('faqStartOverButton');
