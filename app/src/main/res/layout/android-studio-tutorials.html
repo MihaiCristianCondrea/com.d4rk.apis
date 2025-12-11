@@ -47,35 +47,31 @@
       <li>Fetch the latest payloads before editing to compare them in the diff sheet.</li>
     </ul>
   </div>
-  <div class="card-body">
-    <div class="builder-remote-header">
-      <div>
-        <h2>Fetch existing JSON</h2>
-        <p>Pull the latest home or lesson payload before editing entries.</p>
-      </div>Home Lesson
-    </div>
-    <div class="builder-remote-controls">
-      <span class="material-symbols-outlined">link</span> <span class="material-symbols-outlined">cloud_download</span> Fetch from URL
-    </div>
-    <div class="builder-remote-presets" aria-label="Quick fetch shortcuts">
-      <span class="builder-remote-presets-label">Quick links</span> <span class="material-symbols-outlined">download</span> Home · Debug <span class="material-symbols-outlined">download</span> Home · Release <span class="material-symbols-outlined">download</span> Lesson · Debug <span class="material-symbols-outlined">download</span> Lesson · Release
-    </div>
-  </div>
-  <div class="card-body">
-    <div class="builder-remote-header">
-      <div>
-        <h2>Publish to GitHub</h2>
-        <p>Use the GitHub Contents API to update payloads once the previews are valid. Tokens are used only for this request and never stored.</p>
-      </div>
-    </div>
-    <div class="builder-github-note" role="note">
-      <p><strong>Create a personal access token</strong> with <em>Repository permissions → Contents: Read & write</em>. Keep the token outside of source control and scope it to this repository.</p>
-    </div>
-    <div class="builder-github-launch">
-      <span class="material-symbols-outlined">rocket_launch</span> Open publish wizard
-      <p class="builder-github-helper">Validate the previews first, then follow the guided steps to publish.</p>
-    </div>
-  </div>
+  <!-- Change Rationale: Remote controls now rely on the shared partial to keep presets, labels, and launch hooks aligned across
+       workspaces while allowing Android-specific URLs and IDs. -->
+  <div
+    data-partial="builder-remote"
+    data-remote-prefix="android"
+    data-fetch-title="Fetch existing JSON"
+    data-fetch-helper="Pull the latest home or lesson payload before editing entries."
+    data-home-label="Home"
+    data-lesson-label="Lesson"
+    data-fetch-input-id="androidFetchInput"
+    data-fetch-button-id="androidFetchButton"
+    data-fetch-target-id="androidFetchTarget"
+    data-fetch-status-id="androidFetchStatus"
+    data-preset-label="Quick links"
+    data-home-debug-preset="./api/android_studio_tutorials/v1/debug/en/home/api_get_lessons.json"
+    data-home-release-preset="./api/android_studio_tutorials/v1/release/en/home/api_get_lessons.json"
+    data-lesson-debug-preset="./api/android_studio_tutorials/v1/debug/en/lessons/api_get_alert_dialogs.json"
+    data-lesson-release-preset="./api/android_studio_tutorials/v1/release/en/lessons/api_get_alert_dialogs.json"
+    data-github-title="Publish to GitHub"
+    data-github-helper="Use the GitHub Contents API to update payloads once the previews are valid. Tokens are used only for this request and never stored."
+    data-github-note="Create a personal access token with Repository permissions → Contents: Read &amp; write. Keep the token outside of source control and scope it to this repository."
+    data-github-launch-helper="Validate the previews first, then follow the guided steps to publish."
+    data-github-button-id="androidGithubWizardButton"
+    data-github-status-id="androidRemoteGithubStatus"
+  ></div>
   <div class="pager" id="androidPager" data-pager="">
     <div class="pager-tabs" role="tablist">
       <button type="button" class="pager-tab active" data-page="home" role="tab" aria-selected="true">Home API</button> <button type="button" class="pager-tab" data-page="lesson" role="tab" aria-selected="false">Lesson API</button>
