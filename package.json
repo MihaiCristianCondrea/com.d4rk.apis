@@ -32,7 +32,8 @@
       "^.+\\.js$": "babel-jest"
     },
     "moduleNameMapper": {
-      "^@/(.*)$": "<rootDir>/app/src/main/js/$1"
+      "^@/(.*)$": "<rootDir>/app/src/main/js/$1",
+      "builder-remote\\.html\\?raw$": "<rootDir>/__mocks__/builderRemoteRaw.js"
     }
   },
   "dependencies": {

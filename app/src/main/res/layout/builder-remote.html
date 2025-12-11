@@ -1,0 +1,106 @@
+<!-- Change Rationale: Consolidated fetch and publish controls into a shared partial so workspaces can declare presets, status
+     hooks, and labels via data attributes while reusing the same Material-inspired layout. -->
+<template data-partial="builder-remote">
+  <div class="card-body builder-remote-card" data-remote-section="fetch">
+    <div class="builder-remote-header builder-remote-header--split">
+      <div>
+        <h2 data-slot-target="fetch-title">Fetch existing JSON</h2>
+        <p data-slot-target="fetch-helper">Pull the latest home or lesson payload before editing entries.</p>
+      </div>
+      <div class="builder-remote-actions" aria-label="Fetch target">
+        <md-filled-tonal-button class="builder-remote-toggle" data-slot-target="home-target" type="button">
+          <md-icon slot="icon">
+            <span class="material-symbols-outlined">home</span>
+          </md-icon>
+          Home
+        </md-filled-tonal-button>
+        <md-outlined-button class="builder-remote-toggle" data-slot-target="lesson-target" type="button">
+          <md-icon slot="icon">
+            <span class="material-symbols-outlined">menu_book</span>
+          </md-icon>
+          Lesson
+        </md-outlined-button>
+      </div>
+    </div>
+    <div class="builder-remote-inline-action builder-remote-controls builder-remote-controls--stacked">
+      <div class="builder-remote-controls" data-slot-target="fetch-row">
+        <md-outlined-select data-slot-target="fetch-target">
+          <md-select-option value="home" selected>
+            <div slot="headline">Home</div>
+          </md-select-option>
+          <md-select-option value="lesson">
+            <div slot="headline">Lesson</div>
+          </md-select-option>
+        </md-outlined-select>
+        <md-outlined-text-field
+          data-slot-target="fetch-input"
+          label="Fetch from URL"
+          type="url"
+          autocomplete="url"
+          supporting-text="Paste a JSON URL or choose a preset."
+        ></md-outlined-text-field>
+        <md-filled-tonal-button class="builder-remote-inline-button" data-slot-target="fetch-button" has-icon type="button">
+          <md-icon slot="icon">
+            <span class="material-symbols-outlined">cloud_download</span>
+          </md-icon>
+          Fetch JSON
+        </md-filled-tonal-button>
+      </div>
+      <p class="builder-remote-feedback" data-slot-target="fetch-status" role="status" aria-live="polite"></p>
+    </div>
+    <div class="builder-remote-presets builder-remote-presets--buttons" aria-label="Quick fetch shortcuts">
+      <span class="builder-remote-presets-label" data-slot-target="preset-label">Quick links</span>
+      <md-text-button class="builder-remote-inline-button" data-slot-target="home-debug" has-icon type="button">
+        <md-icon slot="icon">
+          <span class="material-symbols-outlined">download</span>
+        </md-icon>
+        <span class="builder-remote-preset-label" data-slot-target="home-debug-label">Home · Debug</span>
+      </md-text-button>
+      <md-text-button class="builder-remote-inline-button" data-slot-target="home-release" has-icon type="button">
+        <md-icon slot="icon">
+          <span class="material-symbols-outlined">download</span>
+        </md-icon>
+        <span class="builder-remote-preset-label" data-slot-target="home-release-label">Home · Release</span>
+      </md-text-button>
+      <md-text-button class="builder-remote-inline-button" data-slot-target="lesson-debug" has-icon type="button">
+        <md-icon slot="icon">
+          <span class="material-symbols-outlined">download</span>
+        </md-icon>
+        <span class="builder-remote-preset-label" data-slot-target="lesson-debug-label">Lesson · Debug</span>
+      </md-text-button>
+      <md-text-button class="builder-remote-inline-button" data-slot-target="lesson-release" has-icon type="button">
+        <md-icon slot="icon">
+          <span class="material-symbols-outlined">download</span>
+        </md-icon>
+        <span class="builder-remote-preset-label" data-slot-target="lesson-release-label">Lesson · Release</span>
+      </md-text-button>
+    </div>
+  </div>
+  <div class="card-body builder-remote-card" data-remote-section="publish">
+    <div class="builder-remote-header">
+      <div>
+        <h2 data-slot-target="github-title">Publish to GitHub</h2>
+        <p data-slot-target="github-helper">
+          Use the GitHub Contents API to update payloads once the previews are valid. Tokens are used only for this request and never stored.
+        </p>
+      </div>
+    </div>
+    <div class="builder-github-note" role="note">
+      <p data-slot-target="github-note">
+        <strong>Create a personal access token</strong> with <em>Repository permissions → Contents: Read &amp; write</em>. Keep the token outside of source control and scope it to this repository.
+      </p>
+    </div>
+    <div class="builder-github-launch">
+      <md-filled-button class="builder-github-launch-button" data-slot-target="github-launch" has-icon type="button">
+        <md-icon slot="icon">
+          <span class="material-symbols-outlined">rocket_launch</span>
+        </md-icon>
+        Open publish wizard
+      </md-filled-button>
+      <p class="builder-github-helper" data-slot-target="github-launch-helper">
+        Validate the previews first, then follow the guided steps to publish.
+      </p>
+      <p class="builder-remote-feedback" data-slot-target="github-status" role="status" aria-live="polite"></p>
+    </div>
+  </div>
+</template>
