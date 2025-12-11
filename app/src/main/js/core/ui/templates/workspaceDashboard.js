@@ -1,4 +1,5 @@
 import workspaceDashboardTemplateSource from '../../../res/layout/workspace-dashboard.html?raw';
+import { renderWorkspaceInsightCards } from './workspaceInsightCard.js';
 
 /**
  * Hydrates workspace dashboard stubs using the shared layout partial so each workspace can
@@ -24,27 +25,31 @@ export function renderWorkspaceDashboards(root = document) {
     }
 
     copyHostClasses(host, section);
-    hydrateInsight(fragment, host.dataset, 'home', {
+    applyInsightDataset(section, 'home', {
       icon: host.dataset.homeIcon,
       label: host.dataset.homeLabel,
       helper: host.dataset.homeHelper,
       valueId: host.dataset.homeCountId,
       defaultValue: host.dataset.homeDefaultValue,
     });
-    hydrateInsight(fragment, host.dataset, 'release', {
+    applyInsightDataset(section, 'release', {
       icon: host.dataset.releaseIcon,
       label: host.dataset.releaseLabel,
       helper: host.dataset.releaseHelper,
       valueId: host.dataset.releaseReadyId,
       defaultValue: host.dataset.releaseDefaultValue,
     });
-    hydrateInsight(fragment, host.dataset, 'blocks', {
+    applyInsightDataset(section, 'blocks', {
       icon: host.dataset.blocksIcon,
       label: host.dataset.blocksLabel,
       helper: host.dataset.blocksHelper,
       valueId: host.dataset.blocksCountId,
       defaultValue: host.dataset.blocksDefaultValue,
     });
+
+    // Change Rationale: Rendering insight cards through the shared partial keeps Material 3 spacing consistent and lets each
+    // workspace override iconography, labels, and IDs via data attributes instead of duplicating card markup.
+    renderWorkspaceInsightCards(section);
 
     assignId(fragment, 'last-edited', host.dataset.lastEditedId, host.dataset.lastEditedDefault);
     assignId(fragment, 'plan-list', host.dataset.planListId);
@@ -90,33 +95,32 @@ function copyHostClasses(host, section) {
 }
 
 /**
- * Applies slot-aware insight values and IDs to the cloned fragment.
+ * Propagates host-provided insight settings onto the placeholder so the shared card partial can hydrate correctly.
  *
- * @param {DocumentFragment} fragment - The cloned template fragment.
- * @param {DOMStringMap} dataset - The dataset pulled from the host node.
+ * @param {Element | DocumentFragment} scope - The fragment that contains the insight placeholder.
  * @param {'home' | 'release' | 'blocks'} key - The insight namespace to hydrate.
  * @param {{ icon?: string, label?: string, helper?: string, valueId?: string, defaultValue?: string }} fields - Insight fields.
  */
-function hydrateInsight(fragment, dataset, key, fields) {
-  const iconTarget = fragment.querySelector(`[data-slot-target="${key}-icon"]`);
-  const labelTarget = fragment.querySelector(`[data-slot-target="${key}-label"]`);
-  const helperTarget = fragment.querySelector(`[data-slot-target="${key}-helper"]`);
-  const valueTarget = fragment.querySelector(`[data-slot-target="${key}-count"]`);
+function applyInsightDataset(scope, key, fields) {
+  const placeholder = scope.querySelector(`[data-slot-prefix="${key}"]`);
+  if (!placeholder) {
+    return;
+  }
 
-  if (fields.icon && iconTarget) {
-    iconTarget.textContent = fields.icon;
+  if (fields.icon) {
+    placeholder.dataset.icon = fields.icon;
   }
-  if (fields.label && labelTarget) {
-    labelTarget.textContent = fields.label;
+  if (fields.label) {
+    placeholder.dataset.label = fields.label;
   }
-  if (fields.helper && helperTarget) {
-    helperTarget.textContent = fields.helper;
+  if (fields.helper) {
+    placeholder.dataset.helper = fields.helper;
   }
-  if (fields.valueId && valueTarget) {
-    valueTarget.id = fields.valueId;
+  if (fields.valueId) {
+    placeholder.dataset.valueId = fields.valueId;
   }
-  if (fields.defaultValue && valueTarget) {
-    valueTarget.textContent = fields.defaultValue;
+  if (fields.defaultValue) {
+    placeholder.dataset.defaultValue = fields.defaultValue;
   }
 }
 

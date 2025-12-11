@@ -33,28 +33,38 @@
   </section>
     <section class="faq-screen" data-faq-screen="workspace" aria-label="FAQ workspace" hidden="">
     <section class="workspace-dashboard" aria-label="Workspace overview">
-      <div class="workspace-insight-grid">
-        <md-elevated-card class="insight-card">
-          <div class="insight-card-header">
-            <span class="material-symbols-outlined insight-icon">help_center</span> <span class="insight-label">FAQs tracked</span>
-          </div>
-          <p class="insight-value" id="faqTotalCount">0</p>
-          <p class="insight-helper">Live count mirrors the builder list.</p>
-        </md-elevated-card>
-        <md-elevated-card class="insight-card">
-          <div class="insight-card-header">
-            <span class="material-symbols-outlined insight-icon">star</span> <span class="insight-label">Featured answers</span>
-          </div>
-          <p class="insight-value" id="faqFeaturedCount">0</p>
-          <p class="insight-helper">Highlighted in home experiences.</p>
-        </md-elevated-card>
-        <md-elevated-card class="insight-card">
-          <div class="insight-card-header">
-            <span class="material-symbols-outlined insight-icon">symptoms</span> <span class="insight-label">Icon coverage</span>
-          </div>
-          <p class="insight-value" id="faqIconCoverage">0/0</p>
-          <p class="insight-helper">Ensure every entry references a Material icon.</p>
-        </md-elevated-card>
+      <!-- Change Rationale: The insight grid now uses the shared workspace-insight-card partial so FAQ metrics mirror the same Material 3 spacing as other workspaces without duplicating markup. -->
+      <div class="workspace-insight-grid" data-slot-target="faq-insights">
+        <div
+          class="workspace-insight-card"
+          data-partial="workspace-insight-card"
+          data-slot-prefix="faq-total"
+          data-icon="help_center"
+          data-label="FAQs tracked"
+          data-helper="Live count mirrors the builder list."
+          data-value-id="faqTotalCount"
+          data-default-value="0"
+        ></div>
+        <div
+          class="workspace-insight-card"
+          data-partial="workspace-insight-card"
+          data-slot-prefix="faq-featured"
+          data-icon="star"
+          data-label="Featured answers"
+          data-helper="Highlighted in home experiences."
+          data-value-id="faqFeaturedCount"
+          data-default-value="0"
+        ></div>
+        <div
+          class="workspace-insight-card"
+          data-partial="workspace-insight-card"
+          data-slot-prefix="faq-icons"
+          data-icon="symptoms"
+          data-label="Icon coverage"
+          data-helper="Ensure every entry references a Material icon."
+          data-value-id="faqIconCoverage"
+          data-default-value="0/0"
+        ></div>
       </div>
       <div class="workspace-secondary-grid">
         <md-filled-card class="workspace-plan">

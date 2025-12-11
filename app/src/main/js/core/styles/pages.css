@@ -255,7 +255,8 @@
   gap: 1.25rem;
 }
 
-.insight-card {
+/* Change Rationale: Align workspace insight cards with the shared partial so typography and spacing stay consistent across dashboards. */
+.workspace-insight-card {
   --md-elevated-card-container-color: var(--md-sys-color-surface-container);
   padding: 1.25rem 1.5rem;
   border-radius: 20px;
@@ -263,7 +264,7 @@
   gap: 0.65rem;
 }
 
-.insight-card-header {
+.workspace-insight-card__header {
   display: flex;
   align-items: center;
   gap: 0.65rem;
@@ -271,7 +272,7 @@
   font-size: 0.9rem;
 }
 
-.insight-icon {
+.workspace-insight-card__icon {
   background: rgba(88, 101, 242, 0.18);
   border-radius: 12px;
   width: 36px;
@@ -282,18 +283,18 @@
   font-size: 1.4rem;
 }
 
-.insight-label {
+.workspace-insight-card__label {
   font-weight: 500;
 }
 
-.insight-value {
+.workspace-insight-card__value {
   margin: 0;
   font-size: clamp(1.6rem, 3vw + 1rem, 2.6rem);
   font-weight: 600;
   color: var(--app-text-color);
 }
 
-.insight-helper {
+.workspace-insight-card__helper {
   margin: 0;
   color: var(--app-secondary-text-color);
   font-size: 0.9rem;

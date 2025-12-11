@@ -1,30 +1,34 @@
+<!-- Change Rationale: Workspace dashboards now reference the shared insight card partial so every workspace inherits identical spacing and helper copy patterns without duplicating markup. -->
 <template data-slot="workspace-dashboard">
   <section class="workspace-dashboard" aria-label="Workspace overview">
-    <div class="workspace-insight-grid">
-      <div class="insight-card" data-slot-target="insight-home">
-        <div class="insight-card-header">
-          <span class="material-symbols-outlined insight-icon" data-slot-target="home-icon">insights</span>
-          <span class="insight-label" data-slot-target="home-label">Home cards tracked</span>
-        </div>
-        <p class="insight-value" data-slot-target="home-count">0</p>
-        <p class="insight-helper" data-slot-target="home-helper">Live count mirrors the JSON preview.</p>
-      </div>
-      <div class="insight-card" data-slot-target="insight-release">
-        <div class="insight-card-header">
-          <span class="material-symbols-outlined insight-icon" data-slot-target="release-icon">task_alt</span>
-          <span class="insight-label" data-slot-target="release-label">Release ready</span>
-        </div>
-        <p class="insight-value" data-slot-target="release-count">0</p>
-        <p class="insight-helper" data-slot-target="release-helper">Entries ready for publishing.</p>
-      </div>
-      <div class="insight-card" data-slot-target="insight-blocks">
-        <div class="insight-card-header">
-          <span class="material-symbols-outlined insight-icon" data-slot-target="blocks-icon">view_list</span>
-          <span class="insight-label" data-slot-target="blocks-label">Blocks per lesson</span>
-        </div>
-        <p class="insight-value" data-slot-target="blocks-count">0</p>
-        <p class="insight-helper" data-slot-target="blocks-helper">Average content blocks per entry.</p>
-      </div>
+    <div class="workspace-insight-grid" data-slot-target="insight-grid">
+      <div
+        class="workspace-insight-card"
+        data-partial="workspace-insight-card"
+        data-slot-prefix="home"
+        data-icon="insights"
+        data-label="Home cards tracked"
+        data-helper="Live count mirrors the JSON preview."
+        data-default-value="0"
+      ></div>
+      <div
+        class="workspace-insight-card"
+        data-partial="workspace-insight-card"
+        data-slot-prefix="release"
+        data-icon="task_alt"
+        data-label="Release ready"
+        data-helper="Entries ready for publishing."
+        data-default-value="0"
+      ></div>
+      <div
+        class="workspace-insight-card"
+        data-partial="workspace-insight-card"
+        data-slot-prefix="blocks"
+        data-icon="view_list"
+        data-label="Blocks per lesson"
+        data-helper="Average content blocks per entry."
+        data-default-value="0"
+      ></div>
     </div>
     <div class="workspace-secondary-grid">
       <div class="workspace-plan">
