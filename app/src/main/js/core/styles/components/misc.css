@@ -5,6 +5,29 @@
   --md-outlined-button-container-shape: var(--app-button-shape);
 }
 
+/* Change Rationale: The segmented controls inside the FAQ workspace and Repo Mapper
+ * inherited surrounding layout colors, which left their outlines and selected states
+ * inconsistent with Material defaults. Limiting the customization to color tokens keeps
+ * the native shape, padding, and elevation while aligning the accents with the app's
+ * primary palette so both control sets render identically.
+ */
+md-segmented-button-set.app-segmented md-outlined-segmented-button {
+  --md-outlined-segmented-button-container-color: var(--md-sys-color-surface-container);
+  --md-outlined-segmented-button-outline-color: var(--md-sys-color-outline-variant, var(--md-sys-color-outline));
+  --md-outlined-segmented-button-label-text-color: var(
+    --md-sys-color-on-surface-variant,
+    var(--md-sys-color-on-surface)
+  );
+  --md-outlined-segmented-button-icon-color: var(--md-sys-color-on-surface-variant, currentColor);
+  --md-outlined-segmented-button-selected-container-color: color-mix(
+    in srgb,
+    var(--md-sys-color-primary) 12%,
+    transparent
+  );
+  --md-outlined-segmented-button-selected-label-text-color: var(--md-sys-color-primary);
+  --md-outlined-segmented-button-selected-icon-color: var(--md-sys-color-primary);
+}
+
 .focus-dialog {
   --md-dialog-container-shape: 28px;
 }
