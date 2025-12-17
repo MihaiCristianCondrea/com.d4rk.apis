@@ -1,0 +1,74 @@
+[
+  {
+    "id": "cleaner-what-is",
+    "icon": "cleaning_services",
+    "question": "What is Cleaner?",
+    "answer": "<p>Cleaner is a free and open-source Android app designed to help improve your device's performance and free up storage. It scans for unnecessary files, old caches, temporary data, and other junk that accumulates over time.</p><p>You stay in full control of what gets removed.</p>",
+    "featured": false,
+    "tags": ["cleaner", "performance", "storage", "cache"]
+  },
+  {
+    "id": "cleaner-safe",
+    "icon": "verified_user",
+    "question": "Is Cleaner safe to use?",
+    "answer": "<p>Yes, Cleaner is safe to use. It only targets files that are safe to remove and never touches personal data, media, or important system files.</p><p>The scanning logic is intentionally conservative to avoid deleting anything essential.</p>",
+    "featured": false,
+    "tags": ["safety", "security", "safe_to_use"]
+  },
+  {
+    "id": "cleaner-how-to-use",
+    "icon": "play_circle",
+    "question": "How do I use Cleaner?",
+    "answer": "<p>Install Cleaner from the Google Play Store or from GitHub Releases, open the app, and start a scan. Cleaner will identify unnecessary files and show you a preview before anything is removed.</p><p>You can fine-tune what types of files should be detected inside the app's Settings section.</p>",
+    "featured": false,
+    "tags": ["how_to", "tutorial", "usage"]
+  },
+  {
+    "id": "cleaner-cache",
+    "icon": "layers_clear",
+    "question": "Can Cleaner delete app cache?",
+    "answer": "<p>Yes, Cleaner can delete app cache. Clearing cache may temporarily make some apps load slower the first time you reopen them, but it frees valuable storage space.</p>",
+    "featured": false,
+    "tags": ["cache", "storage", "cleanup"]
+  },
+  {
+    "id": "cleaner-root",
+    "icon": "security",
+    "question": "Does Cleaner require root access?",
+    "answer": "<p>No, Cleaner does not require root. All features are built around Android's standard APIs, which means Cleaner works safely on any supported device without elevated permissions.</p>",
+    "featured": false,
+    "tags": ["root", "permissions", "compatibility"]
+  },
+  {
+    "id": "cleaner-ios",
+    "icon": "phone_android",
+    "question": "Is Cleaner available for iOS?",
+    "answer": "<p>No, Cleaner is currently available only for Android devices. There are no active plans for an iOS version.</p>",
+    "featured": false,
+    "tags": ["ios", "availability", "platforms"]
+  },
+  {
+    "id": "cleaner-battery",
+    "icon": "battery_saver",
+    "question": "Does Cleaner improve battery life?",
+    "answer": "<p>Cleaner may indirectly improve battery life by removing cached data and junk from apps that frequently run background processes. Results vary depending on your device, installed apps, and usage habits.</p>",
+    "featured": false,
+    "tags": ["battery", "performance"]
+  },
+  {
+    "id": "cleaner-frequency",
+    "icon": "schedule",
+    "question": "How often should I use Cleaner?",
+    "answer": "<p>There is no fixed schedule. Some people run Cleaner weekly, others only once a month. It depends on how often you install apps, browse the web, or use social and media-heavy apps that generate large caches.</p>",
+    "featured": false,
+    "tags": ["usage", "maintenance", "frequency"]
+  },
+  {
+    "id": "cleaner-compatibility",
+    "icon": "devices",
+    "question": "Is Cleaner compatible with all Android devices?",
+    "answer": "<p>Cleaner is compatible with most Android devices that meet the minimum system requirements. Check the Google Play listing or GitHub Releases page to confirm compatibility for your device.</p><p>If you encounter issues, you can open a ticket via GitHub Issues for assistance.</p>",
+    "featured": false,
+    "tags": ["compatibility", "android", "devices"]
+  }
+]

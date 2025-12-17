@@ -1,0 +1,34 @@
+[
+  {
+    "id": "faq-gms-required",
+    "icon": "support_agent",
+    "question": "Why do your apps require Google Play Services?",
+    "answer": "<p>My apps integrate several components from Google Play Services because they provide reliable, well-maintained solutions for everyday needs:</p><ul><li><strong>Firebase Analytics, Performance, and Crashlytics</strong> help monitor stability and feature adoption.</li><li><strong>Google Ads / AdMob</strong> offset hosting, tooling, and device testing costs.</li><li><strong>In-App Reviews & Play In-App Updates</strong> ensure a smoother experience without manual store checks.</li></ul><p>Replacing these SDKs would mean rewriting entire systems and losing important telemetry, so the Play Store build remains the most sustainable choice.</p>",
+    "featured": true,
+    "tags": ["gms", "firebase", "play_services"]
+  },
+  {
+    "id": "faq-why-not-fdroid",
+    "icon": "storefront",
+    "question": "Why aren’t your apps on F-Droid or other stores?",
+    "answer": "<p>I appreciate the open-source philosophy of F-Droid and similar platforms, but their policies prohibit binaries that include proprietary SDKs such as Play Services, AdMob, or Firebase.</p><p>These SDKs are essential to my workflow, so the apps would not pass F-Droid’s checks. To avoid fragmented or unverified builds, I focus on:</p><ul><li><strong>Google Play Store</strong> for the primary, auto-updated release.</li><li><strong>GitHub Releases</strong> for developers who prefer sideloading.</li></ul>",
+    "featured": true,
+    "tags": ["f-droid", "gms", "distribution"]
+  },
+  {
+    "id": "faq-gms-free-builds",
+    "icon": "build",
+    "question": "Will you ever make GMS-free or F-Droid builds?",
+    "answer": "<p>I have experimented with lightweight, offline-friendly prototypes. The difficulty is maintaining two separate pipelines, testing matrices, and documentation — effectively doubling the workload for every update.</p><p>For now, concentrating on one Play Services–based build lets me ship features and fixes faster. If a sustainable path to a GMS-free edition appears, I will share updates in the news feed and on GitHub.</p>",
+    "featured": true,
+    "tags": ["gms-free", "open-source"]
+  },
+  {
+    "id": "faq-official-downloads",
+    "icon": "cloud_download",
+    "question": "Where can I find official builds?",
+    "answer": "<p>Download authentic, verified builds only from:</p><ul><li><strong>Google Play Store</strong> – primary distribution with automatic updates.</li><li><strong>GitHub Releases</strong> – direct sideloadable builds from me.</li></ul><p>APK mirrors may host outdated or modified packages. Always refer back to these official sources.</p>",
+    "featured": true,
+    "tags": ["downloads", "play_store", "github"]
+  }
+]
