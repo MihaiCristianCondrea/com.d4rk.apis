@@ -15,6 +15,22 @@ describe('normalizeRepoSlug', () => {
     );
   });
 
+  test('returns owner/repo when provided a valid slug with dots', () => {
+    expect(normalizeRepoSlug('MihaiCristianCondrea/com.d4rk.apis')).toBe(
+      'MihaiCristianCondrea/com.d4rk.apis',
+    );
+  });
+
+  test('derives slug from compact dot form', () => {
+    expect(normalizeRepoSlug('MihaiCristianCondrea.com.d4rk.apis')).toBe(
+      'MihaiCristianCondrea.com.d4rk/apis',
+    );
+  });
+
+  test('derives slug from CamelCase compact input', () => {
+    expect(normalizeRepoSlug('OpenAIRepo')).toBe('OpenAI/Repo');
+  });
+
   test('returns empty string for invalid input', () => {
     expect(normalizeRepoSlug('not-a-url')).toBe('');
   });
