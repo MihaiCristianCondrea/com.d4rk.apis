@@ -31,7 +31,7 @@
             </md-icon-button>
           </md-outlined-text-field>
         </div>
-        <p id="releases-url-helper" class="gh-helper-text">Use the repo URL or slug for the project.</p>
+        <p id="releases-url-helper" class="gh-helper-text">Use a GitHub URL, owner/repo slug, or compact OwnerRepo name with a dot.</p>
         <p id="releases-url-error" class="gh-error-text" hidden="">Invalid repository URL.</p>
         <div class="gh-token-settings" id="releases-token-settings">
           <md-filled-tonal-button class="token-toggle" id="releases-token-reveal" aria-expanded="false" type="button">
@@ -40,9 +40,7 @@
             <md-icon slot="trailing-icon">expand_more</md-icon>
           </md-filled-tonal-button>
           <div class="gh-collapsible" id="releases-token-wrapper" hidden>
-            <div class="gh-floating-field">
-              <md-outlined-text-field id="releases-token" type="password" class="gh-floating-input" label="Personal Access Token (optional)" autocomplete="off" aria-describedby="releases-token-helper releases-token-error" spellcheck="false"></md-outlined-text-field>
-            </div>
+            <md-outlined-text-field id="releases-token" type="password" class="gh-floating-input" label="Personal Access Token (optional)" autocomplete="off" aria-describedby="releases-token-helper releases-token-error" spellcheck="false"></md-outlined-text-field>
             <p id="releases-token-helper" class="gh-helper-text">Include when querying private repositories.</p>
             <p id="releases-token-error" class="gh-error-text" hidden="">Token required for private repos.</p>
             <div class="gh-token-visibility">

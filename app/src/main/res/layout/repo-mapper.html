@@ -31,7 +31,7 @@
             </md-icon-button>
           </md-outlined-text-field>
         </div>
-        <p id="mapper-url-helper" class="gh-helper-text">Paste a GitHub repository URL or slug.</p>
+        <p id="mapper-url-helper" class="gh-helper-text">Paste a GitHub repository URL, owner/repo slug, or compact OwnerRepo name with a dot.</p>
         <p id="mapper-url-error" class="gh-error-text" hidden="">Invalid repository URL.</p>
         <div class="gh-control-row">
           <div class="gh-token-settings" id="mapper-token-settings">
@@ -41,9 +41,7 @@
               <md-icon slot="trailing-icon">expand_more</md-icon>
             </md-filled-tonal-button>
             <div class="gh-collapsible" id="mapper-token-wrapper" hidden>
-              <div class="gh-floating-field">
-                <md-outlined-text-field id="mapper-token" name="mapper-token" type="password" label="Personal Access Token (optional)" autocomplete="off" aria-describedby="mapper-token-helper mapper-token-error" spellcheck="false"></md-outlined-text-field>
-              </div>
+              <md-outlined-text-field id="mapper-token" name="mapper-token" type="password" label="Personal Access Token (optional)" autocomplete="off" aria-describedby="mapper-token-helper mapper-token-error" spellcheck="false"></md-outlined-text-field>
               <p id="mapper-token-helper" class="gh-helper-text">Use when working with private repositories.</p>
               <p id="mapper-token-error" class="gh-error-text" hidden="">Token required for private repos.</p>
               <div class="gh-token-visibility">

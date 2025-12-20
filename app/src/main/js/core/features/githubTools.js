@@ -10,6 +10,43 @@ const FAVORITES_KEY = 'github_tool_favorites';
 const PREFILL_KEY = 'github_tool_prefill';
 
 /**
+ * Attempts to split a compact GitHub slug that is missing the `owner/` separator.
+ *
+ * Supported heuristics (evaluated in order):
+ * - Dot-delimited owner and repo: `"owner.repo"` => `"owner/repo"` (using the last dot).
+ * - CamelCase boundary: `"OwnerRepo"` => `"Owner/Repo"` (splitting at the final lower->upper transition).
+ *
+ * Inputs that do not match either pattern return an empty string so callers can fall
+ * back to their stricter parsing flow.
+ *
+ * @param {string} value Raw candidate slug without protocol information.
+ * @returns {string} Derived `owner/repo` slug or an empty string when parsing fails.
+ */
+function deriveCompactSlug(value) {
+  const sanitized = value.replace(/\.git$/i, '').trim();
+  if (!sanitized) return '';
+
+  const dotIndex = sanitized.lastIndexOf('.');
+  if (dotIndex > 0 && dotIndex < sanitized.length - 1) {
+    return `${sanitized.slice(0, dotIndex)}/${sanitized.slice(dotIndex + 1)}`;
+  }
+
+  const hasUppercase = /[A-Z]/.test(sanitized);
+  const segments = hasUppercase
+    ? sanitized.match(/[A-Z]?[a-z0-9]+|[A-Z]+(?![a-z])/g)
+    : null;
+  if (segments && segments.length > 1) {
+    const owner = segments.slice(0, -1).join('');
+    const repo = segments[segments.length - 1];
+    if (owner && repo) {
+      return `${owner}/${repo}`;
+    }
+  }
+
+  return '';
+}
+
+/**
  * A single flattened entry in a GitHub repository tree.
  *
  * This mirrors the shape returned by the GitHub "Get a Tree" API.
@@ -88,6 +125,15 @@ function normalizeRepoSlug(value) {
   const trimmed = (value || '').trim();
   if (!trimmed) return '';
 
+  const finalizeSlug = (owner, repo) => {
+    if (!owner || !repo) return '';
+    return `${owner}/${repo}`.replace(/\.git$/i, '');
+  };
+
+  /* Change Rationale: GitHub slugs now come from QR codes and compact text fields that
+   * omit a single slash. Heuristically splitting dot-delimited or CamelCase strings
+   * preserves the fast entry path while keeping URL handling unchanged.
+   */
   try {
     const url = new URL(
         trimmed,
@@ -95,7 +141,7 @@ function normalizeRepoSlug(value) {
     );
     const [, owner, repo] = url.pathname.split('/').filter(Boolean);
     if (owner && repo) {
-      return `${owner}/${repo}`.replace(/\.git$/i, '');
+      return finalizeSlug(owner, repo);
     }
   } catch (error) {
     /* noop – fall back to manual parsing below. */
@@ -106,7 +152,14 @@ function normalizeRepoSlug(value) {
       .split('/')
       .filter(Boolean);
   if (parts.length >= 2) {
-    return `${parts[0]}/${parts[1]}`.replace(/\.git$/i, '');
+    return finalizeSlug(parts[0], parts[1]);
+  }
+
+  if (parts.length === 1) {
+    const compact = deriveCompactSlug(parts[0]);
+    if (compact) {
+      return compact;
+    }
   }
 
   return '';
@@ -591,21 +644,27 @@ function renderFavoritesPage() {
   }
 
   favorites.forEach(({ slug }) => {
+    /* Change Rationale: Favorites now render as flat Material cards with badge headers and
+     * monospace slugs, keeping the remove action aligned to the top-right and actions in
+     * a single row for consistent scanning on narrow layouts.
+     */
     const card = document.createElement('article');
     card.className = 'gh-favorite-card';
     card.innerHTML = `
       <div class="gh-favorite-meta">
-        <div class="gh-favorite-icon" aria-hidden="true">
-          <span class="material-symbols-outlined">hub</span>
+        <div class="gh-favorite-badge-row">
+          <span class="gh-favorite-badge">
+            <span class="material-symbols-outlined" aria-hidden="true">bookmark_added</span>
+            <span>Saved repository</span>
+          </span>
+          <button class="gh-icon-button ghost" type="button" data-remove-favorite aria-label="Unfavorite ${slug}">
+            <span class="material-symbols-outlined" aria-hidden="true">star</span>
+          </button>
         </div>
-        <div>
-          <p class="gh-subtext">Saved repository</p>
-          <h3>${slug}</h3>
+        <div class="gh-favorite-heading">
+          <h3 class="gh-favorite-slug">${slug}</h3>
           <p class="gh-muted">Launch Repo Mapper or Release Stats with one tap.</p>
         </div>
-        <button class="gh-icon-button ghost" type="button" data-remove-favorite aria-label="Unfavorite ${slug}">
-          <span class="material-symbols-outlined">star</span>
-        </button>
       </div>
       <div class="gh-favorite-actions">
         <button class="gh-button primary" type="button" data-open-mapper>
@@ -666,12 +725,35 @@ function setupFavoriteButton(buttonId, inputId) {
   const input = document.getElementById(inputId);
   if (!button || !input) return;
 
+  /**
+   * Change Rationale: The favorite star now mirrors Material's filled/outlined variants so
+   * users get immediate visual confirmation when toggling favorites across Repo Mapper and
+   * Release Stats. Syncing the icon fill, `selected`, and `aria-pressed` flags keeps the
+   * control discoverable and consistent after navigation reloads.
+   *
+   * @param {boolean} filled
+   * @returns {void}
+   */
+  const setIconFill = (filled) => {
+    const icon = button.querySelector('md-icon, .material-symbols-outlined');
+    if (!icon) return;
+    icon.textContent = 'star';
+    icon.style.fontVariationSettings = `'FILL' ${filled ? 1 : 0}, 'wght' 700, 'GRAD' 0, 'opsz' 24`;
+  };
+
   const refreshState = () => {
     const slug = normalizeRepoSlug(input.value);
     const valid = !!slug;
     button.hidden = !valid;
-    if (!valid) return;
+    if (!valid) {
+      setIconFill(false);
+      button.classList.remove('favorited');
+      button.removeAttribute('selected');
+      button.setAttribute('aria-pressed', 'false');
+      return;
+    }
     const active = isFavorited(slug);
+    setIconFill(active);
     button.classList.toggle('favorited', active);
     button.toggleAttribute('selected', active);
     button.setAttribute('aria-pressed', String(active));
