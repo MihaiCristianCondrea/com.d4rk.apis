@@ -13,7 +13,13 @@
   --gh-radius-lg: 24px;
   --gh-radius-md: 18px;
   --gh-radius-sm: 12px;
-  --gh-shadow: 0 18px 50px -24px rgba(0, 0, 0, 0.6);
+  /* Change Rationale: GitHub cards previously leaned on a deep drop shadow that
+   * looked heavy against Material 3 surface colors. Flattening the reusable
+   * shadow token to `none` keeps Repo Mapper, Release Stats, Git Patch, and
+   * Favorites aligned with the low-elevation layout while still relying on the
+   * shared border token for separation.
+   */
+  --gh-shadow: none;
   --gh-border: 1px solid color-mix(in srgb, var(--gh-outline) 45%, transparent);
   --gh-transition: 160ms ease;
 }
@@ -156,12 +162,39 @@
   width: 100%;
 }
 
+/* Change Rationale: Aligning the token reveal with the segmented control prevents the
+ * accordion toggle from floating mid-row when the secret inputs expand.
+ */
+.gh-token-settings .token-toggle {
+  align-self: flex-start;
+}
+
+/* Change Rationale: The segmented wrapper preserves breathing room and a consistent
+ * minimum width so the format toggles sit flush with the token switcher on both desktop
+ * and mobile layouts.
+ */
+.gh-segmented-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.65rem;
+  min-width: 280px;
+}
+
 .gh-control-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
   flex-wrap: wrap;
-  gap: 0.75rem;
+  gap: 1rem;
+}
+
+/* Change Rationale: The token accordion lifts the left side of the control row when open.
+ * Toggling an explicit `.gh-token-open` state keeps the segmented control aligned to the
+ * top of the token panel and preserves spacing on narrow breakpoints.
+ */
+.gh-control-row.gh-token-open {
+  align-items: flex-start;
 }
 
 /* Use native disclosure so token inputs stay accessible even if JS fails to load. */
@@ -196,7 +229,7 @@
     var(--md-sys-color-primary, #e6e1e5) 25%,
     var(--gh-card-strong)
   );
-  box-shadow: 0 12px 36px -26px rgba(0, 0, 0, 0.75);
+  box-shadow: none;
 }
 
 .gh-token-settings summary .chevron {
@@ -212,7 +245,7 @@
 }
 
 .gh-token-settings .gh-collapsible {
-  margin-top: 0.75rem;
+  margin-top: 0.5rem;
 }
 
 .gh-token-visibility {
@@ -261,14 +294,19 @@
   opacity: 0;
 }
 
+/* Change Rationale: The collapsible token container previously inflated padding and added
+ * a drop shadow when opening, which nudged the segmented control vertically. Flattening
+ * the shadow and tightening the padding keeps the row stable while maintaining visual
+ * separation via borders.
+ */
 .gh-collapsible {
   display: grid;
   gap: 0.75rem;
   background: color-mix(in srgb, var(--gh-card-strong) 85%, var(--gh-card));
   border: var(--gh-border);
   border-radius: var(--gh-radius-md);
-  padding: 0 0.75rem;
-  box-shadow: 0 12px 36px -26px rgba(0, 0, 0, 0.65);
+  padding: 0 0.65rem;
+  box-shadow: none;
   overflow: hidden;
   opacity: 0;
   max-height: 0;
@@ -281,14 +319,14 @@
 .gh-token-settings.is-open .gh-collapsible {
   opacity: 1;
   max-height: 400px;
-  padding: 0.75rem;
+  padding: 0.65rem;
   pointer-events: auto;
 }
 
 .gh-token-settings[open] .gh-collapsible {
   opacity: 1;
   max-height: 400px;
-  padding: 0.75rem;
+  padding: 0.65rem;
   pointer-events: auto;
 }
 
@@ -326,6 +364,24 @@
 .gh-primary-button:hover {
   transform: translateY(-1px);
   box-shadow: 0 18px 48px -26px rgba(0, 0, 0, 0.8);
+}
+
+/* Change Rationale: The Generate/Analyze CTAs now communicate loading and invalid
+ * states by dimming and removing hover lift so users can see when submissions are
+ * blocked while tokens or slugs are corrected.
+ */
+.gh-primary-button:disabled,
+.gh-primary-button.is-loading {
+  opacity: 0.72;
+  transform: none;
+  box-shadow: none;
+  cursor: not-allowed;
+}
+
+.gh-primary-button:disabled:hover,
+.gh-primary-button.is-loading:hover {
+  transform: none;
+  box-shadow: none;
 }
 
 .gh-chip-button,
@@ -687,7 +743,7 @@
   padding: 1.15rem;
   display: grid;
   gap: 0.9rem;
-  box-shadow: 0 18px 46px -30px rgba(0, 0, 0, 0.85);
+  box-shadow: var(--gh-shadow);
   color: var(--gh-text);
 }
 

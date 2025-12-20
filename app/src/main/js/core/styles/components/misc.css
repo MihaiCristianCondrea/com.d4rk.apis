@@ -7,8 +7,8 @@
 
 /* Change Rationale: The segmented controls inside the FAQ workspace and Repo Mapper
  * inherited surrounding layout colors, which left their outlines and selected states
- * inconsistent with Material defaults. Limiting the customization to color tokens keeps
- * the native shape, padding, and elevation while aligning the accents with the app's
+ * inconsistent with Material defaults. Tuning the tokens for color, shape, and height
+ * keeps the controls compact and pill-like while aligning the accents with the app's
  * primary palette so both control sets render identically.
  */
 md-segmented-button-set.app-segmented md-outlined-segmented-button {
@@ -26,6 +26,26 @@ md-segmented-button-set.app-segmented md-outlined-segmented-button {
   );
   --md-outlined-segmented-button-selected-label-text-color: var(--md-sys-color-primary);
   --md-outlined-segmented-button-selected-icon-color: var(--md-sys-color-primary);
+  --md-outlined-segmented-button-container-height: 42px;
+  --md-outlined-segmented-button-container-shape: 999px;
+  --md-outlined-segmented-button-focus-outline-color: color-mix(
+    in srgb,
+    var(--md-sys-color-outline-variant, var(--md-sys-color-outline)) 65%,
+    transparent
+  );
+  --md-outlined-segmented-button-focus-outline-width: 2px;
+  --md-outlined-segmented-button-label-text-weight: 700;
+  --md-outlined-segmented-button-with-icon-icon-size: 18px;
+}
+
+/* Change Rationale: The segmented sets needed a slimmer pill footprint and breathing
+ * room from neighboring controls to mirror the inspiration sample used on GitHub tools
+ * and FAQ. Applying the spacing at the host level keeps both pages aligned while
+ * preserving native Material focus rings.
+ */
+md-segmented-button-set.app-segmented.segmented-inline {
+  margin-inline: 0.15rem;
+  gap: 0.35rem;
 }
 
 .focus-dialog {

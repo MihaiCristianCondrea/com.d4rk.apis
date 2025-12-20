@@ -729,11 +729,17 @@ function wireTokenControls({ toggleButtonId, wrapperId, fieldId, visibilityToggl
      * @param {boolean} expanded
      */
     const update = (expanded) => {
+      // Change Rationale: The control row now mirrors the token panel height so segmented
+      // controls stay aligned with the reveal button when the accordion opens.
       toggleButton.setAttribute('aria-expanded', String(expanded));
       wrapper.hidden = !expanded;
       if (container) {
         container.classList.toggle('is-open', expanded);
         container.toggleAttribute('open', expanded);
+      }
+      const controlRow = toggleButton.closest('.gh-control-row');
+      if (controlRow) {
+        controlRow.classList.toggle('gh-token-open', expanded);
       }
     };
     toggleButton.addEventListener('click', () => {
@@ -794,15 +800,23 @@ function hydrateInputs(container) {
  *   - `#mapper-url-error` (optional error container)
  *   - `#mapper-submit`
  *
- * @returns {void}
+ * @param {{ tokenFieldId?: string }} [options] Optional controls to revalidate when tokens change.
+ * @returns {{ validate: () => { slug: string, isValid: boolean } } | null} Validator utilities or `null` if the form is missing.
  */
-function setupRepoMapperForm() {
+function setupRepoMapperForm(options = {}) {
   const form = document.getElementById('mapper-form');
   const urlField = document.getElementById('mapper-url');
   const errorEl = document.getElementById('mapper-url-error');
   const submitButton = document.getElementById('mapper-submit');
+  const tokenField = options.tokenFieldId
+    ? /** @type {HTMLInputElement | null} */ (document.getElementById(options.tokenFieldId))
+    : null;
 
-  if (!form || !urlField || !submitButton) return;
+  /* Change Rationale: Exposing the validator and clearing stale state on errors prevents the
+   * submit button from reactivating while invalid slugs or token edits are pending. This
+   * keeps the async Repo Mapper flow from flashing empty output after failed attempts.
+   */
+  if (!form || !urlField || !submitButton) return null;
 
   const hideError = () => {
     if (errorEl) {
@@ -819,6 +833,8 @@ function setupRepoMapperForm() {
     if (message) {
       errorEl.textContent = message;
     }
+    form.dataset.repoSlug = '';
+    submitButton.disabled = true;
   };
 
   const validate = () => {
@@ -836,6 +852,13 @@ function setupRepoMapperForm() {
     hideError();
     validate();
   });
+
+  if (tokenField) {
+    tokenField.addEventListener('input', () => {
+      hideError();
+      validate();
+    });
+  }
 
   form.addEventListener('submit', (event) => {
     event.preventDefault();
@@ -856,6 +879,7 @@ function setupRepoMapperForm() {
   });
 
   validate();
+  return { validate };
 }
 
 /**
@@ -933,6 +957,7 @@ function setupReleaseStatsForm() {
   });
 
   validate();
+  return { validate };
 }
 
 /**
@@ -1186,7 +1211,7 @@ function initRepoMapper() {
     favoriteControl: { buttonId: 'mapper-fav-btn', inputId: 'mapper-url' },
   });
   if (!page) return;
-  setupRepoMapperForm();
+  const mapperFormControls = setupRepoMapperForm({ tokenFieldId: 'mapper-token' });
 
   const form = document.getElementById('mapper-form');
   const urlField = document.getElementById('mapper-url');
@@ -1206,6 +1231,7 @@ function initRepoMapper() {
   let currentFormat = 'ascii';
   /** @type {RepoTreeEntry[]} */
   let currentTree = [];
+  let mapperIsLoading = false;
 
   /**
    * Synchronizes the repo mapper segmented buttons so they lean on Material's
@@ -1264,11 +1290,23 @@ function initRepoMapper() {
    * @returns {Promise<void>}
    */
   const handleSubmit = async (slug) => {
-    clearError('mapper-error');
-    resultEl.hidden = true;
-    codeEl.textContent = '';
+    /* Change Rationale: Overlapping submissions previously cleared the output while a fetch
+     * was still in flight, flashing an empty panel. Guarding re-entry and ignoring empty
+     * payloads keeps the visible output stable until fresh data arrives.
+     */
+    const normalizedSlug = (slug || '').trim();
+    if (mapperIsLoading || !normalizedSlug) {
+      return;
+    }
 
-    const [owner, repo] = slug.split('/');
+    mapperIsLoading = true;
+    clearError('mapper-error');
+    if (!currentTree.length) {
+      resultEl.hidden = true;
+      codeEl.textContent = '';
+    }
+
+    const [owner, repo] = normalizedSlug.split('/');
     const stopLoading = setButtonBusy(
         submitButton,
         '<span class="gh-rolling material-symbols-outlined">progress_activity</span> Generating…',
@@ -1276,12 +1314,19 @@ function initRepoMapper() {
 
     try {
       const { tree } = await fetchRepositoryTree({ owner, repo }, tokenField?.value?.trim());
+      if (!Array.isArray(tree) || tree.length === 0) {
+        currentTree = [];
+        renderError('mapper-error', 'No repository contents detected for this slug.');
+        return;
+      }
       currentTree = tree;
       renderOutput();
     } catch (error) {
       renderError('mapper-error', error.message);
     } finally {
       stopLoading();
+      mapperIsLoading = false;
+      mapperFormControls?.validate?.();
     }
   };
 
