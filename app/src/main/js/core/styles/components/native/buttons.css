@@ -16,11 +16,12 @@
     md-outlined-button
   ) {
   min-height: 44px;
-  /* Change Rationale: Native Material buttons previously used bold (700) labels that overpowered
-   * surrounding text. Setting the weight to 600 keeps the calls-to-action prominent while aligning
-   * with Material 3's semibold guidance for button labels.
+  /* Change Rationale: Native Material buttons previously used semibold (600) labels that read as
+   * bold across the experience and competed with body copy. Returning to the default (400) weight
+   * keeps button text consistent with Material Design 3's emphasis guidance while prioritizing
+   * readability and the user's request for normal-weight labels.
    */
-  font-weight: 600;
+  font-weight: 400;
   letter-spacing: 0.01em;
   padding-inline-start: var(--app-button-inline-padding);
   padding-inline-end: var(--app-button-inline-padding);

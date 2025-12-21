@@ -62,9 +62,14 @@
   --md-filled-button-container-height: 44px;
   --md-outlined-button-container-height: 44px;
   --md-text-button-container-height: 44px;
-  --md-filled-button-label-text-weight: 600;
-  --md-outlined-button-label-text-weight: 600;
-  --md-text-button-label-text-weight: 600;
+  /* Change Rationale: Builder buttons previously used semibold (600) labels that looked bold across
+   * the toolbars. Normalizing these weights to 400 keeps the controls readable while preventing the
+   * supporting actions from overpowering headlines, aligning with Material 3's preference for color
+   * and state to convey emphasis.
+   */
+  --md-filled-button-label-text-weight: 400;
+  --md-outlined-button-label-text-weight: 400;
+  --md-text-button-label-text-weight: 400;
   --md-outlined-button-outline-color: color-mix(in srgb, var(--md-sys-color-outline) 70%, transparent);
   min-width: 0;
 }
@@ -360,7 +365,12 @@ md-outlined-button.builder-remote-toggle {
     var(--md-sys-color-outline) 65%,
     transparent
   );
-  --md-outlined-button-label-text-weight: 700;
+  /* Change Rationale: Remote toggle buttons previously forced a bold (700) label that clashed with
+   * the newly normalized button typography. Returning to normal weight (400) keeps toggles cohesive
+   * with the rest of the controls while relying on outline and icon styling for affordance, matching
+   * Material 3's guidance to use color and shape over heavy typography.
+   */
+  --md-outlined-button-label-text-weight: 400;
   --md-outlined-button-icon-size: 22px;
   --md-focus-ring-shape: var(--app-button-shape);
   gap: 0.35rem;

@@ -34,7 +34,11 @@ md-segmented-button-set.app-segmented md-outlined-segmented-button {
     transparent
   );
   --md-outlined-segmented-button-focus-outline-width: 2px;
-  --md-outlined-segmented-button-label-text-weight: 700;
+  /* Change Rationale: Segmented buttons previously forced bold (700) labels that made the set look
+   * heavier than adjacent controls. Normal weight (400) keeps the text consistent with other buttons
+   * while relying on selection color for emphasis, matching Material 3's balanced typography.
+   */
+  --md-outlined-segmented-button-label-text-weight: 400;
   --md-outlined-segmented-button-with-icon-icon-size: 18px;
 }
 
