@@ -132,7 +132,11 @@ md-top-app-bar .material-symbols-outlined {
 .drawer-subtitle {
   margin: 0;
   font-size: 1.05rem;
-  font-weight: 700;
+  /* Change Rationale: Drawer subtitles previously used bold (700) weight that overshadowed the
+   * title line. Shifting to semibold (600) keeps the hierarchy intact and matches Material 3's
+   * guidance for supporting nav labels.
+   */
+  font-weight: 600;
   color: var(--app-text-color);
 }
 

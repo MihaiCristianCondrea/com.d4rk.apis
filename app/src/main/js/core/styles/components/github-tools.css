@@ -57,7 +57,11 @@
 .gh-tools-header h1 {
   margin: 0;
   font-size: clamp(2.3rem, 3.5vw, 2.9rem);
-  font-weight: 700;
+  /* Change Rationale: GitHub tools headers and badges previously used bold (700) weights that
+   * overpowered the card subtitles. Moving to semibold (600) matches Material 3 typography,
+   * preserves hierarchy, and improves readability against the dark surfaces.
+   */
+  font-weight: 600;
   letter-spacing: -0.01em;
 }
 
@@ -85,7 +89,7 @@
 .gh-md-field md-icon-button.favorited md-icon,
 .gh-md-field md-icon-button[selected] md-icon {
   color: var(--md-sys-color-primary);
-  font-variation-settings: 'FILL' 1, 'wght' 700, 'GRAD' 0, 'opsz' 24;
+  font-variation-settings: 'FILL' 1, 'wght' 600, 'GRAD' 0, 'opsz' 24;
 }
 
 .filled-icon {
@@ -98,7 +102,7 @@
   letter-spacing: 0.08em;
   text-transform: uppercase;
   font-size: 0.85rem;
-  font-weight: 700;
+  font-weight: 600;
 }
 
 .gh-subtext {
@@ -120,7 +124,7 @@
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
-  font-weight: 700;
+  font-weight: 600;
   color: var(--gh-text);
 }
 
@@ -363,7 +367,11 @@
   border: none;
   border-radius: 999px;
   padding: 0.85rem 1.4rem;
-  font-weight: 700;
+  /* Change Rationale: Primary CTAs previously used bold labels that competed with headlines.
+   * Semibold (600) keeps the buttons assertive while softening the overall hierarchy to match
+   * Material 3 guidance for high-emphasis actions.
+   */
+  font-weight: 600;
   cursor: pointer;
   box-shadow: 0 16px 42px -26px rgba(0, 0, 0, 0.75);
   transition: transform var(--gh-transition), box-shadow var(--gh-transition), background var(--gh-transition);
@@ -424,7 +432,10 @@
   background: transparent;
   color: var(--gh-text);
   padding: 0.35rem 0.5rem;
-  font-weight: 700;
+  /* Change Rationale: Token toggle chips move from bold to semibold (600) to match the other
+   * GitHub chip controls and avoid overpowering the action labels on smaller screens.
+   */
+  font-weight: 600;
   gap: 0.35rem;
 }
 
@@ -584,7 +595,11 @@
 .gh-title {
   margin: 0;
   font-size: 1.4rem;
-  font-weight: 700;
+  /* Change Rationale: Result headers and stat values drop from bold to semibold (600) to keep
+   * the analytics hierarchy readable without overshadowing asset labels, aligning with M3 weight
+   * guidance for secondary headlines.
+   */
+  font-weight: 600;
 }
 
 .gh-stat-block {
@@ -599,7 +614,7 @@
 
 .gh-stat-value {
   font-size: 1.5rem;
-  font-weight: 700;
+  font-weight: 600;
 }
 
 .gh-stack {
@@ -630,7 +645,10 @@
   background: color-mix(in srgb, var(--gh-card) 80%, transparent);
   color: var(--gh-text);
   text-decoration: none;
-  font-weight: 700;
+  /* Change Rationale: Asset pills now use semibold (600) so download links stay legible without
+   * appearing heavier than the surrounding metadata chips on the release details screen.
+   */
+  font-weight: 600;
   transition: background var(--gh-transition), border-color var(--gh-transition), color var(--gh-transition);
 }
 
@@ -775,7 +793,10 @@
   border: 1px solid color-mix(in srgb, var(--gh-outline) 45%, transparent);
   background: color-mix(in srgb, var(--gh-card-strong) 75%, var(--gh-card));
   color: var(--gh-text);
-  font-weight: 700;
+  /* Change Rationale: Favorite badges and labels move to semibold (600) to keep their hierarchy
+   * aligned with other chips in the tool, reducing visual noise while still highlighting saved items.
+   */
+  font-weight: 600;
   font-size: 0.9rem;
 }
 
@@ -788,7 +809,7 @@
   margin: 0;
   font-family: 'JetBrains Mono', 'SFMono-Regular', Menlo, Monaco, Consolas, 'Liberation Mono',
     'Courier New', monospace;
-  font-weight: 700;
+  font-weight: 600;
   font-size: 1.05rem;
   word-break: break-word;
 }
@@ -796,7 +817,7 @@
 .gh-favorite-card .gh-bold,
 .gh-favorite-card h3 {
   margin: 0;
-  font-weight: 700;
+  font-weight: 600;
   color: var(--gh-text);
 }
 
@@ -858,7 +879,10 @@
 .gh-empty-copy h3 {
   margin: 0 0 0.25rem;
   font-size: 1.4rem;
-  font-weight: 700;
+  /* Change Rationale: Empty state headings shift to semibold (600) to keep the feedback
+   * gentle while remaining readable against the muted supporting text.
+   */
+  font-weight: 600;
 }
 
 .gh-empty-copy p {
@@ -878,7 +902,10 @@
   border-radius: 999px;
   border: 1px solid color-mix(in srgb, var(--gh-outline) 45%, transparent);
   padding: 0.6rem 0.9rem;
-  font-weight: 700;
+  /* Change Rationale: Secondary buttons and favorite actions now use semibold weights so they
+   * align with the rest of the controls without appearing heavier than the primary CTA.
+   */
+  font-weight: 600;
   cursor: pointer;
 }
 

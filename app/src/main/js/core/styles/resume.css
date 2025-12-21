@@ -25,7 +25,11 @@
 }
 #resumePage .form-container h1 {
   font-size: 24px;
-  font-weight: 700;
+  /* Change Rationale: Resume headings previously used a bold (700) weight that clashed with the
+   * semibold labels and Material 3 headline guidance. Dropping these to 600 preserves emphasis
+   * without overpowering form labels, improving readability in the builder and preview panes.
+   */
+  font-weight: 600;
   text-align: center;
   color: var(--md-sys-color-primary);
   margin-bottom: 24px;
@@ -235,7 +239,7 @@
   border-bottom: 2px solid var(--app-border-color);
   text-transform: uppercase;
   letter-spacing: 1px;
-  font-weight: 700;
+  font-weight: 600;
   display: flex;
   align-items: center;
   gap: 8px;
@@ -250,7 +254,7 @@
 #resumePage #resume-name {
   font-family: var(--app-font-family-primary);
   font-size: 36px;
-  font-weight: 700;
+  font-weight: 600;
   color: #111;
   margin-bottom: 4px;
   letter-spacing: -0.5px;
@@ -279,7 +283,7 @@
 }
 #resumePage .resume-item-header h3 {
   font-size: 16px;
-  font-weight: 700;
+  font-weight: 600;
   color: #000;
   margin: 0;
 }
