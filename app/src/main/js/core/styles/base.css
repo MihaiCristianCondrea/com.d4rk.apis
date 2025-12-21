@@ -1,5 +1,6 @@
+/* Change Rationale: Body text previously depended on Google Sans Regular from a third-party host, which limited variable weights and caused subtle reflows on load. Pointing the global font stack to Google Sans Flex leverages Material 3’s variable font support for smoother optical sizing and consistent typography across the app. */
 body {
-  font-family: 'Google Sans Regular', 'Poppins', sans-serif;
+  font-family: var(--app-font-family-primary);
   background-color: var(--app-bg-color);
   color: var(--app-text-color);
   --app-scrollbar-compensation: 0px;

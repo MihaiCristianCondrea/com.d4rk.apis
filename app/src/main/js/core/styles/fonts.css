@@ -1,20 +1,29 @@
-@font-face {
-  font-family: 'Google Sans Regular';
-  src: url('https://db.onlinewebfonts.com/t/000be6a5acfcd4e4a425e9f1bb6c80f0.eot');
-  src:
-    url('https://db.onlinewebfonts.com/t/000be6a5acfcd4e4a425e9f1bb6c80f0.eot?#iefix')
-      format('embedded-opentype'),
-    url('https://db.onlinewebfonts.com/t/000be6a5acfcd4e4a425e9f1bb6c80f0.woff2')
-      format('woff2'),
-    url('https://db.onlinewebfonts.com/t/000be6a5acfcd4e4a425e9f1bb6c80f0.woff')
-      format('woff'),
-    url('https://db.onlinewebfonts.com/t/000be6a5acfcd4e4a425e9f1bb6c80f0.ttf')
-      format('truetype'),
-    url('https://db.onlinewebfonts.com/t/000be6a5acfcd4e4a425e9f1bb6c80f0.svg#Google Sans Regular')
-      format('svg');
+/* Change Rationale: The app previously relied on Google Sans Regular from a third-party CDN with limited weights, which increased layout shifts and strayed from Material 3’s variable typography guidance. Importing Google Sans Flex and Google Sans Code directly from Google Fonts provides first-party hosting, full variable axes, and smoother optical sizing that keeps the UI consistent with Material Design 3. */
+@import url('https://fonts.googleapis.com/css2?family=Google+Sans+Code:ital,wght@0,300..800;1,300..800&family=Google+Sans+Flex:opsz,wght@6..144,1..1000&display=swap');
+
+:root {
+  --app-font-family-primary: 'Google Sans Flex', 'Google Sans', 'Poppins', sans-serif;
+  --app-font-family-code: 'Google Sans Code', 'SFMono-Regular', 'Consolas', 'Liberation Mono',
+    monospace;
+}
+
+.google-sans-flex-default {
+  font-family: 'Google Sans Flex', 'Google Sans', 'Poppins', sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 450;
+  font-style: normal;
+  font-variation-settings:
+    'slnt' 0,
+    'wdth' 100,
+    'GRAD' 0,
+    'ROND' 0;
+}
+
+.google-sans-code-default {
+  font-family: 'Google Sans Code', 'SFMono-Regular', 'Consolas', 'Liberation Mono', monospace;
+  font-optical-sizing: auto;
   font-weight: 400;
   font-style: normal;
-  font-display: swap;
 }
 
 @font-face {

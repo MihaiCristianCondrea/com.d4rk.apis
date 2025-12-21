@@ -1,5 +1,6 @@
+/* Change Rationale: Resume screens previously relied on Google Sans Regular and Poppins, which diverged from the new Google Sans Flex typography and introduced inconsistent weight rendering. Switching to the shared Google Sans Flex stack keeps the resume builder aligned with site-wide Material 3 type rhythm and avoids font swap jitter. */
 #resumePage {
-  font-family: 'Google Sans Regular', 'Poppins', sans-serif;
+  font-family: var(--app-font-family-primary);
   margin-top: 70px;
   background-color: var(--app-bg-color);
   color: var(--app-text-color);
@@ -226,7 +227,7 @@
   margin-bottom: 30px;
 }
 #resumePage .resume-section h2 {
-  font-family: 'Google Sans Regular', 'Poppins', sans-serif;
+  font-family: var(--app-font-family-primary);
   font-size: 16px;
   color: #333;
   margin-bottom: 16px;
@@ -247,7 +248,7 @@
   border-bottom-color: var(--md-sys-color-primary);
 }
 #resumePage #resume-name {
-  font-family: 'Google Sans Regular', 'Poppins', sans-serif;
+  font-family: var(--app-font-family-primary);
   font-size: 36px;
   font-weight: 700;
   color: #111;
@@ -255,7 +256,7 @@
   letter-spacing: -0.5px;
 }
 #resumePage #resume-job-title {
-  font-family: 'Google Sans Regular', 'Poppins', sans-serif;
+  font-family: var(--app-font-family-primary);
   font-size: 20px;
   color: var(--md-sys-color-secondary);
   margin-bottom: 24px;
