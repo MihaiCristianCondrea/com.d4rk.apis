@@ -102,7 +102,11 @@
 
 .faq-landing-card__title {
   margin: 0.1rem 0 0.25rem;
-  font-weight: 700;
+  /* Change Rationale: FAQ card headings and remote preset labels previously used bold (700) weights,
+   * which overpowered the supporting copy. Moving to semibold (600) keeps the titles prominent while
+   * matching Material 3's type scale for section headers.
+   */
+  font-weight: 600;
 }
 
 .faq-landing-card__copy {
@@ -553,7 +557,7 @@
 
 .builder-remote-presets-label {
   font-size: 0.75rem;
-  font-weight: 700;
+  font-weight: 600;
   letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--app-secondary-text-color);
@@ -618,6 +622,5 @@
 .github-status {
   min-height: 2.5rem;
 }
-
 
 

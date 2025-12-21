@@ -102,13 +102,17 @@
 </head>
 <body class="antialiased transition-colors duration-300 overflow-hidden flex flex-col min-h-screen">
 
+<!-- Change Rationale: Headings and labels previously used Tailwind's bold weight (700), which created
+     harsh contrast against the surrounding medium text. Switching these to semibold (600) keeps the
+     hierarchy clear while aligning with the Material Design 3 type ramp for easier scanning. -->
+
 <!-- Navigation Drawer Scrim -->
 <div id="drawer-scrim" class="fixed inset-0 bg-black/50 z-40 opacity-0 pointer-events-none transition-opacity duration-300" onclick="toggleDrawer()"></div>
 
 <!-- Navigation Drawer -->
 <nav id="drawer" class="fixed top-0 left-0 bottom-0 w-[320px] bg-[#1c1b1f] text-[#e6e1e5] z-50 flex flex-col shadow-2xl transition-transform duration-300 ease-in-out -translate-x-full rounded-r-2xl">
     <div class="px-4 h-16 flex items-center justify-between shrink-0">
-        <h1 class="text-xl font-bold tracking-normal ml-2">Menu</h1>
+        <h1 class="text-xl font-semibold tracking-normal ml-2">Menu</h1>
         <button onclick="toggleDrawer()" class="p-2 rounded-full hover:bg-[#e6e1e5]/10 transition-colors">
             <span class="material-symbols-outlined">close</span>
         </button>
@@ -157,7 +161,7 @@
                     <div class="mb-6 inline-flex p-4 bg-[#e6e1e5] text-black rounded-2xl shadow-sm">
                         <span class="material-symbols-outlined" style="font-size:32px">terminal</span>
                     </div>
-                    <h3 class="text-2xl font-bold mb-2">Repo Mapper</h3>
+                    <h3 class="text-2xl font-semibold mb-2">Repo Mapper</h3>
                     <p class="text-[#cac4d0] mb-8">Generate ASCII directory trees from any public repository.</p>
                     <div class="flex items-center font-medium group-hover:underline underline-offset-4">
                         Launch Tool <span class="material-symbols-outlined ml-1" style="font-size:18px">arrow_forward</span>
@@ -168,7 +172,7 @@
                     <div class="mb-6 inline-flex p-4 bg-[#e6e1e5] text-black rounded-2xl shadow-sm">
                         <span class="material-symbols-outlined" style="font-size:32px">bar_chart</span>
                     </div>
-                    <h3 class="text-2xl font-bold mb-2">Release Stats</h3>
+                    <h3 class="text-2xl font-semibold mb-2">Release Stats</h3>
                     <p class="text-[#cac4d0] mb-8">Visualize download counts and asset performance.</p>
                     <div class="flex items-center font-medium group-hover:underline underline-offset-4">
                         Launch Tool <span class="material-symbols-outlined ml-1" style="font-size:18px">arrow_forward</span>
@@ -181,7 +185,7 @@
                             <div class="mb-6 inline-flex p-4 bg-[#e6e1e5] text-black rounded-2xl shadow-sm">
                                 <span class="material-symbols-outlined" style="font-size:32px">difference</span>
                             </div>
-                            <h3 class="text-2xl font-bold mb-2">Git Patch</h3>
+                            <h3 class="text-2xl font-semibold mb-2">Git Patch</h3>
                             <p class="text-[#cac4d0] mb-4 max-w-lg">Extract raw .patch files from commit URLs.</p>
                         </div>
                         <span class="material-symbols-outlined text-[var(--outline)]/20 hidden md:block" style="font-size:128px">integration_instructions</span>
@@ -335,8 +339,8 @@
                 <!-- Left: Details -->
                 <div class="bg-[#1d1b20] rounded-3xl p-6 shadow-lg border border-[#49454f]/30 flex flex-col gap-6">
                     <div class="space-y-1">
-                        <p class="text-[#cac4d0] text-xs uppercase tracking-widest font-bold">Selected Release</p>
-                        <h3 id="rel-detail-name" class="text-2xl font-bold text-[#e6e1e5] break-all"></h3>
+                        <p class="text-[#cac4d0] text-xs uppercase tracking-widest font-semibold">Selected Release</p>
+                        <h3 id="rel-detail-name" class="text-2xl font-semibold text-[#e6e1e5] break-all"></h3>
                         <div class="flex items-center gap-2 text-[#cac4d0] text-sm">
                             <span class="material-symbols-outlined" style="font-size:16px">label</span>
                             <span id="rel-detail-tag"></span>
@@ -346,10 +350,10 @@
                     </div>
                     <div class="p-4 bg-[#2b2930] rounded-2xl border border-[#49454f]/50 flex items-center justify-between">
                         <span class="text-[#cac4d0] font-medium">Downloads</span>
-                        <span id="rel-detail-downloads" class="text-2xl font-bold text-[#e6e1e5]"></span>
+                        <span id="rel-detail-downloads" class="text-2xl font-semibold text-[#e6e1e5]"></span>
                     </div>
                     <div class="flex-1 space-y-4">
-                        <p class="text-[#cac4d0] text-xs uppercase tracking-widest font-bold">Assets</p>
+                        <p class="text-[#cac4d0] text-xs uppercase tracking-widest font-semibold">Assets</p>
                         <div id="rel-assets-list" class="space-y-3 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar"></div>
                     </div>
                 </div>
@@ -357,8 +361,8 @@
                 <div class="bg-[#1d1b20] rounded-3xl p-6 shadow-lg border border-[#49454f]/30 flex flex-col gap-6">
                     <div class="flex items-center justify-between">
                         <div class="space-y-1">
-                            <p class="text-[#cac4d0] text-xs uppercase tracking-widest font-bold">Total Project Downloads</p>
-                            <h3 id="rel-total-downloads" class="text-4xl font-bold text-[#e6e1e5]"></h3>
+                            <p class="text-[#cac4d0] text-xs uppercase tracking-widest font-semibold">Total Project Downloads</p>
+                            <h3 id="rel-total-downloads" class="text-4xl font-semibold text-[#e6e1e5]"></h3>
                         </div>
                         <div class="p-3 bg-[#2b2930] rounded-full">
                             <span class="material-symbols-outlined text-[#e6e1e5]">download</span>
@@ -366,7 +370,7 @@
                     </div>
                     <div class="flex-1 space-y-4">
                         <div class="flex items-center justify-between">
-                            <p class="text-[#cac4d0] text-xs uppercase tracking-widest font-bold">All Releases</p>
+                            <p class="text-[#cac4d0] text-xs uppercase tracking-widest font-semibold">All Releases</p>
                             <p id="rel-count" class="text-[#cac4d0] text-xs"></p>
                         </div>
                         <div id="rel-list" class="space-y-2 max-h-[500px] overflow-y-auto pr-2 custom-scrollbar"></div>
@@ -597,7 +601,7 @@
                                 <span class="material-symbols-outlined" style="font-size:16px">folder_open</span>
                                 <span>${f.owner}</span>
                             </div>
-                            <h3 class="text-lg font-bold text-[#e6e1e5] truncate">${f.repo}</h3>
+                            <h3 class="text-lg font-semibold text-[#e6e1e5] truncate">${f.repo}</h3>
                         </div>
                         <button onclick="state.favorites = state.favorites.filter(x => x.repo !== '${f.repo}'); saveFavorites();" class="p-2 -mr-2 -mt-2 rounded-full text-[#e6e1e5] hover:bg-[#e6e1e5]/10 transition-colors">
                             <span class="material-symbols-outlined filled-icon text-[#e6e1e5]">star</span>

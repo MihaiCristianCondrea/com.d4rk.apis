@@ -17,7 +17,11 @@
 .page-header h1 {
   margin: 0;
   font-size: clamp(2rem, 2.8vw + 1rem, 2.8rem);
-  font-weight: 700;
+  /* Change Rationale: The hero and page headers previously used a 700 weight that overpowered
+   * surrounding body copy. Moving to a 600 weight keeps the heading hierarchy intact while
+   * aligning with Material 3's recommended semibold emphasis for readability.
+   */
+  font-weight: 600;
 }
 
 .page-header p {
