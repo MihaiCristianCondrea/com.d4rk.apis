@@ -183,12 +183,12 @@ md-list {
 }
 
 md-list-item {
+  /* Change Rationale: Drawer list typography previously referenced Google Sans Regular directly, creating a mismatch once the global font moved to Google Sans Flex. Using the shared primary stack ensures Material 3 list items inherit the same variable font and weight behavior as the rest of the UI. */
   --md-list-item-label-text-color: var(--app-text-color);
   --md-list-item-supporting-text-color: var(--app-secondary-text-color);
   --md-list-item-leading-icon-color: var(--app-text-color);
   --md-list-item-trailing-icon-color: var(--app-text-color);
-  --md-list-item-label-text-font: 'Google Sans Regular',
-    'Poppins', sans-serif;
+  --md-list-item-label-text-font: var(--app-font-family-primary);
 }
 
 .navigation-drawer md-list { 
@@ -208,8 +208,7 @@ md-list-item {
   --md-list-item-supporting-text-color: var(--md-sys-color-on-surface-variant);
   --md-list-item-leading-icon-color: var(--md-sys-color-on-surface-variant);
   --md-list-item-trailing-icon-color: var(--md-sys-color-on-surface-variant);
-  --md-list-item-label-text-font: 'Google Sans Regular',
-    'Poppins', sans-serif;
+  --md-list-item-label-text-font: var(--app-font-family-primary);
   --md-list-item-leading-space: 16px;
   --md-list-item-trailing-space: 16px;
   --md-list-item-one-line-container-height: 56px;
@@ -300,4 +299,3 @@ md-list-item[type='button'] md-icon[slot='end'] {
 md-list-item[type='button'].expanded md-icon[slot='end'] { 
   transform: rotate(180deg);
 }
-
