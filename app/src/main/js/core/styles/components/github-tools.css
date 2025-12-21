@@ -367,11 +367,12 @@
   border: none;
   border-radius: 999px;
   padding: 0.85rem 1.4rem;
-  /* Change Rationale: Primary CTAs previously used bold labels that competed with headlines.
-   * Semibold (600) keeps the buttons assertive while softening the overall hierarchy to match
-   * Material 3 guidance for high-emphasis actions.
+  /* Change Rationale: Primary CTAs previously used semibold (600) labels that still read as bold and
+   * pulled focus from surrounding copy. Normal-weight (400) text meets the request for lighter labels,
+   * keeps hierarchy with color/state treatments instead of weight, and better mirrors Material 3's
+   * emphasis guidance for balanced prominence.
    */
-  font-weight: 600;
+  font-weight: 400;
   cursor: pointer;
   box-shadow: 0 16px 42px -26px rgba(0, 0, 0, 0.75);
   transition: transform var(--gh-transition), box-shadow var(--gh-transition), background var(--gh-transition);
@@ -413,7 +414,11 @@
   background: color-mix(in srgb, var(--gh-card-strong) 70%, transparent);
   color: var(--gh-text);
   padding: 0.55rem 0.9rem;
-  font-weight: 600;
+  /* Change Rationale: Supporting GitHub controls previously relied on semibold (600) labels that
+   * made every action feel primary. Normalizing the weight to 400 keeps the buttons legible without
+   * creating visual heaviness, leaning on shape and color for emphasis per Material 3.
+   */
+  font-weight: 400;
   cursor: pointer;
   transition: background var(--gh-transition), color var(--gh-transition), border-color var(--gh-transition), transform var(--gh-transition), box-shadow var(--gh-transition);
 }
@@ -432,10 +437,11 @@
   background: transparent;
   color: var(--gh-text);
   padding: 0.35rem 0.5rem;
-  /* Change Rationale: Token toggle chips move from bold to semibold (600) to match the other
-   * GitHub chip controls and avoid overpowering the action labels on smaller screens.
+  /* Change Rationale: Token toggle chips previously used semibold (600) text that stood out like
+   * primary actions. Using normal weight (400) aligns them with the rest of the buttons, keeps the
+   * emphasis on state styling, and satisfies the request for non-bold labels.
    */
-  font-weight: 600;
+  font-weight: 400;
   gap: 0.35rem;
 }
 
@@ -902,10 +908,11 @@
   border-radius: 999px;
   border: 1px solid color-mix(in srgb, var(--gh-outline) 45%, transparent);
   padding: 0.6rem 0.9rem;
-  /* Change Rationale: Secondary buttons and favorite actions now use semibold weights so they
-   * align with the rest of the controls without appearing heavier than the primary CTA.
+  /* Change Rationale: Secondary buttons and favorite actions previously sat at semibold (600),
+   * which kept them visually loud. Normal weight (400) still reads clearly while shifting emphasis
+   * back to color, spacing, and state layers in line with Material 3 guidance for supporting actions.
    */
-  font-weight: 600;
+  font-weight: 400;
   cursor: pointer;
 }
 

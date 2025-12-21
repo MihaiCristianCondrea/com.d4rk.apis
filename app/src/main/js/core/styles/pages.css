@@ -81,7 +81,11 @@
   gap: 0.5rem;
   padding: 0.85rem 1.25rem;
   border-radius: 999px;
-  font-weight: 600;
+  /* Change Rationale: Hero buttons previously used semibold (600) text that looked bold alongside the
+   * page headlines. Normal weight (400) keeps the call-to-action readable without overwhelming the
+   * hero copy, leaning on color and elevation per Material 3 rather than heavy typography.
+   */
+  font-weight: 400;
   text-decoration: none;
   transition: transform 140ms ease, box-shadow 140ms ease,
     background-color 140ms ease, border-color 140ms ease;
