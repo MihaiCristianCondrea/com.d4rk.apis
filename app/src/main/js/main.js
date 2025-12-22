@@ -15,6 +15,7 @@ import * as jsondiffpatchCore from 'jsondiffpatch';
 import * as jsondiffpatchHtmlFormatter from 'jsondiffpatch/formatters/html';
 import * as jsondiffpatchAnnotatedFormatter from 'jsondiffpatch/formatters/annotated';
 import * as jsondiffpatchConsoleFormatter from 'jsondiffpatch/formatters/console';
+import { installFirebaseCrashHandlers, initializeFirebaseMonitoring } from '@/services/firebaseCrashReporter.js';
 
 const globalScope = typeof window !== 'undefined' ? window : globalThis;
 const existingStyleUrls = globalScope.__APP_STYLE_URLS__ || {};
@@ -23,6 +24,11 @@ globalScope.__APP_STYLE_URLS__ = {
   resume: resumeStylesAsset,
   print: resumePrintStylesAsset,
 };
+// Change Rationale: Previously, runtime crashes only surfaced in local consoles, preventing reliable observability.
+// Firebase initialization now forwards uncaught errors to Analytics so we can validate crash-free sessions and
+// quickly surface stability regressions—supporting Material Design 3's emphasis on dependable, responsive feedback.
+installFirebaseCrashHandlers();
+void initializeFirebaseMonitoring();
 
 if (typeof Element !== 'undefined' && Element.prototype?.animate && !globalScope.__APP_ANIMATE_PATCH__) {
   const originalAnimate = Element.prototype.animate;
