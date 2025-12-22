@@ -1236,13 +1236,18 @@ function formatDate(value) {
  *   favoriteControl?: {
  *     buttonId: string,
  *     inputId: string
- *   }
+ *   },
+ *   favoriteControls?: Array<{
+ *     buttonId: string,
+ *     inputId: string
+ *   }>
  * }} [options={}] Hook-up options for the current tool context.
  * @returns {HTMLElement | null} The initialized page element, or `null`.
  */
 function initGhToolsPage({
                            tokenControls,
                            favoriteControl,
+                           favoriteControls,
                          } = {}) {
   const page = document.querySelector('.gh-tools-page');
   if (!page) return null;
@@ -1252,9 +1257,23 @@ function initGhToolsPage({
     wireTokenControls(tokenControls);
   }
 
+  /**
+   * Change Rationale: GitHub tools can now expose multiple favorite stars without
+   * duplicating setup logic. Accepting a list of favorite controls keeps markup
+   * declarative while ensuring each button/input pair inherits the same Material
+   * icon fill sync and visibility rules used by Repo Mapper.
+   */
+  const favoritePairs = [];
   if (favoriteControl) {
-    setupFavoriteButton(favoriteControl.buttonId, favoriteControl.inputId);
+    favoritePairs.push(favoriteControl);
   }
+  if (Array.isArray(favoriteControls)) {
+    favoritePairs.push(...favoriteControls);
+  }
+
+  favoritePairs.forEach(({ buttonId, inputId }) => {
+    setupFavoriteButton(buttonId, inputId);
+  });
 
   hydrateInputs(page);
   page.dataset.ghToolsInitialized = 'true';
@@ -1290,7 +1309,12 @@ function initRepoMapper() {
       fieldId: 'mapper-token',
       visibilityToggleId: 'mapper-token-toggle',
     },
-    favoriteControl: { buttonId: 'mapper-fav-btn', inputId: 'mapper-url' },
+    /**
+     * Change Rationale: Use the shared favorites list API so future tools can add stars
+     * by configuration rather than bespoke wiring. Keeping the config array-based
+     * preserves consistent spacing and focus affordances across Repo Mapper and peers.
+     */
+    favoriteControls: [{ buttonId: 'mapper-fav-btn', inputId: 'mapper-url' }],
   });
   if (!page) return;
   const mapperFormControls = setupRepoMapperForm({ tokenFieldId: 'mapper-token' });
@@ -1466,7 +1490,11 @@ function initReleaseStats() {
       fieldId: 'releases-token',
       visibilityToggleId: 'releases-token-toggle',
     },
-    favoriteControl: { buttonId: 'releases-fav-btn', inputId: 'releases-url' },
+    /**
+     * Change Rationale: Favor the shared favorites wiring array so Release Stats inherits
+     * the same trailing-star layout and state sync behavior without bespoke handlers.
+     */
+    favoriteControls: [{ buttonId: 'releases-fav-btn', inputId: 'releases-url' }],
   });
   if (!page) return;
 
@@ -1671,7 +1699,12 @@ function initGitPatch() {
       fieldId: 'patch-token',
       visibilityToggleId: 'patch-token-toggle',
     },
-    favoriteControl: { buttonId: 'patch-fav-btn', inputId: 'patch-url' },
+    /**
+     * Change Rationale: Align Git Patch with the shared favorites config array so the
+     * trailing star follows the same Material-driven state and visibility rules as
+     * Repo Mapper and Release Stats.
+     */
+    favoriteControls: [{ buttonId: 'patch-fav-btn', inputId: 'patch-url' }],
   });
   if (!page) return;
 
