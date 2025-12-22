@@ -26,7 +26,12 @@
               aria-label="Favorite repository"
               toggle=""
             >
-              <md-icon slot="icon">star</md-icon>
+              <!-- Change Rationale: md-icon-button renders its default and `selected` slots
+                   instead of an `icon` slot. Providing both keeps the outlined star visible
+                   by default and swaps to the filled variant when selected without hiding
+                   the control. -->
+              <md-icon>star</md-icon>
+              <md-icon slot="selected" class="filled-icon">star</md-icon>
             </md-icon-button>
           </md-outlined-text-field>
         </div>
