@@ -727,28 +727,27 @@ function setupFavoriteButton(buttonId, inputId) {
   if (!button || !input) return;
 
   /**
-   * Change Rationale: The favorite star stays visible at all times and now mirrors
-   * Material's filled/outlined variants instead of hiding. The explicit font
-   * variations keep the icon consistent across tools while `selected` and
-   * `aria-pressed` stay in sync for assistive tech.
+   * Change Rationale: Material icon buttons swap between default and `selected`
+   * slots based on the `selected` state. Explicitly syncing the property,
+   * attribute, and `aria-pressed` flag keeps the outlined icon visible on load
+   * while letting the filled icon render immediately when favorited.
    *
-   * @param {boolean} filled Whether the star should render filled.
+   * @param {boolean} isSelected Whether the favorite control is active.
    * @returns {void}
    */
-  const setIconFill = (filled) => {
-    const icon = button.querySelector('md-icon, .material-symbols-outlined');
-    if (!icon) return;
-    icon.textContent = 'star';
-    icon.style.fontVariationSettings = `'FILL' ${filled ? 1 : 0}, 'wght' 700, 'GRAD' 0, 'opsz' 24`;
+  const syncSelectionState = (isSelected) => {
+    button.selected = isSelected;
+    button.toggleAttribute('selected', isSelected);
+    button.setAttribute('aria-pressed', String(isSelected));
   };
 
   /**
    * Syncs the button with the current slug validity and favorite state.
    *
    * Change Rationale: Keeping the star visible (but disabling the control)
-   * avoids layout shifts while still preventing invalid toggles. Updating the
-   * icon fill, ARIA flags, and labels together keeps Repo Mapper, Release
-   * Stats, and Git Patch in lockstep with Material's selection semantics.
+   * avoids layout shifts while still preventing invalid toggles. Aligning the
+   * `selected` state with ARIA ensures the correct slot renders on Material's
+   * icon button while assistive tech reads an accurate pressed state.
    *
    * @returns {void}
    */
@@ -758,10 +757,8 @@ function setupFavoriteButton(buttonId, inputId) {
     button.hidden = false;
     button.disabled = !valid;
     if (!valid) {
-      setIconFill(false);
+      syncSelectionState(false);
       button.classList.remove('favorited');
-      button.toggleAttribute('selected', false);
-      button.setAttribute('aria-pressed', 'false');
       button.setAttribute('aria-label', 'Save favorite');
       button.title = 'Save favorite';
       const label = button.querySelector('.favorite-label');
@@ -771,10 +768,8 @@ function setupFavoriteButton(buttonId, inputId) {
       return;
     }
     const active = isFavorited(slug);
-    setIconFill(active);
+    syncSelectionState(active);
     button.classList.toggle('favorited', active);
-    button.toggleAttribute('selected', active);
-    button.setAttribute('aria-pressed', String(active));
     button.setAttribute('aria-label', active ? 'Remove favorite' : 'Save favorite');
     button.title = active ? 'Remove favorite' : 'Save favorite';
     const label = button.querySelector('.favorite-label');
