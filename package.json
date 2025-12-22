@@ -37,6 +37,7 @@
     }
   },
   "dependencies": {
+    "firebase": "^12.7.0",
     "jsondiffpatch": "^0.7.3"
   }
 }
