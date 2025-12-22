@@ -709,7 +709,8 @@ function renderFavoritesPage() {
  * Wires a "favorite" toggle button to an input field that contains a repository slug.
  *
  * The button:
- * - Is hidden when the input does not contain a valid repository slug.
+ * - Stays visible at all times to maintain consistent affordances.
+ * - Disables interaction when the input does not contain a valid repository slug.
  * - Reflects active state (`favorited` CSS class, ARIA attributes, label text).
  * - Toggles the favorite entry when clicked.
  *
@@ -726,12 +727,12 @@ function setupFavoriteButton(buttonId, inputId) {
   if (!button || !input) return;
 
   /**
-   * Change Rationale: The favorite star now mirrors Material's filled/outlined variants so
-   * users get immediate visual confirmation when toggling favorites across Repo Mapper and
-   * Release Stats. Syncing the icon fill, `selected`, and `aria-pressed` flags keeps the
-   * control discoverable and consistent after navigation reloads.
+   * Change Rationale: The favorite star stays visible at all times and now mirrors
+   * Material's filled/outlined variants instead of hiding. The explicit font
+   * variations keep the icon consistent across tools while `selected` and
+   * `aria-pressed` stay in sync for assistive tech.
    *
-   * @param {boolean} filled
+   * @param {boolean} filled Whether the star should render filled.
    * @returns {void}
    */
   const setIconFill = (filled) => {
@@ -741,15 +742,32 @@ function setupFavoriteButton(buttonId, inputId) {
     icon.style.fontVariationSettings = `'FILL' ${filled ? 1 : 0}, 'wght' 700, 'GRAD' 0, 'opsz' 24`;
   };
 
+  /**
+   * Syncs the button with the current slug validity and favorite state.
+   *
+   * Change Rationale: Keeping the star visible (but disabling the control)
+   * avoids layout shifts while still preventing invalid toggles. Updating the
+   * icon fill, ARIA flags, and labels together keeps Repo Mapper, Release
+   * Stats, and Git Patch in lockstep with Material's selection semantics.
+   *
+   * @returns {void}
+   */
   const refreshState = () => {
     const slug = normalizeRepoSlug(input.value);
     const valid = !!slug;
-    button.hidden = !valid;
+    button.hidden = false;
+    button.disabled = !valid;
     if (!valid) {
       setIconFill(false);
       button.classList.remove('favorited');
-      button.removeAttribute('selected');
+      button.toggleAttribute('selected', false);
       button.setAttribute('aria-pressed', 'false');
+      button.setAttribute('aria-label', 'Save favorite');
+      button.title = 'Save favorite';
+      const label = button.querySelector('.favorite-label');
+      if (label) {
+        label.textContent = 'Favorite';
+      }
       return;
     }
     const active = isFavorited(slug);
