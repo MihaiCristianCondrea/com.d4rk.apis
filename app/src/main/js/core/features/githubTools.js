@@ -139,7 +139,11 @@ function normalizeRepoSlug(value) {
         trimmed,
         trimmed.startsWith('http') ? undefined : 'https://github.com',
     );
-    const [, owner, repo] = url.pathname.split('/').filter(Boolean);
+    /* Change Rationale: Preserve the owner/repo order from full GitHub URLs by avoiding the
+     * leading empty segment skip. This prevents mistakenly treating `/tree` as the repo when
+     * branch-specific URLs are pasted into the mapper form.
+     */
+    const [owner, repo] = url.pathname.split('/').filter(Boolean);
     if (owner && repo) {
       return finalizeSlug(owner, repo);
     }
@@ -163,6 +167,55 @@ function normalizeRepoSlug(value) {
   }
 
   return '';
+}
+
+/**
+ * Normalizes repository input and extracts an optional ref (branch or tag) when present.
+ *
+ * Supported ref detection:
+ * - URLs containing `/tree/<ref>` or `/blob/<ref>`.
+ * - Slug-like strings that include those path segments without a protocol.
+ *
+ * The `slug` field always contains the canonical `owner/repo` value produced by
+ * {@link normalizeRepoSlug}. If parsing fails, both `slug` and `ref` are empty strings.
+ *
+ * @param {string} value Raw user input.
+ * @returns {{ slug: string, ref: string }} Normalized slug and optional ref.
+ */
+function normalizeRepoInput(value) {
+  /* Change Rationale: Users often paste branch-specific URLs (e.g., `/tree/develop`). Preserving
+   * the ref alongside the normalized slug ensures the Repo Mapper fetches the exact branch they
+   * requested instead of silently falling back to the default branch, reducing confusion for
+   * multi-branch workflows.
+   */
+  const slug = normalizeRepoSlug(value);
+  if (!slug) return { slug: '', ref: '' };
+
+  const findRef = (segments) => {
+    const refIndex = segments.findIndex((part) => part === 'tree' || part === 'blob');
+    if (refIndex >= 0 && segments[refIndex + 1]) {
+      return segments.slice(refIndex + 1).join('/');
+    }
+    return '';
+  };
+
+  let ref = '';
+  try {
+    const url = new URL(value, value.startsWith('http') ? undefined : 'https://github.com');
+    ref = findRef(url.pathname.split('/').filter(Boolean));
+  } catch (error) {
+    /* noop – fall back to manual parsing below. */
+  }
+
+  if (!ref) {
+    const segments = value
+        .replace(/^https?:\/\/github.com\//i, '')
+        .split('/')
+        .filter(Boolean);
+    ref = findRef(segments);
+  }
+
+  return { slug, ref };
 }
 
 /**
@@ -958,6 +1011,7 @@ function setupRepoMapperForm(options = {}) {
   form.addEventListener('submit', (event) => {
     event.preventDefault();
     const { slug, isValid } = validate();
+    const { ref } = normalizeRepoInput(urlField.value);
     if (!isValid) {
       showError('Invalid repository URL.');
       urlField.focus();
@@ -965,10 +1019,11 @@ function setupRepoMapperForm(options = {}) {
     }
 
     form.dataset.repoSlug = slug;
+    form.dataset.repoRef = ref || '';
     form.dispatchEvent(
         new CustomEvent('repo-mapper:submit', {
           bubbles: true,
-          detail: { slug },
+          detail: { slug, ref },
         }),
     );
   });
@@ -1148,17 +1203,28 @@ function setupPatchForm() {
  * @returns {() => void} A function that restores the button to its original state.
  */
 function setButtonBusy(button, busy) {
+  /* Change Rationale: Repo Mapper's submit button could remain stuck with a spinner if a nested
+   * busy call overwrote its innerHTML. Caching the original label on the element ensures that the
+   * final restore always returns to the true baseline copy, matching Material Design's guidance
+   * for predictable feedback loops after async actions complete.
+   */
   if (!button) return () => {};
-  const originalLabel = button.innerHTML;
+  const hasCachedLabel = typeof button.dataset.originalLabel !== 'undefined';
+  const originalLabel = hasCachedLabel ? button.dataset.originalLabel : button.innerHTML;
+  if (!hasCachedLabel) {
+    button.dataset.originalLabel = originalLabel;
+  }
   button.disabled = true;
   if (busy) {
     button.classList.add('is-loading');
     button.innerHTML = busy;
+    button.setAttribute('aria-busy', 'true');
   }
   return () => {
     button.disabled = false;
     button.classList.remove('is-loading');
-    button.innerHTML = originalLabel;
+    button.innerHTML = button.dataset.originalLabel || originalLabel;
+    button.removeAttribute('aria-busy');
   };
 }
 
@@ -1406,9 +1472,10 @@ function initRepoMapper() {
    * - Updates local state and re-renders the output.
    *
    * @param {string} slug Normalized repository slug (`owner/repo`).
+   * @param {string} [ref] Optional branch or tag ref to map.
    * @returns {Promise<void>}
    */
-  const handleSubmit = async (slug) => {
+  const handleSubmit = async (slug, ref) => {
     /* Change Rationale: Overlapping submissions previously cleared the output while a fetch
      * was still in flight, flashing an empty panel. Guarding re-entry and ignoring empty
      * payloads keeps the visible output stable until fresh data arrives.
@@ -1426,13 +1493,17 @@ function initRepoMapper() {
     }
 
     const [owner, repo] = normalizedSlug.split('/');
+    const refToUse = (ref || '').trim();
     const stopLoading = setButtonBusy(
         submitButton,
         '<span class="gh-rolling material-symbols-outlined">progress_activity</span> Generating…',
     );
 
     try {
-      const { tree } = await fetchRepositoryTree({ owner, repo }, tokenField?.value?.trim());
+      const { tree } = await fetchRepositoryTree(
+          { owner, repo, ref: refToUse || undefined },
+          tokenField?.value?.trim(),
+      );
       if (!Array.isArray(tree) || tree.length === 0) {
         currentTree = [];
         renderError('mapper-error', 'No repository contents detected for this slug.');
@@ -1450,7 +1521,10 @@ function initRepoMapper() {
   };
 
   form.addEventListener('repo-mapper:submit', (event) => {
-    handleSubmit(event.detail.slug);
+    /* Change Rationale: Repo Mapper now carries the requested ref so branch-specific URLs map
+     * the exact branch users paste (e.g., `/tree/develop`) instead of silently defaulting.
+     */
+    handleSubmit(event.detail.slug, event.detail.ref);
   });
 
   asciiBtn.addEventListener('click', () => {
@@ -1465,9 +1539,34 @@ function initRepoMapper() {
     renderOutput();
   });
 
-  copyBtn?.addEventListener('click', () => {
+  /**
+   * Provides a transient confirmation state on the copy button after successful clipboard writes.
+   *
+   * @returns {void}
+   */
+  const flashCopyConfirmation = () => {
+    if (!copyBtn) return;
+    const original = copyBtn.innerHTML;
+    copyBtn.disabled = true;
+    copyBtn.classList.add('gh-button-success');
+    copyBtn.innerHTML = '<span class="material-symbols-outlined">check</span><span>Copied</span>';
+    setTimeout(() => {
+      copyBtn.innerHTML = original;
+      copyBtn.disabled = false;
+      copyBtn.classList.remove('gh-button-success');
+    }, 4000);
+  };
+
+  copyBtn?.addEventListener('click', async () => {
     if (codeEl.textContent) {
-      copyToClipboard(codeEl.textContent);
+      /* Change Rationale: The copy button now waits for confirmation before flashing success so
+       * users get reliable feedback that their clipboard actually updated, aligning with
+       * Material Design's emphasis on immediate, accurate status cues.
+       */
+      const copied = await copyToClipboard(codeEl.textContent);
+      if (copied) {
+        flashCopyConfirmation();
+      }
     }
   });
 
@@ -1802,6 +1901,7 @@ export {
   initReleaseStats,
   initRepoMapper,
   normalizeRepoSlug,
+  normalizeRepoInput,
   parseCommitInput,
   renderAsciiTree,
   renderPathList,

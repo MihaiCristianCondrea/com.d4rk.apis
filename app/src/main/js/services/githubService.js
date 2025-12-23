@@ -29,7 +29,14 @@ const handleGithubError = async (response, {
   throw new Error(message);
 };
 
-export const fetchRepositoryTree = async ({ owner, repo }, token) => {
+/**
+ * Fetches a repository tree for a specific ref, defaulting to the repository's default branch.
+ *
+ * @param {{ owner: string, repo: string, ref?: string }} params Repository coordinates and optional ref.
+ * @param {string} token Optional personal access token for authenticated requests.
+ * @returns {Promise<{ tree: Array, truncated: boolean }>} Git tree payload.
+ */
+export const fetchRepositoryTree = async ({ owner, repo, ref }, token) => {
   const headers = buildHeaders(token);
 
   const repoRes = await fetch(`https://api.github.com/repos/${owner}/${repo}`, { headers });
@@ -42,10 +49,15 @@ export const fetchRepositoryTree = async ({ owner, repo }, token) => {
   }
 
   const repoData = await repoRes.json();
+  /* Change Rationale: Allowing a caller-provided ref enables branch-specific mapping requests
+   * (e.g., `/tree/develop`) while preserving the previous default-branch behavior for callers
+   * that omit a ref. This aligns the data layer with the Repo Mapper UX expectations.
+   */
   const defaultBranch = repoData.default_branch;
+  const targetRef = ref || defaultBranch;
 
   const treeRes = await fetch(
-    `https://api.github.com/repos/${owner}/${repo}/git/trees/${defaultBranch}?recursive=1`,
+    `https://api.github.com/repos/${owner}/${repo}/git/trees/${targetRef}?recursive=1`,
     { headers },
   );
 
