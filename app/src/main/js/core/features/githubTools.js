@@ -1013,7 +1013,10 @@ function setupRepoMapperForm(options = {}) {
     const { slug, isValid } = validate();
     const { ref } = normalizeRepoInput(urlField.value);
     if (!isValid) {
-      showError('Invalid repository URL.');
+      /* Change Rationale: Error copy now mirrors the slug-friendly input (owner/repo or URL)
+       * instead of implying only full URLs are allowed, reducing confusion for compact slugs.
+       */
+      showError('Enter a GitHub URL or owner/repo slug.');
       urlField.focus();
       return;
     }
@@ -1550,11 +1553,16 @@ function initRepoMapper() {
     copyBtn.disabled = true;
     copyBtn.classList.add('gh-button-success');
     copyBtn.innerHTML = '<span class="material-symbols-outlined">check</span><span>Copied</span>';
+    /* Change Rationale: The confirmation badge now dismisses after three seconds instead of
+     * four to match the rapid feedback cadence in the inspiration UI while still giving
+     * users enough time to notice the success state before the icon returns to the copy
+     * affordance.
+     */
     setTimeout(() => {
       copyBtn.innerHTML = original;
       copyBtn.disabled = false;
       copyBtn.classList.remove('gh-button-success');
-    }, 4000);
+    }, 3000);
   };
 
   copyBtn?.addEventListener('click', async () => {
