@@ -3,6 +3,7 @@ const {
   formatReleaseCsv,
   formatReleaseSummary,
   normalizeRepoSlug,
+  normalizeRepoInput,
   parseCommitInput,
   renderAsciiTree,
   renderPathList,
@@ -33,6 +34,21 @@ describe('normalizeRepoSlug', () => {
 
   test('returns empty string for invalid input', () => {
     expect(normalizeRepoSlug('not-a-url')).toBe('');
+  });
+});
+
+describe('normalizeRepoInput', () => {
+  test('extracts branch refs from tree URLs', () => {
+    expect(
+      normalizeRepoInput('https://github.com/MihaiCristianCondrea/App-Toolkit-for-Android/tree/develop'),
+    ).toEqual({
+      slug: 'MihaiCristianCondrea/App-Toolkit-for-Android',
+      ref: 'develop',
+    });
+  });
+
+  test('returns empty ref when none is present', () => {
+    expect(normalizeRepoInput('foo/bar')).toEqual({ slug: 'foo/bar', ref: '' });
   });
 });
 
