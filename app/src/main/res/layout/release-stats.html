@@ -25,10 +25,13 @@
               aria-pressed="false"
               aria-label="Favorite repository"
               toggle=""
+              variant="outlined"
             >
               <!-- Change Rationale: md-icon-button surfaces its default and `selected` slots,
                    so defining both ensures the outlined star is always visible while the
-                   filled version appears immediately when selected. -->
+                   filled version appears immediately when selected. The outlined variant
+                   keeps the border visible at rest and matches the Repo Mapper inspiration
+                   styling. -->
               <md-icon>star</md-icon>
               <md-icon slot="selected" class="filled-icon">star</md-icon>
             </md-icon-button>

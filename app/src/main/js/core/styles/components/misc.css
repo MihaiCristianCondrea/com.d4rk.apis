@@ -61,6 +61,26 @@ md-segmented-button-set.app-segmented md-outlined-segmented-button {
   --md-outlined-segmented-button-icon-size: 18px;
 }
 
+/* Change Rationale: The inspiration sample wraps segmented buttons in a pill-shaped rail
+ * with subtle contrast and elevation. Applying a shared container treatment gives both
+ * Repo Mapper and FAQ segmented controls the same Material 3 feel instead of floating
+ * as independent squares with check icons.
+ */
+md-segmented-button-set.app-segmented {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.35rem;
+  background: color-mix(
+    in srgb,
+    var(--md-sys-color-surface-variant, var(--gh-card-strong)) 60%,
+    var(--gh-card)
+  );
+  border: 1px solid var(--md-sys-color-outline-variant, var(--gh-border-color, #49454f));
+  border-radius: 999px;
+  box-shadow: 0 4px 12px color-mix(in srgb, #000 15%, transparent);
+}
+
 /* Change Rationale: The segmented sets needed a slimmer pill footprint and breathing
  * room from neighboring controls to mirror the inspiration sample used on GitHub tools
  * and FAQ. Applying the spacing at the host level keeps both pages aligned while

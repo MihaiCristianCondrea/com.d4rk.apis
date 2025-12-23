@@ -11,12 +11,13 @@
           <md-outlined-text-field
             id="mapper-url"
             name="mapper-url"
-            type="url"
+            type="text"
             class="gh-md-field"
             label="Repository URL"
             autocomplete="off"
             aria-describedby="mapper-url-helper mapper-url-error"
             list="mapper-datalist"
+            inputmode="url"
             required
           >
             <md-icon-button
@@ -25,18 +26,23 @@
               aria-pressed="false"
               aria-label="Favorite repository"
               toggle=""
+              variant="outlined"
             >
-              <!-- Change Rationale: md-icon-button renders its default and `selected` slots
-                   instead of an `icon` slot. Providing both keeps the outlined star visible
-                   by default and swaps to the filled variant when selected without hiding
-                   the control. -->
+              <!-- Change Rationale: Material's outlined variant keeps the star framed whether
+                   the control is idle or selected, and supplying both the default and
+                   `selected` slots preserves the outlined-to-filled transition without
+                   collapsing the icon when toggled. The previous `type="url"` enforcement
+                   blocked compact owner/repo slugs (e.g., MihaiCristianCondrea/App-Toolkit-for-Android)
+                   with native "Please enter a URL" errors; switching to `type="text"` with
+                   `inputmode="url"` keeps keyboard hints while allowing slug inputs that the
+                   mapper already normalizes. -->
               <md-icon>star</md-icon>
               <md-icon slot="selected" class="filled-icon">star</md-icon>
             </md-icon-button>
           </md-outlined-text-field>
         </div>
         <p id="mapper-url-helper" class="gh-helper-text">Paste a GitHub repository URL, owner/repo slug, or compact OwnerRepo name with a dot.</p>
-        <p id="mapper-url-error" class="gh-error-text" hidden="">Invalid repository URL.</p>
+        <p id="mapper-url-error" class="gh-error-text" hidden="">Enter a GitHub URL or owner/repo slug.</p>
         <div class="gh-control-row">
           <div class="gh-token-settings" id="mapper-token-settings">
             <md-filled-tonal-button class="token-toggle" id="mapper-token-reveal" aria-expanded="false" type="button">

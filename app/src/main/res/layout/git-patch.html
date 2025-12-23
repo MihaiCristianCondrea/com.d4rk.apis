@@ -25,10 +25,13 @@
               aria-pressed="false"
               aria-label="Favorite commit"
               toggle=""
+              variant="outlined"
             >
               <!-- Change Rationale: Material's icon button swaps between its default and
                    `selected` slots. Supplying both keeps the outlined star visible on load
-                   and switches to the filled star as soon as the control is selected. -->
+                   and switches to the filled star as soon as the control is selected. The
+                   outlined variant mirrors the inspiration UI so the star always keeps its
+                   border even when unselected. -->
               <md-icon>star</md-icon>
               <md-icon slot="selected" class="filled-icon">star</md-icon>
             </md-icon-button>
