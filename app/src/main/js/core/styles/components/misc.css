@@ -9,16 +9,33 @@
  * inherited surrounding layout colors, which left their outlines and selected states
  * inconsistent with Material defaults. Tuning the tokens for color, shape, and height
  * keeps the controls compact and pill-like while aligning the accents with the app's
- * primary palette so both control sets render identically.
+ * primary palette so both control sets render identically. The previous token list
+ * used MDC-era custom property names (`--container-color`, `--container-shape`) that
+ * Material Web ignores, so the intended palette never applied; mapping the values to
+ * the current `md-outlined-segmented-button` tokens restores the correct styling and
+ * honors Material 3's emphasis on stateful color and accessible contrast.
  */
 md-segmented-button-set.app-segmented md-outlined-segmented-button {
-  --md-outlined-segmented-button-container-color: var(--md-sys-color-surface-container);
   --md-outlined-segmented-button-outline-color: var(--md-sys-color-outline-variant, var(--md-sys-color-outline));
-  --md-outlined-segmented-button-label-text-color: var(
+  --md-outlined-segmented-button-unselected-label-text-color: var(
     --md-sys-color-on-surface-variant,
     var(--md-sys-color-on-surface)
   );
-  --md-outlined-segmented-button-icon-color: var(--md-sys-color-on-surface-variant, currentColor);
+  --md-outlined-segmented-button-unselected-icon-color: var(--md-sys-color-on-surface-variant, currentColor);
+  --md-outlined-segmented-button-unselected-focus-label-text-color: var(--md-sys-color-on-surface);
+  --md-outlined-segmented-button-unselected-focus-icon-color: var(--md-sys-color-on-surface);
+  --md-outlined-segmented-button-unselected-hover-label-text-color: var(--md-sys-color-on-surface);
+  --md-outlined-segmented-button-unselected-hover-icon-color: var(--md-sys-color-on-surface);
+  --md-outlined-segmented-button-unselected-hover-state-layer-color: var(
+    --md-sys-color-on-surface-variant,
+    var(--md-sys-color-on-surface)
+  );
+  --md-outlined-segmented-button-unselected-pressed-label-text-color: var(--md-sys-color-on-surface);
+  --md-outlined-segmented-button-unselected-pressed-icon-color: var(--md-sys-color-on-surface);
+  --md-outlined-segmented-button-unselected-pressed-state-layer-color: var(
+    --md-sys-color-on-surface-variant,
+    var(--md-sys-color-on-surface)
+  );
   --md-outlined-segmented-button-selected-container-color: color-mix(
     in srgb,
     var(--md-sys-color-primary) 12%,
@@ -26,20 +43,22 @@ md-segmented-button-set.app-segmented md-outlined-segmented-button {
   );
   --md-outlined-segmented-button-selected-label-text-color: var(--md-sys-color-primary);
   --md-outlined-segmented-button-selected-icon-color: var(--md-sys-color-primary);
+  --md-outlined-segmented-button-selected-focus-label-text-color: var(--md-sys-color-primary);
+  --md-outlined-segmented-button-selected-focus-icon-color: var(--md-sys-color-primary);
+  --md-outlined-segmented-button-selected-hover-label-text-color: var(--md-sys-color-primary);
+  --md-outlined-segmented-button-selected-hover-icon-color: var(--md-sys-color-primary);
+  --md-outlined-segmented-button-selected-hover-state-layer-color: var(--md-sys-color-primary);
+  --md-outlined-segmented-button-selected-pressed-label-text-color: var(--md-sys-color-primary);
+  --md-outlined-segmented-button-selected-pressed-icon-color: var(--md-sys-color-primary);
+  --md-outlined-segmented-button-selected-pressed-state-layer-color: var(--md-sys-color-primary);
   --md-outlined-segmented-button-container-height: 42px;
-  --md-outlined-segmented-button-container-shape: 999px;
-  --md-outlined-segmented-button-focus-outline-color: color-mix(
-    in srgb,
-    var(--md-sys-color-outline-variant, var(--md-sys-color-outline)) 65%,
-    transparent
-  );
-  --md-outlined-segmented-button-focus-outline-width: 2px;
+  --md-outlined-segmented-button-shape: 999px;
   /* Change Rationale: Segmented buttons previously forced bold (700) labels that made the set look
    * heavier than adjacent controls. Normal weight (400) keeps the text consistent with other buttons
    * while relying on selection color for emphasis, matching Material 3's balanced typography.
    */
   --md-outlined-segmented-button-label-text-weight: 400;
-  --md-outlined-segmented-button-with-icon-icon-size: 18px;
+  --md-outlined-segmented-button-icon-size: 18px;
 }
 
 /* Change Rationale: The segmented sets needed a slimmer pill footprint and breathing
