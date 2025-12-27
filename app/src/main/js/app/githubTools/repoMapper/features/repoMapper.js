@@ -1,4 +1,7 @@
-import { initRepoMapper } from '@/core/features/githubTools.js';
-
-// Export the init function for direct calls if needed by the router
-export { initRepoMapper };
+/**
+ * @file Compatibility barrel for the Repo Mapper entrypoint.
+ *
+ * Change Rationale: Repo Mapper now resides in `features/github-tools/repo-mapper` as part of the
+ * feature-first structure. Keeping this shim avoids breaking existing deep imports.
+ */
+export * from '../../../../features/github-tools/repo-mapper/features/repoMapper.js';

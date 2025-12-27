@@ -73,20 +73,21 @@ import './core/ui/components/animations/animations.js';
 
 import './core/legacyBridge.js';
 
-import './app/workspaces/appToolkit/ui/index.js';
-import './app/workspaces/appToolkit/features/appToolkit.js';
 /*
  * Change Rationale:
- * - Align workspace module imports with canonical API slugs by renaming the FAQs workspace folder to `faq`.
- * - This prevents drift between UI modules and API identifiers while keeping Material 3 routes predictable.
+ * - Consolidate feature entrypoints under the new feature-first directory to avoid a monolithic `app/` tree.
+ * - Keep legacy import paths working via compatibility barrels while the router targets the canonical feature modules.
+ * - This aligns with Material Design 3’s modular guidance by keeping each surface isolated yet discoverable.
  */
-import './app/workspaces/faq/features/faq.js';
-import './app/workspaces/englishWithLidia/features/englishWithLidia.js';
-import './app/workspaces/androidStudioTutorials/features/androidStudioTutorials.js';
+import './features/workspaces/app-toolkit/ui/index.js';
+import './features/workspaces/app-toolkit/features/appToolkit.js';
+import './features/workspaces/faq/features/faq.js';
+import './features/workspaces/english-with-lidia/features/englishWithLidia.js';
+import './features/workspaces/android-studio-tutorials/features/androidStudioTutorials.js';
 
-import './app/githubTools/repoMapper/features/repoMapper.js';
-import './app/githubTools/releaseStats/features/releaseStats.js';
-import './app/githubTools/gitPatch/features/gitPatch.js';
-import './app/home/homePage.js';
+import './features/github-tools/repo-mapper/features/repoMapper.js';
+import './features/github-tools/release-stats/features/releaseStats.js';
+import './features/github-tools/git-patch/features/gitPatch.js';
+import './features/home/homePage.js';
 
 import './core/app.js';
