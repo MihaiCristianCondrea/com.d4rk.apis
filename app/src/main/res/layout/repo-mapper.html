@@ -31,13 +31,16 @@
               <!-- Change Rationale: Material's outlined variant keeps the star framed whether
                    the control is idle or selected, and supplying both the default and
                    `selected` slots preserves the outlined-to-filled transition without
-                   collapsing the icon when toggled. The previous `type="url"` enforcement
-                   blocked compact owner/repo slugs (e.g., MihaiCristianCondrea/App-Toolkit-for-Android)
+                   collapsing the icon when toggled. Swapping the icon content to
+                   `material-symbols-outlined` keeps the trailing affordance visually
+                   aligned with the rest of the GitHub tools surface and preserves the
+                   outlined weight even before selection. The previous `type="url"`
+                   enforcement blocked compact owner/repo slugs (e.g., MihaiCristianCondrea/App-Toolkit-for-Android)
                    with native "Please enter a URL" errors; switching to `type="text"` with
                    `inputmode="url"` keeps keyboard hints while allowing slug inputs that the
                    mapper already normalizes. -->
-              <md-icon>star</md-icon>
-              <md-icon slot="selected" class="filled-icon">star</md-icon>
+              <span class="material-symbols-outlined" aria-hidden="true">star</span>
+              <span slot="selected" class="material-symbols-outlined filled-icon" aria-hidden="true">star</span>
             </md-icon-button>
           </md-outlined-text-field>
         </div>
