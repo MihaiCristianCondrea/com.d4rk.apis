@@ -1,9 +1,18 @@
+/**
+ * @file Navigation drawer service integration tests using the canonical core utilities.
+ */
+/*
+ * Change Rationale:
+ * - This suite previously mocked app/src/main/js/domain/utils, a duplicate alias for the core utilities.
+ * - Pointing tests at app/src/main/js/core/utils/utils consolidates utility usage and prevents namespace drift between domain and core layers.
+ * - The consolidation safeguards consistent drawer interactions, which supports the predictable navigation patterns expected in Material Design 3 UIs.
+ */
 const mockUtils = {
   getDynamicElement: jest.fn(),
   rafThrottle: (fn) => fn,
 };
-jest.mock('../app/src/main/js/domain/utils.js', () => {
-  const actual = jest.requireActual('../app/src/main/js/domain/utils.js');
+jest.mock('../app/src/main/js/core/utils/utils.js', () => {
+  const actual = jest.requireActual('../app/src/main/js/core/utils/utils.js');
   return {
     __esModule: true,
     ...actual,
@@ -14,6 +23,11 @@ jest.mock('../app/src/main/js/domain/utils.js', () => {
 
 const { initNavigationDrawer } = require('../app/src/main/js/services/navigationDrawerService.js');
 
+/**
+ * Builds the DOM skeleton required for exercising navigation drawer interactions.
+ *
+ * @returns {void}
+ */
 function createDrawerMarkup() {
   document.body.innerHTML = `
     <header data-drawer-inert-target id="header">

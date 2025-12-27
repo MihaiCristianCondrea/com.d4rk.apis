@@ -75,7 +75,12 @@ import './core/legacyBridge.js';
 
 import './app/workspaces/appToolkit/ui/index.js';
 import './app/workspaces/appToolkit/features/appToolkit.js';
-import './app/workspaces/faqs/features/faq.js';
+/*
+ * Change Rationale:
+ * - Align workspace module imports with canonical API slugs by renaming the FAQs workspace folder to `faq`.
+ * - This prevents drift between UI modules and API identifiers while keeping Material 3 routes predictable.
+ */
+import './app/workspaces/faq/features/faq.js';
 import './app/workspaces/englishWithLidia/features/englishWithLidia.js';
 import './app/workspaces/androidStudioTutorials/features/androidStudioTutorials.js';
 
