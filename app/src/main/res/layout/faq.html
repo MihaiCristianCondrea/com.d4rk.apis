@@ -19,7 +19,8 @@
             <p class="faq-landing-card__copy">Switch between debug or release and manage the source list.</p>
           </div>
         </button>
-        <button type="button" class="faq-landing-card" data-faq-mode="faqs" aria-pressed="false">
+        <!-- Change Rationale: Normalize the workflow key to the singular `faq` slug so UI state matches api/faq and router anchors. -->
+        <button type="button" class="faq-landing-card" data-faq-mode="faq" aria-pressed="false">
           <span class="faq-landing-card__icon material-symbols-outlined">help_center</span>
           <div class="faq-landing-card__body">
             <p class="faq-landing-card__eyebrow">Product FAQs</p>
@@ -121,10 +122,10 @@
               <span>Catalog</span>
             </md-outlined-segmented-button>
             <md-outlined-segmented-button
-              value="faqs"
+              value="faq"
               aria-selected="false"
-              aria-controls="faqPanelFaqs"
-              data-faq-panel-control="faqs"
+              aria-controls="faqPanelFaq"
+              data-faq-panel-control="faq"
               role="tab"
             >
               <md-icon slot="icon">help_center</md-icon>
@@ -215,7 +216,7 @@
         </aside>
       </section>
     </section>
-    <section class="faq-panel" data-faq-panel="faqs" id="faqPanelFaqs" hidden="">
+    <section class="faq-panel" data-faq-panel="faq" id="faqPanelFaq" hidden="">
       <section class="builder-remote-card faq-product-loader" aria-label="Product FAQ loader">
         <div class="card-body">
           <div class="builder-remote-header">

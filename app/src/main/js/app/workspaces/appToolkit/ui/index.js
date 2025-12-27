@@ -1,13 +1,7 @@
-import { createScreenshotField } from './components/screenshotField.js';
-
-const globalScope = typeof window !== 'undefined' ? window : globalThis;
-
-if (!globalScope.AppToolkitScreenshotField) {
-  Object.defineProperty(globalScope, 'AppToolkitScreenshotField', {
-    value: Object.freeze({ create: createScreenshotField }),
-    writable: false,
-    configurable: true,
-  });
-}
-
-export { createScreenshotField };
+/**
+ * @file Compatibility barrel for the App Toolkit UI module.
+ *
+ * Change Rationale: UI code relocated to `features/workspaces/app-toolkit` under the feature-first
+ * layout. This shim keeps legacy import statements working during the transition.
+ */
+export * from '../../../../features/workspaces/app-toolkit/ui/index.js';

@@ -6,7 +6,7 @@
                 {
                     "content_id": "1",
                     "content_type": "content_player",
-                    "content_audio_url": "https://github.com/MihaiCristianCondrea/com.d4rk.apis/raw/refs/heads/main/English%20with%20Lidia/src/tell_me_about_yourself.mp3",
+                    "content_audio_url": "https://github.com/MihaiCristianCondrea/com.d4rk.apis/raw/refs/heads/main/api/english_with_lidia/assets/tell_me_about_yourself.mp3",
                     "content_thumbnail_url": "https://i.ibb.co/p4sQcLn/im-lesson1.webp",
                     "content_title": "Tell me about yourself",
                     "content_artist": "Lidia Melinte",
