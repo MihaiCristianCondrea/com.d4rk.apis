@@ -1,3 +1,12 @@
+import { Workspaces, getWorkspaceAnchor } from '../../core/domain/workspaces/registry.js';
+
+/*
+ * Change Rationale:
+ * - Workspace tiles previously relied on ad-hoc IDs and hrefs that drifted from the canonical API slugs.
+ * - Wiring the cards to the centralized workspace registry aligns UI routes, folder names, and API paths.
+ * - This reduces mapping glue and keeps navigation predictable for the Material 3 home grid.
+ */
+
 /**
  * Configuration object for a workspace card shown on the home page.
  *
@@ -25,11 +34,11 @@
  */
 export const workspaceCards = [
   {
-    id: 'app-toolkit',
-    href: '#app-toolkit-api',
+    id: Workspaces.app_toolkit.id,
+    href: getWorkspaceAnchor(Workspaces.app_toolkit),
     icon: 'build',
     kicker: 'API workspace',
-    title: 'App Toolkit',
+    title: Workspaces.app_toolkit.label,
     description:
         'Curate tool listings, screenshots, and metadata that power the App Toolkit catalog in both debug and release channels.',
     features: [
@@ -39,11 +48,11 @@ export const workspaceCards = [
     ],
   },
   {
-    id: 'faq-api',
-    href: '#faq-api',
+    id: Workspaces.faq.id,
+    href: getWorkspaceAnchor(Workspaces.faq),
     icon: 'help_center',
     kicker: 'API workspace',
-    title: 'FAQ API',
+    title: Workspaces.faq.label,
     description:
         'Coordinate policy answers for websites and Android apps with Google icon suggestions and featured callouts.',
     features: [
@@ -53,11 +62,11 @@ export const workspaceCards = [
     ],
   },
   {
-    id: 'english-with-lidia',
-    href: '#english-with-lidia-api',
+    id: Workspaces.english_with_lidia.id,
+    href: getWorkspaceAnchor(Workspaces.english_with_lidia),
     icon: 'lightbulb',
     kicker: 'API workspace',
-    title: 'English with Lidia',
+    title: Workspaces.english_with_lidia.label,
     description:
         'Design home feeds and lesson flows with multimedia content, audio tracks, and ads aligned with the published documentation.',
     features: [
@@ -67,11 +76,11 @@ export const workspaceCards = [
     ],
   },
   {
-    id: 'android-studio-tutorials',
-    href: '#android-studio-tutorials-api',
+    id: Workspaces.android_studio_tutorials.id,
+    href: getWorkspaceAnchor(Workspaces.android_studio_tutorials),
     icon: 'school',
     kicker: 'API workspace',
-    title: 'Android Studio Tutorials',
+    title: Workspaces.android_studio_tutorials.label,
     description:
         'Assemble Compose-first lesson journeys with code samples, banners, ads, and metadata tailored for the tutorials app.',
     features: [

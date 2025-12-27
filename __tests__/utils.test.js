@@ -1,10 +1,19 @@
+/**
+ * @file Core utility helper tests executed against the canonical utilities module.
+ */
+/*
+ * Change Rationale:
+ * - Previously, these tests loaded helpers via app/src/main/js/domain/utils, a redundant alias of the core utils.
+ * - Importing directly from app/src/main/js/core/utils/utils enforces a single utility entry point and avoids domain namespace confusion.
+ * - The consolidation keeps shared helpers aligned for predictable UX behaviors governed by Material Design 3 interactions.
+ */
 const {
   getNestedValue,
   extractFirstImageFromHtml,
   getDynamicElement,
   showPageLoadingOverlay,
   hidePageLoadingOverlay
-} = require('../app/src/main/js/domain/utils.js');
+} = require('../app/src/main/js/core/utils/utils.js');
 
 describe('getNestedValue', () => {
   test('retrieves nested values with dot notation', () => {
