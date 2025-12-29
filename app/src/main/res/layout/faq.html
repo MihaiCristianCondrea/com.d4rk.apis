@@ -256,22 +256,38 @@
         </div>
         <div class="builder-layout builder-columns">
           <div class="builder-forms" id="faqEntries" aria-live="polite"></div>
-          <aside class="builder-preview" aria-label="JSON preview">
-            <div class="preview-header">
-              <h2>Preview & export</h2>
-              <p>Changes update automatically as you edit entries.</p>
-            </div>
-            <textarea id="faqPreview" class="preview-textarea" readonly spellcheck="false" aria-label="FAQ JSON preview"></textarea>
-            <div class="preview-validation" id="faqValidation" role="status" aria-live="polite"></div>
-            <div class="preview-actions">
-              <md-filled-tonal-button id="faqCopyButton">
-                <md-icon slot="icon">content_copy</md-icon>
-                <span>Copy JSON</span>
-              </md-filled-tonal-button>
-              <md-outlined-button id="faqDownloadButton">
-                <md-icon slot="icon">download</md-icon>
-                <span>Download</span>
-              </md-outlined-button>
+          <aside class="builder-preview" aria-label="FAQ preview workspace">
+            <div class="preview-grid">
+              <section class="preview-card" aria-label="JSON preview">
+                <div class="preview-header">
+                  <h2>Preview & export</h2>
+                  <p>Changes update automatically as you edit entries.</p>
+                </div>
+                <textarea id="faqPreview" class="preview-textarea" readonly spellcheck="false" aria-label="FAQ JSON preview"></textarea>
+                <div class="preview-validation" id="faqValidation" role="status" aria-live="polite"></div>
+                <div class="preview-actions">
+                  <md-filled-tonal-button id="faqCopyButton">
+                    <md-icon slot="icon">content_copy</md-icon>
+                    <span>Copy JSON</span>
+                  </md-filled-tonal-button>
+                  <md-outlined-button id="faqDownloadButton">
+                    <md-icon slot="icon">download</md-icon>
+                    <span>Download</span>
+                  </md-outlined-button>
+                </div>
+              </section>
+              <section class="preview-card preview-card--live" aria-label="Live view">
+                <!-- Change Rationale: Editors only saw JSON, so layout/icon issues surfaced late. The live view mirrors the Material list/card layout and updates as you type to expose visual regressions immediately. -->
+                <div class="preview-header">
+                  <h2>Live view</h2>
+                  <p>See how FAQs render with icons, categories, and HTML.</p>
+                </div>
+                <p id="faqLivePreviewStatus" class="preview-status" role="status" aria-live="polite">Live preview will render as you type.</p>
+                <p id="faqLivePreviewEmpty" class="preview-empty">Add FAQs to render the live view.</p>
+                <div id="faqLivePreview" class="faq-live-preview" role="region" aria-live="polite">
+                  <div id="faqLivePreviewList" class="faq-live-preview__list" role="list"></div>
+                </div>
+              </section>
             </div>
           </aside>
         </div>
