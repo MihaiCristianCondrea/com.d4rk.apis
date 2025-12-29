@@ -49,38 +49,24 @@
         ];
     const ICON_PICKER_MAX_RENDER = 400;
 
-    const CATEGORY_GROUPS = [
-        {
-            label: 'General',
-            options: [
-                { value: 'general', label: 'General' },
-                { value: 'distribution_stores', label: 'Distribution & Stores' },
-                { value: 'privacy_data', label: 'Privacy & Data' },
-                { value: 'ads_monetization', label: 'Ads & Monetization' },
-                { value: 'design_ux', label: 'Design & UX (Material 3)' }
-            ]
-        },
-        {
-            label: '\ud83d\udcf1 Apps / Projects',
-            options: [
-                { value: 'android_studio_tutorials', label: 'Android Studio Tutorials' },
-                { value: 'app_toolkit', label: 'App Toolkit' },
-                { value: 'smart_cleaner', label: 'Smart Cleaner' },
-                { value: 'english_with_lidia', label: 'English with Lidia' },
-                { value: 'low_brightness', label: 'Low Brightness' },
-                { value: 'weddix', label: 'Weddix' },
-                { value: 'cart_calculator', label: 'Cart Calculator' },
-                { value: 'profile_website', label: 'Profile Website' },
-                { value: 'apis_website', label: "API's Website" }
-            ]
-        }
-    ];
-
-    const ALL_CATEGORIES = CATEGORY_GROUPS.flatMap((group) =>
-        group.options.map((option) => ({ ...option, group: group.label }))
-    );
-    const CATEGORY_LOOKUP = new Map(ALL_CATEGORIES.map((item) => [item.value, item]));
-    const CATEGORY_ORDER = new Map(ALL_CATEGORIES.map((item, index) => [item.value, index]));
+    /* Change Rationale: Categories were hard-coded, which blocked new catalog products from being tagged without code edits and diverged from the release/debug JSON sources. This registry merges static general options with live catalog metadata and user-added categories so the UI reflects the actual dataset taxonomy. */
+    const GENERAL_CATEGORY_GROUP = {
+        label: 'General',
+        options: [
+            { value: 'general', label: 'General' },
+            { value: 'distribution_stores', label: 'Distribution & Stores' },
+            { value: 'privacy_data', label: 'Privacy & Data' },
+            { value: 'ads_monetization', label: 'Ads & Monetization' },
+            { value: 'design_ux', label: 'Design & UX (Material 3)' }
+        ]
+    };
+    const categoryState = {
+        groups: [GENERAL_CATEGORY_GROUP],
+        lookup: new Map(),
+        order: new Map(),
+        recognized: new Set(),
+        customCategories: new Set()
+    };
     const DEFAULT_CATEGORIES = [];
 
     function initFaqWorkspace() {
@@ -116,6 +102,10 @@
         const catalogDownloadButton = document.getElementById('faqCatalogDownloadButton');
         const previewArea = document.getElementById('faqPreview');
         const validationStatus = document.getElementById('faqValidation');
+        const livePreviewRoot = document.getElementById('faqLivePreview');
+        const livePreviewList = document.getElementById('faqLivePreviewList');
+        const livePreviewStatus = document.getElementById('faqLivePreviewStatus');
+        const livePreviewEmpty = document.getElementById('faqLivePreviewEmpty');
         const toolbarStatus = document.getElementById('faqToolbarStatus');
         const copyButton = document.getElementById('faqCopyButton');
         const downloadButton = document.getElementById('faqDownloadButton');
@@ -301,6 +291,7 @@
             catalogState.loaded = false;
             catalogState.selectedKey = DEFAULT_PRODUCT_KEY;
             catalogState.source = DEFAULT_CATALOG_URL;
+            categoryState.customCategories = new Set();
             resetFaqPreviewState('Workspace reset to a blank FAQ.');
             resetCatalogPreviewState('Fetch the catalog to start editing products.');
             render();
@@ -348,6 +339,15 @@
             if (previewArea) {
                 previewArea.value = '';
             }
+            if (livePreviewList) {
+                utils.clearElement(livePreviewList);
+            }
+            if (livePreviewStatus) {
+                livePreviewStatus.textContent = 'Live preview will appear after adding FAQs.';
+            }
+            if (livePreviewEmpty) {
+                livePreviewEmpty.hidden = false;
+            }
             if (validationStatus) {
                 utils.setValidationStatus(validationStatus, {
                     status: 'info',
@@ -382,6 +382,132 @@
             }
         }
 
+        /**
+         * Builds the live category registry from the static general options, the
+         * fetched catalog metadata, and any user-supplied custom categories.
+         *
+         * Change Rationale: Categories used to be a fixed array, blocking new
+         * products or ad-hoc taxonomy from release catalogs. Recomputing the
+         * registry from catalog products, question sources, and custom inputs
+         * keeps the UI in sync with the data and aligns with Material 3's
+         * adaptive filtering guidance.
+         *
+         * @param {Array<unknown>} entries - Current FAQ entries for surfacing unmapped categories.
+         * @returns {void}
+         */
+        function refreshCategoryRegistry(entries = state.entries) {
+            const groups = [];
+            const lookup = new Map();
+            const order = new Map();
+            const recognized = new Set();
+            let orderIndex = 0;
+
+            const registerGroup = (label, options = [], { recognize = true } = {}) => {
+                const valid = Array.isArray(options)
+                    ? options
+                          .map((option) => ({
+                              value: utils.trimString(option.value),
+                              label: option.label || option.value
+                          }))
+                          .filter((option) => option.value)
+                    : [];
+                if (!valid.length) {
+                    return;
+                }
+                groups.push({ label, options: valid });
+                valid.forEach((option) => {
+                    lookup.set(option.value, option.label);
+                    order.set(option.value, orderIndex++);
+                    if (recognize) {
+                        recognized.add(option.value);
+                    }
+                });
+            };
+
+            registerGroup(GENERAL_CATEGORY_GROUP.label, GENERAL_CATEGORY_GROUP.options);
+
+            const catalogOptions = [];
+            if (Array.isArray(catalogState.products)) {
+                catalogState.products.forEach((product) => {
+                    const key = utils.trimString(product.key || product.productId);
+                    const name = utils.trimString(product.name || key);
+                    if (key) {
+                        catalogOptions.push({ value: key, label: name || key });
+                    }
+                    if (Array.isArray(product.questionSources)) {
+                        product.questionSources.forEach((source) => {
+                            const category = utils.trimString(source.category);
+                            if (category) {
+                                catalogOptions.push({ value: category, label: category });
+                            }
+                        });
+                    }
+                });
+            }
+            registerGroup('Catalog products', catalogOptions);
+
+            const customOptions = Array.from(categoryState.customCategories).map((value) => ({
+                value,
+                label: value
+            }));
+            registerGroup('Custom categories', customOptions);
+
+            const unmappedValues = new Set();
+            if (Array.isArray(entries)) {
+                entries.forEach((entry) => {
+                    const categories = Array.isArray(entry?.categories) ? entry.categories : [];
+                    categories.forEach((category) => {
+                        const normalized = utils.trimString(category);
+                        if (normalized && !recognized.has(normalized)) {
+                            unmappedValues.add(normalized);
+                        }
+                    });
+                });
+            }
+            registerGroup(
+                'Unmapped from dataset',
+                Array.from(unmappedValues).map((value) => ({ value, label: value })),
+                { recognize: false }
+            );
+
+            categoryState.groups = groups;
+            categoryState.lookup = lookup;
+            categoryState.order = order;
+            categoryState.recognized = recognized;
+        }
+
+        /**
+         * Registers a custom category and applies it to an entry so bespoke
+         * product tags are preserved in exports.
+         *
+         * Change Rationale: Custom categories previously vanished because they
+         * were not part of the static list. Persisting them in the registry and
+         * entry payload matches the Material 3 guidance of letting users extend
+         * filter chips dynamically without code changes.
+         *
+         * @param {string} value - The custom category value to add.
+         * @param {number} entryIndex - The entry index that should receive the category.
+         * @returns {void}
+         */
+        function addCustomCategory(value, entryIndex) {
+            const normalized = utils.trimString(value);
+            if (!normalized) {
+                return;
+            }
+            categoryState.customCategories.add(normalized);
+            if (typeof entryIndex === 'number' && state.entries[entryIndex]) {
+                const existing = Array.isArray(state.entries[entryIndex].categories)
+                    ? [...state.entries[entryIndex].categories]
+                    : [...DEFAULT_CATEGORIES];
+                if (!existing.includes(normalized)) {
+                    state.entries[entryIndex].categories = sortCategories([...existing, normalized]);
+                }
+            }
+            refreshCategoryRegistry();
+            render();
+            requestPreviewUpdate({ markDirty: true });
+        }
+
         function sortCategories(values = []) {
             const seen = new Set();
             const normalized = [];
@@ -394,8 +520,8 @@
                 normalized.push(trimmed);
             });
             return normalized.sort((a, b) => {
-                const orderA = CATEGORY_ORDER.get(a) ?? Number.MAX_SAFE_INTEGER;
-                const orderB = CATEGORY_ORDER.get(b) ?? Number.MAX_SAFE_INTEGER;
+                const orderA = categoryState.order.get(a) ?? Number.MAX_SAFE_INTEGER;
+                const orderB = categoryState.order.get(b) ?? Number.MAX_SAFE_INTEGER;
                 if (orderA === orderB) {
                     return a.localeCompare(b);
                 }
@@ -423,7 +549,7 @@
         function formatCategorySummary(values = []) {
             const valid = sortCategories(values);
             const labels = valid
-                .map((value) => CATEGORY_LOOKUP.get(value)?.label || value)
+                .map((value) => categoryState.lookup.get(value) || value)
                 .filter(Boolean);
             if (!labels.length) {
                 return 'Select categories';
@@ -619,6 +745,7 @@
             if (!entriesContainer) {
                 return;
             }
+            refreshCategoryRegistry();
             closeCategoryMenu();
             utils.clearElement(entriesContainer);
             if (!state.entries.length) {
@@ -987,7 +1114,7 @@
                     openCategoryMenu(categoryMenu, categoryTrigger);
                 }
             });
-            CATEGORY_GROUPS.forEach((group) => {
+            categoryState.groups.forEach((group) => {
                 const groupBlock = utils.createElement('div', {
                     classNames: 'faq-category-menu__group'
                 });
@@ -1040,6 +1167,36 @@
             categoryDropdown.appendChild(categoryTrigger);
             categoryDropdown.appendChild(categoryMenu);
             categoryField.appendChild(categoryDropdown);
+            const customCategoryWrapper = utils.createElement('div', {
+                classNames: 'faq-category-custom'
+            });
+            const customCategoryInput = utils.createElement('input', {
+                classNames: 'api-input faq-category-custom__input',
+                attrs: {
+                    type: 'text',
+                    placeholder: 'Add a custom category…',
+                    'aria-label': 'Add a custom category'
+                }
+            });
+            const customCategoryButton = utils.createInlineButton({
+                icon: 'add',
+                label: 'Add category',
+                onClick: () => {
+                    addCustomCategory(customCategoryInput.value, index);
+                    customCategoryInput.value = '';
+                    syncCategorySummary();
+                }
+            });
+            customCategoryButton.classList.add('faq-category-custom__button');
+            customCategoryWrapper.appendChild(customCategoryInput);
+            customCategoryWrapper.appendChild(customCategoryButton);
+            customCategoryWrapper.appendChild(
+                utils.createElement('span', {
+                    classNames: 'api-field-helper',
+                    text: 'Use a custom category to tag new products without editing code.'
+                })
+            );
+            categoryField.appendChild(customCategoryWrapper);
             categoryField.appendChild(
                 utils.createElement('span', {
                     classNames: 'api-field-helper',
@@ -1351,6 +1508,7 @@
         function evaluateState(payload) {
             const errors = [];
             const warnings = [];
+            const unknownCategories = new Set();
             const seenIds = new Set();
             state.entries.forEach((entry, index) => {
                 const id = utils.trimString(entry.id);
@@ -1373,9 +1531,19 @@
                 if (!answer) {
                     errors.push(`FAQ ${index + 1} is missing answer HTML.`);
                 }
+                const categories = Array.isArray(entry.categories) ? entry.categories : [];
+                categories.forEach((category) => {
+                    const normalized = utils.trimString(category);
+                    if (normalized && !categoryState.recognized.has(normalized)) {
+                        unknownCategories.add(normalized);
+                    }
+                });
             });
             if (getExportedEntryCount(payload) === 0) {
                 warnings.push('Add at least one complete FAQ entry before exporting.');
+            }
+            if (unknownCategories.size) {
+                warnings.push(`Unknown categories detected: ${Array.from(unknownCategories).join(', ')}`);
             }
             return { errors, warnings };
         }
@@ -1384,6 +1552,7 @@
             if (!previewArea) {
                 return;
             }
+            refreshCategoryRegistry();
             const result = await utils.renderJsonPreview({
                 previewArea,
                 statusElement: null,
@@ -1400,6 +1569,7 @@
             applyValidationState(payload);
             updateMetrics(payload);
             updateExportControls();
+            renderLivePreview(payload);
         }
 
         const previewUpdateTask = utils.createDeferredTask(updatePreview, {
@@ -1459,6 +1629,16 @@
                 toolbarStatus.dataset.state = 'warning';
                 const warningMessage = warnings[0] || 'Start adding entries to generate the FAQ dataset.';
                 updateWorkspacePulse(warningMessage);
+                return;
+            }
+            if (warnings.length) {
+                utils.setValidationStatus(validationStatus, {
+                    status: 'warning',
+                    message: warnings[0]
+                });
+                toolbarStatus.textContent = warnings[0];
+                toolbarStatus.dataset.state = 'warning';
+                updateWorkspacePulse(warnings[0]);
                 return;
             }
             const message = exportedCount === 1
@@ -1610,6 +1790,110 @@
                 return;
             }
             workspacePulseEl.textContent = message;
+        }
+
+        /**
+         * Builds an accessible, Material-inspired live preview for FAQs using
+         * sanitized HTML so editors can validate layout and icon choices before
+         * exporting JSON.
+         *
+         * Change Rationale: The workspace previously showed raw JSON only, which
+         * hid layout and icon mistakes until after publishing. Rendering cards
+         * inline follows Material 3 list/card patterns and lets editors spot
+         * visual or accessibility regressions immediately.
+         *
+         * @param {unknown} payload - The export-ready payload produced by the builder.
+         * @returns {void}
+         */
+        function renderLivePreview(payload) {
+            if (!livePreviewList) {
+                return;
+            }
+            const entries = Array.isArray(payload)
+                ? payload
+                : Array.isArray(payload?.entries)
+                ? payload.entries
+                : [];
+            utils.clearElement(livePreviewList);
+            if (livePreviewEmpty) {
+                livePreviewEmpty.hidden = entries.length > 0;
+            }
+            if (!entries.length) {
+                if (livePreviewStatus) {
+                    livePreviewStatus.textContent = 'Add FAQs to see the live preview.';
+                }
+                return;
+            }
+            entries.forEach((entry, index) => {
+                const card = utils.createElement('md-filled-card', {
+                    classNames: 'faq-live-card',
+                    attrs: {
+                        role: 'listitem',
+                        tabindex: '0',
+                        'aria-label': utils.trimString(entry.question) || `FAQ ${index + 1}`
+                    }
+                });
+                const header = utils.createElement('div', { classNames: 'faq-live-card__header' });
+                const iconName = utils.trimString(entry.icon) || 'help';
+                const icon = utils.createElement('span', {
+                    classNames: ['material-symbols-outlined', 'faq-live-card__icon'],
+                    attrs: { 'aria-hidden': 'true' },
+                    text: iconName
+                });
+                const question = utils.createElement('h3', {
+                    classNames: 'faq-live-card__question',
+                    text: utils.trimString(entry.question) || 'Untitled FAQ'
+                });
+                header.appendChild(icon);
+                header.appendChild(question);
+
+                const categoriesRow = utils.createElement('div', {
+                    classNames: 'faq-live-card__categories',
+                    attrs: { role: 'list' }
+                });
+                const categories = Array.isArray(entry.categories) ? entry.categories : [];
+                if (categories.length) {
+                    categories.forEach((category) => {
+                        const label = categoryState.lookup.get(category) || category;
+                        categoriesRow.appendChild(
+                            utils.createElement('span', {
+                                classNames: 'faq-live-card__chip',
+                                attrs: { role: 'listitem' },
+                                text: label
+                            })
+                        );
+                    });
+                } else {
+                    categoriesRow.appendChild(
+                        utils.createElement('span', {
+                            classNames: 'faq-live-card__chip faq-live-card__chip--muted',
+                            text: 'No categories'
+                        })
+                    );
+                }
+
+                const answer = utils.createElement('div', {
+                    classNames: 'faq-live-card__answer',
+                    attrs: { 'aria-live': 'polite' }
+                });
+                const sanitized = utils.sanitizeHtml(entry.answer || '');
+                if (sanitized) {
+                    answer.innerHTML = sanitized;
+                    answer.dataset.empty = 'false';
+                } else {
+                    answer.textContent = 'Answer will render here.';
+                    answer.dataset.empty = 'true';
+                }
+
+                card.appendChild(header);
+                card.appendChild(categoriesRow);
+                card.appendChild(answer);
+                livePreviewList.appendChild(card);
+            });
+            if (livePreviewStatus) {
+                const countLabel = entries.length === 1 ? '1 FAQ' : `${entries.length} FAQs`;
+                livePreviewStatus.textContent = `Live preview ready · ${countLabel}`;
+            }
         }
 
         function updateMetrics() {
@@ -1825,6 +2109,7 @@
                 catalogState.loaded = true;
                 applyCatalogPayload(parsed);
                 renderCatalogPicker(products);
+                render();
                 // Change Rationale: Tie fetch responses directly to the preview so the catalog JSON refreshes without relying on additional user actions.
                 requestCatalogPreviewUpdate({ immediate: true, markDirty: true });
                 if (!silent) {

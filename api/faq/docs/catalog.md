@@ -2,7 +2,7 @@
 
 **Version:** v1
 **Scope:** FAQ Workspace / FAQ API
-**File:** `api/faq/v1/debug/en/catalog.json`
+**File:** `api/faq/v1/{debug|release}/en/catalog.json`
 
 ---
 
@@ -17,6 +17,13 @@ The **FAQ Catalog** is the central configuration file that tells clients:
 
 Instead of duplicating questions across many files, each product declares which FAQ modules it uses.
 This keeps the system extensible, clean, and fully static (GitHub Pages compatible).
+
+> **Release vs Debug**
+>
+> * **release** is production-facing and must always reference `.../api/faq/v1/release/...` JSON paths.
+> * **debug** is for experiments and staging and should reference `.../api/faq/v1/debug/...` JSON paths.
+>
+> Validate paths by loading each build channel in the FAQ workspace (Catalog → Channel presets) and ensuring the previewed URLs contain the correct `/release/` or `/debug/` segment before exporting.
 
 ---
 
@@ -157,19 +164,19 @@ Each file contains an array of structured FAQ entries.
   "key": "smart_cleaner_for_android",
   "questionSources": [
     {
-      "url": "https://mihaicristiancondrea.github.io/com.d4rk.apis/api/faq/v1/debug/en/questions/products/smart_cleaner_for_android.json",
+      "url": "https://mihaicristiancondrea.github.io/com.d4rk.apis/api/faq/v1/release/en/questions/products/smart_cleaner_for_android.json",
       "category": "Product – Smart Cleaner"
     },
     {
-      "url": "https://mihaicristiancondrea.github.io/com.d4rk.apis/api/faq/v1/debug/en/questions/general/ads_monetization.json",
+      "url": "https://mihaicristiancondrea.github.io/com.d4rk.apis/api/faq/v1/release/en/questions/general/ads_monetization.json",
       "category": "Ads & Monetization"
     },
     {
-      "url": "https://mihaicristiancondrea.github.io/com.d4rk.apis/api/faq/v1/debug/en/questions/general/distribution_stores.json",
+      "url": "https://mihaicristiancondrea.github.io/com.d4rk.apis/api/faq/v1/release/en/questions/general/distribution_stores.json",
       "category": "Distribution & Stores"
     },
     {
-      "url": "https://mihaicristiancondrea.github.io/com.d4rk.apis/api/faq/v1/debug/en/questions/general/general.json",
+      "url": "https://mihaicristiancondrea.github.io/com.d4rk.apis/api/faq/v1/release/en/questions/general/general.json",
       "category": "General"
     }
   ]

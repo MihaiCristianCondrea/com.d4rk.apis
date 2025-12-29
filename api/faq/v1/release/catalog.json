@@ -9,19 +9,19 @@
 
       "questionSources": [
         {
-          "url": "https://mihaicristiancondrea.github.io/com.d4rk.apis/api/faq/v1/debug/en/questions/products/smart_cleaner_for_android.json",
+          "url": "https://mihaicristiancondrea.github.io/com.d4rk.apis/api/faq/v1/release/en/questions/products/smart_cleaner_for_android.json",
           "category": "Product – Smart Cleaner"
         },
         {
-          "url": "https://mihaicristiancondrea.github.io/com.d4rk.apis/api/faq/v1/debug/en/questions/general/ads_monetization.json",
+          "url": "https://mihaicristiancondrea.github.io/com.d4rk.apis/api/faq/v1/release/en/questions/general/ads_monetization.json",
           "category": "Ads & Monetization"
         },
         {
-          "url": "https://mihaicristiancondrea.github.io/com.d4rk.apis/api/faq/v1/debug/en/questions/general/distribution_stores.json",
+          "url": "https://mihaicristiancondrea.github.io/com.d4rk.apis/api/faq/v1/release/en/questions/general/distribution_stores.json",
           "category": "Distribution & Stores"
         },
         {
-          "url": "https://mihaicristiancondrea.github.io/com.d4rk.apis/api/faq/v1/debug/en/questions/general/general.json",
+          "url": "https://mihaicristiancondrea.github.io/com.d4rk.apis/api/faq/v1/release/en/questions/general/general.json",
           "category": "General"
         }
       ]
@@ -34,11 +34,11 @@
 
       "questionSources": [
         {
-          "url": "https://mihaicristiancondrea.github.io/com.d4rk.apis/api/faq/v1/debug/en/questions/products/app_toolkit_for_android.json",
+          "url": "https://mihaicristiancondrea.github.io/com.d4rk.apis/api/faq/v1/release/en/questions/products/app_toolkit_for_android.json",
           "category": "Product – App Toolkit"
         },
         {
-          "url": "https://mihaicristiancondrea.github.io/com.d4rk.apis/api/faq/v1/debug/en/questions/general/ads_monetization.json",
+          "url": "https://mihaicristiancondrea.github.io/com.d4rk.apis/api/faq/v1/release/en/questions/general/ads_monetization.json",
           "category": "Ads & Monetization"
         }
       ]
@@ -51,7 +51,7 @@
 
       "questionSources": [
         {
-          "url": "https://mihaicristiancondrea.github.io/com.d4rk.apis/api/faq/v1/debug/en/questions/general/general.json",
+          "url": "https://mihaicristiancondrea.github.io/com.d4rk.apis/api/faq/v1/release/en/questions/general/general.json",
           "category": "General"
         }
       ]
