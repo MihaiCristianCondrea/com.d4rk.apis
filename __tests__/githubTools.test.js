@@ -7,7 +7,7 @@ const {
   parseCommitInput,
   renderAsciiTree,
   renderPathList,
-} = require('../app/src/main/js/core/features/githubTools.js');
+} = require('../app/src/main/js/app/github-tools/domain/githubTools.js');
 
 describe('normalizeRepoSlug', () => {
   test('extracts owner and repo from full URL', () => {

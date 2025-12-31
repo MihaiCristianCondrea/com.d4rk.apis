@@ -1,0 +1,9 @@
+@import "tailwindcss";
+
+@config "../../tailwind.config.js";
+/* Change Rationale: Point Tailwind content source at the relocated home layout to preserve
+   the existing utility extraction after moving templates under layout/home. */
+@source "../../res/layout/home/index.html";
+@source "../../res/layout/**/*.{html,js}";
+@source "../**/*.js";
+@source "../../../assets/**/*.{html,js,css}";

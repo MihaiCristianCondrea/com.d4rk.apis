@@ -1,7 +1,8 @@
 /**
  * @file Compatibility barrel for the App Toolkit workspace entrypoint.
  *
- * Change Rationale: The App Toolkit feature moved to `features/workspaces/app-toolkit` for the
- * feature-first layout; this shim maintains stable imports for existing routes and tests.
+ * Change Rationale: The App Toolkit feature now resides in `app/workspaces/app-toolkit/ui` after
+ * the flattened Android-style reorganization; this shim maintains stable imports for existing routes
+ * and tests.
  */
-export * from '../../../../features/workspaces/app-toolkit/features/appToolkit.js';
+export * from '../app-toolkit/ui/AppToolkitRoute.js';

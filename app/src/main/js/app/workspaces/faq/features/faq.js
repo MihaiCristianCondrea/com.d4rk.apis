@@ -1,7 +1,7 @@
 /**
  * @file Compatibility barrel for the FAQ workspace entrypoint.
  *
- * Change Rationale: The FAQ workspace lives under `features/workspaces/faq` after the feature-first
- * migration. This shim retains historical import targets.
+ * Change Rationale: The FAQ workspace lives under `app/workspaces/faq/ui` after the flattened
+ * layout. This shim retains historical import targets.
  */
-export * from '../../../../features/workspaces/faq/features/faq.js';
+export * from '../faq/ui/FaqRoute.js';

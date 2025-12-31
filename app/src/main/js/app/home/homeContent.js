@@ -1,7 +1,7 @@
 /**
  * @file Backwards-compatible barrel for the Home content configuration.
  *
- * Change Rationale: The feature-first migration keeps the canonical module in `features/home` while
- * preserving legacy import paths for minimal churn.
+ * Change Rationale: Home content now lives in `app/home/data` after the flattened Android-style
+ * layout update. This shim preserves legacy import paths for minimal churn.
  */
-export * from '../../features/home/homeContent.js';
+export * from './data/homeContent.js';

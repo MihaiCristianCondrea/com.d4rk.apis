@@ -1,7 +1,6 @@
-// Change Rationale: The template import previously climbed only three directories, which incorrectly pointed to
-// `app/src/main/js/res/…` and caused Vite to fail resolving the dashboard partial. Updating the path to move up
-// four levels aligns the import with `app/src/main/res/layout`, restoring the Material 3 dashboard layout during builds.
-import workspaceDashboardTemplateSource from '../../../../res/layout/workspace-dashboard.html?raw';
+// Change Rationale: Templates now live under `res/layout/workspaces/shared` to mirror the Android
+// feature-first grouping while preserving the same dashboard markup and Material 3 layout.
+import workspaceDashboardTemplateSource from '../../../../res/layout/workspaces/shared/workspace-dashboard.html?raw';
 import { renderWorkspaceInsightCards } from './workspaceInsightCard.js';
 
 /**
