@@ -1,7 +1,7 @@
 /**
  * @file Backwards-compatible barrel for the Home feature entrypoint.
  *
- * Change Rationale: Home moved under `features/home` to align with the feature-first layout while
- * avoiding breakage for existing imports during the transition.
+ * Change Rationale: Home now resides under `app/home/ui` in the flattened Android-style layout.
+ * This shim preserves historic imports while the router targets the canonical route module.
  */
-export * from '../../features/home/homePage.js';
+export * from './ui/HomeRoute.js';

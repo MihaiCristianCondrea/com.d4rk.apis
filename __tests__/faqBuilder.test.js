@@ -1,7 +1,10 @@
 const fs = require('fs');
 const path = require('path');
 
-const layout = fs.readFileSync(path.join(__dirname, '../app/src/main/res/layout/faq.html'), 'utf8');
+const layout = fs.readFileSync(
+  path.join(__dirname, '../app/src/main/res/layout/workspaces/faq/faq.html'),
+  'utf8',
+);
 
 /**
  * Creates a lightweight ApiBuilderUtils stub for FAQ workspace tests.
@@ -214,7 +217,7 @@ describe('FAQ workspace builder', () => {
             }
             return Promise.resolve(mockResponse('[]'));
         });
-        require('../app/src/main/js/features/workspaces/faq/features/faq.js');
+        require('../app/src/main/js/app/workspaces/faq/ui/FaqRoute.js');
         global.initFaqWorkspace();
     });
 

@@ -1,8 +1,6 @@
-// Change Rationale: The import previously only traversed three directories, landing in `app/src/main/js/res/…` and causing
-// Vite to fail resolving the shared insight card partial. Bumping the path up four levels correctly targets
-// `app/src/main/res/layout` so dashboards and FAQs can continue reusing the Material 3-aligned card markup without
-// duplication.
-import workspaceInsightCardTemplateSource from '../../../../res/layout/workspace-insight-card.html?raw';
+// Change Rationale: Shared insight cards now live under `res/layout/workspaces/shared` to mirror
+// the Android feature-first grouping while preserving the Material 3-aligned card markup.
+import workspaceInsightCardTemplateSource from '../../../../res/layout/workspaces/shared/workspace-insight-card.html?raw';
 
 /**
  * Parses and caches the shared workspace insight card partial for reuse across dashboards.

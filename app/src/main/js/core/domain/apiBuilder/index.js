@@ -10,13 +10,16 @@ import { createInputField, createTextareaField, createSelectField, createInlineB
 import { parseNumber } from '../numbers/parsers.js';
 import { normalizeArray } from '../arrays/normalizers.js';
 import { trimString } from '../strings/normalizers.js';
-import { copyToClipboard } from '@/services/clipboardService';
-import { downloadJson } from '@/services/downloadService';
-import { readFileAsText } from '@/services/fileService';
-import { attachFilePicker } from '@/services/filePickerService';
-import { setValidationStatus } from '@/services/validation/statusService';
-import { renderJsonPreview } from '@/services/jsonPreviewService';
-import { createDeferredTask, createIdleTask } from '@/services/scheduler/deferredTask';
+// Change Rationale: API builder utilities now pull IO helpers from `core/data/services`
+// and scheduler primitives from `core/domain/scheduler` to align with the Android-style
+// layer split without altering behavior or exports.
+import { copyToClipboard } from '@/core/data/services/clipboardService.js';
+import { downloadJson } from '@/core/data/services/downloadService.js';
+import { readFileAsText } from '@/core/data/services/fileService.js';
+import { attachFilePicker } from '@/core/data/services/filePickerService.js';
+import { setValidationStatus } from '@/core/data/services/validation/statusService.js';
+import { renderJsonPreview } from '@/core/data/services/jsonPreviewService.js';
+import { createDeferredTask, createIdleTask } from '@/core/domain/scheduler/deferredTask.js';
 
 export const apiBuilderUtils = Object.freeze({
   createElement,
@@ -64,10 +67,10 @@ export * from '../forms/fields.js';
 export * from '../numbers/parsers.js';
 export * from '../arrays/normalizers.js';
 export * from '../strings/normalizers.js';
-export { copyToClipboard } from '../../../services/clipboardService.js';
-export { downloadJson } from '../../../services/downloadService.js';
-export { readFileAsText } from '../../../services/fileService.js';
-export { attachFilePicker } from '../../../services/filePickerService.js';
-export { setValidationStatus } from '../../../services/validation/statusService.js';
-export { renderJsonPreview } from '../../../services/jsonPreviewService.js';
-export { createDeferredTask, createIdleTask } from '../../../services/scheduler/deferredTask.js';
+export { copyToClipboard } from '../../data/services/clipboardService.js';
+export { downloadJson } from '../../data/services/downloadService.js';
+export { readFileAsText } from '../../data/services/fileService.js';
+export { attachFilePicker } from '../../data/services/filePickerService.js';
+export { setValidationStatus } from '../../data/services/validation/statusService.js';
+export { renderJsonPreview } from '../../data/services/jsonPreviewService.js';
+export { createDeferredTask, createIdleTask } from '../../domain/scheduler/deferredTask.js';
