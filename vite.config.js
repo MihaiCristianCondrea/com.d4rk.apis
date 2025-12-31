@@ -4,7 +4,7 @@ import fs from 'fs';
 import tailwindcss from '@tailwindcss/vite';
 
 const pagesDir = resolve(__dirname, 'app/src/main/res/layout');
-const workersDir = resolve(__dirname, 'app/src/main/js/workers');
+const workersDir = resolve(__dirname, 'app/src/main/js/core/data/workers');
 const mipmapDir = resolve(__dirname, 'app/src/main/res/mipmap');
 const drawableDir = resolve(__dirname, 'app/src/main/res/drawable');
 
@@ -140,7 +140,7 @@ function staticPagesPlugin() {
         fs.cpSync(drawableDir, resolve(__dirname, outDir, 'drawable'), { recursive: true });
       }
 
-      const builtIndex = resolve(__dirname, outDir, 'app/src/main/res/layout/index.html');
+      const builtIndex = resolve(__dirname, outDir, 'app/src/main/res/layout/home/index.html');
       if (fs.existsSync(builtIndex)) {
         const builtHtml = fs.readFileSync(builtIndex, 'utf-8');
         const rewrittenHtml = builtHtml
@@ -169,7 +169,7 @@ export default defineConfig({
     emptyOutDir: true,
     rollupOptions: {
       input: {
-        main: resolve(__dirname, 'app/src/main/res/layout/index.html'),
+        main: resolve(__dirname, 'app/src/main/res/layout/home/index.html'),
       },
     },
   },

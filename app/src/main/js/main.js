@@ -1,21 +1,25 @@
-import './core/styles/tailwind.css';
-import './core/styles/variables.css';
-import './core/styles/base.css';
-import './core/styles/components.css';
-import './core/styles/pages.css';
-import './core/styles/fonts.css';
-import './core/styles/layered-panels.css';
-import './core/styles/viewport-optimizations.css';
-import './core/config.js';
+import '../styles/tailwind.css';
+import '../styles/variables.css';
+import '../styles/base/base.css';
+import '../styles/components/components.css';
+import '../styles/base/pages.css';
+import '../styles/base/fonts.css';
+import '../styles/components/layered-panels.css';
+import '../styles/base/viewport-optimizations.css';
+import './core/data/config/appConfig.js';
 
-import resumeStylesAsset from './core/styles/resume.css?url';
-import resumePrintStylesAsset from './core/styles/print.css?url';
+import resumeStylesAsset from '../styles/base/resume.css?url';
+import resumePrintStylesAsset from '../styles/base/print.css?url';
 
 import * as jsondiffpatchCore from 'jsondiffpatch';
 import * as jsondiffpatchHtmlFormatter from 'jsondiffpatch/formatters/html';
 import * as jsondiffpatchAnnotatedFormatter from 'jsondiffpatch/formatters/annotated';
 import * as jsondiffpatchConsoleFormatter from 'jsondiffpatch/formatters/console';
-import { installFirebaseCrashHandlers, initializeFirebaseMonitoring } from '@/services/firebaseCrashReporter.js';
+// Change Rationale: Styles moved into `app/src/main/styles` to align with the Android-style
+// asset separation (styles/res/layout) while preserving identical load order and URLs.
+// Change Rationale: Crash reporter now resolves from core data services after the feature-first
+// migration, keeping monitoring in the data layer and avoiding circular UI dependencies.
+import { installFirebaseCrashHandlers, initializeFirebaseMonitoring } from '@/core/data/services/firebaseCrashReporter.js';
 
 const globalScope = typeof window !== 'undefined' ? window : globalThis;
 const existingStyleUrls = globalScope.__APP_STYLE_URLS__ || {};
@@ -71,7 +75,7 @@ if (typeof window !== 'undefined' && !window.jsondiffpatch) {
 import './core/ui/components/dialogs/dialogs.js';
 import './core/ui/components/animations/animations.js';
 
-import './core/legacyBridge.js';
+import './core/ui/legacyBridge.js';
 
 /*
  * Change Rationale:
@@ -79,15 +83,15 @@ import './core/legacyBridge.js';
  * - Keep legacy import paths working via compatibility barrels while the router targets the canonical feature modules.
  * - This aligns with Material Design 3’s modular guidance by keeping each surface isolated yet discoverable.
  */
-import './features/workspaces/app-toolkit/ui/index.js';
-import './features/workspaces/app-toolkit/features/appToolkit.js';
-import './features/workspaces/faq/features/faq.js';
-import './features/workspaces/english-with-lidia/features/englishWithLidia.js';
-import './features/workspaces/android-studio-tutorials/features/androidStudioTutorials.js';
+import './app/workspaces/app-toolkit/ui/index.js';
+import './app/workspaces/app-toolkit/ui/AppToolkitRoute.js';
+import './app/workspaces/faq/ui/FaqRoute.js';
+import './app/workspaces/english-with-lidia/ui/EnglishWithLidiaRoute.js';
+import './app/workspaces/android-studio-tutorials/ui/AndroidStudioTutorialsRoute.js';
 
-import './features/github-tools/repo-mapper/features/repoMapper.js';
-import './features/github-tools/release-stats/features/releaseStats.js';
-import './features/github-tools/git-patch/features/gitPatch.js';
-import './features/home/homePage.js';
+import './app/github-tools/ui/routes/RepoMapperRoute.js';
+import './app/github-tools/ui/routes/ReleaseStatsRoute.js';
+import './app/github-tools/ui/routes/GitPatchRoute.js';
+import './app/home/ui/HomeRoute.js';
 
-import './core/app.js';
+import './core/ui/appShell.js';

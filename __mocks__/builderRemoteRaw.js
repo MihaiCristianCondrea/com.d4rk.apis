@@ -5,6 +5,6 @@ const path = require('path');
 // consistently during DOM-based tests without relying on Vite's ?raw import handling.
 
 module.exports = fs.readFileSync(
-  path.join(__dirname, '../app/src/main/res/layout/builder-remote.html'),
+  path.join(__dirname, '../app/src/main/res/layout/workspaces/shared/builder-remote.html'),
   'utf8'
 );
