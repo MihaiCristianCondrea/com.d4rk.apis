@@ -7,6 +7,11 @@ import '../styles/base/fonts.css';
 import '../styles/components/layered-panels.css';
 import '../styles/base/viewport-optimizations.css';
 import './core/data/config/appConfig.js';
+// Change Rationale: Beer CSS now owns base theming so we import the library and
+// Material dynamic colors up front. This keeps the UI vanilla (no custom
+// elements) while still honoring user-accented palettes.
+import 'beercss';
+import 'material-dynamic-colors';
 
 import resumeStylesAsset from '../styles/base/resume.css?url';
 import resumePrintStylesAsset from '../styles/base/print.css?url';

@@ -1,49 +1,23 @@
+/* Change Rationale: Navigation now leans on Beer CSS defaults. Custom variables,
+ * shadows, and color overrides were removed so the drawer inherits the framework's
+ * base look while keeping only the mechanics needed for open/close behavior.
+ */
+
 /* --- Top App Bar --- */
-md-top-app-bar { 
+.app-top-app-bar {
   position: sticky;
   top: 0;
   z-index: 1000;
-  min-height: 56px;
-  height: var(--app-top-app-bar-height);
-  border-radius: 0;
-  box-shadow: none;
   display: flex;
   align-items: center;
+  gap: 12px;
   width: 100%;
-  padding-top: var(--safe-area-inset-top);
-  padding-inline-start: calc(4px + var(--safe-area-inset-left));
-  padding-inline-end: calc(4px + var(--safe-area-inset-right));
-  backdrop-filter: none !important;
-  transition:
-    background-color var(--app-motion-duration-short, 200ms)
-      var(--app-motion-ease-standard, cubic-bezier(0, 0, 0.2, 1)),
-    box-shadow var(--app-motion-duration-short, 200ms)
-      var(--app-motion-ease-standard, cubic-bezier(0, 0, 0.2, 1));
+  padding: 12px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
 }
 
-md-top-app-bar.scrolled { 
-  background-color: var(--md-sys-color-surface-container);
+.app-top-app-bar.scrolled {
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
-  border-bottom-left-radius: 24px;
-  border-bottom-right-radius: 24px;
-}
-
-md-top-app-bar [slot='headline'] { 
-  color: var(--md-sys-color-on-surface);
-  font-size: 20px;
-  font-weight: 500;
-}
-
-md-top-app-bar .material-symbols-outlined { 
-  font-family: 'Material Symbols SemiBold', 'Material Symbols Outlined', sans-serif;
-}
-
-#menuButton,
-#closeDrawerButton {
-  --md-focus-ring-width: 0;
-  --md-focus-ring-active-width: 0;
-  --md-focus-ring-color: transparent;
-  outline: none;
 }
 
 /* --- Navigation Drawer --- */
@@ -51,43 +25,32 @@ md-top-app-bar .material-symbols-outlined {
   position: fixed;
   top: 0;
   left: 0;
-  bottom: calc(
-    env(safe-area-inset-bottom, 0px) - var(--safe-area-max-inset-bottom)
-  );
+  width: 320px;
+  max-width: 100vw;
+  height: 100%;
   z-index: 1200;
   display: flex;
   flex-direction: column;
-  --md-navigation-drawer-container-width: var(--app-drawer-inline-size);
-  --md-navigation-drawer-container-height: 100%;
-  --md-navigation-drawer-container-color: var(--app-drawer-bg-color);
-  --md-navigation-drawer-container-shape: 0 24px 24px 0;
-  --md-navigation-drawer-modal-container-elevation: 2;
-  --md-navigation-drawer-standard-container-elevation: 0;
-  --md-navigation-drawer-active-indicator-color: var(
-    --md-sys-color-secondary-container
-  );
-  --md-navigation-drawer-active-indicator-shape: 28px;
-  --md-navigation-drawer-divider-color: var(--app-border-color);
-  padding-bottom: var(--safe-area-max-inset-bottom);
+  background: inherit;
+  transform: translateX(-100%);
+  transition: transform 300ms ease;
+  pointer-events: none;
+}
+
+.navigation-drawer.open {
+  transform: translateX(0);
+  pointer-events: auto;
 }
 
 .drawer-overlay {
   position: fixed;
   inset: 0;
-    min-height: 100dvh;
-  background-color: color-mix(
-    in srgb,
-    var(--md-sys-color-scrim) 32%,
-    transparent
-  );
+  min-height: 100dvh;
+  background-color: rgba(0, 0, 0, 0.32);
   z-index: 1180;
   opacity: 0;
   visibility: hidden;
-  transition:
-    opacity var(--app-motion-duration-medium, 300ms)
-      var(--app-motion-ease-standard, cubic-bezier(0, 0, 0.2, 1)),
-    visibility var(--app-motion-duration-medium, 300ms)
-      var(--app-motion-ease-standard, cubic-bezier(0, 0, 0.2, 1));
+  transition: opacity 300ms ease, visibility 300ms ease;
 }
 
 .drawer-overlay.open {
@@ -95,211 +58,100 @@ md-top-app-bar .material-symbols-outlined {
   visibility: visible;
 }
 
-.drawer-header {
+.drawer-header,
+.drawer-footer {
+  padding: 16px;
   display: flex;
+  align-items: center;
   justify-content: space-between;
-  align-items: center;
   gap: 12px;
-    padding: calc(24px + var(--safe-area-inset-top)) 28px 16px;
-    padding-inline-start: calc(28px + var(--safe-area-inset-left));
-  padding-inline-end: calc(28px + var(--safe-area-inset-right));
-  border-bottom: 1px solid var(--app-border-color);
-  flex-shrink: 0;
-}
-
-.drawer-header h2 {
-  margin: 0;
-  font-size: 1.125rem;
-  font-weight: 600;
-  color: var(--app-text-color);
-}
-
-.drawer-branding {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.drawer-eyebrow {
-  margin: 0 0 2px;
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: var(--app-secondary-text-color);
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-}
-
-.drawer-subtitle {
-  margin: 0;
-  font-size: 1.05rem;
-  /* Change Rationale: Drawer subtitles previously used bold (700) weight that overshadowed the
-   * title line. Shifting to semibold (600) keeps the hierarchy intact and matches Material 3's
-   * guidance for supporting nav labels.
-   */
-  font-weight: 600;
-  color: var(--app-text-color);
 }
 
 .drawer-content {
   flex-grow: 1;
-    padding: 8px 0 calc(16px + var(--safe-area-max-inset-bottom));
-    overflow-y: auto;
-  scrollbar-gutter: stable;
+  padding: 8px 12px 16px;
+  overflow-y: auto;
 }
 
 .drawer-footer {
-    padding: 16px 28px calc(20px + var(--safe-area-max-inset-bottom));
-    padding-inline-start: calc(28px + var(--safe-area-inset-left));
-  padding-inline-end: calc(28px + var(--safe-area-inset-right));
-  border-top: 1px solid var(--app-border-color);
-  flex-shrink: 0;
+  flex-direction: column;
+  gap: 8px;
   text-align: center;
-}
-
-.drawer-footer .theme-toggle-title {
-  font-size: 0.9rem;
-  font-weight: 500;
-  color: var(--app-secondary-text-color);
-  margin-bottom: 8px;
-  text-align: left;
 }
 
 .drawer-footer .drawer-legal-links {
   display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-wrap: wrap;
   gap: 4px;
-  font-size: 0.75rem;
-  margin-top: 12px;
-  width: 100%;
-  color: var(--app-secondary-text-color);
+  flex-wrap: wrap;
+  justify-content: center;
+  font-size: 0.875rem;
 }
 
-.drawer-footer .drawer-legal-links a {
-  text-decoration: underline;
-  color: inherit;
+.navigation-drawer .divider {
+  border: none;
+  height: 1px;
+  background: rgba(0, 0, 0, 0.08);
+  margin: 8px 4px;
 }
 
-md-list { 
-  --md-list-container-color: transparent;
-  padding: 8px 0;
+.nav-section {
+  border: none;
 }
 
-md-list-item {
-  /* Change Rationale: Drawer list typography previously referenced Google Sans Regular directly, creating a mismatch once the global font moved to Google Sans Flex. Using the shared primary stack ensures Material 3 list items inherit the same variable font and weight behavior as the rest of the UI. */
-  --md-list-item-label-text-color: var(--app-text-color);
-  --md-list-item-supporting-text-color: var(--app-secondary-text-color);
-  --md-list-item-leading-icon-color: var(--app-text-color);
-  --md-list-item-trailing-icon-color: var(--app-text-color);
-  --md-list-item-label-text-font: var(--app-font-family-primary);
+.nav-section > summary {
+  list-style: none;
 }
 
-.navigation-drawer md-list { 
-  padding: 0 12px;
+.nav-summary {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border-radius: 20px;
+  cursor: pointer;
+}
+
+.nav-summary .chevron {
+  margin-left: auto;
+  transition: transform 300ms ease;
+}
+
+.nav-summary.expanded .chevron {
+  transform: rotate(180deg);
+}
+
+.navigation-drawer .list {
   margin: 0;
-  --md-list-container-color: transparent;
+  padding: 0;
+  list-style: none;
 }
 
-.navigation-drawer md-divider { 
-  --md-divider-thickness: 1px;
-  --md-divider-color: var(--app-border-color);
-  margin: 8px 0;
-}
-
-.navigation-drawer md-list-item {
-  --md-list-item-label-text-color: var(--md-sys-color-on-surface);
-  --md-list-item-supporting-text-color: var(--md-sys-color-on-surface-variant);
-  --md-list-item-leading-icon-color: var(--md-sys-color-on-surface-variant);
-  --md-list-item-trailing-icon-color: var(--md-sys-color-on-surface-variant);
-  --md-list-item-label-text-font: var(--app-font-family-primary);
-  --md-list-item-leading-space: 16px;
-  --md-list-item-trailing-space: 16px;
-  --md-list-item-one-line-container-height: 56px;
-  --md-list-item-container-shape: 28px;
-  --md-list-item-state-layer-shape: 28px;
-  --md-focus-ring-shape: 28px;
-  border-radius: var(--md-list-item-container-shape);
-  overflow: hidden;
-  transition:
-    color var(--app-motion-duration-short, 200ms)
-      var(--app-motion-ease-standard, cubic-bezier(0, 0, 0.2, 1)),
-    background-color var(--app-motion-duration-short, 200ms)
-      var(--app-motion-ease-standard, cubic-bezier(0, 0, 0.2, 1));
-}
-
-.navigation-drawer md-list-item [slot='headline'] {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.navigation-drawer md-list-item.nav-item-active {
-  background-color: var(--md-sys-color-secondary-container);
-  border-radius: 28px;
-  --md-list-item-label-text-color: var(--md-sys-color-on-secondary-container);
-  --md-list-item-leading-icon-color: var(--md-sys-color-on-secondary-container);
-  --md-list-item-trailing-icon-color: var(
-    --md-sys-color-on-secondary-container
-  );
-  --md-list-item-label-text-weight: 600;
-}
-
-.navigation-drawer md-list-item.nav-item-active .material-symbols-outlined {
-  font-family:
-    'Material Symbols Filled', 'Material Symbols Outlined', sans-serif;
-}
-
-.navigation-drawer md-list-item:hover:not(.nav-item-active) {
-  --md-list-item-leading-icon-color: var(--md-sys-color-on-surface);
-  --md-list-item-trailing-icon-color: var(--md-sys-color-on-surface);
-}
-
-.navigation-drawer md-list-item[aria-current='page'] {
-  --md-list-item-label-text-weight: 600;
-}
-
-md-list-item a[slot='headline'] {
-  color: inherit;
+.nav-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border-radius: 20px;
   text-decoration: none;
-  display: block;
-  font-family: inherit;
 }
 
-.navigation-drawer md-list-item .material-symbols-outlined {
-  font-size: 24px;
-  transition:
-    color var(--app-motion-duration-short, 200ms)
-      var(--app-motion-ease-standard, cubic-bezier(0, 0, 0.2, 1)),
-    font-family var(--app-motion-duration-short, 200ms)
-      var(--app-motion-ease-standard, cubic-bezier(0, 0, 0.2, 1));
-  font-family:
-    'Material Symbols SemiBold', 'Material Symbols Outlined', sans-serif;
+.nav-link .supporting {
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+.nav-link.nav-item-active {
+  font-weight: 600;
 }
 
 .nested-list {
-  padding: 0;
   margin: 0;
+  padding: 0 0 0 12px;
   overflow: hidden;
   max-height: 0;
-  transition: max-height var(--app-motion-duration-medium, 300ms)
-    var(--app-motion-ease-standard, cubic-bezier(0, 0, 0.2, 1));
-  padding-inline-start: 28px;
+  transition: max-height 300ms ease;
 }
 
 .nested-list.open {
-  max-height: 600px;
-}
-
-.nested-list md-list { 
-  padding: 0;
-}
-
-md-list-item[type='button'] md-icon[slot='end'] { 
-  transition: transform var(--app-motion-duration-medium, 300ms)
-    var(--app-motion-ease-standard, cubic-bezier(0, 0, 0.2, 1));
-}
-
-md-list-item[type='button'].expanded md-icon[slot='end'] { 
-  transform: rotate(180deg);
+  max-height: 800px;
 }

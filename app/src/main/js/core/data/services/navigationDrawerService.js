@@ -1,13 +1,18 @@
 // Change Rationale: Navigation drawer now pulls shared DOM helpers from the UI utility layer
 // to honor the core/ui separation while keeping behavior identical.
-import { getDynamicElement, rafThrottle } from '@/core/ui/utils/domUtils.js';
+// Change Rationale: Drawer logic has been rewritten for Beer CSS so the shell uses semantic
+// HTML (<nav>, <details>, <summary>) instead of Material custom elements. The controller now
+// toggles a simple `.open` class and syncs <details> expansion state instead of relying on the
+// `opened` property from md-navigation-drawer. This removes the body padding shim that pushed
+// content sideways when the drawer opened while preserving accessibility guards.
+import { getDynamicElement } from '@/core/ui/utils/domUtils.js';
 
 /**
  * @typedef {Object} NavigationDrawerOptions
  * @property {string} [menuButtonId='menuButton']
  *   ID of the button that opens the navigation drawer.
  * @property {string} [navDrawerId='navDrawer']
- *   ID of the drawer container element (usually a Material drawer).
+ *   ID of the drawer container element (Beer CSS drawer container).
  * @property {string} [closeDrawerId='closeDrawerButton']
  *   ID of the explicit close button inside the drawer.
  * @property {string} [overlayId='drawerOverlay']
@@ -100,17 +105,6 @@ export class NavigationDrawerController {
     this.syncDrawerState = this.syncDrawerState.bind(this);
     this.handleKeydown = this.handleKeydown.bind(this);
     this.focusFirstNavItem = this.focusFirstNavItem.bind(this);
-
-    /**
-     * Drawer state change handler:
-     * - Throttled with requestAnimationFrame to avoid layout thrash if the
-     *   component emits multiple events while animating.
-     */
-    this.handleDrawerChanged = rafThrottle((event) => {
-      const opened =
-          event?.detail?.opened ?? this.navDrawer?.opened ?? false;
-      this.syncDrawerState(opened);
-    });
   }
 
   /**
@@ -126,7 +120,7 @@ export class NavigationDrawerController {
     }
 
     this.wireButtons();
-    this.syncDrawerState(Boolean(this.navDrawer.opened));
+    this.syncDrawerState(Boolean(this.navDrawer.classList?.contains('open')));
   }
 
   /**
@@ -160,11 +154,6 @@ export class NavigationDrawerController {
 
     this.drawerOverlay?.addEventListener('click', () => this.close());
 
-    this.navDrawer.addEventListener(
-        'navigation-drawer-changed',
-        this.handleDrawerChanged,
-    );
-
     document.addEventListener('keydown', this.handleKeydown);
 
     // Independent expandable sections inside the drawer
@@ -182,7 +171,7 @@ export class NavigationDrawerController {
   /**
    * Opens the navigation drawer and moves focus to the first nav item.
    *
-   * - Sets the drawer's `opened` property.
+   * - Applies the drawer's `.open` class.
    * - Syncs global state (overlay, inert, aria).
    * - Ensures keyboard focus lands on the first actionable item.
    */
@@ -190,7 +179,7 @@ export class NavigationDrawerController {
     if (!this.navDrawer) {
       return;
     }
-    this.navDrawer.opened = true;
+    this.navDrawer.classList.add('open');
     this.syncDrawerState(true);
     this.focusFirstNavItem();
   }
@@ -198,7 +187,7 @@ export class NavigationDrawerController {
   /**
    * Closes the navigation drawer and returns focus to the menu button.
    *
-   * - Clears the drawer `opened` property.
+   * - Clears the drawer `.open` class.
    * - Syncs global state and inert areas.
    * - Sends focus back to the menu button (if available) to avoid leaving
    *   focus trapped in an inert subtree.
@@ -207,7 +196,7 @@ export class NavigationDrawerController {
     if (!this.navDrawer) {
       return;
     }
-    this.navDrawer.opened = false;
+    this.navDrawer.classList.remove('open');
     this.syncDrawerState(false);
     this.menuButton?.focus?.();
   }
@@ -220,7 +209,7 @@ export class NavigationDrawerController {
    * @param {KeyboardEvent} event - Keydown event dispatched on document.
    */
   handleKeydown(event) {
-    if (event.key === 'Escape' && this.navDrawer?.opened) {
+    if (event.key === 'Escape' && this.navDrawer?.classList?.contains('open')) {
       this.close();
     }
   }
@@ -247,13 +236,20 @@ export class NavigationDrawerController {
       return;
     }
 
-    const applyExpansion = (expanded) =>
-        this.setSectionState(toggleButton, contentElement, Boolean(expanded));
+    const parentDetails = toggleButton.closest('details');
+    const applyExpansion = (expanded) => {
+      this.setSectionState(toggleButton, contentElement, Boolean(expanded));
+      if (parentDetails) {
+        parentDetails.open = Boolean(expanded);
+      }
+    };
 
-    // Apply initial expansion state based on the configuration.
-    applyExpansion(defaultExpanded);
+    // Apply initial expansion state based on the configuration and any <details open> default.
+    const initialExpanded = parentDetails?.open ?? defaultExpanded;
+    applyExpansion(initialExpanded);
 
-    toggleButton.addEventListener('click', () => {
+    toggleButton.addEventListener('click', (event) => {
+      event.preventDefault();
       const nextExpanded = !contentElement.classList.contains('open');
       applyExpansion(nextExpanded);
     });
@@ -278,14 +274,14 @@ export class NavigationDrawerController {
     contentElement.classList.toggle('open', expanded);
     toggleButton.classList.toggle('expanded', expanded);
     toggleButton.setAttribute('aria-expanded', expanded ? 'true' : 'false');
-    contentElement.setAttribute('aria-hidden', expanded ? 'false' : 'true');
+   contentElement.setAttribute('aria-hidden', expanded ? 'false' : 'true');
   }
 
   /**
    * Attempts to move focus to the first actionable navigation list item.
    *
    * Fallback order:
-   * 1. First `md-list-item[href]` inside the drawer.
+   * 1. First `.nav-link[href]` inside the drawer.
    * 2. The drawer's dedicated close button.
    * 3. Returns false if neither is available.
    *
@@ -296,7 +292,7 @@ export class NavigationDrawerController {
     if (!this.navDrawer) {
       return false;
     }
-    const firstNavItem = this.navDrawer.querySelector('md-list-item[href]');
+    const firstNavItem = this.navDrawer.querySelector('.nav-link[href]');
     if (firstNavItem && typeof firstNavItem.focus === 'function') {
       firstNavItem.focus();
       return true;
@@ -355,8 +351,8 @@ export class NavigationDrawerController {
     // (e.g., during fast navigations) so pages never stay stuck with overflow hidden.
     this.drawerOverlay?.classList.toggle('open', isDrawerOpen);
     this.drawerOverlay?.setAttribute('aria-hidden', isDrawerOpen ? 'false' : 'true');
-    this.setBodyScrollbarCompensation(isDrawerOpen);
     document.body.classList.toggle('drawer-is-open', isDrawerOpen);
+    this.navDrawer?.classList.toggle('open', isDrawerOpen);
     this.menuButton?.setAttribute('aria-expanded', isDrawerOpen ? 'true' : 'false');
 
     this.updateModalAccessibilityState(isDrawerOpen);
@@ -364,8 +360,6 @@ export class NavigationDrawerController {
     if (!hasDrawer) {
       return;
     }
-
-    this.updateNavDrawerAriaModal();
   }
 
   /**
@@ -379,26 +373,10 @@ export class NavigationDrawerController {
    *
    * @param {boolean} isDrawerOpen - Whether the navigation drawer is open.
    */
-  setBodyScrollbarCompensation(isDrawerOpen) {
-    if (typeof window === 'undefined' || typeof document === 'undefined') {
-      return;
-    }
-    const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
-    const compensation = isDrawerOpen ? Math.max(0, scrollbarWidth) : 0;
-    document.body?.style?.setProperty('--app-scrollbar-compensation', `${compensation}px`);
-  }
-
-  /**
-   * Ensures the drawer is treated as a modal surface by assistive tech.
-   *
-   * - Sets `aria-modal="true"` on the drawer element so screen readers
-   *   understand the drawer as a modal dialog-like context.
-   */
-  updateNavDrawerAriaModal() {
-    if (!this.navDrawer) {
-      return;
-    }
-    this.navDrawer.setAttribute('aria-modal', 'true');
+  setBodyScrollbarCompensation() {
+    // Change Rationale: Beer CSS drawers overlay content without shifting the layout.
+    // The previous scrollbar compensation padding pushed the page horizontally on open,
+    // so it has been retired in favor of the framework's built-in gutters.
   }
 
   /**
