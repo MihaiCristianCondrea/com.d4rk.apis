@@ -34,39 +34,28 @@ function createDrawerMarkup() {
       <button id="menuButton" type="button">Menu</button>
     </header>
     <div id="drawerOverlay" aria-hidden="true"></div>
-    <md-navigation-drawer id="navDrawer" aria-modal="true">
+    <nav id="navDrawer" class="navigation-drawer" tabindex="-1">
       <button id="closeDrawerButton" type="button">Close</button>
       <nav>
-        <md-list>
-          <md-list-item href="#home" id="homeLink">Home</md-list-item>
-        </md-list>
+        <ul class="list">
+          <li><a href="#home" id="homeLink" class="nav-link">Home</a></li>
+        </ul>
       </nav>
-      <section>
-        <button id="aboutToggle" type="button" aria-controls="aboutContent" aria-expanded="false">About</button>
+      <details>
+        <summary id="aboutToggle" aria-controls="aboutContent" aria-expanded="false">About</summary>
         <div id="aboutContent" aria-hidden="true">About section</div>
-      </section>
-      <section>
-        <button id="androidAppsToggle" type="button" aria-controls="androidAppsContent" aria-expanded="false">Apps</button>
-        <div id="androidAppsContent" aria-hidden="true">Apps section</div>
-      </section>
-    </md-navigation-drawer>
+      </details>
+      <details open>
+        <summary id="androidAppsToggle" aria-controls="androidAppsContent" aria-expanded="true">Apps</summary>
+        <div id="androidAppsContent" class="open" aria-hidden="false">Apps section</div>
+      </details>
+    </nav>
     <main data-drawer-inert-target id="mainContent">Main content</main>
     <footer data-drawer-inert-target id="footerContent">Footer content</footer>
   `;
 
   const navDrawerElement = document.getElementById('navDrawer');
-  let openedState = false;
-  Object.defineProperty(navDrawerElement, 'opened', {
-    configurable: true,
-    get() {
-      return openedState;
-    },
-    set(value) {
-      openedState = Boolean(value);
-    },
-  });
-
-  const firstNavItem = navDrawerElement.querySelector('md-list-item[href]');
+  const firstNavItem = navDrawerElement.querySelector('.nav-link[href]');
   firstNavItem.focus = jest.fn();
 
   const closeDrawerButton = document.getElementById('closeDrawerButton');
@@ -92,14 +81,14 @@ describe('navigationDrawerService', () => {
     const overlay = document.getElementById('drawerOverlay');
     const navDrawerElement = document.getElementById('navDrawer');
     const inertElements = Array.from(document.querySelectorAll('[data-drawer-inert-target]'));
-    const firstNavItem = navDrawerElement.querySelector('md-list-item[href]');
+    const firstNavItem = navDrawerElement.querySelector('.nav-link[href]');
 
     const navItemFocusSpy = firstNavItem.focus;
     const menuFocusSpy = jest.spyOn(menuButtonElement, 'focus');
 
     menuButtonElement.click();
 
-    expect(navDrawerElement.opened).toBe(true);
+    expect(navDrawerElement.classList.contains('open')).toBe(true);
     expect(document.body.classList.contains('drawer-is-open')).toBe(true);
     expect(menuButtonElement.getAttribute('aria-expanded')).toBe('true');
     expect(overlay.classList.contains('open')).toBe(true);
@@ -112,7 +101,7 @@ describe('navigationDrawerService', () => {
 
     overlay.click();
 
-    expect(navDrawerElement.opened).toBe(false);
+    expect(navDrawerElement.classList.contains('open')).toBe(false);
     expect(document.body.classList.contains('drawer-is-open')).toBe(false);
     expect(menuButtonElement.getAttribute('aria-expanded')).toBe('false');
     expect(menuFocusSpy).toHaveBeenCalledTimes(1);
@@ -124,11 +113,11 @@ describe('navigationDrawerService', () => {
     });
 
     menuButtonElement.click();
-    expect(navDrawerElement.opened).toBe(true);
+    expect(navDrawerElement.classList.contains('open')).toBe(true);
 
     document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
 
-    expect(navDrawerElement.opened).toBe(false);
+    expect(navDrawerElement.classList.contains('open')).toBe(false);
     expect(document.body.classList.contains('drawer-is-open')).toBe(false);
     expect(menuButtonElement.getAttribute('aria-expanded')).toBe('false');
     expect(menuFocusSpy).toHaveBeenCalledTimes(2);

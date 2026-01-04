@@ -3,7 +3,6 @@ body {
   font-family: var(--app-font-family-primary);
   background-color: var(--app-bg-color);
   color: var(--app-text-color);
-  --app-scrollbar-compensation: 0px;
   margin: 0;
   padding: 0;
   overflow-y: auto;
@@ -53,9 +52,11 @@ main {
 
 /* Only lock scrolling when the drawer overlay is visible; otherwise keep the page scrollable. */
 body.drawer-is-open {
+  /* Change Rationale: Beer CSS keeps gutters stable, so the old padding shim
+   * that pushed content sideways has been removed to prevent lateral jumps when
+   * the drawer opens.
+   */
   overflow: hidden;
-  /* Change Rationale: Hiding the body scrollbar previously nudged the layout when the drawer opened. Reserving a compensation gutter keeps the page width stable while maintaining scroll lock. */
-  padding-inline-end: var(--app-scrollbar-compensation, 0px);
 }
 
 button,

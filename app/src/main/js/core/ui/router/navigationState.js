@@ -1,3 +1,7 @@
+// Change Rationale: Beer CSS navigation replaces Material list items with
+// semantic anchors and <details> groups. The active-state helper now targets
+// `.nav-link` entries and keeps the new summary toggles expanded when a nested
+// route is active.
 import normalizePageId from './identifiers.js';
 
 /**
@@ -6,14 +10,13 @@ import normalizePageId from './identifiers.js';
  * This function keeps the navigation drawer in sync with the router by:
  *
  * - Normalizing the current page ID using {@link normalizePageId}.
- * - Iterating over all `md-list-item` elements inside `#navDrawer` that have an `href`.
+ * - Iterating over all drawer links inside `#navDrawer` that have an `href`.
  * - Clearing any previous "active" styling and ARIA state from each item.
  * - Comparing each item's `href` (normalized) to the current page.
  * - Marking the matching item as active using:
  *   - `.nav-item-active` CSS class
  *   - `aria-current="page"`
  *   - `aria-selected="true"`
- *   - `item.active = true` when the component exposes a boolean `active` property.
  * - Ensuring parent nested lists are expanded when the active item is in a nested group
  *   by programmatically clicking the associated toggle button.
  *
@@ -25,7 +28,7 @@ import normalizePageId from './identifiers.js';
  * The implementation assumes:
  *
  * - A navigation drawer root with id `#navDrawer`.
- * - Navigation items implemented as `md-list-item` elements with `href` attributes.
+ * - Navigation items implemented as anchor elements with the `.nav-link` class.
  * - Nested lists wrapped in an element with the `.nested-list` class and an `id`.
  * - A corresponding toggle button controlling each nested list, referenced via
  *   `aria-controls="{nestedParent.id}"`, which:
@@ -44,15 +47,9 @@ import normalizePageId from './identifiers.js';
 export function updateActiveNavLink(currentPageId) {
   const normalizedCurrentPage = normalizePageId(currentPageId);
 
-  document.querySelectorAll('#navDrawer md-list-item[href]').forEach((item) => {
+  document.querySelectorAll('#navDrawer .nav-link[href]').forEach((item) => {
     // Reset any existing active state on the item.
     item.classList.remove('nav-item-active');
-    if (item.hasAttribute('active')) {
-      item.removeAttribute('active');
-    }
-    if (typeof item.active === 'boolean' && item.active) {
-      item.active = false;
-    }
     item.removeAttribute('aria-current');
     item.removeAttribute('aria-selected');
 
@@ -71,9 +68,6 @@ export function updateActiveNavLink(currentPageId) {
     item.classList.add('nav-item-active');
     item.setAttribute('aria-current', 'page');
     item.setAttribute('aria-selected', 'true');
-    if (typeof item.active === 'boolean') {
-      item.active = true;
-    }
 
     // If the item lives inside a nested list, ensure its parent group is expanded.
     const nestedParent = item.closest('.nested-list');
