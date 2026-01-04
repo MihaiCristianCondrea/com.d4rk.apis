@@ -1,20 +1,21 @@
 /* Allow styling custom Material elements across component styles. */
 /* stylelint-disable selector-type-no-unknown */
-@import './components/native/text-fields.css';
-@import './components/native/dropdowns.css';
-@import './components/native/buttons.css';
-@import './components/native/outlined-buttons.css';
-@import './components/native/icon-buttons.css';
-@import './components/native/dialogs.css';
-@import './components/native/cards.css';
-@import './components/native/outlined-cards.css';
-@import './components/native/scroll.css';
-@import './components/navigation.css';
-@import './components/native/loading-overlay.css';
-@import './components/native/inline-buttons.css';
-@import './components/api-builder.css';
-@import './components/faq-builder.css';
-@import './components/collection-rows.css';
-@import './components/misc.css';
-@import './components/github-tools.css';
+/* Change Rationale: Import paths previously pointed to a nested `components/` directory that does not exist, causing Vite to fail resolving component styles during builds. Using direct sibling-relative imports matches the actual folder layout, restores bundling, and keeps Material Design 3 component styles consistently available. */
+@import './native/text-fields.css';
+@import './native/dropdowns.css';
+@import './native/buttons.css';
+@import './native/outlined-buttons.css';
+@import './native/icon-buttons.css';
+@import './native/dialogs.css';
+@import './native/cards.css';
+@import './native/outlined-cards.css';
+@import './native/scroll.css';
+@import './navigation.css';
+@import './native/loading-overlay.css';
+@import './native/inline-buttons.css';
+@import './api-builder.css';
+@import './faq-builder.css';
+@import './collection-rows.css';
+@import './misc.css';
+@import './github-tools.css';
 /* stylelint-enable selector-type-no-unknown */
