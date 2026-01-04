@@ -1,6 +1,6 @@
 /* Allow styling custom Material elements across component styles. */
 /* stylelint-disable selector-type-no-unknown */
-/* Change Rationale: Import paths previously pointed to a nested `components/` directory that does not exist, causing Vite to fail resolving component styles during builds. Using direct sibling-relative imports matches the actual folder layout, restores bundling, and keeps Material Design 3 component styles consistently available. */
+/* Change Rationale: Feature-specific styles were relocated under `features/` during the Android-style refactor, but this aggregator still pointed at now-missing sibling files. Vite's Tailwind plugin failed resolution, breaking production builds. Updating imports to the canonical feature paths restores bundling while preserving Material Design 3 surface/typography treatments across shared components. */
 @import './native/text-fields.css';
 @import './native/dropdowns.css';
 @import './native/buttons.css';
@@ -13,9 +13,9 @@
 @import './navigation.css';
 @import './native/loading-overlay.css';
 @import './native/inline-buttons.css';
-@import './api-builder.css';
-@import './faq-builder.css';
+@import '../features/workspaces/shared/api-builder.css';
+@import '../features/workspaces/faq/faq-builder.css';
 @import './collection-rows.css';
 @import './misc.css';
-@import './github-tools.css';
+@import '../features/github-tools/github-tools.css';
 /* stylelint-enable selector-type-no-unknown */
