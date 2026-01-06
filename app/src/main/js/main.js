@@ -1,3 +1,10 @@
+// Change Rationale: Beer CSS previously loaded after the app styles, overriding
+// the navigation drawer transform and leaving the drawer permanently visible.
+// Importing the framework first and layering our component styles afterwards
+// restores the intended off-canvas behavior while keeping the Material 3
+// palette provided by beer + dynamic colors.
+import 'beercss';
+import 'material-dynamic-colors';
 import '../styles/tailwind.css';
 import '../styles/variables.css';
 import '../styles/base/base.css';
@@ -7,11 +14,6 @@ import '../styles/base/fonts.css';
 import '../styles/components/layered-panels.css';
 import '../styles/base/viewport-optimizations.css';
 import './core/data/config/appConfig.js';
-// Change Rationale: Beer CSS now owns base theming so we import the library and
-// Material dynamic colors up front. This keeps the UI vanilla (no custom
-// elements) while still honoring user-accented palettes.
-import 'beercss';
-import 'material-dynamic-colors';
 
 import resumeStylesAsset from '../styles/base/resume.css?url';
 import resumePrintStylesAsset from '../styles/base/print.css?url';
