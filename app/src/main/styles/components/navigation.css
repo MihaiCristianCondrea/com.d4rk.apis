@@ -21,7 +21,13 @@
 }
 
 /* --- Navigation Drawer --- */
-.navigation-drawer {
+/* Change Rationale: Beer CSS registers a `.navigation-drawer` helper that pins
+ * the element in the normal flow (position: sticky) and neutralizes transforms.
+ * Increasing selector specificity and explicitly hiding the drawer by default
+ * keeps it off-canvas until the controller applies `.open`, matching the router
+ * lifecycle and preventing overlay-less nav bleed on initial load.
+ */
+:root nav.navigation-drawer {
   position: fixed;
   top: 0;
   left: 0;
@@ -35,11 +41,13 @@
   transform: translateX(-100%);
   transition: transform 300ms ease;
   pointer-events: none;
+  visibility: hidden;
 }
 
-.navigation-drawer.open {
+:root nav.navigation-drawer.open {
   transform: translateX(0);
   pointer-events: auto;
+  visibility: visible;
 }
 
 .drawer-overlay {
