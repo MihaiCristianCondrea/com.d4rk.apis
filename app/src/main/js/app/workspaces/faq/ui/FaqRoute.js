@@ -162,12 +162,12 @@
         };
 
         /**
-         * Switches the active FAQ view while keeping the segmented buttons in sync.
+         * Switches the active FAQ view while keeping the tabbed nav in sync.
          *
-         * Change Rationale: The previous chip-based segmented buttons relied on bespoke CSS to look
-         * connected, which drifted from Material defaults. Using `md-outlined-segmented-button`
-         * components preserves the native styling; manually updating their `selected` and
-         * `aria-pressed` states keeps accessibility parity while reflecting the active panel.
+         * Change Rationale: The panel switcher now uses BeerCSS tabbed navigation instead of
+         * segmented controls to keep spacing and active states aligned with the rest of the
+         * navigation system. Updating `active`, `aria-selected`, and `aria-pressed` attributes
+         * here preserves accessibility while matching BeerCSS tab semantics.
          *
          * @param {string} panel The panel key to activate (e.g., "catalog" or "faq").
          * @returns {void}
@@ -186,6 +186,7 @@
 
             panelButtons.forEach((button) => {
                 const isActive = button.dataset.faqPanelControl === activePanel;
+                button.classList.toggle('active', isActive);
                 button.toggleAttribute('selected', isActive);
                 button.selected = isActive;
                 button.setAttribute('aria-pressed', isActive ? 'true' : 'false');

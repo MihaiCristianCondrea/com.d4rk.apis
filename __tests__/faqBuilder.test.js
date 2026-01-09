@@ -273,6 +273,26 @@ describe('FAQ workspace builder', () => {
         expect(document.getElementById('faqLivePreviewList').children.length).toBe(1);
     });
 
+    test('switching FAQ panels updates tabbed navigation state', () => {
+        const panelButtons = document.querySelectorAll('[data-faq-panel-control]');
+        const catalogPanel = document.getElementById('faqPanelCatalog');
+        const faqPanel = document.getElementById('faqPanelFaq');
+
+        expect(panelButtons.length).toBe(2);
+        expect(panelButtons[0].classList.contains('active')).toBe(true);
+        expect(panelButtons[0].getAttribute('aria-selected')).toBe('true');
+        expect(catalogPanel.hasAttribute('hidden')).toBe(false);
+        expect(faqPanel.hasAttribute('hidden')).toBe(true);
+
+        panelButtons[1].click();
+
+        expect(panelButtons[0].classList.contains('active')).toBe(false);
+        expect(panelButtons[1].classList.contains('active')).toBe(true);
+        expect(panelButtons[1].getAttribute('aria-selected')).toBe('true');
+        expect(catalogPanel.hasAttribute('hidden')).toBe(true);
+        expect(faqPanel.hasAttribute('hidden')).toBe(false);
+    });
+
     test('icon picker selection writes to the entry', async () => {
         const browseButton = document.querySelector('.faq-icon-button');
         browseButton.click();
