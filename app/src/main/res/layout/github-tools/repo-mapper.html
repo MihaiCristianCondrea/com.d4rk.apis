@@ -1,4 +1,8 @@
-<div class="gh-tools-page">
+<!-- Change Rationale: GitHub tool pages previously rendered without the shared BeerCSS page wrapper,
+     which made their spacing and typography diverge from other routes. Adding the `page-section`,
+     `page`, and `app-shell-panel` classes aligns these screens with the BeerCSS page pattern so
+     layout rhythm and transitions stay consistent with Material 3 surface guidance. -->
+<div class="page-section app-shell-panel page active gh-tools-page">
   <section class="gh-tools-section">
     <header class="gh-tools-header">
       <p class="gh-eyebrow">GitHub Tools</p>
@@ -82,9 +86,12 @@
           </div>
         </div>
         <div class="gh-actions end">
-          <!-- Change Rationale: Beer CSS sizing helpers now control action button shape/height
-               so GitHub tools use the same default button geometry across screens. -->
-          <button type="submit" id="mapper-submit" class="gh-primary-button large">
+          <!-- Change Rationale: Primary actions previously relied on project-specific button classes,
+               which left size and shape inconsistent with other screens. Applying BeerCSS button
+               helpers (`primary`, `large`, `round`) delegates sizing to the framework, keeping
+               touch targets consistent and aligning with Material 3's emphasis on uniform control
+               geometry. -->
+          <button type="submit" id="mapper-submit" class="primary large round">
             <span class="material-symbols-outlined">terminal</span>
             <span>Generate Map</span>
           </button>
@@ -101,7 +108,11 @@
           <span class="gh-stat-pill"><span id="mapper-stats-folders">0</span> Folders</span>
           <span class="gh-stat-pill"><span id="mapper-stats-files">0</span> Files</span>
         </div>
-        <button type="button" id="mapper-copy-btn" class="gh-ghost-button small transparent border">
+        <!-- Change Rationale: Secondary actions previously used custom ghost classes, which
+             produced mismatched outlines and corner radii. Using BeerCSS `border`, `transparent`,
+             and size helpers keeps the button shape consistent with the primary action while
+             respecting Material 3's outlined control guidance. -->
+        <button type="button" id="mapper-copy-btn" class="small round transparent border">
           <span class="material-symbols-outlined">content_copy</span>
           <span>Copy Code</span>
         </button>

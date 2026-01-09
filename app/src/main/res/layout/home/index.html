@@ -42,130 +42,84 @@
 <body class="bg-surface-container-lowest">
 <div id="drawerOverlay" class="drawer-overlay" aria-hidden="true"></div>
 <div id="pageLoadingOverlay" class="page-loading-overlay"></div>
-<nav id="navDrawer" class="navigation-drawer surface border left" aria-label="Main navigation" tabindex="-1">
-  <div class="drawer-header">
-    <div class="drawer-branding">
-      <i aria-hidden="true">hub</i>
-      <div>
-        <!-- Change Rationale: Drawer header text now uses neutral containers to avoid
-             default paragraph margins and keep Beer CSS alignment consistent. -->
-        <div class="drawer-eyebrow">API Console</div>
-        <div class="drawer-subtitle">Workspaces</div>
-      </div>
-    </div>
-    <button id="closeDrawerButton" class="transparent circle" aria-label="Close navigation">
-      <i aria-hidden="true">close</i>
+<!-- Change Rationale: The drawer markup previously nested navigation links inside lists and
+     details elements, which produced default list bullets and broke BeerCSS nav styling.
+     Rebuilding the drawer as a BeerCSS navigation rail keeps anchors as direct children
+     of the nav, restoring the intended spacing, typography, and icon alignment for a
+     native-looking drawer experience. -->
+<nav id="navDrawer" class="navigation-drawer surface border m l max left" aria-label="Main navigation" tabindex="-1">
+  <header class="drawer-header">
+    <button id="closeDrawerButton" class="extra circle transparent" aria-label="Close navigation">
+      <i aria-hidden="true">menu_open</i>
     </button>
-  </div>
-  <div class="drawer-content">
-    <!-- Change Rationale: Drawer navigation now follows the Beer CSS list + expansion pattern
-         so spacing, typography, and alignment inherit the framework defaults across sections. -->
-    <ul class="list" aria-label="Primary navigation">
-      <li>
-        <a href="#home" id="homeLink" class="nav-link">
-          <i aria-hidden="true">home</i>
-          <div>Home</div>
-        </a>
-      </li>
-    </ul>
-    <hr class="small">
-    <ul class="list" aria-label="Workspace navigation">
-      <li>
-        <details id="apiWorkspacesSection" class="nav-section" open>
-          <summary class="nav-summary" id="apiWorkspacesToggle" aria-controls="apiWorkspacesContent" aria-expanded="true">
-            <i aria-hidden="true">api</i>
-            <div class="max">API Workspaces</div>
-            <i aria-hidden="true">expand_more</i>
-          </summary>
-          <ul class="list" id="apiWorkspacesContent" role="group" aria-hidden="false">
-            <li>
-              <a href="#app-toolkit-api" class="nav-link">
-                <i aria-hidden="true">build</i>
-                <div class="max">
-                  <h6 class="small">App Toolkit</h6>
-                  <div class="supporting">Manage Android utilities</div>
-                </div>
-              </a>
-            </li>
-            <li>
-              <a href="#faq-api" class="nav-link">
-                <i aria-hidden="true">help_center</i>
-                <div class="max">
-                  <h6 class="small">FAQ API</h6>
-                  <div class="supporting">Ship policy &amp; support answers</div>
-                </div>
-              </a>
-            </li>
-            <li>
-              <a href="#english-with-lidia-api" class="nav-link">
-                <i aria-hidden="true">menu_book</i>
-                <div class="max">
-                  <h6 class="small">English with Lidia</h6>
-                  <div class="supporting">Build lessons &amp; home feeds</div>
-                </div>
-              </a>
-            </li>
-            <li>
-              <a href="#android-studio-tutorials-api" class="nav-link">
-                <i aria-hidden="true">school</i>
-                <div class="max">
-                  <h6 class="small">Android Studio Tutorials</h6>
-                  <div class="supporting">Compose home &amp; lesson flows</div>
-                </div>
-              </a>
-            </li>
-          </ul>
-        </details>
-      </li>
-      <li>
-        <details id="githubToolsSection" class="nav-section" open>
-          <summary class="nav-summary" id="githubToolsToggle" aria-controls="githubToolsContent" aria-expanded="true">
-            <i aria-hidden="true">code</i>
-            <div class="max">GitHub Tools</div>
-            <i aria-hidden="true">expand_more</i>
-          </summary>
-          <ul class="list" id="githubToolsContent" role="group" aria-hidden="false">
-            <li>
-              <a href="#github-favorites" class="nav-link">
-                <i aria-hidden="true">grade</i>
-                <div class="max">
-                  <h6 class="small">Favorites</h6>
-                  <div class="supporting">Quick access to starred repos</div>
-                </div>
-              </a>
-            </li>
-            <li>
-              <a href="#repo-mapper" class="nav-link">
-                <i aria-hidden="true">terminal</i>
-                <div class="max">
-                  <h6 class="small">Repo Mapper</h6>
-                  <div class="supporting">Generate directory trees</div>
-                </div>
-              </a>
-            </li>
-            <li>
-              <a href="#release-stats" class="nav-link">
-                <i aria-hidden="true">bar_chart</i>
-                <div class="max">
-                  <h6 class="small">Release Stats</h6>
-                  <div class="supporting">Visualize download counts</div>
-                </div>
-              </a>
-            </li>
-            <li>
-              <a href="#git-patch" class="nav-link">
-                <i aria-hidden="true">receipt_long</i>
-                <div class="max">
-                  <h6 class="small">Git Patch</h6>
-                  <div class="supporting">Extract commit patches</div>
-                </div>
-              </a>
-            </li>
-          </ul>
-        </details>
-      </li>
-    </ul>
-  </div>
+    <a href="#home" class="button extend square round" aria-label="Go to API Console home">
+      <i aria-hidden="true">hub</i>
+      <span>API Console</span>
+    </a>
+  </header>
+  <a href="#home" id="homeLink" class="nav-link">
+    <i aria-hidden="true">home</i>
+    <span>Home</span>
+  </a>
+  <div class="small-text small-padding">API Workspaces</div>
+  <a href="#app-toolkit-api" class="nav-link">
+    <i aria-hidden="true">build</i>
+    <div>
+      <span>App Toolkit</span>
+      <div class="small-text">Manage Android utilities</div>
+    </div>
+  </a>
+  <a href="#faq-api" class="nav-link">
+    <i aria-hidden="true">help_center</i>
+    <div>
+      <span>FAQ API</span>
+      <div class="small-text">Ship policy &amp; support answers</div>
+    </div>
+  </a>
+  <a href="#english-with-lidia-api" class="nav-link">
+    <i aria-hidden="true">menu_book</i>
+    <div>
+      <span>English with Lidia</span>
+      <div class="small-text">Build lessons &amp; home feeds</div>
+    </div>
+  </a>
+  <a href="#android-studio-tutorials-api" class="nav-link">
+    <i aria-hidden="true">school</i>
+    <div>
+      <span>Android Studio Tutorials</span>
+      <div class="small-text">Compose home &amp; lesson flows</div>
+    </div>
+  </a>
+  <div class="small-text small-padding">GitHub Tools</div>
+  <a href="#github-favorites" class="nav-link">
+    <i aria-hidden="true">grade</i>
+    <div>
+      <span>Favorites</span>
+      <div class="small-text">Quick access to starred repos</div>
+    </div>
+  </a>
+  <a href="#repo-mapper" class="nav-link">
+    <i aria-hidden="true">terminal</i>
+    <div>
+      <span>Repo Mapper</span>
+      <div class="small-text">Generate directory trees</div>
+    </div>
+  </a>
+  <a href="#release-stats" class="nav-link">
+    <i aria-hidden="true">bar_chart</i>
+    <div>
+      <span>Release Stats</span>
+      <div class="small-text">Visualize download counts</div>
+    </div>
+  </a>
+  <a href="#git-patch" class="nav-link">
+    <i aria-hidden="true">receipt_long</i>
+    <div>
+      <span>Git Patch</span>
+      <div class="small-text">Extract commit patches</div>
+    </div>
+  </a>
+  <div class="max"></div>
   <div class="drawer-footer">
     <div class="theme-toggle-title">
       Theme
@@ -188,14 +142,26 @@
     </div>
   </div>
 </nav>
+<!-- Change Rationale: The top app bar previously placed controls directly in the header,
+     which bypassed BeerCSS's navigation layout and led to uneven alignment between the
+     menu icon and title. Wrapping the controls in a BeerCSS nav row and promoting the
+     headline to an h5 with the max helper keeps spacing consistent and follows Material
+     3's app bar hierarchy for clear, balanced touch targets. -->
 <header id="topAppBar" class="app-top-app-bar" data-drawer-inert-target="">
-  <button id="menuButton" class="transparent circle" aria-label="Open navigation menu">
-    <i aria-hidden="true">menu</i>
-  </button>
-  <div id="appBarHeadline">API Console</div>
+  <nav>
+    <button id="menuButton" class="transparent circle" aria-label="Open navigation menu">
+      <i aria-hidden="true">menu</i>
+    </button>
+    <h5 id="appBarHeadline" class="max">API Console</h5>
+  </nav>
 </header>
-<div class="content-wrapper" id="pageContentArea" data-drawer-inert-target="">
-  <div id="mainContentPage" class="page-section app-shell-panel active">
+<!-- Change Rationale: The main content wrapper previously used a generic div, which
+     prevented BeerCSS container helpers from establishing a consistent page baseline.
+     Converting it to a responsive main element aligns spacing and typography with the
+     framework defaults while keeping the existing router hooks intact, improving
+     layout consistency per Material 3 guidance. -->
+<main class="content-wrapper responsive" id="pageContentArea" data-drawer-inert-target="">
+  <div id="mainContentPage" class="page-section app-shell-panel page active">
     <section class="hero">
       <div class="hero-copy">
         <p class="hero-eyebrow">Purpose-built for Mihai-Cristian Condrea's apps</p>
@@ -225,7 +191,7 @@
       </div>
     </section>
   </div>
-</div>
+</main>
 <footer class="app-footer">
   <span id="copyright-message"></span>
 </footer>

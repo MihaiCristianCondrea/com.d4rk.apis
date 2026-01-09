@@ -1,4 +1,8 @@
-<div id="faqPage" class="page-section app-shell-panel active">
+<!-- Change Rationale: The workspace container previously omitted the BeerCSS page helper,
+     which left its spacing rules disconnected from the rest of the app shell. Adding the
+     `page` class lets BeerCSS manage the baseline page layout, keeping typography and
+     section rhythm consistent with Material 3 layout guidance. -->
+<div id="faqPage" class="page-section app-shell-panel page active">
   <header class="page-header">
     <h1>FAQ API workspace</h1>
     <p>Publish a structured FAQ feed for app and web surfaces. The builder keeps questions, categories, featured flags, search tags, and HTML answers aligned with the GitHub Pages datasets defined in <code>./api/faq/v1/debug/catalog.json</code>. Use the catalog picker to merge multiple question sources for a product or fetch a single JSON file when iterating locally.</p>
@@ -11,7 +15,11 @@
         <p class="faq-onboarding__helper">Pick the path that matches your goal. The workspace will open the matching screen and keep you on one focused flow.</p>
       </div>
       <div class="faq-onboarding__grid">
-        <button type="button" class="faq-landing-card" data-faq-mode="catalog" aria-pressed="false">
+        <!-- Change Rationale: The workflow buttons previously relied on custom card styling alone,
+             which made their tap targets and corner treatment drift from BeerCSS controls. Adding
+             the BeerCSS `round` helper keeps the button geometry consistent with other actions and
+             aligns with Material 3's guidance for cohesive component shape. -->
+        <button type="button" class="faq-landing-card round" data-faq-mode="catalog" aria-pressed="false">
           <span class="faq-landing-card__icon material-symbols-outlined">inventory_2</span>
           <div class="faq-landing-card__body">
             <p class="faq-landing-card__eyebrow">Catalog</p>
@@ -20,7 +28,7 @@
           </div>
         </button>
         <!-- Change Rationale: Normalize the workflow key to the singular `faq` slug so UI state matches api/faq and router anchors. -->
-        <button type="button" class="faq-landing-card" data-faq-mode="faq" aria-pressed="false">
+        <button type="button" class="faq-landing-card round" data-faq-mode="faq" aria-pressed="false">
           <span class="faq-landing-card__icon material-symbols-outlined">help_center</span>
           <div class="faq-landing-card__body">
             <p class="faq-landing-card__eyebrow">Product FAQs</p>
@@ -105,37 +113,36 @@
             </md-text-button>
             <p class="faq-segmented__helper">Switch workflows without leaving the FAQ route.</p>
           </div>
-          <md-segmented-button-set
-            aria-label="Switch FAQ workspace view"
-            role="tablist"
-            class="app-segmented segmented-inline"
-          >
-            <md-outlined-segmented-button
-              selected
-              value="catalog"
+          <!-- Change Rationale: The FAQ panel switcher now uses the BeerCSS tabbed navigation
+               pattern, replacing segmented controls so tab spacing, icon alignment, and active
+               states match the rest of the BeerCSS navigation system. -->
+          <nav class="tabbed" aria-label="Switch FAQ workspace view" role="tablist">
+            <a
+              class="active"
               aria-selected="true"
               aria-controls="faqPanelCatalog"
               data-faq-panel-control="catalog"
               role="tab"
+              tabindex="0"
             >
-              <md-icon slot="icon">inventory_2</md-icon>
+              <i aria-hidden="true">inventory_2</i>
               <span>Catalog</span>
-            </md-outlined-segmented-button>
-            <md-outlined-segmented-button
-              value="faq"
+            </a>
+            <a
               aria-selected="false"
               aria-controls="faqPanelFaq"
               data-faq-panel-control="faq"
               role="tab"
+              tabindex="-1"
             >
-              <md-icon slot="icon">help_center</md-icon>
+              <i aria-hidden="true">help_center</i>
               <span>FAQs</span>
-            </md-outlined-segmented-button>
-          </md-segmented-button-set>
+            </a>
+          </nav>
         </div>
       </md-filled-card>
     </section>
-    <section class="faq-panel" data-faq-panel="catalog" id="faqPanelCatalog">
+    <section class="faq-panel page padding" data-faq-panel="catalog" id="faqPanelCatalog">
       <div class="card-body">
         <h2>Catalog structure</h2>
         <ul>
@@ -216,7 +223,7 @@
         </aside>
       </section>
     </section>
-    <section class="faq-panel" data-faq-panel="faq" id="faqPanelFaq" hidden="">
+    <section class="faq-panel page padding" data-faq-panel="faq" id="faqPanelFaq" hidden="">
       <section class="builder-remote-card faq-product-loader" aria-label="Product FAQ loader">
         <div class="card-body">
           <div class="builder-remote-header">
@@ -300,7 +307,12 @@
             <div>
               <h2>Select a Material icon</h2>
               <p>Search the Material Symbols catalog and insert the icon name automatically.</p>
-            </div><button type="button" class="faq-icon-picker__close" id="faqIconPickerClose" aria-label="Close icon picker"><span class="material-symbols-outlined">close</span></button>
+            </div>
+            <!-- Change Rationale: The icon picker close control previously used a bespoke class without
+                 BeerCSS shape helpers, which made it feel inconsistent next to other icon buttons.
+                 Adding BeerCSS `transparent` and `circle` helpers keeps the control aligned with
+                 the framework's icon button pattern and Material 3 touch target expectations. -->
+            <button type="button" class="faq-icon-picker__close transparent circle" id="faqIconPickerClose" aria-label="Close icon picker"><span class="material-symbols-outlined">close</span></button>
           </header>
           <div class="faq-icon-picker__meta">
             <span>Selected: <strong id="faqIconPickerSelection">None</strong></span> <span>Showing <strong id="faqIconPickerResultCount">0</strong> icons</span>
@@ -313,7 +325,11 @@
           <p class="faq-icon-picker__empty" id="faqIconPickerEmpty" hidden="">No icons match "<span id="faqIconPickerQuery"></span>"</p>
           <div class="faq-icon-picker__grid" id="faqIconPickerList" role="listbox" aria-label="Material Symbols options"></div>
           <div class="faq-icon-picker__footer">
-            <button type="button" class="api-inline-button variant-ghost" id="faqIconPickerClear"><span class="material-symbols-outlined api-inline-icon">backspace</span> <span>Clear selection</span></button> <span class="material-symbols-outlined">done</span> Done
+            <!-- Change Rationale: Inline actions previously depended on custom spacing alone, which
+                 left their shape and size out of sync with BeerCSS buttons. Applying BeerCSS size
+                 and shape helpers preserves the lightweight styling while aligning with Material 3
+                 button geometry. -->
+            <button type="button" class="api-inline-button variant-ghost small round transparent" id="faqIconPickerClear"><span class="material-symbols-outlined api-inline-icon">backspace</span> <span>Clear selection</span></button> <span class="material-symbols-outlined">done</span> Done
           </div>
         </div>
       </div>
