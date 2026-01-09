@@ -57,7 +57,9 @@
           </div>
         </div>
         <div class="gh-actions end">
-          <button type="submit" id="releases-submit" class="gh-primary-button">
+          <!-- Change Rationale: Beer CSS sizing helpers now control action button shape/height
+               so GitHub tools use the same default button geometry across screens. -->
+          <button type="submit" id="releases-submit" class="gh-primary-button large">
             <span class="material-symbols-outlined">analytics</span>
             <span>Analyze</span>
           </button>
@@ -75,19 +77,19 @@
           <span class="gh-stat-pill"><span id="rel-count">0</span> Releases</span>
         </div>
         <div class="gh-action-row">
-          <button type="button" id="rel-copy-json" class="gh-ghost-button">
+          <button type="button" id="rel-copy-json" class="gh-ghost-button small transparent border">
             <span class="material-symbols-outlined">content_copy</span>
             <span>Copy JSON</span>
           </button>
-          <button type="button" id="rel-download-json" class="gh-ghost-button">
+          <button type="button" id="rel-download-json" class="gh-ghost-button small transparent border">
             <span class="material-symbols-outlined">save</span>
             <span>Download JSON</span>
           </button>
-          <button type="button" id="rel-copy-csv" class="gh-ghost-button">
+          <button type="button" id="rel-copy-csv" class="gh-ghost-button small transparent border">
             <span class="material-symbols-outlined">table</span>
             <span>Copy CSV</span>
           </button>
-          <button type="button" id="rel-download-csv" class="gh-ghost-button">
+          <button type="button" id="rel-download-csv" class="gh-ghost-button small transparent border">
             <span class="material-symbols-outlined">download</span>
             <span>Download CSV</span>
           </button>

@@ -37,18 +37,6 @@
   gap: 1.5rem;
 }
 
-.gh-primary-button,
-.gh-chip-button,
-.gh-icon-button,
-.gh-ghost-button,
-.gh-pill-button,
-.gh-button {
-  font: inherit;
-  text-decoration: none;
-  line-height: 1.1;
-  align-items: center;
-}
-
 .gh-tools-header {
   display: grid;
   gap: 0.5rem;
@@ -365,135 +353,8 @@
   justify-content: flex-end;
 }
 
-.gh-primary-button {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  background: var(--md-sys-color-primary, #e6e1e5);
-  color: var(--md-sys-color-on-primary, #141218);
-  border: none;
-  border-radius: 999px;
-  padding: 0.85rem 1.4rem;
-  /* Change Rationale: Primary CTAs previously used semibold (600) labels that still read as bold and
-   * pulled focus from surrounding copy. Normal-weight (400) text meets the request for lighter labels,
-   * keeps hierarchy with color/state treatments instead of weight, and better mirrors Material 3's
-   * emphasis guidance for balanced prominence.
-   */
-  font-weight: 400;
-  cursor: pointer;
-  box-shadow: 0 16px 42px -26px rgba(0, 0, 0, 0.75);
-  transition: transform var(--gh-transition), box-shadow var(--gh-transition), background var(--gh-transition);
-}
-
-.gh-primary-button:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 18px 48px -26px rgba(0, 0, 0, 0.8);
-}
-
-/* Change Rationale: The Generate/Analyze CTAs now communicate loading and invalid
- * states by dimming and removing hover lift so users can see when submissions are
- * blocked while tokens or slugs are corrected.
- */
-.gh-primary-button:disabled,
-.gh-primary-button.is-loading {
-  opacity: 0.72;
-  transform: none;
-  box-shadow: none;
-  cursor: not-allowed;
-}
-
-.gh-primary-button:disabled:hover,
-.gh-primary-button.is-loading:hover {
-  transform: none;
-  box-shadow: none;
-}
-
-.gh-chip-button,
-.gh-icon-button,
-.gh-ghost-button,
-.gh-pill-button,
-.gh-button {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.45rem;
-  border-radius: 999px;
-  border: 1px solid color-mix(in srgb, var(--gh-outline) 45%, transparent);
-  background: color-mix(in srgb, var(--gh-card-strong) 70%, transparent);
-  color: var(--gh-text);
-  padding: 0.55rem 0.9rem;
-  /* Change Rationale: Supporting GitHub controls previously relied on semibold (600) labels that
-   * made every action feel primary. Normalizing the weight to 400 keeps the buttons legible without
-   * creating visual heaviness, leaning on shape and color for emphasis per Material 3.
-   */
-  font-weight: 400;
-  cursor: pointer;
-  transition: background var(--gh-transition), color var(--gh-transition), border-color var(--gh-transition), transform var(--gh-transition), box-shadow var(--gh-transition);
-}
-
-.gh-chip-button:hover,
-.gh-ghost-button:hover,
-.gh-pill-button:hover,
-.gh-button:hover,
-.gh-icon-button:hover {
-  background: color-mix(in srgb, var(--md-sys-color-primary) 12%, transparent);
-  border-color: color-mix(in srgb, var(--md-sys-color-primary) 30%, var(--gh-outline));
-}
-
-.gh-chip-button.token-toggle {
-  border: none;
-  background: transparent;
-  color: var(--gh-text);
-  padding: 0.35rem 0.5rem;
-  /* Change Rationale: Token toggle chips previously used semibold (600) text that stood out like
-   * primary actions. Using normal weight (400) aligns them with the rest of the buttons, keeps the
-   * emphasis on state styling, and satisfies the request for non-bold labels.
-   */
-  font-weight: 400;
-  gap: 0.35rem;
-}
-
-.gh-chip-button.token-toggle .material-symbols-outlined {
-  font-size: 20px;
-}
-
-.gh-chip-button.token-toggle:hover,
-.gh-chip-button.token-toggle.is-open {
-  background: color-mix(in srgb, var(--md-sys-color-primary) 12%, transparent);
-  text-decoration: none;
-  transform: none;
-  box-shadow: none;
-}
-
-.gh-chip-button.ghost,
-.gh-ghost-button {
-  background: color-mix(in srgb, var(--gh-card) 80%, transparent);
-}
-
-.gh-icon-button {
-  padding: 0.5rem;
-  border-radius: 999px;
-  width: 44px;
-  height: 44px;
-  justify-content: center;
-}
-
-.gh-icon-button.is-active,
-.gh-pill-button.is-active {
-  background: color-mix(in srgb, var(--md-sys-color-primary) 18%, var(--gh-card-strong));
-  border-color: color-mix(in srgb, var(--md-sys-color-primary) 45%, var(--gh-outline));
-}
-
-.gh-ghost-button.compact {
-  padding: 0.35rem 0.7rem;
-  gap: 0.35rem;
-  font-size: 0.95rem;
-}
-
-.gh-icon-button.is-active .material-symbols-outlined,
-.gh-pill-button.is-active .material-symbols-outlined {
-  font-variation-settings: 'FILL' 1;
-  color: var(--md-sys-color-primary, currentColor);
-}
+/* Change Rationale: GitHub tool buttons now rely on Beer CSS defaults for shape,
+ * size, and state styling so controls stay consistent across screens. */
 
 
 .gh-result,

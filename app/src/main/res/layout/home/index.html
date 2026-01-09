@@ -47,8 +47,10 @@
     <div class="drawer-branding">
       <i aria-hidden="true">hub</i>
       <div>
-        <p class="drawer-eyebrow">API Console</p>
-        <p class="drawer-subtitle">Workspaces</p>
+        <!-- Change Rationale: Drawer header text now uses neutral containers to avoid
+             default paragraph margins and keep Beer CSS alignment consistent. -->
+        <div class="drawer-eyebrow">API Console</div>
+        <div class="drawer-subtitle">Workspaces</div>
       </div>
     </div>
     <button id="closeDrawerButton" class="transparent circle" aria-label="Close navigation">
@@ -56,7 +58,9 @@
     </button>
   </div>
   <div class="drawer-content">
-    <ul class="list">
+    <!-- Change Rationale: Drawer navigation now follows the Beer CSS list + expansion pattern
+         so spacing, typography, and alignment inherit the framework defaults across sections. -->
+    <ul class="list" aria-label="Primary navigation">
       <li>
         <a href="#home" id="homeLink" class="nav-link">
           <i aria-hidden="true">home</i>
@@ -64,97 +68,103 @@
         </a>
       </li>
     </ul>
-    <div class="divider"></div>
-    <details id="apiWorkspacesSection" class="nav-section" open>
-      <summary class="nav-summary" id="apiWorkspacesToggle" aria-controls="apiWorkspacesContent" aria-expanded="true">
-        <i aria-hidden="true">api</i>
-        <div class="max">API Workspaces</div>
-        <i class="chevron" aria-hidden="true">expand_more</i>
-      </summary>
-      <ul class="list nested-list open" id="apiWorkspacesContent" role="group" aria-hidden="false">
-        <li>
-          <a href="#app-toolkit-api" class="nav-link">
-            <i aria-hidden="true">build</i>
-            <div class="max">
-              <h6 class="small">App Toolkit</h6>
-              <p class="supporting">Manage Android utilities</p>
-            </div>
-          </a>
-        </li>
-        <li>
-          <a href="#faq-api" class="nav-link">
-            <i aria-hidden="true">help_center</i>
-            <div class="max">
-              <h6 class="small">FAQ API</h6>
-              <p class="supporting">Ship policy &amp; support answers</p>
-            </div>
-          </a>
-        </li>
-        <li>
-          <a href="#english-with-lidia-api" class="nav-link">
-            <i aria-hidden="true">menu_book</i>
-            <div class="max">
-              <h6 class="small">English with Lidia</h6>
-              <p class="supporting">Build lessons &amp; home feeds</p>
-            </div>
-          </a>
-        </li>
-        <li>
-          <a href="#android-studio-tutorials-api" class="nav-link">
-            <i aria-hidden="true">school</i>
-            <div class="max">
-              <h6 class="small">Android Studio Tutorials</h6>
-              <p class="supporting">Compose home &amp; lesson flows</p>
-            </div>
-          </a>
-        </li>
-      </ul>
-    </details>
-    <details id="githubToolsSection" class="nav-section" open>
-      <summary class="nav-summary" id="githubToolsToggle" aria-controls="githubToolsContent" aria-expanded="true">
-        <i aria-hidden="true">code</i>
-        <div class="max">GitHub Tools</div>
-        <i class="chevron" aria-hidden="true">expand_more</i>
-      </summary>
-      <ul class="list nested-list open" id="githubToolsContent" role="group" aria-hidden="false">
-        <li>
-          <a href="#github-favorites" class="nav-link">
-            <i aria-hidden="true">grade</i>
-            <div class="max">
-              <h6 class="small">Favorites</h6>
-              <p class="supporting">Quick access to starred repos</p>
-            </div>
-          </a>
-        </li>
-        <li>
-          <a href="#repo-mapper" class="nav-link">
-            <i aria-hidden="true">terminal</i>
-            <div class="max">
-              <h6 class="small">Repo Mapper</h6>
-              <p class="supporting">Generate directory trees</p>
-            </div>
-          </a>
-        </li>
-        <li>
-          <a href="#release-stats" class="nav-link">
-            <i aria-hidden="true">bar_chart</i>
-            <div class="max">
-              <h6 class="small">Release Stats</h6>
-              <p class="supporting">Visualize download counts</p>
-            </div>
-          </a>
-        </li>
-        <li>
-          <a href="#git-patch" class="nav-link">
-            <i aria-hidden="true">receipt_long</i>
-            <div class="max">
-              <h6 class="small">Git Patch</h6>
-              <p class="supporting">Extract commit patches</p>
-            </div>
-          </a>
-        </li>
-      </ul>
-    </details>
+    <hr class="small">
+    <ul class="list" aria-label="Workspace navigation">
+      <li>
+        <details id="apiWorkspacesSection" class="nav-section" open>
+          <summary class="nav-summary" id="apiWorkspacesToggle" aria-controls="apiWorkspacesContent" aria-expanded="true">
+            <i aria-hidden="true">api</i>
+            <div class="max">API Workspaces</div>
+            <i aria-hidden="true">expand_more</i>
+          </summary>
+          <ul class="list" id="apiWorkspacesContent" role="group" aria-hidden="false">
+            <li>
+              <a href="#app-toolkit-api" class="nav-link">
+                <i aria-hidden="true">build</i>
+                <div class="max">
+                  <h6 class="small">App Toolkit</h6>
+                  <div class="supporting">Manage Android utilities</div>
+                </div>
+              </a>
+            </li>
+            <li>
+              <a href="#faq-api" class="nav-link">
+                <i aria-hidden="true">help_center</i>
+                <div class="max">
+                  <h6 class="small">FAQ API</h6>
+                  <div class="supporting">Ship policy &amp; support answers</div>
+                </div>
+              </a>
+            </li>
+            <li>
+              <a href="#english-with-lidia-api" class="nav-link">
+                <i aria-hidden="true">menu_book</i>
+                <div class="max">
+                  <h6 class="small">English with Lidia</h6>
+                  <div class="supporting">Build lessons &amp; home feeds</div>
+                </div>
+              </a>
+            </li>
+            <li>
+              <a href="#android-studio-tutorials-api" class="nav-link">
+                <i aria-hidden="true">school</i>
+                <div class="max">
+                  <h6 class="small">Android Studio Tutorials</h6>
+                  <div class="supporting">Compose home &amp; lesson flows</div>
+                </div>
+              </a>
+            </li>
+          </ul>
+        </details>
+      </li>
+      <li>
+        <details id="githubToolsSection" class="nav-section" open>
+          <summary class="nav-summary" id="githubToolsToggle" aria-controls="githubToolsContent" aria-expanded="true">
+            <i aria-hidden="true">code</i>
+            <div class="max">GitHub Tools</div>
+            <i aria-hidden="true">expand_more</i>
+          </summary>
+          <ul class="list" id="githubToolsContent" role="group" aria-hidden="false">
+            <li>
+              <a href="#github-favorites" class="nav-link">
+                <i aria-hidden="true">grade</i>
+                <div class="max">
+                  <h6 class="small">Favorites</h6>
+                  <div class="supporting">Quick access to starred repos</div>
+                </div>
+              </a>
+            </li>
+            <li>
+              <a href="#repo-mapper" class="nav-link">
+                <i aria-hidden="true">terminal</i>
+                <div class="max">
+                  <h6 class="small">Repo Mapper</h6>
+                  <div class="supporting">Generate directory trees</div>
+                </div>
+              </a>
+            </li>
+            <li>
+              <a href="#release-stats" class="nav-link">
+                <i aria-hidden="true">bar_chart</i>
+                <div class="max">
+                  <h6 class="small">Release Stats</h6>
+                  <div class="supporting">Visualize download counts</div>
+                </div>
+              </a>
+            </li>
+            <li>
+              <a href="#git-patch" class="nav-link">
+                <i aria-hidden="true">receipt_long</i>
+                <div class="max">
+                  <h6 class="small">Git Patch</h6>
+                  <div class="supporting">Extract commit patches</div>
+                </div>
+              </a>
+            </li>
+          </ul>
+        </details>
+      </li>
+    </ul>
   </div>
   <div class="drawer-footer">
     <div class="theme-toggle-title">

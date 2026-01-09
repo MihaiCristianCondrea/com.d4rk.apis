@@ -82,7 +82,9 @@
           </div>
         </div>
         <div class="gh-actions end">
-          <button type="submit" id="mapper-submit" class="gh-primary-button">
+          <!-- Change Rationale: Beer CSS sizing helpers now control action button shape/height
+               so GitHub tools use the same default button geometry across screens. -->
+          <button type="submit" id="mapper-submit" class="gh-primary-button large">
             <span class="material-symbols-outlined">terminal</span>
             <span>Generate Map</span>
           </button>
@@ -99,7 +101,7 @@
           <span class="gh-stat-pill"><span id="mapper-stats-folders">0</span> Folders</span>
           <span class="gh-stat-pill"><span id="mapper-stats-files">0</span> Files</span>
         </div>
-        <button type="button" id="mapper-copy-btn" class="gh-ghost-button">
+        <button type="button" id="mapper-copy-btn" class="gh-ghost-button small transparent border">
           <span class="material-symbols-outlined">content_copy</span>
           <span>Copy Code</span>
         </button>
