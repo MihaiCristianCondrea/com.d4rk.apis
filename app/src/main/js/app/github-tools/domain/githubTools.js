@@ -704,6 +704,8 @@ function renderFavoritesPage() {
      * monospace slugs, keeping the remove action aligned to the top-right and actions in
      * a single row for consistent scanning on narrow layouts.
      */
+    // Change Rationale: Button classes now lean on Beer CSS sizing helpers so
+    // favorites actions stay consistent with the GitHub tools button geometry.
     const card = document.createElement('article');
     card.className = 'gh-favorite-card';
     card.innerHTML = `
@@ -713,7 +715,7 @@ function renderFavoritesPage() {
             <span class="material-symbols-outlined" aria-hidden="true">bookmark_added</span>
             <span>Saved repository</span>
           </span>
-          <button class="gh-icon-button ghost" type="button" data-remove-favorite aria-label="Unfavorite ${slug}">
+          <button class="gh-icon-button small circle transparent" type="button" data-remove-favorite aria-label="Unfavorite ${slug}">
             <span class="material-symbols-outlined" aria-hidden="true">star</span>
           </button>
         </div>
@@ -723,15 +725,15 @@ function renderFavoritesPage() {
         </div>
       </div>
       <div class="gh-favorite-actions">
-        <button class="gh-button primary" type="button" data-open-mapper>
+        <button class="gh-button primary small" type="button" data-open-mapper>
           <span class="material-symbols-outlined">terminal</span>
           <span>Map</span>
         </button>
-        <button class="gh-button secondary" type="button" data-open-stats>
+        <button class="gh-button secondary small" type="button" data-open-stats>
           <span class="material-symbols-outlined">bar_chart</span>
           <span>Stats</span>
         </button>
-        <a class="gh-ghost-button" href="https://github.com/${slug}" target="_blank" rel="noopener noreferrer">
+        <a class="button gh-ghost-button small transparent border" href="https://github.com/${slug}" target="_blank" rel="noopener noreferrer">
           <span class="material-symbols-outlined">open_in_new</span>
           <span>Open</span>
         </a>

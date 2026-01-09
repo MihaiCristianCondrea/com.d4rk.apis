@@ -59,7 +59,9 @@
           </div>
         </div>
         <div class="gh-actions end">
-          <button type="submit" id="patch-submit" class="gh-primary-button">
+          <!-- Change Rationale: Beer CSS sizing helpers now control action button shape/height
+               so GitHub tools use the same default button geometry across screens. -->
+          <button type="submit" id="patch-submit" class="gh-primary-button large">
             <span class="material-symbols-outlined">difference</span>
             <span>Get Patch</span>
           </button>
@@ -76,11 +78,11 @@
           <span class="gh-stat-pill"><span class="material-symbols-outlined">check</span> <span>Ready to apply</span></span>
         </div>
         <div class="gh-action-row">
-          <button type="button" id="patch-download-btn" class="gh-ghost-button">
+          <button type="button" id="patch-download-btn" class="gh-ghost-button small transparent border">
             <span class="material-symbols-outlined">download</span>
             <span>Download</span>
           </button>
-          <button type="button" id="patch-copy-btn" class="gh-ghost-button">
+          <button type="button" id="patch-copy-btn" class="gh-ghost-button small transparent border">
             <span class="material-symbols-outlined">content_copy</span>
             <span>Copy</span>
           </button>
