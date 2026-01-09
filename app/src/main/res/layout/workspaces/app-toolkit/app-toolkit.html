@@ -27,8 +27,11 @@
     - How JS interacts with it (if at all)
     - Any UX assumptions (e.g., “insights rely on live preview data”)
 -->
-
-<div id="appToolkitPage" class="page-section app-shell-panel active">
+<!-- Change Rationale: The workspace container previously omitted the BeerCSS page helper,
+     which left its spacing rules disconnected from the rest of the app shell. Adding the
+     `page` class lets BeerCSS manage the baseline page layout, keeping typography and
+     section rhythm consistent with Material 3 layout guidance. -->
+<div id="appToolkitPage" class="page-section app-shell-panel page active">
   <!-- Page header: static description of what this workspace does -->
   <header class="page-header">
     <h1>App Toolkit API workspace</h1>

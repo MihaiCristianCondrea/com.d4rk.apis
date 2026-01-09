@@ -14,7 +14,7 @@ import normalizePageId from './identifiers.js';
  * - Clearing any previous "active" styling and ARIA state from each item.
  * - Comparing each item's `href` (normalized) to the current page.
  * - Marking the matching item as active using:
- *   - `.nav-item-active` CSS class
+ *   - `.active` CSS class
  *   - `aria-current="page"`
  *   - `aria-selected="true"`
  * - Ensuring parent nested lists are expanded when the active item is in a nested group
@@ -49,7 +49,7 @@ export function updateActiveNavLink(currentPageId) {
 
   document.querySelectorAll('#navDrawer .nav-link[href]').forEach((item) => {
     // Reset any existing active state on the item.
-    item.classList.remove('nav-item-active');
+    item.classList.remove('active');
     item.removeAttribute('aria-current');
     item.removeAttribute('aria-selected');
 
@@ -65,7 +65,7 @@ export function updateActiveNavLink(currentPageId) {
     }
 
     // Mark this item as the active navigation entry.
-    item.classList.add('nav-item-active');
+    item.classList.add('active');
     item.setAttribute('aria-current', 'page');
     item.setAttribute('aria-selected', 'true');
 

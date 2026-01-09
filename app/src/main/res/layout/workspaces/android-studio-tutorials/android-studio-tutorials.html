@@ -1,4 +1,8 @@
-<div id="androidWorkspace" class="page-section app-shell-panel active">
+<!-- Change Rationale: The workspace container previously omitted the BeerCSS page helper,
+     which left its spacing rules disconnected from the rest of the app shell. Adding the
+     `page` class lets BeerCSS manage the baseline page layout, keeping typography and
+     section rhythm consistent with Material 3 layout guidance. -->
+<div id="androidWorkspace" class="page-section app-shell-panel page active">
   <header class="page-header">
     <h1>Android Studio Tutorials API workspace</h1>
     <p>Create home feed listings and lesson content with the same workflow as the App Toolkit builder. Track metadata quality, compare diffs, and publish updates without leaving the workspace.</p>
@@ -73,11 +77,21 @@
     data-github-status-id="androidRemoteGithubStatus"
   ></div>
   <div class="pager" id="androidPager" data-pager="">
-    <div class="pager-tabs" role="tablist">
-      <button type="button" class="pager-tab active" data-page="home" role="tab" aria-selected="true">Home API</button> <button type="button" class="pager-tab" data-page="lesson" role="tab" aria-selected="false">Lesson API</button>
-    </div>
+    <!-- Change Rationale: The pager tabs now follow the BeerCSS tabbed navigation pattern so
+         tab labels and icons inherit the framework's spacing and typography, keeping the
+         home/lesson toggle aligned with other nav controls across the app. -->
+    <nav class="pager-tabs tabbed" role="tablist">
+      <a class="pager-tab active" data-page="home" role="tab" aria-selected="true" aria-controls="androidPageHome" tabindex="0">
+        <i aria-hidden="true">home</i>
+        <span>Home API</span>
+      </a>
+      <a class="pager-tab" data-page="lesson" role="tab" aria-selected="false" aria-controls="androidPageLesson" tabindex="-1">
+        <i aria-hidden="true">menu_book</i>
+        <span>Lesson API</span>
+      </a>
+    </nav>
     <div class="pager-pages">
-      <section class="pager-page active" data-page="home" role="tabpanel">
+      <section class="pager-page page padding active" data-page="home" role="tabpanel" id="androidPageHome">
         <div class="card-body">
           <h2>Home feed cards</h2>
           <ul>
@@ -112,7 +126,7 @@
           </div>
         </section>
       </section>
-      <section class="pager-page" data-page="lesson" role="tabpanel">
+      <section class="pager-page page padding" data-page="lesson" role="tabpanel" id="androidPageLesson">
         <div class="card-body">
           <h2>Lesson content blocks</h2>
           <ul>

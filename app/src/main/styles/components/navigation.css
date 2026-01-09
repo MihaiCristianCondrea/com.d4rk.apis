@@ -4,16 +4,29 @@
  */
 
 /* --- Top App Bar --- */
+/* Change Rationale: The top app bar previously applied flex spacing directly on the header,
+ * which left the BeerCSS nav layout unused and made headline spacing harder to standardize.
+ * Moving alignment to a nested nav element adopts the BeerCSS pattern, keeps the title aligned
+ * with the button row, and reinforces Material 3's consistent app bar rhythm.
+ */
 .app-top-app-bar {
   position: sticky;
   top: 0;
   z-index: 1000;
+  width: 100%;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.app-top-app-bar nav {
   display: flex;
   align-items: center;
   gap: 12px;
   width: 100%;
   padding: 12px;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.app-top-app-bar h5 {
+  margin: 0;
 }
 
 .app-top-app-bar.scrolled {
@@ -96,11 +109,7 @@
   font-size: 0.875rem;
 }
 
-/* Change Rationale: Nav list items now rely on Beer CSS default sizing and spacing.
- * Keep a lightweight active state so the current route still reads clearly without
- * reintroducing custom padding or border radii.
+/* Change Rationale: Active nav styling now uses BeerCSS' `.active` state on anchors,
+ * so the custom `.nav-item-active` override has been removed to avoid conflicts and
+ * keep drawer feedback consistent with framework defaults.
  */
-.nav-link.nav-item-active {
-  color: var(--primary);
-  font-weight: 500;
-}
