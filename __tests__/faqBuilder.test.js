@@ -217,7 +217,9 @@ describe('FAQ workspace builder', () => {
             }
             return Promise.resolve(mockResponse('[]'));
         });
-        require('../app/src/main/js/app/workspaces/faq/ui/FaqRoute.js');
+        // Change Rationale: The FAQ workspace entrypoint now lives under the Help feature tree,
+        // so tests load HelpActivity to reflect the canonical module location.
+        require('../app/src/main/js/app/help/ui/HelpActivity.js');
         global.initFaqWorkspace();
     });
 

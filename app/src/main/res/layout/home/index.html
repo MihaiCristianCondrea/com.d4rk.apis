@@ -40,86 +40,115 @@
   <link rel="modulepreload" href="../../../js/main.js">
 </head>
 <body class="bg-surface-container-lowest">
-<div id="drawerOverlay" class="drawer-overlay" aria-hidden="true"></div>
+<!-- Change Rationale: Apply BeerCSS overlay styling so the drawer backdrop inherits
+     the framework's default dimming treatment without altering the open/close logic. -->
+<div id="drawerOverlay" class="drawer-overlay overlay" aria-hidden="true"></div>
 <div id="pageLoadingOverlay" class="page-loading-overlay"></div>
-<!-- Change Rationale: The drawer markup previously nested navigation links inside lists and
-     details elements, which produced default list bullets and broke BeerCSS nav styling.
-     Rebuilding the drawer as a BeerCSS navigation rail keeps anchors as direct children
-     of the nav, restoring the intended spacing, typography, and icon alignment for a
-     native-looking drawer experience. -->
+<!-- Change Rationale: The drawer layout now uses BeerCSS list helpers inside a dedicated
+     drawer-content wrapper. This keeps grouped navigation items aligned to a shared list
+     rhythm, lets the drawer content flex naturally above the footer, and matches BeerCSS
+     spacing defaults without relying on custom padding overrides. -->
 <nav id="navDrawer" class="navigation-drawer surface border m l max left" aria-label="Main navigation" tabindex="-1">
-  <header class="drawer-header">
+  <header class="drawer-header row">
     <button id="closeDrawerButton" class="extra circle transparent" aria-label="Close navigation">
       <i aria-hidden="true">menu_open</i>
     </button>
-    <a href="#home" class="button extend square round" aria-label="Go to API Console home">
+    <!-- Change Rationale: The drawer brand action previously mixed conflicting shape helpers
+         (`square` + `round`). Keeping the extended button rounded aligns it with BeerCSS
+         button geometry and improves visual consistency across navigation surfaces. -->
+    <a href="#home" class="button extend round" aria-label="Go to API Console home">
       <i aria-hidden="true">hub</i>
       <span>API Console</span>
     </a>
   </header>
-  <a href="#home" id="homeLink" class="nav-link">
-    <i aria-hidden="true">home</i>
-    <div>Home</div>
-  </a>
-  <div class="small-text small-padding">API Workspaces</div>
-  <a href="#app-toolkit-api" class="nav-link">
-    <i aria-hidden="true">build</i>
-    <div>
-      <div>App Toolkit</div>
-      <div class="small-text">Manage Android utilities</div>
-    </div>
-  </a>
-  <a href="#faq-api" class="nav-link">
-    <i aria-hidden="true">help_center</i>
-    <div>
-      <div>FAQ API</div>
-      <div class="small-text">Ship policy &amp; support answers</div>
-    </div>
-  </a>
-  <a href="#english-with-lidia-api" class="nav-link">
-    <i aria-hidden="true">menu_book</i>
-    <div>
-      <div>English with Lidia</div>
-      <div class="small-text">Build lessons &amp; home feeds</div>
-    </div>
-  </a>
-  <a href="#android-studio-tutorials-api" class="nav-link">
-    <i aria-hidden="true">school</i>
-    <div>
-      <div>Android Studio Tutorials</div>
-      <div class="small-text">Compose home &amp; lesson flows</div>
-    </div>
-  </a>
-  <div class="small-text small-padding">GitHub Tools</div>
-  <a href="#github-favorites" class="nav-link">
-    <i aria-hidden="true">grade</i>
-    <div>
-      <div>Favorites</div>
-      <div class="small-text">Quick access to starred repos</div>
-    </div>
-  </a>
-  <a href="#repo-mapper" class="nav-link">
-    <i aria-hidden="true">terminal</i>
-    <div>
-      <div>Repo Mapper</div>
-      <div class="small-text">Generate directory trees</div>
-    </div>
-  </a>
-  <a href="#release-stats" class="nav-link">
-    <i aria-hidden="true">bar_chart</i>
-    <div>
-      <div>Release Stats</div>
-      <div class="small-text">Visualize download counts</div>
-    </div>
-  </a>
-  <a href="#git-patch" class="nav-link">
-    <i aria-hidden="true">receipt_long</i>
-    <div>
-      <div>Git Patch</div>
-      <div class="small-text">Extract commit patches</div>
-    </div>
-  </a>
-  <div class="max"></div>
+  <div class="drawer-content">
+    <ul class="list">
+      <li>
+        <a href="#home" id="homeLink" class="nav-link">
+          <i aria-hidden="true">home</i>
+          <div>Home</div>
+        </a>
+      </li>
+    </ul>
+    <div class="small-text small-padding">API Workspaces</div>
+    <ul class="list">
+      <li>
+        <a href="#app-toolkit-api" class="nav-link">
+          <i aria-hidden="true">build</i>
+          <div>
+            <div>App Toolkit</div>
+            <div class="small-text">Manage Android utilities</div>
+          </div>
+        </a>
+      </li>
+      <li>
+        <a href="#faq-api" class="nav-link">
+          <i aria-hidden="true">help_center</i>
+          <div>
+            <div>FAQ API</div>
+            <div class="small-text">Ship policy &amp; support answers</div>
+          </div>
+        </a>
+      </li>
+      <li>
+        <a href="#english-with-lidia-api" class="nav-link">
+          <i aria-hidden="true">menu_book</i>
+          <div>
+            <div>English with Lidia</div>
+            <div class="small-text">Build lessons &amp; home feeds</div>
+          </div>
+        </a>
+      </li>
+      <li>
+        <a href="#android-studio-tutorials-api" class="nav-link">
+          <i aria-hidden="true">school</i>
+          <div>
+            <div>Android Studio Tutorials</div>
+            <div class="small-text">Compose home &amp; lesson flows</div>
+          </div>
+        </a>
+      </li>
+    </ul>
+    <div class="small-text small-padding">GitHub Tools</div>
+    <ul class="list">
+      <li>
+        <a href="#github-favorites" class="nav-link">
+          <i aria-hidden="true">grade</i>
+          <div>
+            <div>Favorites</div>
+            <div class="small-text">Quick access to starred repos</div>
+          </div>
+        </a>
+      </li>
+      <li>
+        <a href="#repo-mapper" class="nav-link">
+          <i aria-hidden="true">terminal</i>
+          <div>
+            <div>Repo Mapper</div>
+            <div class="small-text">Generate directory trees</div>
+          </div>
+        </a>
+      </li>
+      <li>
+        <a href="#release-stats" class="nav-link">
+          <i aria-hidden="true">bar_chart</i>
+          <div>
+            <div>Release Stats</div>
+            <div class="small-text">Visualize download counts</div>
+          </div>
+        </a>
+      </li>
+      <li>
+        <a href="#git-patch" class="nav-link">
+          <i aria-hidden="true">receipt_long</i>
+          <div>
+            <div>Git Patch</div>
+            <div class="small-text">Extract commit patches</div>
+          </div>
+        </a>
+      </li>
+    </ul>
+  </div>
   <div class="drawer-footer">
     <div class="theme-toggle-title">
       Theme
