@@ -92,7 +92,9 @@ import './core/ui/legacyBridge.js';
  */
 import './app/workspaces/app-toolkit/ui/index.js';
 import './app/workspaces/app-toolkit/ui/AppToolkitRoute.js';
-import './app/workspaces/faq/ui/FaqRoute.js';
+// Change Rationale: The FAQ workspace module moved into the canonical Help feature tree,
+// so the bootstrapping import now points at HelpActivity to keep the entry wiring intact.
+import './app/help/ui/HelpActivity.js';
 import './app/workspaces/english-with-lidia/ui/EnglishWithLidiaRoute.js';
 import './app/workspaces/android-studio-tutorials/ui/AndroidStudioTutorialsRoute.js';
 

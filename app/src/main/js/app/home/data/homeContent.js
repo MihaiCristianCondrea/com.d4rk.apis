@@ -5,13 +5,15 @@ import { Workspaces, getWorkspaceAnchor } from '../../../core/domain/workspaces/
  * - Workspace tiles previously relied on ad-hoc IDs and hrefs that drifted from the canonical API slugs.
  * - Wiring the cards to the centralized workspace registry aligns UI routes, folder names, and API paths.
  * - This reduces mapping glue and keeps navigation predictable for the Material 3 home grid.
+ * - Documentation references now point to `HomeRoute.js` to reflect the canonical feature structure
+ *   after removing compatibility barrels.
  */
 
 /**
  * Configuration object for a workspace card shown on the home page.
  *
  * These entries drive the "API workspace" section and are rendered by
- * `homePage.js` into clickable tiles that route into specific builders.
+ * `HomeRoute.js` into clickable tiles that route into specific builders.
  *
  * @typedef {Object} WorkspaceCardConfig
  * @property {string} id Stable identifier for the workspace (used for analytics or DOM hooks).
@@ -28,7 +30,7 @@ import { Workspaces, getWorkspaceAnchor } from '../../../core/domain/workspaces/
  *
  * Each entry defines the content for a single "API workspace" tile. The
  * cards are consumed by `initHomePage` / `renderWorkspaceGrid` in
- * `homePage.js`, which builds the actual DOM using this configuration.
+ * `HomeRoute.js`, which builds the actual DOM using this configuration.
  *
  * @type {WorkspaceCardConfig[]}
  */
@@ -94,8 +96,12 @@ export const workspaceCards = [
 /**
  * Configuration object for a GitHub tool card shown on the home page.
  *
+ * Change Rationale: Home content docs now reference the canonical `HomeRoute.js`
+ * module after removing compatibility barrels, keeping documentation aligned with
+ * the feature structure.
+ *
  * These entries drive the "GitHub tools" section and are rendered by
- * `homePage.js` into feature cards that navigate into the GitHub tools
+ * `HomeRoute.js` into feature cards that navigate into the GitHub tools
  * surfaces (Repo Mapper, Release Stats, Git Patch).
  *
  * @typedef {Object} GithubToolConfig
@@ -111,7 +117,7 @@ export const workspaceCards = [
  * GitHub tools configuration rendered on the home page.
  *
  * Each entry defines one GitHub-focused utility surfaced in the UI. The
- * cards are consumed by `renderGithubToolsGrid` in `homePage.js`.
+ * cards are consumed by `renderGithubToolsGrid` in `HomeRoute.js`.
  *
  * @type {GithubToolConfig[]}
  */
