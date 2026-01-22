@@ -50,6 +50,13 @@
   z-index: 1200;
   display: flex;
   flex-direction: column;
+  /* Change Rationale: The drawer now pulls its surface and text colors from the
+   * Android green theme tokens so it stays aligned with light/dark palettes and
+   * BeerCSS surfaces.
+   */
+  background-color: var(--app-drawer-bg-color);
+  color: var(--app-text-color);
+  border-right: 1px solid var(--app-border-color);
   transform: translateX(-100%);
   transition: transform 300ms ease;
   pointer-events: none;
@@ -66,7 +73,10 @@
   position: fixed;
   inset: 0;
   min-height: 100dvh;
-  background-color: rgba(0, 0, 0, 0.32);
+  /* Change Rationale: Use the shared overlay token so dimming matches the rest of
+   * the theme (and can be tuned centrally).
+   */
+  background-color: var(--app-overlay-bg-color);
   z-index: 1180;
   opacity: 0;
   visibility: hidden;
@@ -94,6 +104,23 @@
 /* Change Rationale: Drawer content padding removed so list items align to Beer CSS
  * default spacing, preventing the nested lists from drifting horizontally.
  */
+
+/* Change Rationale: Navigation links now explicitly inherit theme colors so active,
+ * hover, and focus states remain legible with the Android green palette.
+ */
+:root nav.navigation-drawer .nav-link {
+  color: var(--app-text-color);
+  border-radius: 16px;
+}
+
+:root nav.navigation-drawer .nav-link.active {
+  background: color-mix(in srgb, var(--md-sys-color-primary) 18%, transparent);
+  color: var(--md-sys-color-primary);
+}
+
+:root nav.navigation-drawer .nav-link:hover {
+  background: color-mix(in srgb, var(--md-sys-color-primary) 12%, transparent);
+}
 
 .drawer-footer {
   flex-direction: column;
