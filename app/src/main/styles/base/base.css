@@ -19,11 +19,13 @@ body {
 }
 
 main {
-  /* Keep primary content scrollable so navigation overlays can't trap the page. */
+  /* Change Rationale: The main container previously created a nested scroll region,
+   * which clipped the end of the home tool grid on taller pages. Letting the body
+   * handle scrolling keeps the full section visible while preserving drawer locking.
+   */
   flex: 1 1 auto;
-  min-height: 100vh;
-  overflow-y: auto;
-  overscroll-behavior: contain;
+  min-height: 0;
+  overflow-y: visible;
 }
 
 * {

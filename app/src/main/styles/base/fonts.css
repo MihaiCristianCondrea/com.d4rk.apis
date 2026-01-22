@@ -1,14 +1,21 @@
 /* Change Rationale: The app previously relied on Google Sans Regular from a third-party CDN with limited weights, which increased layout shifts and strayed from Material 3’s variable typography guidance. Importing Google Sans Flex and Google Sans Code directly from Google Fonts provides first-party hosting, full variable axes, and smoother optical sizing that keeps the UI consistent with Material Design 3. */
 @import url('https://fonts.googleapis.com/css2?family=Google+Sans+Code:ital,wght@0,300..800;1,300..800&family=Google+Sans+Flex:opsz,wght@6..144,1..1000&display=swap');
 
+/* Change Rationale: The project should consistently use Google Sans Flex, so the fallback
+ * stack removes Poppins to prevent unintended typography shifts if the primary font fails.
+ * Keeping Google Sans as the fallback retains a closely aligned Material 3 typeface.
+ */
 :root {
-  --app-font-family-primary: 'Google Sans Flex', 'Google Sans', 'Poppins', sans-serif;
+  --app-font-family-primary: 'Google Sans Flex', 'Google Sans', sans-serif;
   --app-font-family-code: 'Google Sans Code', 'SFMono-Regular', 'Consolas', 'Liberation Mono',
     monospace;
 }
 
+/* Change Rationale: Align the helper class with the primary font stack so any
+ * component opting into `.google-sans-flex-default` stays consistent.
+ */
 .google-sans-flex-default {
-  font-family: 'Google Sans Flex', 'Google Sans', 'Poppins', sans-serif;
+  font-family: 'Google Sans Flex', 'Google Sans', sans-serif;
   font-optical-sizing: auto;
   font-weight: 450;
   font-style: normal;

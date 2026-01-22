@@ -108,7 +108,11 @@
   background: var(--md-sys-color-surface);
   border-radius: 999px;
   padding: 0.35rem 0.9rem;
-  box-shadow: inset 0 0 0 1px rgba(88, 101, 242, 0.18);
+  /* Change Rationale: Align the toolbar status outline with the Android green
+   * palette so workspace controls stay on brand.
+   */
+  box-shadow: inset 0 0 0 1px
+    color-mix(in srgb, var(--md-sys-color-primary) 18%, transparent);
 }
 
 .toolbar-status-label {

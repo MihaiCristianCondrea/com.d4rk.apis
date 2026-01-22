@@ -56,7 +56,10 @@
   --app-nested-list-bg: rgba(0, 0, 0, 0.02);
   --app-theme-button-selected-bg: rgba(61, 220, 132, 0.15);
   --app-footer-text-color: #5f6368;
-  --app-link-color: #4285f4;
+  /* Change Rationale: Link color now derives from the Android green primary token so
+   * links remain consistent with the updated palette across light/dark themes.
+   */
+  --app-link-color: var(--md-sys-color-primary);
   --app-dialog-bg-color: var(--md-sys-color-surface-container-low);
   --app-top-app-bar-height: calc(56px + var(--safe-area-inset-top));
   --app-motion-duration-short: 220ms;
@@ -197,6 +200,9 @@ html.dark {
   --app-nested-list-bg: rgba(255, 255, 255, 0.03);
   --app-theme-button-selected-bg: rgba(150, 222, 161, 0.2);
   --app-footer-text-color: #a0a0a0;
-  --app-link-color: #8ab4f8;
+  /* Change Rationale: Dark theme links now inherit the Android green primary token,
+   * keeping interactive text consistent with the rest of the palette.
+   */
+  --app-link-color: var(--md-sys-color-primary);
   --app-dialog-bg-color: var(--md-sys-color-surface-container);
 }
