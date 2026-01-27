@@ -50,7 +50,7 @@ hooks intact.
 
 | Old path | New path | Feature scope |
 | --- | --- | --- |
-| app/src/main/res/layout/index.html | app/src/main/res/layout/home/index.html | home |
+| app/src/main/res/layout/index.html | app/src/main/res/layout/home/home.html | home |
 | app/src/main/res/layout/repo-mapper.html | app/src/main/res/layout/github-tools/repo-mapper.html | github-tools |
 | app/src/main/res/layout/release-stats.html | app/src/main/res/layout/github-tools/release-stats.html | github-tools |
 | app/src/main/res/layout/git-patch.html | app/src/main/res/layout/github-tools/git-patch.html | github-tools |

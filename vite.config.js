@@ -140,7 +140,9 @@ function staticPagesPlugin() {
         fs.cpSync(drawableDir, resolve(__dirname, outDir, 'drawable'), { recursive: true });
       }
 
-      const builtIndex = resolve(__dirname, outDir, 'app/src/main/res/layout/home/index.html');
+      // Change Rationale: The home layout template now uses a descriptive file name instead of
+      // index.html, so the build step must locate the updated path for the main shell.
+      const builtIndex = resolve(__dirname, outDir, 'app/src/main/res/layout/home/home.html');
       if (fs.existsSync(builtIndex)) {
         const builtHtml = fs.readFileSync(builtIndex, 'utf-8');
         const rewrittenHtml = builtHtml
@@ -169,7 +171,9 @@ export default defineConfig({
     emptyOutDir: true,
     rollupOptions: {
       input: {
-        main: resolve(__dirname, 'app/src/main/res/layout/home/index.html'),
+        // Change Rationale: Align the Vite entry point with the renamed home layout template
+        // so the main shell continues to compile from the canonical home screen file.
+        main: resolve(__dirname, 'app/src/main/res/layout/home/home.html'),
       },
     },
   },

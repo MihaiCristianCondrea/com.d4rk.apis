@@ -4,7 +4,9 @@
  * existing route table and metadata.
  */
 import { resolveAssetUrl } from '../../data/config/appConfig.js';
-import { initFavoritesPage, initGitPatch, initReleaseStats, initRepoMapper } from '@/app/github-tools/domain/githubTools.js';
+// Change Rationale: GitHub tooling now lives under the `app/githubtools/core` domain path,
+// so router imports must use the canonical location to avoid Vite resolution errors.
+import { initFavoritesPage, initGitPatch, initReleaseStats, initRepoMapper } from '@/app/githubtools/core/domain/githubTools.js';
 
 function layoutPath(filename) {
     return resolveAssetUrl(`layout/${filename}`);

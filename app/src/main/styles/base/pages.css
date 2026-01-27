@@ -234,6 +234,10 @@
 .tool-card p {
   margin: 0;
   color: var(--app-secondary-text-color);
+  /* Change Rationale: Reduce line-height so stacked text rows on the home screen
+   * feel closer to Material 3 list density, matching the reference layout.
+   */
+  line-height: 1.35;
 }
 
 .tool-card .card-footer {
@@ -554,6 +558,10 @@
 .workspace-tile-body {
   margin: 0;
   color: var(--app-secondary-text-color);
+  /* Change Rationale: Tighten the home card body copy so multi-line descriptions
+   * read more like native list text blocks and avoid excessive vertical gaps.
+   */
+  line-height: 1.35;
 }
 
 .workspace-tile-list {
@@ -562,6 +570,7 @@
   color: var(--app-secondary-text-color);
   display: grid;
   gap: 0.4rem;
+  line-height: 1.35;
 }
 
 .workspace-tile-footer {

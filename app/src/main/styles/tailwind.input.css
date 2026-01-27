@@ -3,7 +3,9 @@
 @config "../../tailwind.config.js";
 /* Change Rationale: Point Tailwind content source at the relocated home layout to preserve
    the existing utility extraction after moving templates under layout/home. */
-@source "../../res/layout/home/index.html";
+/* Change Rationale: The home layout now uses a descriptive file name, so update the
+   Tailwind content source to keep utility extraction aligned with the renamed template. */
+@source "../../res/layout/home/home.html";
 @source "../../res/layout/**/*.{html,js}";
 @source "../**/*.js";
 @source "../../../assets/**/*.{html,js,css}";

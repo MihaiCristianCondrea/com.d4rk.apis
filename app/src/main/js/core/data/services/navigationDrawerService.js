@@ -120,7 +120,12 @@ export class NavigationDrawerController {
     }
 
     this.wireButtons();
-    this.syncDrawerState(Boolean(this.navDrawer.classList?.contains('open')));
+    // Change Rationale: The drawer is now a dialog element, so its open state
+    // is tracked via the `open` attribute rather than a custom class alone.
+    const isDrawerOpen = this.isDialogDrawer()
+      ? this.navDrawer.open
+      : Boolean(this.navDrawer.classList?.contains('open'));
+    this.syncDrawerState(isDrawerOpen);
   }
 
   /**
@@ -179,6 +184,15 @@ export class NavigationDrawerController {
     if (!this.navDrawer) {
       return;
     }
+    // Change Rationale: Use the native dialog API when available so the drawer
+    // behaves like a modal surface, matching BeerCSS's left-dialog pattern.
+    if (this.isDialogDrawer() && !this.navDrawer.open) {
+      if (typeof this.navDrawer.showModal === 'function') {
+        this.navDrawer.showModal();
+      } else {
+        this.navDrawer.setAttribute('open', '');
+      }
+    }
     this.navDrawer.classList.add('open');
     this.syncDrawerState(true);
     this.focusFirstNavItem();
@@ -195,6 +209,15 @@ export class NavigationDrawerController {
   close() {
     if (!this.navDrawer) {
       return;
+    }
+    // Change Rationale: Closing the dialog explicitly ensures the native backdrop
+    // is dismissed alongside the custom overlay when the drawer hides.
+    if (this.isDialogDrawer() && this.navDrawer.open) {
+      if (typeof this.navDrawer.close === 'function') {
+        this.navDrawer.close();
+      } else {
+        this.navDrawer.removeAttribute('open');
+      }
     }
     this.navDrawer.classList.remove('open');
     this.syncDrawerState(false);
@@ -360,6 +383,16 @@ export class NavigationDrawerController {
     if (!hasDrawer) {
       return;
     }
+  }
+
+  /**
+   * Determines whether the navigation drawer element is a dialog.
+   *
+   * @returns {boolean} True when the drawer is an HTMLDialogElement.
+   */
+  isDialogDrawer() {
+    return typeof HTMLDialogElement !== 'undefined'
+      && this.navDrawer instanceof HTMLDialogElement;
   }
 
   /**
