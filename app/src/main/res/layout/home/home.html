@@ -40,119 +40,113 @@
   <link rel="modulepreload" href="../../../js/main.js">
 </head>
 <body class="bg-surface-container-lowest">
-<!-- Change Rationale: Apply BeerCSS overlay styling so the drawer backdrop inherits
-     the framework's default dimming treatment without altering the open/close logic. -->
-<div id="drawerOverlay" class="drawer-overlay overlay" aria-hidden="true"></div>
+<!-- Change Rationale: Apply BeerCSS modal overlay helpers so the drawer backdrop matches
+     the native dialog dimming treatment and supports the left-surface drawer animation. -->
+<div id="drawerOverlay" class="drawer-overlay overlay blur" aria-hidden="true"></div>
 <div id="pageLoadingOverlay" class="page-loading-overlay"></div>
-<!-- Change Rationale: The drawer layout now uses BeerCSS list helpers inside a dedicated
-     drawer-content wrapper. This keeps grouped navigation items aligned to a shared list
-     rhythm, lets the drawer content flex naturally above the footer, and matches BeerCSS
-     spacing defaults without relying on custom padding overrides. -->
-<nav id="navDrawer" class="navigation-drawer surface border m l max left" aria-label="Main navigation" tabindex="-1">
-  <header class="drawer-header row">
-    <button id="closeDrawerButton" class="extra circle transparent" aria-label="Close navigation">
-      <i aria-hidden="true">menu_open</i>
-    </button>
-    <!-- Change Rationale: The drawer brand action previously mixed conflicting shape helpers
-         (`square` + `round`). Keeping the extended button rounded aligns it with BeerCSS
-         button geometry and improves visual consistency across navigation surfaces. -->
-    <a href="#home" class="button extend round" aria-label="Go to API Console home">
-      <i aria-hidden="true">hub</i>
-      <span>API Console</span>
-    </a>
+<!-- Change Rationale: The drawer now uses BeerCSS's left modal dialog pattern so it slides
+     in natively from the edge, matching the provided drawer reference and Material 3 guidance. -->
+<dialog id="navDrawer" class="navigation-drawer left" aria-label="Main navigation">
+  <header class="drawer-header">
+    <nav>
+      <h6 class="max">Menu</h6>
+      <button id="closeDrawerButton" class="transparent circle" aria-label="Close navigation">
+        <i aria-hidden="true">close</i>
+      </button>
+    </nav>
   </header>
   <div class="drawer-content">
-    <ul class="list">
-      <li>
+    <ul class="list drawer-list">
+      <li class="wave round">
         <a href="#home" id="homeLink" class="nav-link">
           <i aria-hidden="true">home</i>
-          <div>Home</div>
+          <span class="max">Home</span>
         </a>
       </li>
     </ul>
-    <div class="small-text small-padding">API Workspaces</div>
-    <ul class="list">
-      <li>
+    <div class="drawer-divider"></div>
+    <div class="drawer-section-title">API Workspaces</div>
+    <ul class="list drawer-list">
+      <li class="wave round">
         <a href="#app-toolkit-api" class="nav-link">
           <i aria-hidden="true">build</i>
-          <div>
-            <div>App Toolkit</div>
-            <div class="small-text">Manage Android utilities</div>
-          </div>
+          <span class="drawer-item-text">
+            <span class="drawer-item-title">App Toolkit</span>
+            <span class="drawer-item-subtitle">Manage Android utilities</span>
+          </span>
         </a>
       </li>
-      <li>
+      <li class="wave round">
         <a href="#faq-api" class="nav-link">
-          <i aria-hidden="true">help_center</i>
-          <div>
-            <div>FAQ API</div>
-            <div class="small-text">Ship policy &amp; support answers</div>
-          </div>
+          <i aria-hidden="true">help</i>
+          <span class="drawer-item-text">
+            <span class="drawer-item-title">FAQ &amp; Support</span>
+            <span class="drawer-item-subtitle">Publish policy answers</span>
+          </span>
         </a>
       </li>
-      <li>
+      <li class="wave round">
         <a href="#english-with-lidia-api" class="nav-link">
           <i aria-hidden="true">menu_book</i>
-          <div>
-            <div>English with Lidia</div>
-            <div class="small-text">Build lessons &amp; home feeds</div>
-          </div>
+          <span class="drawer-item-text">
+            <span class="drawer-item-title">English with Lidia</span>
+            <span class="drawer-item-subtitle">Build lessons &amp; home feeds</span>
+          </span>
         </a>
       </li>
-      <li>
+      <li class="wave round">
         <a href="#android-studio-tutorials-api" class="nav-link">
           <i aria-hidden="true">school</i>
-          <div>
-            <div>Android Studio Tutorials</div>
-            <div class="small-text">Compose home &amp; lesson flows</div>
-          </div>
+          <span class="drawer-item-text">
+            <span class="drawer-item-title">Android Studio Tutorials</span>
+            <span class="drawer-item-subtitle">Compose lesson flows</span>
+          </span>
         </a>
       </li>
     </ul>
-    <div class="small-text small-padding">GitHub Tools</div>
-    <ul class="list">
-      <li>
+    <div class="drawer-divider"></div>
+    <div class="drawer-section-title">GitHub Tools</div>
+    <ul class="list drawer-list">
+      <li class="wave round">
         <a href="#github-favorites" class="nav-link">
           <i aria-hidden="true">grade</i>
-          <div>
-            <div>Favorites</div>
-            <div class="small-text">Quick access to starred repos</div>
-          </div>
+          <span class="drawer-item-text">
+            <span class="drawer-item-title">Favorites</span>
+            <span class="drawer-item-subtitle">Quick access to starred repos</span>
+          </span>
         </a>
       </li>
-      <li>
+      <li class="wave round">
         <a href="#repo-mapper" class="nav-link">
           <i aria-hidden="true">terminal</i>
-          <div>
-            <div>Repo Mapper</div>
-            <div class="small-text">Generate directory trees</div>
-          </div>
+          <span class="drawer-item-text">
+            <span class="drawer-item-title">Repo Mapper</span>
+            <span class="drawer-item-subtitle">Generate directory trees</span>
+          </span>
         </a>
       </li>
-      <li>
+      <li class="wave round">
         <a href="#release-stats" class="nav-link">
           <i aria-hidden="true">bar_chart</i>
-          <div>
-            <div>Release Stats</div>
-            <div class="small-text">Visualize download counts</div>
-          </div>
+          <span class="drawer-item-text">
+            <span class="drawer-item-title">Release Stats</span>
+            <span class="drawer-item-subtitle">Visualize download counts</span>
+          </span>
         </a>
       </li>
-      <li>
+      <li class="wave round">
         <a href="#git-patch" class="nav-link">
           <i aria-hidden="true">receipt_long</i>
-          <div>
-            <div>Git Patch</div>
-            <div class="small-text">Extract commit patches</div>
-          </div>
+          <span class="drawer-item-text">
+            <span class="drawer-item-title">Git Patch</span>
+            <span class="drawer-item-subtitle">Extract commit patches</span>
+          </span>
         </a>
       </li>
     </ul>
   </div>
   <div class="drawer-footer">
-    <div class="theme-toggle-title">
-      Theme
-    </div>
+    <div class="theme-toggle-title">Theme</div>
     <div class="theme-button-container">
       <button id="lightThemeButton" data-theme="light" aria-label="Use light theme" aria-pressed="false" class="transparent circle">
         <i class="material-symbols-outlined" aria-hidden="true">light_mode</i>
@@ -170,13 +164,11 @@
       <a href="https://mihaicristiancondrea.github.io/profile/#code-of-conduct" target="_blank" rel="noreferrer">Code of Conduct</a>
     </div>
   </div>
-</nav>
-<!-- Change Rationale: The top app bar previously placed controls directly in the header,
-     which bypassed BeerCSS's navigation layout and led to uneven alignment between the
-     menu icon and title. Wrapping the controls in a BeerCSS nav row and promoting the
-     headline to an h5 with the max helper keeps spacing consistent and follows Material
-     3's app bar hierarchy for clear, balanced touch targets. -->
-<header id="topAppBar" class="app-top-app-bar" data-drawer-inert-target="">
+</dialog>
+<!-- Change Rationale: The top app bar now uses BeerCSS's filled header style so it matches
+     native Material 3 surfaces and can transition to a higher-emphasis container on scroll,
+     while keeping the nav row alignment consistent for touch targets. -->
+<header id="topAppBar" class="app-top-app-bar fill" data-drawer-inert-target="">
   <nav>
     <button id="menuButton" class="transparent circle" aria-label="Open navigation menu">
       <i aria-hidden="true">menu</i>

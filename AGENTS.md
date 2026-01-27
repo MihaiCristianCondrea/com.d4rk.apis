@@ -1,12 +1,15 @@
 # AGENTS.md
 
 ## 1. Project Architecture & Boundary Rules
+<!-- Change Rationale: Add an explicit architecture check requirement so every task ends with
+     a quick validation that the Android-style layering remains intact and consistent. -->
 - **Core Data Source:** The source of truth for all API data is located in the `api/` directory.
 - **Archived Directories:** The root-level folders named `Android Studio Tutorials`, `App Toolkit`, and `English with Lidia` are legacy/archived. **Do not read or edit files in these root folders.** Always navigate to `api/<app_name>/v1/`.
 - **Protected Files:**
   - **README.md:** This file is for marketing and human-written context only. **Do not modify the root README.md.**
   - **LICENSE:** Do not modify.
 - **Android-style layout:** The repository mirrors an Android project structure (e.g., `app/src/main/js`, `app/src/main/res`). When adding assets or routes, follow this app-style organization to keep parity between web and Android paradigms.
+- **Architecture check:** At the end of every task, confirm the `data/domain/ui` split, router ownership, Material 3 alignment, and documentation consistency remain intact.
 
 ## 2. Documentation Strategy
 The agent is responsible for maintaining technical accuracy in the `api/<app_name>/docs/` directories.

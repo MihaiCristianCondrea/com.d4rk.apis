@@ -14,7 +14,13 @@
   top: 0;
   z-index: 1000;
   width: 100%;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  /* Change Rationale: Provide a filled surface so the app bar is never transparent and
+   * smoothly transitions to a higher-emphasis container when scrolling, matching Material 3.
+   */
+  background-color: var(--md-sys-color-surface);
+  color: var(--app-text-color);
+  border-bottom: 1px solid color-mix(in srgb, var(--md-sys-color-outline) 18%, transparent);
+  transition: background-color 200ms ease, box-shadow 200ms ease, border-color 200ms ease;
 }
 
 .app-top-app-bar nav {
@@ -30,43 +36,38 @@
 }
 
 .app-top-app-bar.scrolled {
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  background-color: var(--md-sys-color-surface-container);
+  border-bottom-color: transparent;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
 }
 
 /* --- Navigation Drawer --- */
-/* Change Rationale: Beer CSS registers a `.navigation-drawer` helper that pins
- * the element in the normal flow (position: sticky) and neutralizes transforms.
- * Increasing selector specificity and explicitly hiding the drawer by default
- * keeps it off-canvas until the controller applies `.open`, matching the router
- * lifecycle and preventing overlay-less nav bleed on initial load.
+/* Change Rationale: Switch drawer styling to target the BeerCSS dialog surface and
+ * let the framework handle the left-edge modal animation while we keep theme tokens
+ * aligned with the Android green palette.
  */
-:root nav.navigation-drawer {
-  position: fixed;
-  top: 0;
-  left: 0;
-  inline-size: var(--app-drawer-inline-size);
+:root dialog.navigation-drawer {
+  inline-size: min(var(--app-drawer-inline-size), 100vw);
   max-width: 100vw;
   height: 100%;
+  margin: 0;
+  padding: 0;
+  border: none;
+  border-radius: 0;
   z-index: 1200;
   display: flex;
   flex-direction: column;
-  /* Change Rationale: The drawer now pulls its surface and text colors from the
-   * Android green theme tokens so it stays aligned with light/dark palettes and
-   * BeerCSS surfaces.
-   */
   background-color: var(--app-drawer-bg-color);
   color: var(--app-text-color);
   border-right: 1px solid var(--app-border-color);
-  transform: translateX(-100%);
-  transition: transform 300ms ease;
-  pointer-events: none;
-  visibility: hidden;
+  overflow: hidden;
 }
 
-:root nav.navigation-drawer.open {
-  transform: translateX(0);
-  pointer-events: auto;
-  visibility: visible;
+/* Change Rationale: Clear the native dialog backdrop so the custom overlay
+ * handles dimming and blur consistently with the rest of the app shell.
+ */
+:root dialog.navigation-drawer::backdrop {
+  background: transparent;
 }
 
 .drawer-overlay {
@@ -97,6 +98,16 @@
   gap: 12px;
 }
 
+/* Change Rationale: Align the drawer header nav row so the title and close
+ * button share a consistent baseline and match the modal drawer reference.
+ */
+.drawer-header nav {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+}
+
 .drawer-content {
   flex-grow: 1;
   overflow-y: auto;
@@ -108,18 +119,64 @@
 /* Change Rationale: Navigation links now explicitly inherit theme colors so active,
  * hover, and focus states remain legible with the Android green palette.
  */
-:root nav.navigation-drawer .nav-link {
-  color: var(--app-text-color);
+/* Change Rationale: Drawer entries now use the BeerCSS list rhythm from the
+ * modal dialog example, so ensure link rows align icons and labels cleanly.
+ */
+:root dialog.navigation-drawer .drawer-list {
+  padding: 0 12px;
+  margin: 0;
+}
+
+/* Change Rationale: Navigation links now explicitly inherit theme colors so active,
+ * hover, and focus states remain legible with the Android green palette.
+ */
+:root dialog.navigation-drawer .nav-link {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
+  padding: 0.55rem 0.85rem;
+  text-decoration: none;
   border-radius: 16px;
 }
 
-:root nav.navigation-drawer .nav-link.active {
+:root dialog.navigation-drawer .nav-link.active {
   background: color-mix(in srgb, var(--md-sys-color-primary) 18%, transparent);
   color: var(--md-sys-color-primary);
 }
 
-:root nav.navigation-drawer .nav-link:hover {
+:root dialog.navigation-drawer .nav-link:hover {
   background: color-mix(in srgb, var(--md-sys-color-primary) 12%, transparent);
+}
+
+:root dialog.navigation-drawer .drawer-section-title {
+  padding: 0 20px;
+  font-size: 0.9rem;
+  color: var(--app-secondary-text-color);
+}
+
+:root dialog.navigation-drawer .drawer-divider {
+  margin: 8px 16px;
+  height: 1px;
+  background: color-mix(in srgb, var(--md-sys-color-outline) 30%, transparent);
+}
+
+/* Change Rationale: Drawer items now include a title + subtitle stack to mirror
+ * the reference drawer layout without adding extra vertical padding.
+ */
+:root dialog.navigation-drawer .drawer-item-text {
+  display: grid;
+  gap: 0.15rem;
+  line-height: 1.2;
+}
+
+:root dialog.navigation-drawer .drawer-item-title {
+  font-weight: 500;
+}
+
+:root dialog.navigation-drawer .drawer-item-subtitle {
+  font-size: 0.75rem;
+  color: var(--app-secondary-text-color);
 }
 
 .drawer-footer {

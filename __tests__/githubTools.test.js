@@ -7,7 +7,9 @@ const {
   parseCommitInput,
   renderAsciiTree,
   renderPathList,
-} = require('../app/src/main/js/app/github-tools/domain/githubTools.js');
+// Change Rationale: GitHub tools live under the `app/githubtools/core` feature namespace,
+// so tests should import from the canonical path to stay aligned with the refactor.
+} = require('../app/src/main/js/app/githubtools/core/domain/githubTools.js');
 
 describe('normalizeRepoSlug', () => {
   test('extracts owner and repo from full URL', () => {

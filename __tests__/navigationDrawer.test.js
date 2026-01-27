@@ -29,12 +29,15 @@ const { initNavigationDrawer } = require('../app/src/main/js/core/data/services/
  * @returns {void}
  */
 function createDrawerMarkup() {
+  /* Change Rationale: The drawer markup now uses a dialog surface to match the BeerCSS
+   * left-modal pattern, so the test DOM needs to mirror the updated element type.
+   */
   document.body.innerHTML = `
     <header data-drawer-inert-target id="header">
       <button id="menuButton" type="button">Menu</button>
     </header>
     <div id="drawerOverlay" aria-hidden="true"></div>
-    <nav id="navDrawer" class="navigation-drawer" tabindex="-1">
+    <dialog id="navDrawer" class="navigation-drawer">
       <button id="closeDrawerButton" type="button">Close</button>
       <nav>
         <ul class="list">
@@ -49,12 +52,22 @@ function createDrawerMarkup() {
         <summary id="androidAppsToggle" aria-controls="androidAppsContent" aria-expanded="true">Apps</summary>
         <div id="androidAppsContent" class="open" aria-hidden="false">Apps section</div>
       </details>
-    </nav>
+    </dialog>
     <main data-drawer-inert-target id="mainContent">Main content</main>
     <footer data-drawer-inert-target id="footerContent">Footer content</footer>
   `;
 
   const navDrawerElement = document.getElementById('navDrawer');
+  if (typeof HTMLDialogElement === 'undefined') {
+    global.HTMLDialogElement = navDrawerElement.constructor;
+  }
+  navDrawerElement.open = false;
+  navDrawerElement.showModal = jest.fn(() => {
+    navDrawerElement.open = true;
+  });
+  navDrawerElement.close = jest.fn(() => {
+    navDrawerElement.open = false;
+  });
   const firstNavItem = navDrawerElement.querySelector('.nav-link[href]');
   firstNavItem.focus = jest.fn();
 

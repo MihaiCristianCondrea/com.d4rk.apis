@@ -92,15 +92,16 @@ import './core/ui/legacyBridge.js';
  */
 import './app/workspaces/app-toolkit/ui/index.js';
 import './app/workspaces/app-toolkit/ui/AppToolkitRoute.js';
-// Change Rationale: The FAQ workspace module moved into the canonical Help feature tree,
-// so the bootstrapping import now points at HelpActivity to keep the entry wiring intact.
-import './app/help/ui/HelpActivity.js';
+// Change Rationale: The unused Help feature codebase has been removed, so its bootstrapping
+// import is no longer required. FAQ tooling now relies solely on the workspace routes.
 import './app/workspaces/english-with-lidia/ui/EnglishWithLidiaRoute.js';
 import './app/workspaces/android-studio-tutorials/ui/AndroidStudioTutorialsRoute.js';
 
-import './app/github-tools/ui/routes/RepoMapperRoute.js';
-import './app/github-tools/ui/routes/ReleaseStatsRoute.js';
-import './app/github-tools/ui/routes/GitPatchRoute.js';
+// Change Rationale: GitHub tool entrypoints now resolve from the `app/githubtools` feature
+// tree to match the flattened Android-style layout and avoid missing-module errors in Vite.
+import './app/githubtools/repomapper/domain/RepoMapperRoute.js';
+import './app/githubtools/core/ui/routes/ReleaseStatsRoute.js';
+import './app/githubtools/gitpatch/domain/GitPatchRoute.js';
 import './app/home/ui/HomeRoute.js';
 
 import './core/ui/appShell.js';
