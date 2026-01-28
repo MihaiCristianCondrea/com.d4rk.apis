@@ -35,12 +35,23 @@
   --md-sys-color-surface-container: #ecefef;
   --md-sys-color-surface-container-high: #f2f5f4;
   --md-sys-color-surface-container-highest: #e1e4e4;
+  /* Change Rationale: App-level surface tokens now sit above BeerCSS variables
+   * so shell components can reference stable semantic colors without hardcoding
+   * accent palettes (e.g. the previous purple drift).
+   */
+  --app-surface: var(--md-sys-color-surface);
+  --app-surface-container: var(--md-sys-color-surface-container);
+  --app-surface-container-high: var(--md-sys-color-surface-container-high);
+  --app-outline: var(--md-sys-color-outline);
+  --app-on-surface: var(--md-sys-color-on-surface);
+  --app-primary: var(--md-sys-color-primary);
+  --app-on-primary: var(--md-sys-color-on-primary);
   /* Change Rationale: BeerCSS surfaces now reference the Material 3 tokens to
    * eliminate the default purple palette while keeping the theme anchored to
    * the same system colors used by Material Web Components.
    */
-  --primary: var(--md-sys-color-primary);
-  --on-primary: var(--md-sys-color-on-primary);
+  --primary: var(--app-primary);
+  --on-primary: var(--app-on-primary);
   --primary-container: var(--md-sys-color-primary-container);
   --on-primary-container: var(--md-sys-color-on-primary-container);
   --secondary: var(--md-sys-color-secondary);
@@ -57,11 +68,11 @@
   --on-error-container: var(--md-sys-color-on-error-container);
   --background: var(--md-sys-color-background);
   --on-background: var(--md-sys-color-on-background);
-  --surface: var(--md-sys-color-surface);
-  --on-surface: var(--md-sys-color-on-surface);
+  --surface: var(--app-surface);
+  --on-surface: var(--app-on-surface);
   --surface-variant: var(--md-sys-color-surface-variant);
   --on-surface-variant: var(--md-sys-color-on-surface-variant);
-  --outline: var(--md-sys-color-outline);
+  --outline: var(--app-outline);
   --outline-variant: var(--md-sys-color-outline-variant);
   --shadow: var(--md-sys-color-shadow);
   --scrim: var(--md-sys-color-scrim);
@@ -72,14 +83,14 @@
   --surface-bright: var(--md-sys-color-surface-bright);
   --surface-container-lowest: var(--md-sys-color-surface-container-lowest);
   --surface-container-low: var(--md-sys-color-surface-container-low);
-  --surface-container: var(--md-sys-color-surface-container);
-  --surface-container-high: var(--md-sys-color-surface-container-high);
+  --surface-container: var(--app-surface-container);
+  --surface-container-high: var(--app-surface-container-high);
   --surface-container-highest: var(--md-sys-color-surface-container-highest);
-  --app-bg-color: var(--md-sys-color-surface);
-  --app-text-color: var(--md-sys-color-on-surface);
+  --app-bg-color: var(--app-surface);
+  --app-text-color: var(--app-on-surface);
   --app-secondary-text-color: var(--md-sys-color-on-surface-variant);
-  --app-card-bg-color: var(--md-sys-color-surface-container);
-  --app-outlined-card-bg-color: var(--md-sys-color-surface-container);
+  --app-card-bg-color: var(--app-surface-container);
+  --app-outlined-card-bg-color: var(--app-surface-container);
   --app-section-title-color: var(--md-sys-color-on-background);
   --app-border-color: var(--md-sys-color-outline-variant);
   --app-screenshot-radius: 20px;

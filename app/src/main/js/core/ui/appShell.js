@@ -13,11 +13,10 @@ import {
 } from './utils/domUtils.js';
 import { PROFILE_AVATAR_FALLBACK_SRC } from '../domain/constants.js';
 import { initThemeControls } from '@/core/data/services/themeService.js';
-import { initNavigationDrawer } from '@/core/data/services/navigationDrawerService.js';
 import { initRouter, loadPageContent, normalizePageId } from './router/index.js';
 import RouterRoutes from './router/routes.js';
 import { registerGlobalUtilities, registerCompatibilityGlobals } from './globals.js';
-import { initNavigationState } from './components/navigationState.js';
+import { initAppNavigation } from './components/navigation/appNavigation.js';
 
 let pageContentAreaEl, mainContentPageOriginalEl, appBarHeadlineEl, topAppBarEl;
 let navigationController = null;
@@ -48,8 +47,10 @@ registerCompatibilityGlobals({
     getDynamicElement,
     initRouter,
     initTheme: initThemeControls,
+    // Change Rationale: The canonical navigation component now owns drawer wiring,
+    // so legacy initNavigationDrawer calls proxy through the shared initializer.
     initNavigationDrawer: (...args) => {
-        navigationController = initNavigationDrawer(...args);
+        navigationController = initAppNavigation(...args);
         return navigationController;
     },
     loadPageContent,
@@ -74,10 +75,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Initialize Modules ---
     updateCopyrightYear();
     initThemeControls();
-    navigationController = initNavigationDrawer();
-    // Change Rationale: Keep navigation highlight states unified across drawer and rail
-    // by syncing active link styles from a single shared helper.
-    initNavigationState();
+    // Change Rationale: Initialize the canonical navigation component so rail + drawer
+    // markup and routing are centralized under core/ui instead of screen HTML.
+    navigationController = initAppNavigation();
 
     if (typeof SiteAnimations !== 'undefined' && SiteAnimations && typeof SiteAnimations.init === 'function') {
         try {
@@ -250,6 +250,13 @@ function setupRouteLinkInterception() {
 
         const interactiveElement = eventTarget.closest('[href^="#"]');
         if (!interactiveElement) {
+            return;
+        }
+
+        // Change Rationale: Navigation links are now handled by the canonical
+        // app navigation component, so the global interceptor skips them to
+        // avoid double route dispatch.
+        if (interactiveElement.closest('[data-app-navigation]')) {
             return;
         }
 

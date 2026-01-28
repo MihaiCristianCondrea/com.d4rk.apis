@@ -12,23 +12,21 @@
           <span class="gh-stat-pill"><span id="rel-count">0</span> Releases</span>
         </div>
         <div class="gh-action-row">
-          <!-- Change Rationale: Secondary actions previously used custom ghost classes, which
-               produced mismatched outlines and corner radii. Using BeerCSS `border`, `transparent`,
-               and size helpers keeps the button shape consistent with the primary action while
-               respecting Material 3's outlined control guidance. -->
-          <button type="button" id="rel-copy-json" class="small round transparent border">
+        <!-- Change Rationale: Secondary actions now use the shared app button helpers so
+             outlined styling stays consistent across GitHub tools without per-screen stacks. -->
+        <button type="button" id="rel-copy-json" class="app-button app-button--secondary app-button--small">
             <span class="material-symbols-outlined">content_copy</span>
             <span>Copy JSON</span>
           </button>
-          <button type="button" id="rel-download-json" class="small round transparent border">
+        <button type="button" id="rel-download-json" class="app-button app-button--secondary app-button--small">
             <span class="material-symbols-outlined">save</span>
             <span>Download JSON</span>
           </button>
-          <button type="button" id="rel-copy-csv" class="small round transparent border">
+        <button type="button" id="rel-copy-csv" class="app-button app-button--secondary app-button--small">
             <span class="material-symbols-outlined">table</span>
             <span>Copy CSV</span>
           </button>
-          <button type="button" id="rel-download-csv" class="small round transparent border">
+        <button type="button" id="rel-download-csv" class="app-button app-button--secondary app-button--small">
             <span class="material-symbols-outlined">download</span>
             <span>Download CSV</span>
           </button>

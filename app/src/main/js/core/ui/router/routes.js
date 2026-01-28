@@ -394,14 +394,14 @@ const defaultRoutes = [
         }
     },
     {
-        id: 'github-favorites',
+        id: 'githubtools-favorites',
         path: screenPath('githubtools/favorites/ui/GitHubFavoritesScreen.html'),
         title: 'Favorites',
         onLoad: initFavoritesPage,
         metadata: {
             description: 'Quick access to repositories saved from Repo Mapper and Release Stats.',
             keywords: ['favorites', 'GitHub tools'],
-            canonicalSlug: 'github-favorites',
+            canonicalSlug: 'githubtools-favorites',
             openGraph: {
                 title: 'Favorites',
                 description: 'Quick access to repositories saved from Repo Mapper and Release Stats.',

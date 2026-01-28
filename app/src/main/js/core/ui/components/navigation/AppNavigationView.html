@@ -1,0 +1,223 @@
+<!--
+  Change Rationale:
+  - Provide a single canonical navigation surface for the app shell so rail + drawer markup
+    is no longer duplicated per screen.
+  - The BeerCSS rail/drawer structure is centralized here to keep navigation layout aligned
+    with Material 3 guidance while letting the router own active state updates.
+-->
+<div class="app-navigation" data-app-navigation>
+  <div id="drawerOverlay" class="overlay s" aria-hidden="true"></div>
+  <nav id="navRail" class="m l left app-navigation-rail surface-container" aria-label="Primary navigation" data-drawer-inert-target>
+    <ul class="list">
+      <li class="wave round">
+        <a href="#home" class="nav-link" data-nav-link>
+          <i aria-hidden="true">home</i>
+          <div class="max">
+            <span class="type-title-medium">Home</span>
+          </div>
+        </a>
+      </li>
+    </ul>
+    <hr>
+    <div class="padding type-label-large">API Workspaces</div>
+    <ul class="list">
+      <li class="wave round">
+        <a href="#app-toolkit-api" class="nav-link" data-nav-link>
+          <i aria-hidden="true">build</i>
+          <div class="max">
+            <span class="type-title-medium">App Toolkit</span>
+            <small class="type-body-small">Manage Android utilities</small>
+          </div>
+        </a>
+      </li>
+      <li class="wave round">
+        <a href="#faq-api" class="nav-link" data-nav-link>
+          <i aria-hidden="true">help</i>
+          <div class="max">
+            <span class="type-title-medium">FAQ &amp; Support</span>
+            <small class="type-body-small">Publish policy answers</small>
+          </div>
+        </a>
+      </li>
+      <li class="wave round">
+        <a href="#english-with-lidia-api" class="nav-link" data-nav-link>
+          <i aria-hidden="true">menu_book</i>
+          <div class="max">
+            <span class="type-title-medium">English with Lidia</span>
+            <small class="type-body-small">Build lessons &amp; home feeds</small>
+          </div>
+        </a>
+      </li>
+      <li class="wave round">
+        <a href="#android-studio-tutorials-api" class="nav-link" data-nav-link>
+          <i aria-hidden="true">school</i>
+          <div class="max">
+            <span class="type-title-medium">Android Studio Tutorials</span>
+            <small class="type-body-small">Compose lesson flows</small>
+          </div>
+        </a>
+      </li>
+    </ul>
+    <hr>
+    <div class="padding type-label-large">GitHub Tools</div>
+    <ul class="list">
+      <li class="wave round">
+        <a href="#githubtools-favorites" class="nav-link" data-nav-link>
+          <i aria-hidden="true">grade</i>
+          <div class="max">
+            <span class="type-title-medium">Favorites</span>
+            <small class="type-body-small">Quick access to starred repos</small>
+          </div>
+        </a>
+      </li>
+      <li class="wave round">
+        <a href="#githubtools-repo-mapper" class="nav-link" data-nav-link>
+          <i aria-hidden="true">terminal</i>
+          <div class="max">
+            <span class="type-title-medium">Repo Mapper</span>
+            <small class="type-body-small">Generate directory trees</small>
+          </div>
+        </a>
+      </li>
+      <li class="wave round">
+        <a href="#githubtools-release-stats" class="nav-link" data-nav-link>
+          <i aria-hidden="true">bar_chart</i>
+          <div class="max">
+            <span class="type-title-medium">Release Stats</span>
+            <small class="type-body-small">Visualize download counts</small>
+          </div>
+        </a>
+      </li>
+      <li class="wave round">
+        <a href="#githubtools-git-patch" class="nav-link" data-nav-link>
+          <i aria-hidden="true">receipt_long</i>
+          <div class="max">
+            <span class="type-title-medium">Git Patch</span>
+            <small class="type-body-small">Extract commit patches</small>
+          </div>
+        </a>
+      </li>
+    </ul>
+  </nav>
+  <dialog id="navDrawer" class="navigation-drawer left s" aria-label="Main navigation">
+    <header class="drawer-header padding">
+      <nav>
+        <h6 class="type-title-small max">Menu</h6>
+        <button id="closeDrawerButton" class="transparent circle" aria-label="Close navigation" type="button">
+          <i aria-hidden="true">close</i>
+        </button>
+      </nav>
+    </header>
+    <div class="drawer-content padding">
+      <ul class="list">
+        <li class="wave round">
+          <a href="#home" class="nav-link" data-nav-link>
+            <i aria-hidden="true">home</i>
+            <div class="max">
+              <span class="type-title-medium">Home</span>
+            </div>
+          </a>
+        </li>
+      </ul>
+      <hr>
+      <div class="padding type-label-large">API Workspaces</div>
+      <ul class="list">
+        <li class="wave round">
+          <a href="#app-toolkit-api" class="nav-link" data-nav-link>
+            <i aria-hidden="true">build</i>
+            <div class="max">
+              <span class="type-title-medium">App Toolkit</span>
+              <small class="type-body-small">Manage Android utilities</small>
+            </div>
+          </a>
+        </li>
+        <li class="wave round">
+          <a href="#faq-api" class="nav-link" data-nav-link>
+            <i aria-hidden="true">help</i>
+            <div class="max">
+              <span class="type-title-medium">FAQ &amp; Support</span>
+              <small class="type-body-small">Publish policy answers</small>
+            </div>
+          </a>
+        </li>
+        <li class="wave round">
+          <a href="#english-with-lidia-api" class="nav-link" data-nav-link>
+            <i aria-hidden="true">menu_book</i>
+            <div class="max">
+              <span class="type-title-medium">English with Lidia</span>
+              <small class="type-body-small">Build lessons &amp; home feeds</small>
+            </div>
+          </a>
+        </li>
+        <li class="wave round">
+          <a href="#android-studio-tutorials-api" class="nav-link" data-nav-link>
+            <i aria-hidden="true">school</i>
+            <div class="max">
+              <span class="type-title-medium">Android Studio Tutorials</span>
+              <small class="type-body-small">Compose lesson flows</small>
+            </div>
+          </a>
+        </li>
+      </ul>
+      <hr>
+      <div class="padding type-label-large">GitHub Tools</div>
+      <ul class="list">
+        <li class="wave round">
+          <a href="#githubtools-favorites" class="nav-link" data-nav-link>
+            <i aria-hidden="true">grade</i>
+            <div class="max">
+              <span class="type-title-medium">Favorites</span>
+              <small class="type-body-small">Quick access to starred repos</small>
+            </div>
+          </a>
+        </li>
+        <li class="wave round">
+          <a href="#githubtools-repo-mapper" class="nav-link" data-nav-link>
+            <i aria-hidden="true">terminal</i>
+            <div class="max">
+              <span class="type-title-medium">Repo Mapper</span>
+              <small class="type-body-small">Generate directory trees</small>
+            </div>
+          </a>
+        </li>
+        <li class="wave round">
+          <a href="#githubtools-release-stats" class="nav-link" data-nav-link>
+            <i aria-hidden="true">bar_chart</i>
+            <div class="max">
+              <span class="type-title-medium">Release Stats</span>
+              <small class="type-body-small">Visualize download counts</small>
+            </div>
+          </a>
+        </li>
+        <li class="wave round">
+          <a href="#githubtools-git-patch" class="nav-link" data-nav-link>
+            <i aria-hidden="true">receipt_long</i>
+            <div class="max">
+              <span class="type-title-medium">Git Patch</span>
+              <small class="type-body-small">Extract commit patches</small>
+            </div>
+          </a>
+        </li>
+      </ul>
+    </div>
+    <div class="drawer-footer padding">
+      <div class="theme-toggle-title">Theme</div>
+      <div class="theme-button-container">
+        <button id="lightThemeButton" data-theme="light" aria-label="Use light theme" aria-pressed="false" class="transparent circle" type="button">
+          <i class="material-symbols-outlined" aria-hidden="true">light_mode</i>
+        </button>
+        <button id="darkThemeButton" data-theme="dark" aria-label="Use dark theme" aria-pressed="false" class="transparent circle" type="button">
+          <i class="material-symbols-outlined" aria-hidden="true">dark_mode</i>
+        </button>
+        <button id="autoThemeButton" data-theme="auto" aria-label="Match system theme" aria-pressed="true" class="transparent circle" type="button">
+          <i class="material-symbols-outlined" aria-hidden="true">brightness_auto</i>
+        </button>
+      </div>
+      <div class="drawer-legal-links">
+        <a href="https://mihaicristiancondrea.github.io/profile/#privacy-policy" target="_blank" rel="noreferrer">Privacy Policy</a>
+        <span aria-hidden="true">&bull;</span>
+        <a href="https://mihaicristiancondrea.github.io/profile/#code-of-conduct" target="_blank" rel="noreferrer">Code of Conduct</a>
+      </div>
+    </div>
+  </dialog>
+</div>

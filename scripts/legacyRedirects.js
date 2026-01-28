@@ -7,9 +7,11 @@
  * Legacy layout filename to route ID mapping for GitHub tools.
  */
 const legacyGitHubToolRedirects = Object.freeze({
-  'git-patch.html': 'git-patch',
-  'repo-mapper.html': 'repo-mapper',
-  'release-stats.html': 'release-stats',
+  // Change Rationale: GitHub tool redirects now point to the canonical
+  // githubtools-prefixed route IDs to keep naming consistent.
+  'git-patch.html': 'githubtools-git-patch',
+  'repo-mapper.html': 'githubtools-repo-mapper',
+  'release-stats.html': 'githubtools-release-stats',
 });
 
 /**
@@ -25,10 +27,10 @@ function resolveLegacyGitHubToolRoute(url) {
   const pathOnly = url.split(/[?#]/)[0];
   const normalizedPath = pathOnly.replace(/\\+/g, '/').replace(/\/+$/, '');
   const lowerPath = normalizedPath.toLowerCase();
-  if (!lowerPath.startsWith('/layout/github-tools/')) {
+  if (!lowerPath.startsWith('/layout/githubtools/')) {
     return null;
   }
-  const legacyFile = lowerPath.replace('/layout/github-tools/', '');
+  const legacyFile = lowerPath.replace('/layout/githubtools/', '');
   return legacyGitHubToolRedirects[legacyFile] || null;
 }
 
@@ -52,7 +54,7 @@ function createLegacyRedirectHtml(routeId) {
       (function () {
         const search = window.location.search || '';
         const hash = window.location.hash || '';
-        const basePath = window.location.pathname.replace(/\\/layout\\/github-tools\\/[^/]*$/i, '/');
+        const basePath = window.location.pathname.replace(/\\/layout\\/githubtools\\/[^/]*$/i, '/');
         const base = basePath.endsWith('/') ? basePath : basePath + '/';
         const target = base + '#${routeId}' + search + hash;
         window.location.replace(target);

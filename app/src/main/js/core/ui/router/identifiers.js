@@ -1,10 +1,10 @@
-// Change Rationale: Legacy GitHub tool URLs previously lived under `/layout/github-tools/*.html`,
-// which caused 404s after the Screen-based routing migration. Normalizing those paths to the
-// canonical route IDs keeps navigation stable without reintroducing layout dependencies.
+// Change Rationale: Legacy GitHub tool URLs previously lived under `/layout/githubtools/*.html`,
+// so normalization now resolves them to the updated githubtools route IDs without reintroducing
+// layout dependencies or hyphenated folder names.
 const LEGACY_GITHUB_TOOL_ROUTES = Object.freeze({
-  'github-tools/git-patch.html': 'git-patch',
-  'github-tools/repo-mapper.html': 'repo-mapper',
-  'github-tools/release-stats.html': 'release-stats',
+  'githubtools/git-patch.html': 'githubtools-git-patch',
+  'githubtools/repo-mapper.html': 'githubtools-repo-mapper',
+  'githubtools/release-stats.html': 'githubtools-release-stats',
 });
 
 /**
@@ -28,7 +28,7 @@ function resolveLegacyLayoutRoute(value) {
     .replace(/^layout\//i, '')
     .replace(/\/+$/, '')
     .toLowerCase();
-  if (!normalizedPath.startsWith('github-tools/')) {
+  if (!normalizedPath.startsWith('githubtools/')) {
     return null;
   }
   return LEGACY_GITHUB_TOOL_ROUTES[normalizedPath] || null;

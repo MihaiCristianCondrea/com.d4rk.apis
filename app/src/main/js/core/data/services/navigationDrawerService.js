@@ -64,7 +64,9 @@ export class NavigationDrawerController {
                 navDrawerId = 'navDrawer',
                 closeDrawerId = 'closeDrawerButton',
                 overlayId = 'drawerOverlay',
-                closeOnNavSelectMediaQuery = '(max-width: 840px)',
+                // Change Rationale: Align the drawer breakpoint with the shared navigation
+                // rail cutoff so modal behavior stays consistent across CSS and JS.
+                closeOnNavSelectMediaQuery = '(max-width: 960px)',
                 aboutToggleId = 'aboutToggle',
                 aboutContentId = 'aboutContent',
                 androidToggleId = 'apiWorkspacesToggle',

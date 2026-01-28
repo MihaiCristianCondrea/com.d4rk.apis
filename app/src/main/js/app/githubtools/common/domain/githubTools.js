@@ -704,8 +704,8 @@ function renderFavoritesPage() {
      * monospace slugs, keeping the remove action aligned to the top-right and actions in
      * a single row for consistent scanning on narrow layouts.
      */
-    // Change Rationale: Button classes now lean on Beer CSS sizing helpers so
-    // favorites actions stay consistent with the GitHub tools button geometry.
+    // Change Rationale: Button classes now lean on the shared app button helpers
+    // so favorites actions stay consistent across GitHub tool surfaces.
     const card = document.createElement('article');
     card.className = 'gh-favorite-card';
     card.innerHTML = `
@@ -725,15 +725,15 @@ function renderFavoritesPage() {
         </div>
       </div>
       <div class="gh-favorite-actions">
-        <button class="gh-button primary small" type="button" data-open-mapper>
+        <button class="app-button app-button--primary app-button--small" type="button" data-open-mapper>
           <span class="material-symbols-outlined">terminal</span>
           <span>Map</span>
         </button>
-        <button class="gh-button secondary small" type="button" data-open-stats>
+        <button class="app-button app-button--secondary app-button--small" type="button" data-open-stats>
           <span class="material-symbols-outlined">bar_chart</span>
           <span>Stats</span>
         </button>
-        <a class="button gh-ghost-button small transparent border" href="https://github.com/${slug}" target="_blank" rel="noopener noreferrer">
+        <a class="app-button app-button--secondary app-button--small" href="https://github.com/${slug}" target="_blank" rel="noopener noreferrer">
           <span class="material-symbols-outlined">open_in_new</span>
           <span>Open</span>
         </a>
@@ -747,13 +747,13 @@ function renderFavoritesPage() {
     const mapperBtn = card.querySelector('[data-open-mapper]');
     mapperBtn?.addEventListener('click', () => {
       savePrefill('mapper', slug);
-      window.location.hash = '#repo-mapper';
+      window.location.hash = '#githubtools-repo-mapper';
     });
 
     const statsBtn = card.querySelector('[data-open-stats]');
     statsBtn?.addEventListener('click', () => {
       savePrefill('releases', slug);
-      window.location.hash = '#release-stats';
+      window.location.hash = '#githubtools-release-stats';
     });
 
     grid.appendChild(card);

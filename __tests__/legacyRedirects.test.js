@@ -9,5 +9,5 @@
 const { createLegacyRedirectHtml } = require('../scripts/legacyRedirects.js');
 
 test('createLegacyRedirectHtml matches the expected template', () => {
-  expect(createLegacyRedirectHtml('git-patch')).toMatchSnapshot();
+  expect(createLegacyRedirectHtml('githubtools-git-patch')).toMatchSnapshot();
 });

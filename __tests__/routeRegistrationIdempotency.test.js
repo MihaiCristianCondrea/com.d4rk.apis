@@ -56,7 +56,7 @@ test('GitPatchRoute registers once even when imported twice', () => {
     registerGitPatchRoute();
 
     const routes = RouterRoutes.getRoutes();
-    const gitPatchRoutes = routes.filter((route) => route.id === 'git-patch');
+    const gitPatchRoutes = routes.filter((route) => route.id === 'githubtools-git-patch');
     result = { routes, gitPatchRoutes, initialCount: initialRoutes.length };
   });
 
@@ -78,7 +78,7 @@ test('ReleaseStatsRoute registers once even when imported twice', () => {
     registerReleaseStatsRoute();
 
     const routes = RouterRoutes.getRoutes();
-    const releaseStatsRoutes = routes.filter((route) => route.id === 'release-stats');
+    const releaseStatsRoutes = routes.filter((route) => route.id === 'githubtools-release-stats');
     result = { routes, releaseStatsRoutes, initialCount: initialRoutes.length };
   });
 

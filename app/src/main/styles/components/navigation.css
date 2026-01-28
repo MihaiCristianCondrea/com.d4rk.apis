@@ -9,6 +9,11 @@
  */
 .app-top-app-bar {
   width: 100%;
+  /* Change Rationale: Keep the app bar tied to the neutral surface tokens so
+   * navigation never drifts to an accent background.
+   */
+  background-color: var(--app-surface);
+  color: var(--app-on-surface);
 }
 
 .app-top-app-bar nav {
@@ -36,11 +41,52 @@
   overflow-y: auto;
 }
 
+/* --- Navigation Rail --- */
+/* Change Rationale: Pin the rail to the left edge on desktop so content never
+ * centers under it and the BeerCSS layout matches the CEO reference.
+ */
+:root {
+  --app-nav-rail-width: 280px;
+  --app-nav-rail-padding: 0.75rem;
+}
+
+.app-navigation-rail {
+  position: fixed;
+  inset-inline-start: 0;
+  inset-block-start: var(--app-top-app-bar-height);
+  width: var(--app-nav-rail-width);
+  height: calc(100vh - var(--app-top-app-bar-height));
+  padding: var(--app-nav-rail-padding);
+  overflow-y: auto;
+  z-index: 5;
+}
+
+/* Change Rationale: Maintain readable layout when the rail is visible by
+ * offsetting the main shell surfaces instead of centering underneath it.
+ */
+@media (min-width: 960px) {
+  .app-shell-main,
+  .app-shell-footer {
+    padding-inline-start: calc(1rem + var(--safe-area-inset-left) + var(--app-nav-rail-width));
+  }
+}
+
 /* Change Rationale: Keep nav links aligned as rows without custom padding so the
  * framework controls spacing and state styling.
  */
-.nav-link {
+.app-navigation .nav-link {
   display: flex;
   align-items: center;
   text-decoration: none;
+}
+
+.app-navigation .nav-link .max {
+  min-width: 0;
+}
+
+.app-navigation .nav-link small {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }

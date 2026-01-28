@@ -76,12 +76,9 @@
     </div>
   </div>
   <div class="gh-actions end">
-    <!-- Change Rationale: Primary actions previously relied on project-specific button classes,
-         which left size and shape inconsistent with other screens. Applying BeerCSS button
-         helpers (`primary`, `large`, `round`) delegates sizing to the framework, keeping
-         touch targets consistent and aligning with Material 3's emphasis on uniform control
-         geometry. -->
-    <button type="submit" id="mapper-submit" class="primary large round">
+    <!-- Change Rationale: Primary actions now use the shared app button helpers so the
+         filled CTA treatment stays consistent across GitHub tool screens. -->
+    <button type="submit" id="mapper-submit" class="app-button app-button--primary app-button--large">
       <span class="material-symbols-outlined">terminal</span>
       <span>Generate Map</span>
     </button>
