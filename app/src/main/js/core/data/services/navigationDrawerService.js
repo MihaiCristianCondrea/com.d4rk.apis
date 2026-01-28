@@ -17,6 +17,8 @@ import { getDynamicElement } from '@/core/ui/utils/domUtils.js';
  *   ID of the explicit close button inside the drawer.
  * @property {string} [overlayId='drawerOverlay']
  *   ID of the overlay element that sits behind the drawer.
+ * @property {string} [closeOnNavSelectMediaQuery='(max-width: 840px)']
+ *   Media query that must match before clicking a nav item auto-closes the drawer.
  * @property {string} [aboutToggleId='aboutToggle']
  *   ID of the toggle button controlling the "About" section in the drawer.
  * @property {string} [aboutContentId='aboutContent']
@@ -62,6 +64,7 @@ export class NavigationDrawerController {
                 navDrawerId = 'navDrawer',
                 closeDrawerId = 'closeDrawerButton',
                 overlayId = 'drawerOverlay',
+                closeOnNavSelectMediaQuery = '(max-width: 840px)',
                 aboutToggleId = 'aboutToggle',
                 aboutContentId = 'aboutContent',
                 androidToggleId = 'apiWorkspacesToggle',
@@ -74,6 +77,7 @@ export class NavigationDrawerController {
     this.navDrawer = getDynamicElement(navDrawerId);
     this.closeDrawerButton = getDynamicElement(closeDrawerId);
     this.drawerOverlay = getDynamicElement(overlayId);
+    this.closeOnNavSelectMediaQuery = closeOnNavSelectMediaQuery;
 
     // Section: About
     this.aboutToggle = getDynamicElement(aboutToggleId);
@@ -105,6 +109,7 @@ export class NavigationDrawerController {
     this.syncDrawerState = this.syncDrawerState.bind(this);
     this.handleKeydown = this.handleKeydown.bind(this);
     this.focusFirstNavItem = this.focusFirstNavItem.bind(this);
+    this.handleNavItemSelection = this.handleNavItemSelection.bind(this);
   }
 
   /**
@@ -120,6 +125,7 @@ export class NavigationDrawerController {
     }
 
     this.wireButtons();
+    this.wireNavLinkCloseBehavior();
     // Change Rationale: The drawer is now a dialog element, so its open state
     // is tracked via the `open` attribute rather than a custom class alone.
     const isDrawerOpen = this.isDialogDrawer()
@@ -171,6 +177,40 @@ export class NavigationDrawerController {
     this.initToggleSection(this.githubToggle, this.githubContent, {
       defaultExpanded: true,
     });
+  }
+
+  /**
+   * Wires nav items so the drawer can optionally close on selection.
+   *
+   * Change Rationale:
+   * - The drawer should collapse after a selection on smaller screens to keep
+   *   the content in view and avoid leaving a modal open on top of the page.
+   * - On larger screens, navigation remains open so users can continue
+   *   exploring without losing their place in the menu.
+   *
+   * @returns {void}
+   */
+  wireNavLinkCloseBehavior() {
+    if (!this.navDrawer) {
+      return;
+    }
+
+    const navLinks = this.navDrawer.querySelectorAll('.nav-link[href]');
+    navLinks.forEach((link) => {
+      link.addEventListener('click', this.handleNavItemSelection);
+    });
+  }
+
+  /**
+   * Handles clicks on navigation items, closing the drawer when configured.
+   *
+   * @returns {void}
+   */
+  handleNavItemSelection() {
+    if (!this.shouldCloseOnNavSelection()) {
+      return;
+    }
+    this.close();
   }
 
   /**
@@ -372,7 +412,9 @@ export class NavigationDrawerController {
 
     // Always clean up global scroll locking even if the drawer element is missing
     // (e.g., during fast navigations) so pages never stay stuck with overflow hidden.
-    this.drawerOverlay?.classList.toggle('open', isDrawerOpen);
+    // Change Rationale: BeerCSS uses the `overlay` helper class for scrims, which
+    // expects an `active` state to appear; align the controller with the framework.
+    this.drawerOverlay?.classList.toggle('active', isDrawerOpen);
     this.drawerOverlay?.setAttribute('aria-hidden', isDrawerOpen ? 'false' : 'true');
     document.body.classList.toggle('drawer-is-open', isDrawerOpen);
     this.navDrawer?.classList.toggle('open', isDrawerOpen);
@@ -437,6 +479,21 @@ export class NavigationDrawerController {
       element.toggleAttribute('inert', inert);
       element.setAttribute('aria-hidden', String(inert));
     });
+  }
+
+  /**
+   * Checks whether the drawer should close after a navigation selection.
+   *
+   * @returns {boolean}
+   */
+  shouldCloseOnNavSelection() {
+    if (typeof window === 'undefined' || !this.closeOnNavSelectMediaQuery) {
+      return false;
+    }
+    if (typeof window.matchMedia !== 'function') {
+      return false;
+    }
+    return window.matchMedia(this.closeOnNavSelectMediaQuery).matches;
   }
 }
 

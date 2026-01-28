@@ -40,14 +40,14 @@
   <link rel="modulepreload" href="../../../js/main.js">
 </head>
 <body class="bg-surface-container-lowest">
-<!-- Change Rationale: Apply BeerCSS modal overlay helpers so the drawer backdrop matches
-     the native dialog dimming treatment and supports the left-surface drawer animation. -->
-<div id="drawerOverlay" class="drawer-overlay overlay blur" aria-hidden="true"></div>
+<!-- Change Rationale: Use the BeerCSS overlay scrim without blur so the drawer matches
+     the stock modal backdrop and keeps focus behavior predictable. -->
+<div id="drawerOverlay" class="overlay" aria-hidden="true"></div>
 <div id="pageLoadingOverlay" class="page-loading-overlay"></div>
 <!-- Change Rationale: The drawer now uses BeerCSS's left modal dialog pattern so it slides
      in natively from the edge, matching the provided drawer reference and Material 3 guidance. -->
 <dialog id="navDrawer" class="navigation-drawer left" aria-label="Main navigation">
-  <header class="drawer-header">
+  <header class="drawer-header padding">
     <nav>
       <h6 class="max">Menu</h6>
       <button id="closeDrawerButton" class="transparent circle" aria-label="Close navigation">
@@ -55,97 +55,102 @@
       </button>
     </nav>
   </header>
-  <div class="drawer-content">
-    <ul class="list drawer-list">
+  <!-- Change Rationale: Drawer list items now use the BeerCSS list row structure
+       (icon + div.max + title + <small>) so spacing and typography inherit the
+       stock framework defaults without custom CSS overrides. -->
+  <div class="drawer-content padding">
+    <ul class="list">
       <li class="wave round">
-        <a href="#home" id="homeLink" class="nav-link">
+        <a href="#home" id="homeLink" class="nav-link space">
           <i aria-hidden="true">home</i>
-          <span class="max">Home</span>
+          <div class="max">
+            <span>Home</span>
+          </div>
         </a>
       </li>
     </ul>
-    <div class="drawer-divider"></div>
-    <div class="drawer-section-title">API Workspaces</div>
-    <ul class="list drawer-list">
+    <hr>
+    <small class="padding">API Workspaces</small>
+    <ul class="list">
       <li class="wave round">
-        <a href="#app-toolkit-api" class="nav-link">
+        <a href="#app-toolkit-api" class="nav-link space">
           <i aria-hidden="true">build</i>
-          <span class="drawer-item-text">
-            <span class="drawer-item-title">App Toolkit</span>
-            <span class="drawer-item-subtitle">Manage Android utilities</span>
-          </span>
+          <div class="max">
+            <span>App Toolkit</span>
+            <small>Manage Android utilities</small>
+          </div>
         </a>
       </li>
       <li class="wave round">
-        <a href="#faq-api" class="nav-link">
+        <a href="#faq-api" class="nav-link space">
           <i aria-hidden="true">help</i>
-          <span class="drawer-item-text">
-            <span class="drawer-item-title">FAQ &amp; Support</span>
-            <span class="drawer-item-subtitle">Publish policy answers</span>
-          </span>
+          <div class="max">
+            <span>FAQ &amp; Support</span>
+            <small>Publish policy answers</small>
+          </div>
         </a>
       </li>
       <li class="wave round">
-        <a href="#english-with-lidia-api" class="nav-link">
+        <a href="#english-with-lidia-api" class="nav-link space">
           <i aria-hidden="true">menu_book</i>
-          <span class="drawer-item-text">
-            <span class="drawer-item-title">English with Lidia</span>
-            <span class="drawer-item-subtitle">Build lessons &amp; home feeds</span>
-          </span>
+          <div class="max">
+            <span>English with Lidia</span>
+            <small>Build lessons &amp; home feeds</small>
+          </div>
         </a>
       </li>
       <li class="wave round">
-        <a href="#android-studio-tutorials-api" class="nav-link">
+        <a href="#android-studio-tutorials-api" class="nav-link space">
           <i aria-hidden="true">school</i>
-          <span class="drawer-item-text">
-            <span class="drawer-item-title">Android Studio Tutorials</span>
-            <span class="drawer-item-subtitle">Compose lesson flows</span>
-          </span>
+          <div class="max">
+            <span>Android Studio Tutorials</span>
+            <small>Compose lesson flows</small>
+          </div>
         </a>
       </li>
     </ul>
-    <div class="drawer-divider"></div>
-    <div class="drawer-section-title">GitHub Tools</div>
-    <ul class="list drawer-list">
+    <hr>
+    <small class="padding">GitHub Tools</small>
+    <ul class="list">
       <li class="wave round">
-        <a href="#github-favorites" class="nav-link">
+        <a href="#github-favorites" class="nav-link space">
           <i aria-hidden="true">grade</i>
-          <span class="drawer-item-text">
-            <span class="drawer-item-title">Favorites</span>
-            <span class="drawer-item-subtitle">Quick access to starred repos</span>
-          </span>
+          <div class="max">
+            <span>Favorites</span>
+            <small>Quick access to starred repos</small>
+          </div>
         </a>
       </li>
       <li class="wave round">
-        <a href="#repo-mapper" class="nav-link">
+        <a href="#repo-mapper" class="nav-link space">
           <i aria-hidden="true">terminal</i>
-          <span class="drawer-item-text">
-            <span class="drawer-item-title">Repo Mapper</span>
-            <span class="drawer-item-subtitle">Generate directory trees</span>
-          </span>
+          <div class="max">
+            <span>Repo Mapper</span>
+            <small>Generate directory trees</small>
+          </div>
         </a>
       </li>
       <li class="wave round">
-        <a href="#release-stats" class="nav-link">
+        <a href="#release-stats" class="nav-link space">
           <i aria-hidden="true">bar_chart</i>
-          <span class="drawer-item-text">
-            <span class="drawer-item-title">Release Stats</span>
-            <span class="drawer-item-subtitle">Visualize download counts</span>
-          </span>
+          <div class="max">
+            <span>Release Stats</span>
+            <small>Visualize download counts</small>
+          </div>
         </a>
       </li>
       <li class="wave round">
-        <a href="#git-patch" class="nav-link">
+        <a href="#git-patch" class="nav-link space">
           <i aria-hidden="true">receipt_long</i>
-          <span class="drawer-item-text">
-            <span class="drawer-item-title">Git Patch</span>
-            <span class="drawer-item-subtitle">Extract commit patches</span>
-          </span>
+          <div class="max">
+            <span>Git Patch</span>
+            <small>Extract commit patches</small>
+          </div>
         </a>
       </li>
     </ul>
   </div>
-  <div class="drawer-footer">
+  <div class="drawer-footer padding">
     <div class="theme-toggle-title">Theme</div>
     <div class="theme-button-container">
       <button id="lightThemeButton" data-theme="light" aria-label="Use light theme" aria-pressed="false" class="transparent circle">

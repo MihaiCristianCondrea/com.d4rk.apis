@@ -1,7 +1,105 @@
 /**
- * Router route-map tests target files that no longer exist in the current router implementation.
- * This suite is skipped until updated routes and entrypoints are restored.
+ * Router and app shell tests.
  */
-describe.skip('router routes (legacy)', () => {
-  test('skipped: routes module not present', () => {});
+// Change Rationale: Replace the legacy skipped suite with focused tests that guard
+// shell behaviors (app bar scroll elevation) and navigation selection state.
+
+const mockDomUtils = {
+  getDynamicElement: jest.fn(),
+  updateCopyrightYear: jest.fn(),
+  showPageLoadingOverlay: jest.fn(),
+  hidePageLoadingOverlay: jest.fn(),
+  rafThrottle: (fn) => fn,
+};
+
+jest.mock('../app/src/main/js/core/ui/utils/domUtils.js', () => mockDomUtils);
+
+jest.mock('../app/src/main/js/core/data/services/themeService.js', () => ({
+  initThemeControls: jest.fn(),
+}));
+
+jest.mock('../app/src/main/js/core/data/services/navigationDrawerService.js', () => ({
+  initNavigationDrawer: jest.fn(() => ({ close: jest.fn() })),
+}));
+
+jest.mock('../app/src/main/js/core/ui/router/index.js', () => ({
+  initRouter: jest.fn(),
+  loadPageContent: jest.fn(),
+  normalizePageId: jest.fn((id) => id),
+}));
+
+jest.mock('../app/src/main/js/core/ui/router/routes.js', () => ({
+  __esModule: true,
+  default: {},
+}));
+
+jest.mock('../app/src/main/js/core/ui/globals.js', () => ({
+  registerGlobalUtilities: jest.fn(),
+  registerCompatibilityGlobals: jest.fn(),
+}));
+
+const { updateActiveNavLink } = require('../app/src/main/js/core/ui/router/navigationState.js');
+
+function setupAppShellDom() {
+  document.body.innerHTML = `
+    <header id="topAppBar" class="app-top-app-bar">
+      <nav>
+        <button id="menuButton" type="button">Menu</button>
+        <h5 id="appBarHeadline">API Console</h5>
+      </nav>
+    </header>
+    <main id="pageContentArea" data-drawer-inert-target>
+      <div id="mainContentPage" class="page-section active"></div>
+    </main>
+  `;
+}
+
+// Change Rationale: The shell must elevate the top app bar on scroll to match the
+// stock Material behavior without custom styling.
+test('app shell toggles app bar elevation on scroll', () => {
+  setupAppShellDom();
+  mockDomUtils.getDynamicElement.mockImplementation((id) => document.getElementById(id));
+
+  Object.defineProperty(window, 'scrollY', {
+    value: 0,
+    writable: true,
+    configurable: true,
+  });
+
+  jest.isolateModules(() => {
+    require('../app/src/main/js/core/ui/appShell.js');
+  });
+
+  document.dispatchEvent(new Event('DOMContentLoaded'));
+
+  const appBar = document.getElementById('topAppBar');
+  expect(appBar.classList.contains('fill')).toBe(true);
+  expect(appBar.classList.contains('elevate')).toBe(false);
+
+  window.scrollY = 10;
+  window.dispatchEvent(new Event('scroll'));
+
+  expect(appBar.classList.contains('elevate')).toBe(true);
+});
+
+// Change Rationale: Guard the active navigation state so only one drawer item
+// is selected at a time with the expected ARIA attributes.
+test('updateActiveNavLink marks the current route as selected', () => {
+  document.body.innerHTML = `
+    <dialog id="navDrawer">
+      <a class="nav-link" href="#home">Home</a>
+      <a class="nav-link" href="#faq-api">FAQ</a>
+      <a class="nav-link" href="#app-toolkit-api">App Toolkit</a>
+    </dialog>
+  `;
+
+  updateActiveNavLink('#faq-api');
+
+  const links = Array.from(document.querySelectorAll('.nav-link'));
+  const activeLinks = links.filter((link) => link.classList.contains('active'));
+
+  expect(activeLinks).toHaveLength(1);
+  expect(activeLinks[0].getAttribute('href')).toBe('#faq-api');
+  expect(activeLinks[0].getAttribute('aria-current')).toBe('page');
+  expect(activeLinks[0].getAttribute('aria-selected')).toBe('true');
 });

@@ -36,12 +36,12 @@ function createDrawerMarkup() {
     <header data-drawer-inert-target id="header">
       <button id="menuButton" type="button">Menu</button>
     </header>
-    <div id="drawerOverlay" aria-hidden="true"></div>
+    <div id="drawerOverlay" class="overlay" aria-hidden="true"></div>
     <dialog id="navDrawer" class="navigation-drawer">
       <button id="closeDrawerButton" type="button">Close</button>
       <nav>
         <ul class="list">
-          <li><a href="#home" id="homeLink" class="nav-link">Home</a></li>
+          <li><a href="#home" id="homeLink" class="nav-link space">Home</a></li>
         </ul>
       </nav>
       <details>
@@ -104,7 +104,7 @@ describe('navigationDrawerService', () => {
     expect(navDrawerElement.classList.contains('open')).toBe(true);
     expect(document.body.classList.contains('drawer-is-open')).toBe(true);
     expect(menuButtonElement.getAttribute('aria-expanded')).toBe('true');
-    expect(overlay.classList.contains('open')).toBe(true);
+    expect(overlay.classList.contains('active')).toBe(true);
     expect(overlay.getAttribute('aria-hidden')).toBe('false');
     expect(navItemFocusSpy).toHaveBeenCalledTimes(1);
     inertElements.forEach((element) => {
@@ -118,7 +118,7 @@ describe('navigationDrawerService', () => {
     expect(document.body.classList.contains('drawer-is-open')).toBe(false);
     expect(menuButtonElement.getAttribute('aria-expanded')).toBe('false');
     expect(menuFocusSpy).toHaveBeenCalledTimes(1);
-    expect(overlay.classList.contains('open')).toBe(false);
+    expect(overlay.classList.contains('active')).toBe(false);
     expect(overlay.getAttribute('aria-hidden')).toBe('true');
     inertElements.forEach((element) => {
       expect(element.hasAttribute('inert')).toBe(false);
@@ -138,6 +138,32 @@ describe('navigationDrawerService', () => {
       expect(element.hasAttribute('inert')).toBe(false);
       expect(element.getAttribute('aria-hidden')).toBe('false');
     });
+  });
+
+  // Change Rationale: Validate close button and nav selection behavior so the
+  // modal drawer always dismisses on small screens per the shell doctrine.
+  test('closes the drawer with the close button and nav selection on small screens', () => {
+    const closeButton = document.getElementById('closeDrawerButton');
+    const menuButtonElement = document.getElementById('menuButton');
+    const navDrawerElement = document.getElementById('navDrawer');
+    const homeLink = document.getElementById('homeLink');
+
+    Object.defineProperty(window, 'matchMedia', {
+      value: jest.fn(() => ({ matches: true })),
+      configurable: true,
+    });
+
+    menuButtonElement.click();
+    expect(navDrawerElement.classList.contains('open')).toBe(true);
+
+    closeButton.click();
+    expect(navDrawerElement.classList.contains('open')).toBe(false);
+
+    menuButtonElement.click();
+    expect(navDrawerElement.classList.contains('open')).toBe(true);
+
+    homeLink.click();
+    expect(navDrawerElement.classList.contains('open')).toBe(false);
   });
 
   test('toggle sections open independently with default expansions', () => {
