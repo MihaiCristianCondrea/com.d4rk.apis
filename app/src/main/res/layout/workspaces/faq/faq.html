@@ -81,11 +81,28 @@
             <div class="plan-header">
               <h2>Today's pipeline</h2><span class="plan-updated">Updated as you edit</span>
             </div>
-            <ol class="plan-list">
-              <li><span class="plan-step-title">Draft clear questions</span> <span class="plan-step-meta">Keep them scoped to one concern.</span></li>
-              <li><span class="plan-step-title">Pair with succinct HTML answers</span> <span class="plan-step-meta">Use paragraphs and lists for readability.</span></li>
-              <li><span class="plan-step-title">Validate & export</span> <span class="plan-step-meta">Refresh <code>index.json</code> and category files in the repo.</span></li>
-            </ol>
+            <!-- Change Rationale: Plan steps now follow BeerCSS list rows with div.max + small
+                 text so list spacing remains stock and accessible. -->
+            <ul class="list plan-list">
+              <li class="wave round">
+                <div class="max">
+                  <span>Draft clear questions</span>
+                  <small>Keep them scoped to one concern.</small>
+                </div>
+              </li>
+              <li class="wave round">
+                <div class="max">
+                  <span>Pair with succinct HTML answers</span>
+                  <small>Use paragraphs and lists for readability.</small>
+                </div>
+              </li>
+              <li class="wave round">
+                <div class="max">
+                  <span>Validate &amp; export</span>
+                  <small>Refresh <code>index.json</code> and category files in the repo.</small>
+                </div>
+              </li>
+            </ul>
           </div>
         </md-filled-card>
         <md-filled-card class="workspace-release">
@@ -94,10 +111,24 @@
               <h2>Workspace status</h2>
               <p id="faqWorkspacePulse">Awaiting first entry.</p>
             </div>
-            <ul class="release-tips">
-              <li>Assign one or more categories per FAQ when it helps with grouping.</li>
-              <li>Feature the answers that deserve extra visibility in app hubs.</li>
-              <li>Icon symbols use Google's Material Symbols catalog.</li>
+            <!-- Change Rationale: Release tips now use BeerCSS list rows to keep ripple and
+                 spacing consistent with other list surfaces. -->
+            <ul class="list release-tips">
+              <li class="wave round">
+                <div class="max">
+                  <span>Assign one or more categories per FAQ when it helps with grouping.</span>
+                </div>
+              </li>
+              <li class="wave round">
+                <div class="max">
+                  <span>Feature the answers that deserve extra visibility in app hubs.</span>
+                </div>
+              </li>
+              <li class="wave round">
+                <div class="max">
+                  <span>Icon symbols use Google's Material Symbols catalog.</span>
+                </div>
+              </li>
             </ul>
           </div>
         </md-filled-card>

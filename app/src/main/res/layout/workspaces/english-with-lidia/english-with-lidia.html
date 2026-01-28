@@ -33,13 +33,40 @@
     data-legend-secondary-text="Lesson"
   >
     <template slot="plan-steps">
-      <li><span class="plan-step-title">Refine home feed metadata</span> <span class="plan-step-meta" id="englishReviewCount">0 cards needing attention</span></li>
-      <li><span class="plan-step-title">Validate lesson structure</span> <span class="plan-step-meta">Ensure title, metadata, and blocks render cleanly.</span></li>
-      <li><span class="plan-step-title">Publish to GitHub</span> <span class="plan-step-meta">Ship debug and release payloads together.</span></li>
+      <!-- Change Rationale: Plan steps now use BeerCSS list rows with div.max + small text so
+           list spacing and typography match the framework defaults. -->
+      <li class="wave round">
+        <div class="max">
+          <span>Refine home feed metadata</span>
+          <small id="englishReviewCount">0 cards needing attention</small>
+        </div>
+      </li>
+      <li class="wave round">
+        <div class="max">
+          <span>Validate lesson structure</span>
+          <small>Ensure title, metadata, and blocks render cleanly.</small>
+        </div>
+      </li>
+      <li class="wave round">
+        <div class="max">
+          <span>Publish to GitHub</span>
+          <small>Ship debug and release payloads together.</small>
+        </div>
+      </li>
     </template>
     <template slot="release-tips">
-      <li>Populate lesson_id, lesson_type, and thumbnails for each card.</li>
-      <li>Provide at least four content blocks per lesson to keep pacing.</li>
+      <!-- Change Rationale: Release tips are now BeerCSS list rows to keep ripple and spacing
+           aligned with other list surfaces. -->
+      <li class="wave round">
+        <div class="max">
+          <span>Populate lesson_id, lesson_type, and thumbnails for each card.</span>
+        </div>
+      </li>
+      <li class="wave round">
+        <div class="max">
+          <span>Provide at least four content blocks per lesson to keep pacing.</span>
+        </div>
+      </li>
     </template>
   </section>
   <div class="card-body">

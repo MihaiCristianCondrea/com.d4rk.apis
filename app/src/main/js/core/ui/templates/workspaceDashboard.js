@@ -183,8 +183,17 @@ function renderListSlot(host, fragment, slotName, targetSelector) {
   }
 
   if (!target.children.length) {
+    // Change Rationale: Fallback list items now mirror the BeerCSS list row
+    // structure (li.wave.round + div.max + span) so list spacing and ripple
+    // behavior stay consistent across templates.
     const fallback = document.createElement('li');
-    fallback.textContent = 'Add checklist items to guide the workflow.';
+    fallback.className = 'wave round';
+    const max = document.createElement('div');
+    max.className = 'max';
+    const title = document.createElement('span');
+    title.textContent = 'Add checklist items to guide the workflow.';
+    max.appendChild(title);
+    fallback.appendChild(max);
     target.appendChild(fallback);
   }
 }

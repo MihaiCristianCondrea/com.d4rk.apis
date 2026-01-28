@@ -73,22 +73,40 @@
     data-legend-secondary-text="Release"
   >
     <template slot="plan-steps">
-      <li>
-        <span class="plan-step-title">Curate metadata</span>
-        <span class="plan-step-meta" id="appToolkitReviewCount">0 entries queued</span>
+      <!-- Change Rationale: Plan steps now use BeerCSS list rows with div.max, title, and small
+           helper text so list spacing and typography stay aligned with framework defaults. -->
+      <li class="wave round">
+        <div class="max">
+          <span>Curate metadata</span>
+          <small id="appToolkitReviewCount">0 entries queued</small>
+        </div>
       </li>
-      <li>
-        <span class="plan-step-title">Validate JSON preview</span>
-        <span class="plan-step-meta">Keep status green before publishing.</span>
+      <li class="wave round">
+        <div class="max">
+          <span>Validate JSON preview</span>
+          <small>Keep status green before publishing.</small>
+        </div>
       </li>
-      <li>
-        <span class="plan-step-title">Publish to GitHub</span>
-        <span class="plan-step-meta">Ship debug and release catalogs together.</span>
+      <li class="wave round">
+        <div class="max">
+          <span>Publish to GitHub</span>
+          <small>Ship debug and release catalogs together.</small>
+        </div>
       </li>
     </template>
     <template slot="release-tips">
-      <li>Add icons and three screenshots to unlock release readiness.</li>
-      <li>Use quick presets below to pull the latest production data.</li>
+      <!-- Change Rationale: Release tips adopt BeerCSS list rows so ripple and spacing match
+           the rest of the shell and avoid custom list spacing overrides. -->
+      <li class="wave round">
+        <div class="max">
+          <span>Add icons and three screenshots to unlock release readiness.</span>
+        </div>
+      </li>
+      <li class="wave round">
+        <div class="max">
+          <span>Use quick presets below to pull the latest production data.</span>
+        </div>
+      </li>
     </template>
   </section>
 

@@ -365,6 +365,11 @@
   gap: 1.25rem;
 }
 
+/* Change Rationale: Plan and release lists now rely on BeerCSS list defaults,
+ * so custom list spacing and typography overrides are removed to keep the
+ * stock list rhythm and ripple behavior.
+ */
+
 .plan-header {
   display: flex;
   flex-direction: column;
@@ -383,23 +388,6 @@
   color: var(--app-secondary-text-color);
 }
 
-.plan-list {
-  margin: 0;
-  padding-left: 1.2rem;
-  display: grid;
-  gap: 0.75rem;
-}
-
-.plan-step-title {
-  font-weight: 550;
-  color: var(--app-text-color);
-}
-
-.plan-step-meta {
-  display: block;
-  font-size: 0.85rem;
-  color: var(--app-secondary-text-color);
-}
 
 .plan-actions {
   display: flex;
@@ -474,14 +462,6 @@
   color: var(--app-secondary-text-color);
 }
 
-.release-tips {
-  margin: 0;
-  padding-left: 1.1rem;
-  display: grid;
-  gap: 0.5rem;
-  color: var(--app-secondary-text-color);
-  font-size: 0.9rem;
-}
 
 @media (max-width: 900px) {
   .workspace-dashboard {

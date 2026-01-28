@@ -37,7 +37,9 @@
             <h2>Today's pipeline</h2>
             <span class="plan-updated">Updated <span data-slot-target="last-edited">awaiting changes</span></span>
           </div>
-          <ol class="plan-list" data-slot-target="plan-list"></ol>
+          <!-- Change Rationale: Plan lists now use BeerCSS list rows so spacing and typography
+               inherit the framework defaults without custom list spacing overrides. -->
+          <ul class="list plan-list" data-slot-target="plan-list"></ul>
           <div class="plan-actions">
             <span class="material-symbols-outlined">timelapse</span>
             Start focus session
@@ -62,7 +64,9 @@
               <span data-slot-target="legend-secondary">Lesson</span>
             </div>
           </div>
-          <ul class="release-tips" data-slot-target="release-tips"></ul>
+          <!-- Change Rationale: Release tips now render as BeerCSS list rows to keep list density
+               and ripple behavior consistent with other navigation lists. -->
+          <ul class="list release-tips" data-slot-target="release-tips"></ul>
         </div>
       </div>
     </div>

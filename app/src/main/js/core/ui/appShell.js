@@ -117,12 +117,25 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- App Bar Scroll Behavior ---
     if (topAppBarEl) {
-        window.addEventListener('scroll', () => {
-            const isScrolled = window.scrollY > 0;
-            topAppBarEl.classList.toggle('scrolled', isScrolled);
-        });
+        // Change Rationale: BeerCSS expects the app bar to use the `fill` surface class
+        // with an elevated state on scroll; toggling the framework class keeps the
+        // header aligned with stock behavior without custom styling.
+        applyAppBarScrollState(topAppBarEl);
+        window.addEventListener('scroll', () => applyAppBarScrollState(topAppBarEl));
     }
 });
+
+/**
+ * Applies the app bar surface classes based on the current scroll position.
+ *
+ * @param {HTMLElement} appBarEl - The top app bar element.
+ * @returns {void}
+ */
+function applyAppBarScrollState(appBarEl) {
+    const isScrolled = window.scrollY > 0;
+    appBarEl.classList.add('fill');
+    appBarEl.classList.toggle('elevate', isScrolled);
+}
 
 /**
  * Builds the router options payload, wiring global page handlers when present.
