@@ -22,6 +22,14 @@ jest.mock('../app/src/main/js/core/data/services/navigationDrawerService.js', ()
   initNavigationDrawer: jest.fn(() => ({ close: jest.fn() })),
 }));
 
+// Change Rationale: Mock the navigation view import so appShell can load under Jest
+// without requiring the raw Vite HTML loader in the test environment.
+jest.mock(
+  '../app/src/main/js/core/ui/components/navigation/AppNavigationView.html?raw',
+  () => '<div data-app-navigation></div>',
+  { virtual: true }
+);
+
 jest.mock('../app/src/main/js/core/ui/router/index.js', () => ({
   initRouter: jest.fn(),
   loadPageContent: jest.fn(),
@@ -87,9 +95,9 @@ test('app shell toggles app bar elevation on scroll', () => {
 test('updateActiveNavLink marks the current route as selected', () => {
   document.body.innerHTML = `
     <dialog id="navDrawer">
-      <a class="nav-link" href="#home">Home</a>
-      <a class="nav-link" href="#faq-api">FAQ</a>
-      <a class="nav-link" href="#app-toolkit-api">App Toolkit</a>
+      <a class="nav-link" data-nav-link href="#home">Home</a>
+      <a class="nav-link" data-nav-link href="#faq-api">FAQ</a>
+      <a class="nav-link" data-nav-link href="#app-toolkit-api">App Toolkit</a>
     </dialog>
   `;
 

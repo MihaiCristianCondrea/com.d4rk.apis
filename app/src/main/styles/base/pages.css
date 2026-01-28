@@ -167,10 +167,27 @@
 .action-card {
   border: 1px solid var(--md-sys-color-outline-variant);
   background-color: var(--md-sys-color-surface);
+  transition: border-color 160ms ease, box-shadow 160ms ease,
+    transform 160ms ease, background-color 160ms ease;
 }
 
 .info-card {
   background-color: var(--md-sys-color-surface-container);
+  transition: box-shadow 160ms ease, background-color 160ms ease;
+}
+
+/* Change Rationale: Clickable cards now surface a consistent hover/focus ring
+ * so navigation intent is clear without relying on custom per-screen styling.
+ */
+.action-card:hover {
+  border-color: color-mix(in srgb, var(--md-sys-color-primary) 40%, var(--md-sys-color-outline-variant));
+  box-shadow: 0 4px 16px color-mix(in srgb, var(--md-sys-color-primary) 18%, transparent);
+  transform: translateY(-1px);
+}
+
+.action-card:focus-visible {
+  outline: 2px solid var(--md-sys-color-primary);
+  outline-offset: 3px;
 }
 
 .feature-card-icon {

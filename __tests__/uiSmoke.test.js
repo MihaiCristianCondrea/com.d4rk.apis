@@ -4,8 +4,8 @@
 
 /*
  * Change Rationale:
- * - Validate that the Home screen declares the correct navigation surfaces
- *   (rail on m/l, drawer on s) without duplicating routing logic.
+ * - Validate that the canonical navigation view declares the correct surfaces
+ *   (rail on m/l, drawer on s) without duplicating routing logic in screens.
  */
 
 const fs = require('fs');
@@ -24,7 +24,39 @@ function loadHtmlDocument(filePath) {
 }
 
 describe('UI smoke', () => {
-  test('home navigation surfaces follow rail vs drawer breakpoint rules', () => {
+  test('navigation surfaces follow rail vs drawer breakpoint rules', () => {
+    const repoRoot = path.join(__dirname, '..');
+    const navViewPath = path.join(
+      repoRoot,
+      'app',
+      'src',
+      'main',
+      'js',
+      'core',
+      'ui',
+      'components',
+      'navigation',
+      'AppNavigationView.html'
+    );
+    const doc = loadHtmlDocument(navViewPath);
+
+    const navRail = doc.getElementById('navRail');
+    const navDrawer = doc.getElementById('navDrawer');
+    const drawerOverlay = doc.getElementById('drawerOverlay');
+
+    expect(navRail).not.toBeNull();
+    expect(navRail.classList.contains('m')).toBe(true);
+    expect(navRail.classList.contains('l')).toBe(true);
+    expect(navRail.classList.contains('s')).toBe(false);
+
+    expect(navDrawer).not.toBeNull();
+    expect(navDrawer.classList.contains('s')).toBe(true);
+
+    expect(drawerOverlay).not.toBeNull();
+    expect(drawerOverlay.classList.contains('s')).toBe(true);
+  });
+
+  test('home shell mounts navigation outside the main content container', () => {
     const repoRoot = path.join(__dirname, '..');
     const homeScreenPath = path.join(
       repoRoot,
@@ -39,23 +71,11 @@ describe('UI smoke', () => {
     );
     const doc = loadHtmlDocument(homeScreenPath);
 
-    const navRail = doc.getElementById('navRail');
-    const navDrawer = doc.getElementById('navDrawer');
-    const menuButton = doc.getElementById('menuButton');
-    const drawerOverlay = doc.getElementById('drawerOverlay');
+    const navMount = doc.getElementById('appNavigationMount');
+    const mainContent = doc.getElementById('pageContentArea');
 
-    expect(navRail).not.toBeNull();
-    expect(navRail.classList.contains('m')).toBe(true);
-    expect(navRail.classList.contains('l')).toBe(true);
-    expect(navRail.classList.contains('s')).toBe(false);
-
-    expect(navDrawer).not.toBeNull();
-    expect(navDrawer.classList.contains('s')).toBe(true);
-
-    expect(menuButton).not.toBeNull();
-    expect(menuButton.classList.contains('s')).toBe(true);
-
-    expect(drawerOverlay).not.toBeNull();
-    expect(drawerOverlay.classList.contains('s')).toBe(true);
+    expect(navMount).not.toBeNull();
+    expect(mainContent).not.toBeNull();
+    expect(mainContent.contains(navMount)).toBe(false);
   });
 });

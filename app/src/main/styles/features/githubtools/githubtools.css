@@ -44,7 +44,6 @@
 
 .gh-tools-header h1 {
   margin: 0;
-  font-size: clamp(2.3rem, 3.5vw, 2.9rem);
   /* Change Rationale: GitHub tools headers and badges previously used bold (700) weights that
    * overpowered the card subtitles. Moving to semibold (600) matches Material 3 typography,
    * preserves hierarchy, and improves readability against the dark surfaces.
@@ -713,13 +712,14 @@
   flex-wrap: wrap;
 }
 
-.gh-favorite-actions .gh-button,
-.gh-favorite-actions .gh-ghost-button {
+.gh-favorite-actions .app-button {
   flex: 1 1 0;
   min-width: 140px;
   justify-content: center;
+}
+
+.gh-favorite-actions .app-button--secondary {
   border-color: color-mix(in srgb, var(--gh-outline) 55%, transparent);
-  background: color-mix(in srgb, var(--gh-card-strong) 65%, var(--gh-card));
 }
 
 .gh-empty {
@@ -768,28 +768,9 @@
   color: var(--gh-subtext);
 }
 
-.gh-button.secondary,
-.gh-pill-button,
-.gh-favorite-card .gh-button {
-  background: color-mix(in srgb, var(--gh-card-strong) 80%, var(--gh-card));
-  color: var(--gh-text);
-  border-radius: 999px;
-  border: 1px solid color-mix(in srgb, var(--gh-outline) 45%, transparent);
-  padding: 0.6rem 0.9rem;
-  /* Change Rationale: Secondary buttons and favorite actions previously sat at semibold (600),
-   * which kept them visually loud. Normal weight (400) still reads clearly while shifting emphasis
-   * back to color, spacing, and state layers in line with Material 3 guidance for supporting actions.
-   */
-  font-weight: 400;
-  cursor: pointer;
-}
-
-.gh-button.secondary:hover,
-.gh-pill-button:hover {
-  background: color-mix(in srgb, var(--md-sys-color-primary) 12%, transparent);
-}
-
-.gh-favorite-card .gh-button.secondary {
+/* Change Rationale: Favorite card actions now inherit the global app button styles,
+ * so sizing and emphasis stay aligned with shared button roles. */
+.gh-favorite-card .app-button {
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;

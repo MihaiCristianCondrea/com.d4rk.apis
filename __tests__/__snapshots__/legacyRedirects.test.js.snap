@@ -5,7 +5,7 @@ exports[`createLegacyRedirectHtml matches the expected template 1`] = `
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta http-equiv="refresh" content="0; url=../../#git-patch" />
+    <meta http-equiv="refresh" content="0; url=../../#githubtools-git-patch" />
     <meta name="robots" content="noindex" />
     <title>Redirecting…</title>
   </head>
@@ -14,9 +14,9 @@ exports[`createLegacyRedirectHtml matches the expected template 1`] = `
       (function () {
         const search = window.location.search || '';
         const hash = window.location.hash || '';
-        const basePath = window.location.pathname.replace(/\\/layout\\/github-tools\\/[^/]*$/i, '/');
+        const basePath = window.location.pathname.replace(/\\/layout\\/githubtools\\/[^/]*$/i, '/');
         const base = basePath.endsWith('/') ? basePath : basePath + '/';
-        const target = base + '#git-patch' + search + hash;
+        const target = base + '#githubtools-git-patch' + search + hash;
         window.location.replace(target);
       })();
     </script>

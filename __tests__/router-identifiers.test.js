@@ -9,22 +9,22 @@ const { normalizePageId } = require('../app/src/main/js/core/ui/router/identifie
 
 describe('normalizePageId', () => {
   test('maps legacy GitHub tool layout URLs to route IDs', () => {
-    expect(normalizePageId('/layout/github-tools/git-patch.html')).toBe('git-patch');
-    expect(normalizePageId('/layout/github-tools/repo-mapper.html')).toBe('repo-mapper');
-    expect(normalizePageId('/layout/github-tools/release-stats.html')).toBe('release-stats');
+    expect(normalizePageId('/layout/githubtools/git-patch.html')).toBe('githubtools-git-patch');
+    expect(normalizePageId('/layout/githubtools/repo-mapper.html')).toBe('githubtools-repo-mapper');
+    expect(normalizePageId('/layout/githubtools/release-stats.html')).toBe('githubtools-release-stats');
   });
 
   test('maps legacy GitHub tool layout URLs with hash prefixes', () => {
-    expect(normalizePageId('#/layout/github-tools/git-patch.html')).toBe('git-patch');
-    expect(normalizePageId('#/layout/github-tools/repo-mapper.html')).toBe('repo-mapper');
+    expect(normalizePageId('#/layout/githubtools/git-patch.html')).toBe('githubtools-git-patch');
+    expect(normalizePageId('#/layout/githubtools/repo-mapper.html')).toBe('githubtools-repo-mapper');
   });
 
   test('normalizes legacy GitHub tool layout variants', () => {
-    expect(normalizePageId('/LAYOUT/GITHUB-TOOLS/GIT-PATCH.HTML')).toBe('git-patch');
-    expect(normalizePageId('/layout//github-tools//repo-mapper.html')).toBe('repo-mapper');
-    expect(normalizePageId('/layout/github-tools/release-stats.html/')).toBe('release-stats');
-    expect(normalizePageId('/layout/github-tools/git-patch.html?utm=1')).toBe('git-patch');
-    expect(normalizePageId('/layout/github-tools/repo-mapper.html#section')).toBe('repo-mapper');
+    expect(normalizePageId('/LAYOUT/GITHUBTOOLS/GIT-PATCH.HTML')).toBe('githubtools-git-patch');
+    expect(normalizePageId('/layout//githubtools//repo-mapper.html')).toBe('githubtools-repo-mapper');
+    expect(normalizePageId('/layout/githubtools/release-stats.html/')).toBe('githubtools-release-stats');
+    expect(normalizePageId('/layout/githubtools/git-patch.html?utm=1')).toBe('githubtools-git-patch');
+    expect(normalizePageId('/layout/githubtools/repo-mapper.html#section')).toBe('githubtools-repo-mapper');
   });
 
   test('ignores unrelated layout URLs', () => {

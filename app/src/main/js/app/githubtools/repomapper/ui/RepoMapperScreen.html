@@ -11,11 +11,9 @@
           <span class="gh-stat-pill"><span id="mapper-stats-folders">0</span> Folders</span>
           <span class="gh-stat-pill"><span id="mapper-stats-files">0</span> Files</span>
         </div>
-        <!-- Change Rationale: Secondary actions previously used custom ghost classes, which
-             produced mismatched outlines and corner radii. Using BeerCSS `border`, `transparent`,
-             and size helpers keeps the button shape consistent with the primary action while
-             respecting Material 3's outlined control guidance. -->
-        <button type="button" id="mapper-copy-btn" class="small round transparent border">
+        <!-- Change Rationale: Secondary actions now use the shared app button helpers so
+             outlined styling stays consistent across GitHub tools without per-screen stacks. -->
+        <button type="button" id="mapper-copy-btn" class="app-button app-button--secondary app-button--small">
           <span class="material-symbols-outlined">content_copy</span>
           <span>Copy Code</span>
         </button>

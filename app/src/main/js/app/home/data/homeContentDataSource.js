@@ -127,25 +127,27 @@ export const workspaceCards = [
  * @type {GithubToolConfig[]}
  */
 export const githubTools = [
+  // Change Rationale: GitHub tools route IDs now use the `githubtools-` prefix
+  // so navigation targets align with the canonical feature naming.
   {
-    id: 'repo-mapper',
-    href: '#repo-mapper',
+    id: 'githubtools-repo-mapper',
+    href: '#githubtools-repo-mapper',
     icon: 'terminal',
     title: 'Repo Mapper',
     description:
         'Generate ASCII directory trees from any public repository. Perfect for documentation and LLM context.',
   },
   {
-    id: 'release-stats',
-    href: '#release-stats',
+    id: 'githubtools-release-stats',
+    href: '#githubtools-release-stats',
     icon: 'bar_chart',
     title: 'Release Stats',
     description:
         'Visualize download counts, analyze asset performance, and track version history in real-time.',
   },
   {
-    id: 'git-patch',
-    href: '#git-patch',
+    id: 'githubtools-git-patch',
+    href: '#githubtools-git-patch',
     icon: 'difference',
     title: 'Git Patch',
     description:

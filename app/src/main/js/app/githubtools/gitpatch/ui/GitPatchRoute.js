@@ -59,20 +59,22 @@ export function registerGitPatchRoute() {
   // Change Rationale: Git Patch routes must override legacy entries that pointed to `/layout`
   // so the Screen-based inline HTML path is always used. This keeps navigation aligned with
   // the Repo Mapper and Release Stats flow while preventing 404s in production.
-  const existingRoute = RouterRoutes.getRoute('git-patch');
+  // Change Rationale: GitHub tools route IDs now share the `githubtools-` prefix
+  // so router identifiers match the canonical feature naming scheme.
+  const existingRoute = RouterRoutes.getRoute('githubtools-git-patch');
   if (existingRoute?.inlineHtml) {
     return;
   }
 
   RouterRoutes.registerRoute({
-    id: 'git-patch',
+    id: 'githubtools-git-patch',
     title: 'Git Patch',
     onLoad: initGitPatch,
     inlineHtml: buildGitPatchScreenHtml(),
     metadata: {
       description: 'Extract raw .patch files from commit URLs. Easily apply changes from one repo to another or perform code reviews.',
       keywords: ['Git Patch', 'GitHub', 'patch', 'commit'],
-      canonicalSlug: 'git-patch',
+      canonicalSlug: 'githubtools-git-patch',
       openGraph: {
         title: 'Git Patch',
         description: 'Extract raw .patch files from commit URLs. Easily apply changes from one repo to another or perform code reviews.',

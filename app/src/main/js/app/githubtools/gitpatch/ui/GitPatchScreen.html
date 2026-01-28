@@ -11,15 +11,13 @@
           <span class="gh-stat-pill"><span class="material-symbols-outlined">check</span> <span>Ready to apply</span></span>
         </div>
         <div class="gh-action-row">
-          <!-- Change Rationale: Secondary actions previously used custom ghost classes, which
-               produced mismatched outlines and corner radii. Using BeerCSS `border`, `transparent`,
-               and size helpers keeps the button shape consistent with the primary action while
-               respecting Material 3's outlined control guidance. -->
-          <button type="button" id="patch-download-btn" class="small round transparent border">
+        <!-- Change Rationale: Secondary actions now use the shared app button helpers so
+             outlined styling stays consistent across GitHub tools without per-screen stacks. -->
+          <button type="button" id="patch-download-btn" class="app-button app-button--secondary app-button--small">
             <span class="material-symbols-outlined">download</span>
             <span>Download</span>
           </button>
-          <button type="button" id="patch-copy-btn" class="small round transparent border">
+          <button type="button" id="patch-copy-btn" class="app-button app-button--secondary app-button--small">
             <span class="material-symbols-outlined">content_copy</span>
             <span>Copy</span>
           </button>

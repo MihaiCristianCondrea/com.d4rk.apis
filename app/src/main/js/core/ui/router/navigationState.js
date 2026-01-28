@@ -1,7 +1,5 @@
-// Change Rationale: Beer CSS navigation replaces Material list items with
-// semantic anchors and <details> groups. The active-state helper now targets
-// `.nav-link` entries and keeps the new summary toggles expanded when a nested
-// route is active.
+// Change Rationale: Navigation state now targets the canonical rail + drawer
+// anchors so the router owns the active highlight across all navigation surfaces.
 import normalizePageId from './identifiers.js';
 
 /**
@@ -47,14 +45,12 @@ import normalizePageId from './identifiers.js';
 export function updateActiveNavLink(currentPageId) {
   const normalizedCurrentPage = normalizePageId(currentPageId);
 
-  document.querySelectorAll('#navDrawer .nav-link[href]').forEach((item) => {
-    // Reset any existing active state on the item.
-    item.classList.remove('active');
+  document.querySelectorAll('[data-nav-link][href]').forEach((item) => {
+    item.classList.remove('active', 'primary-container');
     item.removeAttribute('aria-current');
     item.removeAttribute('aria-selected');
 
-    // Read and normalize the navigation target for this item.
-    let itemHref = item.getAttribute('href');
+    const itemHref = item.getAttribute('href');
     if (!itemHref) {
       return;
     }
@@ -64,23 +60,9 @@ export function updateActiveNavLink(currentPageId) {
       return;
     }
 
-    // Mark this item as the active navigation entry.
-    item.classList.add('active');
+    item.classList.add('active', 'primary-container');
     item.setAttribute('aria-current', 'page');
     item.setAttribute('aria-selected', 'true');
-
-    // If the item lives inside a nested list, ensure its parent group is expanded.
-    const nestedParent = item.closest('.nested-list');
-    if (!nestedParent || !nestedParent.id) {
-      return;
-    }
-
-    const toggleButton = document.querySelector(
-        `[aria-controls="${nestedParent.id}"]`
-    );
-    if (toggleButton && !toggleButton.classList.contains('expanded')) {
-      toggleButton.click();
-    }
   });
 }
 

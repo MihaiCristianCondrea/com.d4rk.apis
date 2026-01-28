@@ -1,7 +1,9 @@
 <!-- Change Rationale: Centralize the GitHub tools header markup so each tool screen reuses the
      same Material 3-aligned structure without duplicating typography or spacing rules. -->
 <header class="gh-tools-header">
-  <p class="gh-eyebrow">{{eyebrow}}</p>
-  <h1>{{title}}</h1>
-  <p class="gh-subtext">{{subtext}}</p>
+  <!-- Change Rationale: Apply the shared MD3 type scale so GitHub tool headers
+       present a clear headline/label/body hierarchy instead of uniform sizing. -->
+  <p class="gh-eyebrow type-label-large">{{eyebrow}}</p>
+  <h1 class="type-headline-large">{{title}}</h1>
+  <p class="gh-subtext type-body-medium">{{subtext}}</p>
 </header>
