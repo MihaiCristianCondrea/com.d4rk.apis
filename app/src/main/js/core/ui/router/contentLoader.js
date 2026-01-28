@@ -110,6 +110,18 @@ async function fetchPageMarkup(pageId, options = {}) {
     const pageTitle = routeConfig.title || DEFAULT_PAGE_TITLE;
     const onReadyHook = routeConfig.onLoad || null;
 
+    // Change Rationale: Allow routes to supply inline HTML so feature Route modules can
+    // compose Screen + View markup without requiring a fetch to `/layout`.
+    if (typeof routeConfig.inlineHtml === 'string' && routeConfig.inlineHtml.trim()) {
+        return {
+            status: 'success',
+            title: pageTitle,
+            html: routeConfig.inlineHtml,
+            onReady: onReadyHook,
+            sourceTitle: pageTitle
+        };
+    }
+
     // 2–3. Routes without a path
     if (!routeConfig.path) {
         if (routeConfig.id !== 'home') {

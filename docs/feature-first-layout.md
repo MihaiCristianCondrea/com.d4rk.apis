@@ -4,7 +4,8 @@
 
 ## Canonical structure
 - Core infrastructure stays in `app/src/main/js/core/` (router, styles, services, shared UI).
-- User-facing modules live in `app/src/main/js/app/<feature>/` with subfolders `data/`, `domain/`, and `ui/` (for example, `app/home`, `app/github-tools`, `app/workspaces/app-toolkit`).
+<!-- Change Rationale: Update the example feature path to match the current githubtools folder naming. -->
+- User-facing modules live in `app/src/main/js/app/<feature>/` with subfolders `data/`, `domain/`, and `ui/` (for example, `app/home`, `app/githubtools`, `app/workspaces/app-toolkit`).
 - Workspace folders match API slugs (for example, `app/workspaces/faq` instead of `faqs`).
 
 ## Import conventions

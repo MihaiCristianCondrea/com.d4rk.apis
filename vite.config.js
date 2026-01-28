@@ -5,6 +5,7 @@ import tailwindcss from '@tailwindcss/vite';
 
 const pagesDir = resolve(__dirname, 'app/src/main/res/layout');
 const workersDir = resolve(__dirname, 'app/src/main/js/core/data/workers');
+const screensDir = resolve(__dirname, 'app/src/main/js/app');
 const mipmapDir = resolve(__dirname, 'app/src/main/res/mipmap');
 const drawableDir = resolve(__dirname, 'app/src/main/res/drawable');
 
@@ -44,6 +45,7 @@ function staticPagesPlugin() {
       server.middlewares.use((req, res, next) => {
         if (serveStaticDir(req, res, next, '/layout/', pagesDir)) return;
         if (serveStaticDir(req, res, next, '/pages/', pagesDir)) return;
+        if (serveStaticDir(req, res, next, '/screens/', screensDir)) return;
         next();
       });
 
@@ -103,11 +105,17 @@ function staticPagesPlugin() {
       if (!outDir) {
         return;
       }
-      const targetDirs = ['pages', 'layout'];
-      targetDirs.forEach((dirName) => {
-        const targetDir = resolve(__dirname, outDir, dirName);
+      const targetDirs = [
+        { name: 'pages', source: pagesDir },
+        { name: 'layout', source: pagesDir },
+        // Change Rationale: GitHub tool screens now live under the feature UI tree, so
+        // copy the feature screens into a dedicated static folder for the router.
+        { name: 'screens', source: screensDir },
+      ];
+      targetDirs.forEach(({ name, source }) => {
+        const targetDir = resolve(__dirname, outDir, name);
         fs.mkdirSync(targetDir, { recursive: true });
-        fs.cpSync(pagesDir, targetDir, { recursive: true });
+        fs.cpSync(source, targetDir, { recursive: true });
       });
 
       const staticFiles = [
@@ -140,9 +148,13 @@ function staticPagesPlugin() {
         fs.cpSync(drawableDir, resolve(__dirname, outDir, 'drawable'), { recursive: true });
       }
 
-      // Change Rationale: The home layout template now uses a descriptive file name instead of
-      // index.html, so the build step must locate the updated path for the main shell.
-      const builtIndex = resolve(__dirname, outDir, 'app/src/main/res/layout/home/home.html');
+      // Change Rationale: The Home screen now follows the Screen naming convention,
+      // so the build step must locate the updated path for the main shell.
+      const builtIndex = resolve(
+        __dirname,
+        outDir,
+        'app/src/main/js/app/home/ui/HomeScreen.html',
+      );
       if (fs.existsSync(builtIndex)) {
         const builtHtml = fs.readFileSync(builtIndex, 'utf-8');
         const rewrittenHtml = builtHtml
@@ -171,9 +183,9 @@ export default defineConfig({
     emptyOutDir: true,
     rollupOptions: {
       input: {
-        // Change Rationale: Align the Vite entry point with the renamed home layout template
+        // Change Rationale: Align the Vite entry point with the renamed Home screen
         // so the main shell continues to compile from the canonical home screen file.
-        main: resolve(__dirname, 'app/src/main/res/layout/home/home.html'),
+        main: resolve(__dirname, 'app/src/main/js/app/home/ui/HomeScreen.html'),
       },
     },
   },

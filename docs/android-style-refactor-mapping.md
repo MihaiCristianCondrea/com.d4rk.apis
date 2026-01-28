@@ -17,7 +17,7 @@ hooks intact.
 | app/src/main/js/core/utils/utils.js | app/src/main/js/core/ui/utils/domUtils.js | core/ui |
 | app/src/main/js/core/utils/constants.js | app/src/main/js/core/domain/constants.js | core/domain |
 | app/src/main/js/core/router/** | app/src/main/js/core/ui/router/** | core/ui |
-| app/src/main/js/core/features/githubTools.js | app/src/main/js/app/github-tools/domain/githubTools.js | feature/github-tools/domain |
+| app/src/main/js/core/features/githubTools.js | app/src/main/js/app/githubtools/common/domain/githubTools.js | feature/githubtools/common/domain |
 | app/src/main/js/core/legacyBridge.js | app/src/main/js/core/ui/legacyBridge.js | core/ui |
 | app/src/main/js/workers/*.js | app/src/main/js/core/data/workers/*.js | core/data |
 | app/src/main/js/router/** (facades) | app/src/main/js/router/** (facades -> core/ui/router) | compatibility |
@@ -31,11 +31,11 @@ hooks intact.
 
 | Old path | New path | Layer |
 | --- | --- | --- |
-| app/src/main/js/features/home/data/homeContent.js | app/src/main/js/app/home/data/homeContent.js | feature/home/data |
+| app/src/main/js/features/home/data/homeContent.js | app/src/main/js/app/home/data/homeContentDataSource.js | feature/home/data |
 | app/src/main/js/features/home/ui/homePage.js | app/src/main/js/app/home/ui/HomeRoute.js | feature/home/ui |
-| app/src/main/js/features/github-tools/repo-mapper/ui/repoMapper.js | app/src/main/js/app/github-tools/ui/routes/RepoMapperRoute.js | feature/github-tools/ui |
-| app/src/main/js/features/github-tools/release-stats/ui/releaseStats.js | app/src/main/js/app/github-tools/ui/routes/ReleaseStatsRoute.js | feature/github-tools/ui |
-| app/src/main/js/features/github-tools/git-patch/ui/gitPatch.js | app/src/main/js/app/github-tools/ui/routes/GitPatchRoute.js | feature/github-tools/ui |
+| app/src/main/js/features/github-tools/repo-mapper/ui/repoMapper.js | app/src/main/js/app/githubtools/repomapper/ui/RepoMapperRoute.js | feature/githubtools/repomapper/ui |
+| app/src/main/js/features/github-tools/release-stats/ui/releaseStats.js | app/src/main/js/app/githubtools/releasestats/ui/ReleaseStatsRoute.js | feature/githubtools/releasestats/ui |
+| app/src/main/js/features/github-tools/git-patch/ui/gitPatch.js | app/src/main/js/app/githubtools/gitpatch/ui/GitPatchRoute.js | feature/githubtools/gitpatch/ui |
 | app/src/main/js/features/workspaces/app-toolkit/ui/appToolkit.js | app/src/main/js/app/workspaces/app-toolkit/ui/AppToolkitRoute.js | feature/workspaces/app-toolkit/ui |
 | app/src/main/js/features/workspaces/app-toolkit/data/services/imageProbeService.js | app/src/main/js/app/workspaces/app-toolkit/data/services/imageProbeService.js | feature/workspaces/app-toolkit/data |
 | app/src/main/js/features/workspaces/app-toolkit/domain/images.js | app/src/main/js/app/workspaces/app-toolkit/domain/images.js | feature/workspaces/app-toolkit/domain |
@@ -50,11 +50,11 @@ hooks intact.
 
 | Old path | New path | Feature scope |
 | --- | --- | --- |
-| app/src/main/res/layout/index.html | app/src/main/res/layout/home/home.html | home |
-| app/src/main/res/layout/repo-mapper.html | app/src/main/res/layout/github-tools/repo-mapper.html | github-tools |
-| app/src/main/res/layout/release-stats.html | app/src/main/res/layout/github-tools/release-stats.html | github-tools |
-| app/src/main/res/layout/git-patch.html | app/src/main/res/layout/github-tools/git-patch.html | github-tools |
-| app/src/main/res/layout/github-favorites.html | app/src/main/res/layout/github-tools/github-favorites.html | github-tools |
+| app/src/main/res/layout/index.html | app/src/main/js/app/home/ui/HomeScreen.html | home |
+| app/src/main/res/layout/repo-mapper.html | app/src/main/js/app/githubtools/repomapper/ui/RepoMapperScreen.html | githubtools/repomapper |
+| app/src/main/res/layout/release-stats.html | app/src/main/js/app/githubtools/releasestats/ui/ReleaseStatsScreen.html | githubtools/releasestats |
+| app/src/main/res/layout/git-patch.html | app/src/main/js/app/githubtools/gitpatch/ui/GitPatchScreen.html | githubtools/gitpatch |
+| app/src/main/res/layout/github-favorites.html | app/src/main/js/app/githubtools/favorites/ui/GitHubFavoritesScreen.html | githubtools/favorites |
 | app/src/main/res/layout/app-toolkit.html | app/src/main/res/layout/workspaces/app-toolkit/app-toolkit.html | workspaces/app-toolkit |
 | app/src/main/res/layout/faq.html | app/src/main/res/layout/workspaces/faq/faq.html | workspaces/faq |
 | app/src/main/res/layout/english-with-lidia.html | app/src/main/res/layout/workspaces/english-with-lidia/english-with-lidia.html | workspaces/english-with-lidia |

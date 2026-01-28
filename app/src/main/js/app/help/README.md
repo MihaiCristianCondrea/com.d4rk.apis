@@ -21,6 +21,9 @@ adopted across the repository.
 
 ## Directory conventions
 
+<!-- Change Rationale: Feature screens now live with feature UI and reusable views live under
+     ui/views, so the directory and naming guidance is updated to reflect the Screen + View structure. -->
+
 ### App-level folders
 
 - `app/src/main/js/core/`
@@ -29,8 +32,10 @@ adopted across the repository.
 - `app/src/main/js/app/<feature>/`
   - Each feature gets `data/`, `domain/`, and `ui/` subfolders.
   - Routes, screens, and view helpers belong in `ui/`.
-- `app/src/main/res/layout/<feature>/`
-  - HTML layout templates grouped by feature.
+- `app/src/main/js/app/<feature>/ui/`
+  - Feature-specific HTML screens live directly in the UI folder.
+- `app/src/main/js/app/<feature>/ui/views/`
+  - Reusable HTML view snippets for the feature.
 - `app/src/main/styles/`
   - `base/` for typography and page-level styling.
   - `components/` for shared UI primitives.
@@ -39,8 +44,9 @@ adopted across the repository.
 ### File naming
 
 - **Routes:** `FeatureRoute.js` (PascalCase) inside `ui/`.
-- **Screens/partials:** `feature-name.html` in `res/layout/<feature>/`.
-- **Data modules:** descriptive camelCase (`homeContent.js`, `images.js`).
+- **Screens:** `FeatureScreen.html` (or similar) under `ui/`.
+- **Views:** reusable HTML snippets under `ui/views/`.
+- **Data modules:** descriptive camelCase (`homeContentDataSource.js`, `images.js`).
 
 ## Workflow expectations
 

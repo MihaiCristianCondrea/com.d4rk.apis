@@ -99,9 +99,10 @@ import './app/workspaces/android-studio-tutorials/ui/AndroidStudioTutorialsRoute
 
 // Change Rationale: GitHub tool entrypoints now resolve from the `app/githubtools` feature
 // tree to match the flattened Android-style layout and avoid missing-module errors in Vite.
-import './app/githubtools/repomapper/domain/RepoMapperRoute.js';
-import './app/githubtools/core/ui/routes/ReleaseStatsRoute.js';
-import './app/githubtools/gitpatch/domain/GitPatchRoute.js';
+// Change Rationale: Repo Mapper routes live in the feature UI layer to keep routing out of domain logic.
+import './app/githubtools/repomapper/ui/RepoMapperRoute.js';
+import './app/githubtools/releasestats/ui/ReleaseStatsRoute.js';
+import './app/githubtools/gitpatch/ui/GitPatchRoute.js';
 import './app/home/ui/HomeRoute.js';
 
 import './core/ui/appShell.js';

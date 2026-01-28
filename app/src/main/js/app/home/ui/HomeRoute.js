@@ -1,8 +1,17 @@
-// Change Rationale: Home content now lives under `app/home/data` in the flattened Android-style
-// layout. The module continues to render the same home grid while matching the required data/domain/ui split.
-import { githubTools, workspaceCards } from '../data/homeContent.js';
+/**
+ * @file Home feature route entrypoint for rendering the landing grid.
+ */
+// Change Rationale: Home content data and screens now live under the feature-first home tree,
+// keeping configuration and UI assets co-located without changing runtime behavior.
+import { githubTools, workspaceCards } from '../data/homeContentDataSource.js';
+// Change Rationale: The Home screen now follows the Screen naming convention, so import the
+// new screen path for bundling and future router usage.
+import homeScreenSource from './HomeScreen.html?raw';
 
 const globalScope = typeof window !== 'undefined' ? window : globalThis;
+// Change Rationale: Expose the latest home screen HTML after moving it into the feature UI,
+// ensuring any runtime loader can reference the canonical in-feature screen path.
+globalScope.__APP_HOME_SCREEN__ = homeScreenSource;
 
 /**
  * Configuration for a workspace tile on the home page.
