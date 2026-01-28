@@ -1,3 +1,6 @@
+/**
+ * @file Home feature data source for workspace and GitHub tool card configuration.
+ */
 import { Workspaces, getWorkspaceAnchor } from '../../../core/domain/workspaces/registry.js';
 
 /*
@@ -7,6 +10,8 @@ import { Workspaces, getWorkspaceAnchor } from '../../../core/domain/workspaces/
  * - This reduces mapping glue and keeps navigation predictable for the Material 3 home grid.
  * - Documentation references now point to `HomeRoute.js` to reflect the canonical feature structure
  *   after removing compatibility barrels.
+ * - Renaming this file clarifies that it is a data source module (static content),
+ *   matching the feature-first data/domain/ui doctrine.
  */
 
 /**

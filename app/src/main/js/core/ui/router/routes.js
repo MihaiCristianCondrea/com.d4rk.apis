@@ -4,12 +4,18 @@
  * existing route table and metadata.
  */
 import { resolveAssetUrl } from '../../data/config/appConfig.js';
-// Change Rationale: GitHub tooling now lives under the `app/githubtools/core` domain path,
+// Change Rationale: GitHub tooling now lives under the `app/githubtools/common` domain path,
 // so router imports must use the canonical location to avoid Vite resolution errors.
-import { initFavoritesPage, initGitPatch, initReleaseStats, initRepoMapper } from '@/app/githubtools/core/domain/githubTools.js';
+import { initFavoritesPage } from '@/app/githubtools/common/domain/githubTools.js';
 
 function layoutPath(filename) {
     return resolveAssetUrl(`layout/${filename}`);
+}
+
+// Change Rationale: GitHub tool screens now live under feature UI folders, so provide a
+// helper for resolving screen paths without relying on res/layout.
+function screenPath(filename) {
+    return resolveAssetUrl(`screens/${filename}`);
 }
 
 const DEFAULT_ROUTE_TITLE = 'API Console';
@@ -208,9 +214,14 @@ function sanitizeRouteConfig(config) {
         throw new Error('RouterRoutes: Route configuration requires a non-empty "id".');
     }
 
+    // Change Rationale: Support inline HTML so feature Route modules can register composed
+    // Screen + View markup without forcing a network fetch.
     const sanitized = {
         id: normalizedId,
         path: typeof config.path === 'string' && config.path.trim() ? config.path.trim() : null,
+        inlineHtml: typeof config.inlineHtml === 'string' && config.inlineHtml.trim()
+            ? config.inlineHtml
+            : null,
         title: typeof config.title === 'string' && config.title.trim() ? config.title.trim() : DEFAULT_ROUTE_TITLE,
         onLoad: typeof config.onLoad === 'function' ? config.onLoad : null
     };
@@ -367,7 +378,7 @@ const defaultRoutes = [
     },
     {
         id: 'github-favorites',
-        path: layoutPath('github-tools/github-favorites.html'),
+        path: screenPath('githubtools/favorites/ui/GitHubFavoritesScreen.html'),
         title: 'Favorites',
         onLoad: initFavoritesPage,
         metadata: {
@@ -385,66 +396,8 @@ const defaultRoutes = [
             }
         }
     },
-    {
-        id: 'repo-mapper',
-        path: layoutPath('github-tools/repo-mapper.html'),
-        title: 'Repo Mapper',
-        onLoad: initRepoMapper,
-        metadata: {
-            description: 'Generate ASCII directory trees from any public repository. Perfect for documentation and LLM context.',
-            keywords: ['Repo Mapper', 'GitHub', 'ASCII', 'directory tree'],
-            canonicalSlug: 'repo-mapper',
-            openGraph: {
-                title: 'Repo Mapper',
-                description: 'Generate ASCII directory trees from any public repository. Perfect for documentation and LLM context.',
-                type: 'website'
-            },
-            twitter: {
-                title: 'Repo Mapper',
-                description: 'Generate ASCII directory trees from any public repository. Perfect for documentation and LLM context.'
-            }
-        }
-    },
-    {
-        id: 'release-stats',
-        path: layoutPath('github-tools/release-stats.html'),
-        title: 'Release Stats',
-        onLoad: initReleaseStats,
-        metadata: {
-            description: 'Visualize download counts, analyze asset performance, and track version history in real-time.',
-            keywords: ['Release Stats', 'GitHub', 'downloads', 'statistics'],
-            canonicalSlug: 'release-stats',
-            openGraph: {
-                title: 'Release Stats',
-                description: 'Visualize download counts, analyze asset performance, and track version history in real-time.',
-                type: 'website'
-            },
-            twitter: {
-                title: 'Release Stats',
-                description: 'Visualize download counts, analyze asset performance, and track version history in real-time.'
-            }
-        }
-    },
-    {
-        id: 'git-patch',
-        path: layoutPath('github-tools/git-patch.html'),
-        title: 'Git Patch',
-        onLoad: initGitPatch,
-        metadata: {
-            description: 'Extract raw .patch files from commit URLs. Easily apply changes from one repo to another or perform code reviews.',
-            keywords: ['Git Patch', 'GitHub', 'patch', 'commit'],
-            canonicalSlug: 'git-patch',
-            openGraph: {
-                title: 'Git Patch',
-                description: 'Extract raw .patch files from commit URLs. Easily apply changes from one repo to another or perform code reviews.',
-                type: 'website'
-            },
-            twitter: {
-                title: 'Git Patch',
-                description: 'Extract raw .patch files from commit URLs. Easily apply changes from one repo to another or perform code reviews.'
-            }
-        }
-    }
+    // GitHub tool routes are now registered by their feature Route modules so they can
+    // compose Screen + View markup at registration time.
 ];
 
 defaultRoutes.forEach(registerRoute);

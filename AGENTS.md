@@ -11,6 +11,45 @@
 - **Android-style layout:** The repository mirrors an Android project structure (e.g., `app/src/main/js`, `app/src/main/res`). When adding assets or routes, follow this app-style organization to keep parity between web and Android paradigms.
 - **Architecture check:** At the end of every task, confirm the `data/domain/ui` split, router ownership, Material 3 alignment, and documentation consistency remain intact.
 
+<!--
+Change Rationale: Freeze the feature-first structure and naming/import rules in a single place so
+future migrations stay consistent with the Android-style layering model.
+-->
+## 1.1 Folder & Naming Doctrine
+- **Folder doctrine (feature-first + data/domain/ui):**
+  - `app/src/main/js/app/` is **features only**.
+  - `app/src/main/js/core/` is **shared platform/framework** code.
+  - Every feature must live under `app/src/main/js/app/<feature-name>/` with **only**:
+    - `data/`
+    - `domain/`
+    - `ui/`
+- **Naming doctrine:**
+  - UI entrypoints: `*Route.js` for route registration + page composition.
+  - Screen templates: `*Screen.html` (if HTML screens are used).
+  - Screen controllers: `*Screen.js` (if needed).
+  - View models: `*ViewModel.js` (if the VM pattern is used).
+  - UI contracts only live in `ui/contract/`:
+    - `*Action.js`
+    - `*Event.js`
+    - `state/*UiState.js`
+  - Data layer:
+    - `*Service.js` for platform/network/browser API integration.
+    - `*RemoteDataSource.js` / `*LocalDataSource.js` only when true sources exist.
+    - `*RepositoryImpl.js` implements a domain `*Repository.js`.
+  - Domain layer:
+    - `*Repository.js` for interfaces.
+    - `*UseCase.js` for single-purpose domain logic.
+    - `model/*` for types/shapes.
+- **Import direction rules:**
+  - `domain` can only import `domain`.
+  - `data` can import `domain` + core/platform services, never `ui`.
+  - `ui` can import `data` and `domain`, and is the only layer that touches the DOM directly.
+- **Screens + Views:**
+  - Feature-specific HTML screens live directly in the feature `ui/` folder.
+  - Reusable view snippets live in `ui/views/` (or `common/ui/views/` for cross-tool reuse).
+  - `res/layout` is reserved for global shell screens only (or empty).
+- **Architecture check requirement:** At the end of every task, confirm the `data/domain/ui` split, router ownership, Material 3 alignment, and documentation consistency remain intact.
+
 ## 2. Documentation Strategy
 The agent is responsible for maintaining technical accuracy in the `api/<app_name>/docs/` directories.
 - **Mandatory Docs:** Every application folder in `api/` must have a `docs/` subdirectory.

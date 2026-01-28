@@ -1,0 +1,66 @@
+<!-- Change Rationale: Move the Git Patch form into a reusable view so the screen can be
+     composed with shared GitHub tool layout components. -->
+<form id="patch-form" class="gh-form" autocomplete="off" name="patch-form">
+  <div class="gh-field-row">
+    <md-outlined-text-field
+      id="patch-url"
+      name="patch-url"
+      type="url"
+      class="gh-md-field"
+      label="Commit URL"
+      autocomplete="off"
+      aria-describedby="patch-url-helper patch-url-error"
+      spellcheck="false"
+      required
+    >
+      <md-icon-button
+        id="patch-fav-btn"
+        slot="trailing-icon"
+        aria-pressed="false"
+        aria-label="Favorite commit"
+        toggle=""
+        variant="outlined"
+      >
+        <!-- Change Rationale: Material's icon button swaps between its default and
+             `selected` slots. Supplying both keeps the outlined star visible on load
+             and switches to the filled star as soon as the control is selected. The
+             outlined variant mirrors the inspiration UI so the star always keeps its
+             border even when unselected. -->
+        <md-icon>star</md-icon>
+        <md-icon slot="selected" class="filled-icon">star</md-icon>
+      </md-icon-button>
+    </md-outlined-text-field>
+  </div>
+  <p id="patch-url-helper" class="gh-helper-text">Accepts full GitHub URLs or shorthand commit paths.</p>
+  <p id="patch-url-error" class="gh-error-text" hidden>Invalid commit URL.</p>
+  <div class="gh-token-settings" id="patch-token-settings">
+    <md-filled-tonal-button class="token-toggle" id="patch-token-reveal" aria-expanded="false" type="button">
+      <md-icon slot="icon">vpn_key</md-icon>
+      <span class="favorite-label">Token settings</span>
+      <md-icon slot="trailing-icon">expand_more</md-icon>
+    </md-filled-tonal-button>
+    <div class="gh-collapsible" id="patch-token-wrapper" hidden>
+      <div class="gh-floating-field">
+        <md-outlined-text-field id="patch-token" type="password" class="gh-floating-input" label="Personal Access Token (optional)" autocomplete="off" aria-describedby="patch-token-helper patch-token-error" spellcheck="false"></md-outlined-text-field>
+      </div>
+      <p id="patch-token-helper" class="gh-helper-text">Required when fetching private commits.</p>
+      <p id="patch-token-error" class="gh-error-text" hidden>Token required for private repos.</p>
+      <div class="gh-token-visibility">
+        <md-checkbox id="patch-token-toggle">
+          <span slot="label" data-token-visibility-label>Show token</span>
+        </md-checkbox>
+      </div>
+    </div>
+  </div>
+  <div class="gh-actions end">
+    <!-- Change Rationale: Primary actions previously relied on project-specific button classes,
+         which left size and shape inconsistent with other screens. Applying BeerCSS button
+         helpers (`primary`, `large`, `round`) delegates sizing to the framework, keeping
+         touch targets consistent and aligning with Material 3's emphasis on uniform control
+         geometry. -->
+    <button type="submit" id="patch-submit" class="primary large round">
+      <span class="material-symbols-outlined">difference</span>
+      <span>Get Patch</span>
+    </button>
+  </div>
+</form>
