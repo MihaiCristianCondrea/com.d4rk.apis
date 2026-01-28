@@ -530,8 +530,11 @@
 
     <!-- Dialog action buttons (Back / Next handled by JS) -->
     <div slot="actions" class="github-dialog-actions">
-      <md-text-button dialog-action="close">Cancel</md-text-button>
-      <md-text-button id="appToolkitGithubBack">Back</md-text-button>
+      <!-- Change Rationale: Dialog action roles now follow the primary/secondary
+           rule set so cancel/back use outlined styling and the confirm action
+           remains filled for emphasis. -->
+      <md-outlined-button dialog-action="close">Cancel</md-outlined-button>
+      <md-outlined-button id="appToolkitGithubBack">Back</md-outlined-button>
       <md-filled-button id="appToolkitGithubNext" data-dialog-initial-focus>Next</md-filled-button>
     </div>
   </md-dialog>

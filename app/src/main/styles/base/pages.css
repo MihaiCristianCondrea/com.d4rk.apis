@@ -157,9 +157,20 @@
   --feature-card-icon-font-size: 24px;
   text-decoration: none;
   color: var(--app-text-color);
-  background-color: var(--md-sys-color-surface-container);
   display: grid;
   gap: var(--feature-card-gap);
+}
+
+/* Change Rationale: Home cards now follow the action/info role system so
+ * outlined cards indicate navigation while filled cards remain informational.
+ */
+.action-card {
+  border: 1px solid var(--md-sys-color-outline-variant);
+  background-color: var(--md-sys-color-surface);
+}
+
+.info-card {
+  background-color: var(--md-sys-color-surface-container);
 }
 
 .feature-card-icon {
@@ -191,20 +202,56 @@
   grid-column: span 2;
 }
 
-.tool-card h3 {
+.action-card-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.action-card-title-group {
+  display: grid;
+  gap: 0.2rem;
+}
+
+.info-card-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.action-card-title,
+.info-card-title {
   margin: 0;
 }
 
-.tool-card p {
+.info-card-meta {
+  color: var(--app-secondary-text-color);
+}
+
+.action-card-kicker {
+  margin: 0;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--app-secondary-text-color);
+}
+
+.action-card-body,
+.info-card-body {
   margin: 0;
   color: var(--app-secondary-text-color);
-  /* Change Rationale: Reduce line-height so stacked text rows on the home screen
-   * feel closer to Material 3 list density, matching the reference layout.
-   */
   line-height: 1.35;
 }
 
-.tool-card .card-footer {
+.action-card-list {
+  margin: 0;
+  padding-left: 1.1rem;
+  color: var(--app-secondary-text-color);
+  display: grid;
+  gap: 0.4rem;
+  line-height: 1.35;
+}
+
+.action-card-footer {
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
@@ -459,61 +506,10 @@
   box-shadow: 0 18px 40px rgba(0, 0, 0, 0.08);
 }
 
-.workspace-tile {
+.workspace-card {
   --feature-card-gap: 0.55rem;
   --feature-card-icon-size: 42px;
   --feature-card-icon-font-size: 22px;
-}
-
-.workspace-tile-header {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-}
-
-.workspace-tile-kicker {
-  margin: 0;
-  /* Change Rationale: Reduce tracking so kicker labels align more cleanly with
-   * the workspace titles beneath them.
-   */
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  color: var(--app-secondary-text-color);
-}
-
-.workspace-tile h3 {
-  margin: 0;
-}
-
-.workspace-tile-icon {
-  display: grid;
-  place-items: center;
-}
-
-.workspace-tile-body {
-  margin: 0;
-  color: var(--app-secondary-text-color);
-  /* Change Rationale: Tighten the home card body copy so multi-line descriptions
-   * read more like native list text blocks and avoid excessive vertical gaps.
-   */
-  line-height: 1.35;
-}
-
-.workspace-tile-list {
-  margin: 0;
-  padding-left: 1.1rem;
-  color: var(--app-secondary-text-color);
-  display: grid;
-  gap: 0.4rem;
-  line-height: 1.35;
-}
-
-.workspace-tile-footer {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
-  font-weight: 600;
-  color: var(--md-sys-color-primary);
 }
 
 .workspace-card h3 {
