@@ -307,29 +307,8 @@ const defaultRoutes = [
             }
         }
     },
-    {
-        id: 'faq-api',
-        path: layoutPath('workspaces/faq/faq.html'),
-        title: 'FAQ API',
-        metadata: {
-            description: 'Publish structured FAQ answers with featured snippets and Material icon suggestions for web and Android surfaces.',
-            keywords: [
-                'FAQ API builder',
-                'Material Symbols autocomplete',
-                'support answers JSON'
-            ],
-            canonicalSlug: 'faq-api',
-            openGraph: {
-                title: 'FAQ API workspace',
-                description: 'Publish structured FAQ answers with featured snippets and Material icon suggestions for web and Android surfaces.',
-                type: 'website'
-            },
-            twitter: {
-                title: 'FAQ API workspace',
-                description: 'Publish structured FAQ answers with featured snippets and Material icon suggestions for web and Android surfaces.'
-            }
-        }
-    },
+    // Change Rationale: FAQ workspace routes now register through the feature Route module so
+    // they can serve Screen + Views markup without relying on res/layout fallbacks.
     {
         id: 'english-with-lidia-api',
         path: layoutPath('workspaces/english-with-lidia/english-with-lidia.html'),

@@ -161,9 +161,8 @@ function buildRouterOptions() {
         pageHandlers['app-toolkit-api'] = globalScope.initAppToolkitWorkspace;
     }
 
-    if (typeof globalScope.initFaqWorkspace === 'function') {
-        pageHandlers['faq-api'] = globalScope.initFaqWorkspace;
-    }
+    // Change Rationale: FAQ workspace initialization now registers through the feature route module,
+    // so the app shell no longer needs a workspace-specific fallback hook.
 
     if (typeof globalScope.initEnglishWorkspace === 'function') {
         pageHandlers['english-with-lidia-api'] = globalScope.initEnglishWorkspace;

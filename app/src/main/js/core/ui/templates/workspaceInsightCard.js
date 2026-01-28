@@ -1,6 +1,6 @@
-// Change Rationale: Shared insight cards now live under `res/layout/workspaces/shared` to mirror
-// the Android feature-first grouping while preserving the Material 3-aligned card markup.
-import workspaceInsightCardTemplateSource from '../../../../res/layout/workspaces/shared/workspace-insight-card.html?raw';
+// Change Rationale: Shared workspace insight cards now live under the workspaces shared UI views
+// to align with the Screen + Views contract and keep reusable markup within the feature tree.
+import workspaceInsightCardTemplateSource from '@/app/workspaces/shared/ui/views/WorkspaceInsightCardView.html?raw';
 
 /**
  * Parses and caches the shared workspace insight card partial for reuse across dashboards.
