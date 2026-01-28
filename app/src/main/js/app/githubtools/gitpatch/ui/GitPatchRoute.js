@@ -56,7 +56,11 @@ function buildGitPatchScreenHtml() {
  * @returns {void}
  */
 export function registerGitPatchRoute() {
-  if (RouterRoutes.hasRoute('git-patch')) {
+  // Change Rationale: Git Patch routes must override legacy entries that pointed to `/layout`
+  // so the Screen-based inline HTML path is always used. This keeps navigation aligned with
+  // the Repo Mapper and Release Stats flow while preventing 404s in production.
+  const existingRoute = RouterRoutes.getRoute('git-patch');
+  if (existingRoute?.inlineHtml) {
     return;
   }
 

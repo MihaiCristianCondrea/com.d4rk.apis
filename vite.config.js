@@ -8,12 +8,62 @@ const workersDir = resolve(__dirname, 'app/src/main/js/core/data/workers');
 const screensDir = resolve(__dirname, 'app/src/main/js/app');
 const mipmapDir = resolve(__dirname, 'app/src/main/res/mipmap');
 const drawableDir = resolve(__dirname, 'app/src/main/res/drawable');
+// Change Rationale: Legacy GitHub tool URLs previously referenced `/layout/github-tools/*.html`.
+// Defining the redirect map here keeps build output and dev routing in sync without restoring
+// layout-based routing or adding feature HTML back into res/layout.
+const legacyGitHubToolRedirects = Object.freeze({
+  'git-patch.html': 'git-patch',
+  'repo-mapper.html': 'repo-mapper',
+  'release-stats.html': 'release-stats',
+});
 
 const mimeTypes = {
   '.html': 'text/html',
   '.json': 'application/json',
   '.txt': 'text/plain',
 };
+
+/**
+ * Resolves legacy GitHub tool layout URLs to route IDs.
+ *
+ * @param {string | undefined} url Incoming request URL.
+ * @returns {string | null} Route ID for the GitHub tool, or null when no mapping exists.
+ */
+function resolveLegacyGitHubToolRoute(url) {
+  if (!url) {
+    return null;
+  }
+  const [path] = url.split('?');
+  if (!path.startsWith('/layout/github-tools/')) {
+    return null;
+  }
+  const legacyFile = path.replace('/layout/github-tools/', '');
+  return legacyGitHubToolRedirects[legacyFile] || null;
+}
+
+/**
+ * Builds a redirect HTML payload for legacy GitHub tool URLs.
+ *
+ * @param {string} routeId Canonical route ID to redirect toward.
+ * @returns {string} HTML document that redirects to the SPA route.
+ */
+function createLegacyRedirectHtml(routeId) {
+  return `<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="refresh" content="0; url=../..//#${routeId}" />
+    <meta name="robots" content="noindex" />
+    <title>Redirecting…</title>
+  </head>
+  <body>
+    <script>
+      window.location.replace('../../#${routeId}');
+    </script>
+    <p>Redirecting to the GitHub Tools console…</p>
+  </body>
+</html>`;
+}
 
 function staticPagesPlugin() {
   let outDir;
@@ -43,6 +93,13 @@ function staticPagesPlugin() {
       };
 
       server.middlewares.use((req, res, next) => {
+        const legacyRouteId = resolveLegacyGitHubToolRoute(req.url);
+        if (legacyRouteId) {
+          res.statusCode = 302;
+          res.setHeader('Location', `/#${legacyRouteId}`);
+          res.end();
+          return;
+        }
         if (serveStaticDir(req, res, next, '/layout/', pagesDir)) return;
         if (serveStaticDir(req, res, next, '/pages/', pagesDir)) return;
         if (serveStaticDir(req, res, next, '/screens/', screensDir)) return;
@@ -116,6 +173,16 @@ function staticPagesPlugin() {
         const targetDir = resolve(__dirname, outDir, name);
         fs.mkdirSync(targetDir, { recursive: true });
         fs.cpSync(source, targetDir, { recursive: true });
+      });
+
+      // Change Rationale: Create temporary legacy redirect pages so `/layout/github-tools/*.html`
+      // continues to resolve without reintroducing layout-driven routing. This keeps Git Patch,
+      // Repo Mapper, and Release Stats reachable while migration tests are stabilized.
+      const legacyRedirectDir = resolve(__dirname, outDir, 'layout', 'github-tools');
+      fs.mkdirSync(legacyRedirectDir, { recursive: true });
+      Object.entries(legacyGitHubToolRedirects).forEach(([filename, routeId]) => {
+        const redirectHtml = createLegacyRedirectHtml(routeId);
+        fs.writeFileSync(resolve(legacyRedirectDir, filename), redirectHtml, 'utf-8');
       });
 
       const staticFiles = [
