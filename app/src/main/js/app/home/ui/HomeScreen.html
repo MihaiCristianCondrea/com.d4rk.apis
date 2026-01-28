@@ -37,7 +37,13 @@
     @import url('https://fonts.googleapis.com/css2?family=Google+Sans+Code:ital,wght@0,300..800;1,300..800&family=Google+Sans+Flex:opsz,wght@6..144,1..1000&display=swap');
   </style>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer">
-  <link rel="modulepreload" href="../../../js/main.js">
+  <!--
+    Change Rationale: The preload path previously targeted a non-existent js/ subfolder, which
+    prevented the main module from resolving when the screen loaded. The updated path correctly
+    navigates to app/src/main/js/main.js, ensuring module resolution aligns with the app's
+    entrypoint and keeps the HTML bootstrap consistent with Material 3 UX responsiveness.
+  -->
+  <link rel="modulepreload" href="../../../main.js">
 </head>
 <!-- Change Rationale: The body now relies on the global Material surface token
      instead of a Tailwind background override so the page inherits BeerCSS's
@@ -325,6 +331,6 @@
 <footer class="app-footer">
   <span id="copyright-message"></span>
 </footer>
-<script type="module" src="../../../js/main.js"></script>
+<script type="module" src="../../../main.js"></script>
 </body>
 </html>
