@@ -33,9 +33,9 @@ hooks intact.
 | --- | --- | --- |
 | app/src/main/js/features/home/data/homeContent.js | app/src/main/js/app/home/data/homeContentDataSource.js | feature/home/data |
 | app/src/main/js/features/home/ui/homePage.js | app/src/main/js/app/home/ui/HomeRoute.js | feature/home/ui |
-| app/src/main/js/features/github-tools/repo-mapper/ui/repoMapper.js | app/src/main/js/app/githubtools/repomapper/ui/RepoMapperRoute.js | feature/githubtools/repomapper/ui |
-| app/src/main/js/features/github-tools/release-stats/ui/releaseStats.js | app/src/main/js/app/githubtools/releasestats/ui/ReleaseStatsRoute.js | feature/githubtools/releasestats/ui |
-| app/src/main/js/features/github-tools/git-patch/ui/gitPatch.js | app/src/main/js/app/githubtools/gitpatch/ui/GitPatchRoute.js | feature/githubtools/gitpatch/ui |
+| app/src/main/js/features/githubtools/repomapper/ui/repoMapper.js | app/src/main/js/app/githubtools/repomapper/ui/RepoMapperRoute.js | feature/githubtools/repomapper/ui |
+| app/src/main/js/features/githubtools/releasestats/ui/releaseStats.js | app/src/main/js/app/githubtools/releasestats/ui/ReleaseStatsRoute.js | feature/githubtools/releasestats/ui |
+| app/src/main/js/features/githubtools/gitpatch/ui/gitPatch.js | app/src/main/js/app/githubtools/gitpatch/ui/GitPatchRoute.js | feature/githubtools/gitpatch/ui |
 | app/src/main/js/features/workspaces/app-toolkit/ui/appToolkit.js | app/src/main/js/app/workspaces/app-toolkit/ui/AppToolkitRoute.js | feature/workspaces/app-toolkit/ui |
 | app/src/main/js/features/workspaces/app-toolkit/data/services/imageProbeService.js | app/src/main/js/app/workspaces/app-toolkit/data/services/imageProbeService.js | feature/workspaces/app-toolkit/data |
 | app/src/main/js/features/workspaces/app-toolkit/domain/images.js | app/src/main/js/app/workspaces/app-toolkit/domain/images.js | feature/workspaces/app-toolkit/domain |
@@ -82,7 +82,7 @@ hooks intact.
 | app/src/main/js/core/styles/navigation.css | app/src/main/styles/components/navigation.css | components |
 | app/src/main/js/core/styles/components/collection-rows.css | app/src/main/styles/components/collection-rows.css | components |
 | app/src/main/js/core/styles/components/misc.css | app/src/main/styles/components/misc.css | components |
-| app/src/main/js/core/styles/components/github-tools.css | app/src/main/styles/features/github-tools/github-tools.css | feature/github-tools |
+| app/src/main/js/core/styles/components/github-tools.css | app/src/main/styles/features/githubtools/githubtools.css | feature/githubtools |
 | app/src/main/js/core/styles/components/api-builder.css | app/src/main/styles/features/workspaces/shared/api-builder.css | feature/workspaces |
 | app/src/main/js/core/styles/components/faq-builder.css | app/src/main/styles/features/workspaces/faq/faq-builder.css | feature/workspaces/faq |
 | app/src/main/js/core/styles/components/native/*.css | app/src/main/styles/components/native/*.css | components |

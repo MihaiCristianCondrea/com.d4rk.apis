@@ -17,5 +17,8 @@
 @import '../features/workspaces/faq/faq-builder.css';
 @import './collection-rows.css';
 @import './misc.css';
-@import '../features/github-tools/github-tools.css';
+/* Change Rationale: Normalize GitHub tools styling to the `githubtools` feature name so
+   references align with route IDs and feature folder naming. This prevents drift between
+   CSS imports and the canonical tool identifiers without impacting Material 3 styling. */
+@import '../features/githubtools/githubtools.css';
 /* stylelint-enable selector-type-no-unknown */

@@ -18,8 +18,16 @@ function resolveLegacyLayoutRoute(value) {
   if (!trimmed) {
     return null;
   }
-  const pathOnly = trimmed.split('?')[0];
-  const normalizedPath = pathOnly.replace(/^\/+/, '').replace(/^layout\//, '');
+  // Change Rationale: Legacy URLs arrive with mixed casing, duplicate slashes, or trailing
+  // delimiters. Normalizing those variants keeps the compatibility layer conservative while
+  // ensuring known GitHub tool paths continue to resolve.
+  const pathOnly = trimmed.split(/[?#]/)[0];
+  const normalizedPath = pathOnly
+    .replace(/\/{2,}/g, '/')
+    .replace(/^\/+/, '')
+    .replace(/^layout\//i, '')
+    .replace(/\/+$/, '')
+    .toLowerCase();
   if (!normalizedPath.startsWith('github-tools/')) {
     return null;
   }
