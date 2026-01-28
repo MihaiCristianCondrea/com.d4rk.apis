@@ -231,13 +231,33 @@ function sanitizeRouteConfig(config) {
     return sanitized;
 }
 
+/**
+ * Registers a route while keeping inline HTML registrations deterministic.
+ *
+ * @param {object} config - Route configuration to register.
+ * @returns {object|null} The stored route clone.
+ */
 function registerRoute(config) {
     const sanitized = sanitizeRouteConfig(config);
-    const isUpdate = Object.prototype.hasOwnProperty.call(PAGE_ROUTES, sanitized.id);
-    PAGE_ROUTES[sanitized.id] = sanitized;
-    if (isUpdate) {
-        console.warn(`RouterRoutes: Route "${sanitized.id}" was overwritten.`);
+    const existingRoute = PAGE_ROUTES[sanitized.id];
+
+    // Change Rationale: Inline HTML is the canonical registration for feature routes, so
+    // always retain inline markup when present and avoid overwriting with path-only entries.
+    // This guarantees deterministic registration regardless of import order.
+    if (existingRoute) {
+        if (existingRoute.inlineHtml && !sanitized.inlineHtml) {
+            return cloneRoute(existingRoute);
+        }
+
+        if (!existingRoute.inlineHtml && sanitized.inlineHtml) {
+            PAGE_ROUTES[sanitized.id] = sanitized;
+            return cloneRoute(sanitized);
+        }
+
+        return cloneRoute(existingRoute);
     }
+
+    PAGE_ROUTES[sanitized.id] = sanitized;
     return cloneRoute(sanitized);
 }
 
