@@ -56,7 +56,11 @@ function buildReleaseStatsScreenHtml() {
  * @returns {void}
  */
 export function registerReleaseStatsRoute() {
-  if (RouterRoutes.hasRoute('release-stats')) {
+  // Change Rationale: Release Stats must prefer the Screen + View composition when legacy
+  // `/layout` routes are still registered, keeping the GitHub tools navigation consistent
+  // and eliminating 404s tied to removed layout files.
+  const existingRoute = RouterRoutes.getRoute('release-stats');
+  if (existingRoute?.inlineHtml) {
     return;
   }
 
