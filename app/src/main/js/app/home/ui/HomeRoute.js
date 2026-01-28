@@ -78,10 +78,13 @@ function createWorkspaceHeader(card) {
 
   const textWrapper = document.createElement('div');
   const kicker = document.createElement('p');
-  kicker.className = 'workspace-tile-kicker';
+  // Change Rationale: Typography classes replace card-specific font sizing so
+  // the home cards inherit the shared Material 3 type scale consistently.
+  kicker.className = 'workspace-tile-kicker type-label-medium';
   kicker.textContent = card.kicker;
 
   const title = document.createElement('h3');
+  title.className = 'type-title-medium';
   title.textContent = card.title;
 
   textWrapper.append(kicker, title);
@@ -108,20 +111,22 @@ function createWorkspaceHeader(card) {
  */
 function createWorkspaceTile(card) {
   const tile = document.createElement('a');
-  tile.className = 'feature-card workspace-tile';
+  // Change Rationale: Apply BeerCSS spacing utilities on the card wrapper to
+  // remove bespoke padding while keeping touch targets comfortable.
+  tile.className = 'feature-card workspace-tile padding';
   tile.href = card.href;
   tile.setAttribute('aria-label', `Open ${card.title} workspace`);
 
   tile.appendChild(createWorkspaceHeader(card));
 
   const description = document.createElement('p');
-  description.className = 'workspace-tile-body';
+  description.className = 'workspace-tile-body type-body-medium';
   description.textContent = card.description;
   tile.appendChild(description);
 
   if (Array.isArray(card.features) && card.features.length) {
     const list = document.createElement('ul');
-    list.className = 'workspace-tile-list';
+    list.className = 'workspace-tile-list type-body-small';
     card.features.forEach((feature) => {
       const item = document.createElement('li');
       item.textContent = feature;
@@ -131,7 +136,7 @@ function createWorkspaceTile(card) {
   }
 
   const footer = document.createElement('span');
-  footer.className = 'workspace-tile-footer';
+  footer.className = 'workspace-tile-footer type-label-large';
   footer.innerHTML =
       'Open workspace <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span>';
   tile.appendChild(footer);
@@ -157,7 +162,9 @@ function createWorkspaceTile(card) {
  */
 function createGithubToolCard(tool) {
   const card = document.createElement('a');
-  card.className = 'feature-card tool-card';
+  // Change Rationale: Use shared typography classes and BeerCSS spacing so the
+  // GitHub tools cards match the home workspace cards without custom sizing.
+  card.className = 'feature-card tool-card padding';
   if (tool.wide) {
     card.classList.add('tool-card-wide');
   }
@@ -167,15 +174,17 @@ function createGithubToolCard(tool) {
   card.appendChild(createIcon(tool.icon));
 
   const title = document.createElement('h3');
+  title.className = 'type-title-medium';
   title.textContent = tool.title;
   card.appendChild(title);
 
   const description = document.createElement('p');
+  description.className = 'type-body-medium';
   description.textContent = tool.description;
   card.appendChild(description);
 
   const footer = document.createElement('span');
-  footer.className = 'card-footer';
+  footer.className = 'card-footer type-label-large';
   footer.innerHTML =
       'Launch Tool <span class="material-symbols-outlined">arrow_forward</span>';
   card.appendChild(footer);

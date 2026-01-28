@@ -39,7 +39,10 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer">
   <link rel="modulepreload" href="../../../js/main.js">
 </head>
-<body class="bg-surface-container-lowest">
+<!-- Change Rationale: The body now relies on the global Material surface token
+     instead of a Tailwind background override so the page inherits BeerCSS's
+     surface styling consistently across themes. -->
+<body>
 <!-- Change Rationale: Use the BeerCSS overlay scrim without blur so the drawer matches
      the stock modal backdrop and keeps focus behavior predictable. -->
 <div id="drawerOverlay" class="overlay" aria-hidden="true"></div>
@@ -49,7 +52,7 @@
 <dialog id="navDrawer" class="navigation-drawer left" aria-label="Main navigation">
   <header class="drawer-header padding">
     <nav>
-      <h6 class="max">Menu</h6>
+      <h6 class="type-title-small max">Menu</h6>
       <button id="closeDrawerButton" class="transparent circle" aria-label="Close navigation">
         <i aria-hidden="true">close</i>
       </button>
@@ -61,90 +64,93 @@
   <div class="drawer-content padding">
     <ul class="list">
       <li class="wave round">
-        <a href="#home" id="homeLink" class="nav-link space">
+        <a href="#home" id="homeLink" class="nav-link">
           <i aria-hidden="true">home</i>
           <div class="max">
-            <span>Home</span>
+            <span class="type-title-medium">Home</span>
           </div>
         </a>
       </li>
     </ul>
     <hr>
-    <small class="padding">API Workspaces</small>
+    <!-- Change Rationale: Drawer section headers now apply the shared Material
+         label type scale so navigation group labels match the rest of the UI
+         without custom font-size overrides. -->
+    <div class="padding type-label-large">API Workspaces</div>
     <ul class="list">
       <li class="wave round">
-        <a href="#app-toolkit-api" class="nav-link space">
+        <a href="#app-toolkit-api" class="nav-link">
           <i aria-hidden="true">build</i>
           <div class="max">
-            <span>App Toolkit</span>
-            <small>Manage Android utilities</small>
+            <span class="type-title-medium">App Toolkit</span>
+            <small class="type-body-small">Manage Android utilities</small>
           </div>
         </a>
       </li>
       <li class="wave round">
-        <a href="#faq-api" class="nav-link space">
+        <a href="#faq-api" class="nav-link">
           <i aria-hidden="true">help</i>
           <div class="max">
-            <span>FAQ &amp; Support</span>
-            <small>Publish policy answers</small>
+            <span class="type-title-medium">FAQ &amp; Support</span>
+            <small class="type-body-small">Publish policy answers</small>
           </div>
         </a>
       </li>
       <li class="wave round">
-        <a href="#english-with-lidia-api" class="nav-link space">
+        <a href="#english-with-lidia-api" class="nav-link">
           <i aria-hidden="true">menu_book</i>
           <div class="max">
-            <span>English with Lidia</span>
-            <small>Build lessons &amp; home feeds</small>
+            <span class="type-title-medium">English with Lidia</span>
+            <small class="type-body-small">Build lessons &amp; home feeds</small>
           </div>
         </a>
       </li>
       <li class="wave round">
-        <a href="#android-studio-tutorials-api" class="nav-link space">
+        <a href="#android-studio-tutorials-api" class="nav-link">
           <i aria-hidden="true">school</i>
           <div class="max">
-            <span>Android Studio Tutorials</span>
-            <small>Compose lesson flows</small>
+            <span class="type-title-medium">Android Studio Tutorials</span>
+            <small class="type-body-small">Compose lesson flows</small>
           </div>
         </a>
       </li>
     </ul>
     <hr>
-    <small class="padding">GitHub Tools</small>
+    <div class="padding type-label-large">GitHub Tools</div>
     <ul class="list">
       <li class="wave round">
-        <a href="#github-favorites" class="nav-link space">
+        <a href="#github-favorites" class="nav-link">
           <i aria-hidden="true">grade</i>
           <div class="max">
-            <span>Favorites</span>
-            <small>Quick access to starred repos</small>
+            <span class="type-title-medium">Favorites</span>
+            <small class="type-body-small">Quick access to starred repos</small>
           </div>
         </a>
       </li>
       <li class="wave round">
-        <a href="#repo-mapper" class="nav-link space">
+        <a href="#repo-mapper" class="nav-link">
           <i aria-hidden="true">terminal</i>
           <div class="max">
-            <span>Repo Mapper</span>
-            <small>Generate directory trees</small>
+            <span class="type-title-medium">Repo Mapper</span>
+            <small class="type-body-small">Generate directory trees</small>
           </div>
         </a>
       </li>
       <li class="wave round">
-        <a href="#release-stats" class="nav-link space">
+        <a href="#release-stats" class="nav-link">
           <i aria-hidden="true">bar_chart</i>
           <div class="max">
-            <span>Release Stats</span>
-            <small>Visualize download counts</small>
+            <span class="type-title-medium">Release Stats</span>
+            <small class="type-body-small">Visualize download counts</small>
           </div>
         </a>
       </li>
       <li class="wave round">
-        <a href="#git-patch" class="nav-link space">
+        <a href="#git-patch" class="nav-link">
           <i aria-hidden="true">receipt_long</i>
           <div class="max">
-            <span>Git Patch</span>
-            <small>Extract commit patches</small>
+            <span class="type-title-medium">Git Patch</span>
+            <small class="type-body-small">Extract commit patches</small>
           </div>
         </a>
       </li>
@@ -170,15 +176,15 @@
     </div>
   </div>
 </dialog>
-<!-- Change Rationale: The top app bar now uses BeerCSS's filled header style so it matches
-     native Material 3 surfaces and can transition to a higher-emphasis container on scroll,
-     while keeping the nav row alignment consistent for touch targets. -->
-<header id="topAppBar" class="app-top-app-bar fill" data-drawer-inert-target="">
+<!-- Change Rationale: The top app bar now combines BeerCSS's fixed header behavior with
+     the filled surface class, replacing bespoke sticky styling so scroll elevation and
+     spacing follow the stock Material 3 pattern. -->
+<header id="topAppBar" class="app-top-app-bar fixed fill" data-drawer-inert-target="">
   <nav>
     <button id="menuButton" class="transparent circle" aria-label="Open navigation menu">
       <i aria-hidden="true">menu</i>
     </button>
-    <h5 id="appBarHeadline" class="max">API Console</h5>
+    <h5 id="appBarHeadline" class="type-title-medium max">API Console</h5>
   </nav>
 </header>
 <!-- Change Rationale: The main content wrapper previously used a generic div, which
@@ -188,31 +194,34 @@
      layout consistency per Material 3 guidance. -->
 <main class="content-wrapper responsive" id="pageContentArea" data-drawer-inert-target="">
   <div id="mainContentPage" class="page-section app-shell-panel page active">
+    <!-- Change Rationale: Home hero typography now uses shared Material type
+         scale classes, replacing bespoke font sizing to reduce the oversized
+         headline effect and keep the hierarchy aligned with MD3 guidance. -->
     <section class="hero">
       <div class="hero-copy">
-        <p class="hero-eyebrow">Purpose-built for Mihai-Cristian Condrea's apps</p>
-        <h1>Build JSON APIs visually and ship updates faster</h1>
-        <p class="hero-body">Use reusable templates, smart defaults, and interactive previews to craft the App Toolkit, English with Lidia, and Android Studio Tutorials APIs without memorizing schemas.</p>
+        <p class="hero-eyebrow type-label-medium">Purpose-built for Mihai-Cristian Condrea's apps</p>
+        <h1 class="type-headline-large">Build JSON APIs visually and ship updates faster</h1>
+        <p class="hero-body type-body-medium">Use reusable templates, smart defaults, and interactive previews to craft the App Toolkit, English with Lidia, and Android Studio Tutorials APIs without memorizing schemas.</p>
       </div>
       <div class="hero-visual" aria-hidden="true"></div>
     </section>
 
     <section class="home-section">
       <div class="section-header">
-        <h2>Pick your API workspace</h2>
-        <p>Each workspace reflects the structure and constraints documented in the production JSON files so you can safely prototype or edit.</p>
+        <h2 class="type-title-large">Pick your API workspace</h2>
+        <p class="type-body-medium">Each workspace reflects the structure and constraints documented in the production JSON files so you can safely prototype or edit.</p>
       </div>
-      <div class="workspace-surface feature-surface">
+      <div class="workspace-surface feature-surface padding">
         <div class="feature-card-grid workspace-grid" data-workspace-grid></div>
       </div>
     </section>
 
     <section class="home-section">
       <div class="section-header">
-        <h2>Explore GitHub helper tools</h2>
-        <p>Jump into the utilities that streamline patching, mapping, and release analysis without leaving the console.</p>
+        <h2 class="type-title-large">Explore GitHub helper tools</h2>
+        <p class="type-body-medium">Jump into the utilities that streamline patching, mapping, and release analysis without leaving the console.</p>
       </div>
-      <div class="github-tools-surface feature-surface">
+      <div class="github-tools-surface feature-surface padding">
         <div class="feature-card-grid tool-card-grid" data-github-tools-grid></div>
       </div>
     </section>

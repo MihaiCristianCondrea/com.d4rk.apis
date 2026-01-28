@@ -4,13 +4,10 @@
  */
 
 /* --- Top App Bar --- */
-/* Change Rationale: Keep the app bar sticky and layered above content per the
- * shell requirements without overriding BeerCSS surface styling.
+/* Change Rationale: The top app bar now relies on BeerCSS's `fixed` header
+ * behavior for stickiness, so only minimal sizing remains here.
  */
 .app-top-app-bar {
-  position: sticky;
-  top: 0;
-  z-index: 10;
   width: 100%;
 }
 

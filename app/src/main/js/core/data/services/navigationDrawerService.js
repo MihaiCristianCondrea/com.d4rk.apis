@@ -180,13 +180,11 @@ export class NavigationDrawerController {
   }
 
   /**
-   * Wires nav items so the drawer can optionally close on selection.
+   * Wires nav items so the drawer closes on selection.
    *
    * Change Rationale:
-   * - The drawer should collapse after a selection on smaller screens to keep
-   *   the content in view and avoid leaving a modal open on top of the page.
-   * - On larger screens, navigation remains open so users can continue
-   *   exploring without losing their place in the menu.
+   * - The drawer behaves as a modal surface across breakpoints, so selections
+   *   always dismiss it to reveal content and avoid trapping focus.
    *
    * @returns {void}
    */
@@ -207,6 +205,8 @@ export class NavigationDrawerController {
    * @returns {void}
    */
   handleNavItemSelection() {
+    // Change Rationale: Modal drawers should always collapse after navigation
+    // to match Material 3 guidance and keep focus on the newly loaded page.
     if (!this.shouldCloseOnNavSelection()) {
       return;
     }
@@ -487,13 +487,9 @@ export class NavigationDrawerController {
    * @returns {boolean}
    */
   shouldCloseOnNavSelection() {
-    if (typeof window === 'undefined' || !this.closeOnNavSelectMediaQuery) {
-      return false;
-    }
-    if (typeof window.matchMedia !== 'function') {
-      return false;
-    }
-    return window.matchMedia(this.closeOnNavSelectMediaQuery).matches;
+    // Change Rationale: The drawer is now always modal, so navigation selections
+    // consistently dismiss it across viewport sizes to match MD3 expectations.
+    return true;
   }
 }
 

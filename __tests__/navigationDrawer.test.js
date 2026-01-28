@@ -41,7 +41,7 @@ function createDrawerMarkup() {
       <button id="closeDrawerButton" type="button">Close</button>
       <nav>
         <ul class="list">
-          <li><a href="#home" id="homeLink" class="nav-link space">Home</a></li>
+          <li><a href="#home" id="homeLink" class="nav-link">Home</a></li>
         </ul>
       </nav>
       <details>
@@ -141,17 +141,12 @@ describe('navigationDrawerService', () => {
   });
 
   // Change Rationale: Validate close button and nav selection behavior so the
-  // modal drawer always dismisses on small screens per the shell doctrine.
-  test('closes the drawer with the close button and nav selection on small screens', () => {
+  // modal drawer always dismisses after a navigation choice across viewports.
+  test('closes the drawer with the close button and nav selection', () => {
     const closeButton = document.getElementById('closeDrawerButton');
     const menuButtonElement = document.getElementById('menuButton');
     const navDrawerElement = document.getElementById('navDrawer');
     const homeLink = document.getElementById('homeLink');
-
-    Object.defineProperty(window, 'matchMedia', {
-      value: jest.fn(() => ({ matches: true })),
-      configurable: true,
-    });
 
     menuButtonElement.click();
     expect(navDrawerElement.classList.contains('open')).toBe(true);

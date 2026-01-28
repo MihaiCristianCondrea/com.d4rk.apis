@@ -35,11 +35,51 @@
   --md-sys-color-surface-container: #ecefef;
   --md-sys-color-surface-container-high: #f2f5f4;
   --md-sys-color-surface-container-highest: #e1e4e4;
-  --app-bg-color: var(--md-sys-color-surface-container-lowest);
+  /* Change Rationale: BeerCSS surfaces now reference the Material 3 tokens to
+   * eliminate the default purple palette while keeping the theme anchored to
+   * the same system colors used by Material Web Components.
+   */
+  --primary: var(--md-sys-color-primary);
+  --on-primary: var(--md-sys-color-on-primary);
+  --primary-container: var(--md-sys-color-primary-container);
+  --on-primary-container: var(--md-sys-color-on-primary-container);
+  --secondary: var(--md-sys-color-secondary);
+  --on-secondary: var(--md-sys-color-on-secondary);
+  --secondary-container: var(--md-sys-color-secondary-container);
+  --on-secondary-container: var(--md-sys-color-on-secondary-container);
+  --tertiary: var(--md-sys-color-tertiary);
+  --on-tertiary: var(--md-sys-color-on-tertiary);
+  --tertiary-container: var(--md-sys-color-tertiary-container);
+  --on-tertiary-container: var(--md-sys-color-on-tertiary-container);
+  --error: var(--md-sys-color-error);
+  --on-error: var(--md-sys-color-on-error);
+  --error-container: var(--md-sys-color-error-container);
+  --on-error-container: var(--md-sys-color-on-error-container);
+  --background: var(--md-sys-color-background);
+  --on-background: var(--md-sys-color-on-background);
+  --surface: var(--md-sys-color-surface);
+  --on-surface: var(--md-sys-color-on-surface);
+  --surface-variant: var(--md-sys-color-surface-variant);
+  --on-surface-variant: var(--md-sys-color-on-surface-variant);
+  --outline: var(--md-sys-color-outline);
+  --outline-variant: var(--md-sys-color-outline-variant);
+  --shadow: var(--md-sys-color-shadow);
+  --scrim: var(--md-sys-color-scrim);
+  --inverse-surface: var(--md-sys-color-inverse-surface);
+  --inverse-on-surface: var(--md-sys-color-inverse-on-surface);
+  --inverse-primary: var(--md-sys-color-inverse-primary);
+  --surface-dim: var(--md-sys-color-surface-dim);
+  --surface-bright: var(--md-sys-color-surface-bright);
+  --surface-container-lowest: var(--md-sys-color-surface-container-lowest);
+  --surface-container-low: var(--md-sys-color-surface-container-low);
+  --surface-container: var(--md-sys-color-surface-container);
+  --surface-container-high: var(--md-sys-color-surface-container-high);
+  --surface-container-highest: var(--md-sys-color-surface-container-highest);
+  --app-bg-color: var(--md-sys-color-surface);
   --app-text-color: var(--md-sys-color-on-surface);
   --app-secondary-text-color: var(--md-sys-color-on-surface-variant);
-  --app-card-bg-color: var(--md-sys-color-surface);
-  --app-outlined-card-bg-color: var(--md-sys-color-surface);
+  --app-card-bg-color: var(--md-sys-color-surface-container);
+  --app-outlined-card-bg-color: var(--md-sys-color-surface-container);
   --app-section-title-color: var(--md-sys-color-on-background);
   --app-border-color: var(--md-sys-color-outline-variant);
   --app-screenshot-radius: 20px;
@@ -81,6 +121,28 @@
   --safe-area-bottom-offset: calc(
     env(safe-area-inset-bottom, 0px) - var(--safe-area-max-inset-bottom)
   );
+  /* Change Rationale: Material 3 type scale sizes are defined once at the
+   * token level so feature layouts can apply typography classes without
+   * per-component font-size overrides.
+   */
+  --md-sys-typescale-headline-large-size: 2rem;
+  --md-sys-typescale-headline-large-line-height: 2.5rem;
+  --md-sys-typescale-title-large-size: 1.375rem;
+  --md-sys-typescale-title-large-line-height: 1.75rem;
+  --md-sys-typescale-title-medium-size: 1rem;
+  --md-sys-typescale-title-medium-line-height: 1.5rem;
+  --md-sys-typescale-title-small-size: 0.875rem;
+  --md-sys-typescale-title-small-line-height: 1.25rem;
+  --md-sys-typescale-body-large-size: 1rem;
+  --md-sys-typescale-body-large-line-height: 1.5rem;
+  --md-sys-typescale-body-medium-size: 0.875rem;
+  --md-sys-typescale-body-medium-line-height: 1.25rem;
+  --md-sys-typescale-body-small-size: 0.75rem;
+  --md-sys-typescale-body-small-line-height: 1rem;
+  --md-sys-typescale-label-large-size: 0.875rem;
+  --md-sys-typescale-label-large-line-height: 1.25rem;
+  --md-sys-typescale-label-medium-size: 0.75rem;
+  --md-sys-typescale-label-medium-line-height: 1rem;
   /* Change Rationale: Typographic tokens previously pointed to Google Sans Regular with a Poppins fallback, reducing access to variable weights and drifting from Material 3’s variable font guidance. Standardizing on the Google Sans Flex stack ensures consistent optical sizing, broader weight coverage, and alignment with the new site-wide font strategy. */
   --md-sys-typescale-label-large-font-family-name: 'Google Sans Flex';
   --md-sys-typescale-label-large-font: var(--app-font-family-primary);
@@ -182,10 +244,14 @@ html.dark {
   --md-sys-color-surface-container: #1d2021;
   --md-sys-color-surface-container-high: #272b2b;
   --md-sys-color-surface-container-highest: #323636;
-  --app-bg-color: var(--md-sys-color-surface-container-lowest);
+  /* Change Rationale: Keep dark mode surfaces anchored to the Material 3
+   * surface token so the page background does not fall back to a near-black
+   * container variant.
+   */
+  --app-bg-color: var(--md-sys-color-surface);
   --app-text-color: var(--md-sys-color-on-surface);
   --app-secondary-text-color: var(--md-sys-color-on-surface-variant);
-  --app-card-bg-color: var(--md-sys-color-surface-container-low);
+  --app-card-bg-color: var(--md-sys-color-surface-container);
   --app-outlined-card-bg-color: var(--md-sys-color-surface-container);
   --app-section-title-color: var(--md-sys-color-on-background);
   --app-border-color: var(--md-sys-color-outline-variant);
