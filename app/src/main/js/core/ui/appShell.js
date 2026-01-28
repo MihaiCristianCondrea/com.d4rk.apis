@@ -17,6 +17,7 @@ import { initNavigationDrawer } from '@/core/data/services/navigationDrawerServi
 import { initRouter, loadPageContent, normalizePageId } from './router/index.js';
 import RouterRoutes from './router/routes.js';
 import { registerGlobalUtilities, registerCompatibilityGlobals } from './globals.js';
+import { initNavigationState } from './components/navigationState.js';
 
 let pageContentAreaEl, mainContentPageOriginalEl, appBarHeadlineEl, topAppBarEl;
 let navigationController = null;
@@ -74,6 +75,9 @@ document.addEventListener('DOMContentLoaded', () => {
     updateCopyrightYear();
     initThemeControls();
     navigationController = initNavigationDrawer();
+    // Change Rationale: Keep navigation highlight states unified across drawer and rail
+    // by syncing active link styles from a single shared helper.
+    initNavigationState();
 
     if (typeof SiteAnimations !== 'undefined' && SiteAnimations && typeof SiteAnimations.init === 'function') {
         try {

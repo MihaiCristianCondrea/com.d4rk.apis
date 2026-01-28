@@ -1,5 +1,8 @@
 import { createWorkspaceActivationController } from '../domain/workspaceActivationController.js';
 import { renderWorkspaceDashboards } from '../../../../core/ui/templates/workspaceDashboard.js';
+// Change Rationale: Screenshot carousel navigation now uses the shared action button
+// helper so tertiary buttons remain consistent with the global button-role policy.
+import { createTertiaryActionButton } from '@/core/ui/components/actionButtons.js';
 
 (function (global) {
     const utils = global.ApiBuilderUtils;
@@ -1892,23 +1895,23 @@ import { renderWorkspaceDashboards } from '../../../../core/ui/templates/workspa
 
             const createNavButton = (direction) => {
                 const isNext = direction === 'next';
-                const button = utils.createElement('button', {
+                // Change Rationale: The carousel nav buttons now flow through the
+                // tertiary action button helper to keep icon-only actions aligned
+                // with the global button role system.
+                return createTertiaryActionButton({
+                    label: '',
+                    icon: isNext ? 'chevron_right' : 'chevron_left',
                     classNames: [
                         'screenshot-carousel__nav',
                         isNext ? 'screenshot-carousel__nav--next' : 'screenshot-carousel__nav--prev'
                     ],
                     attrs: {
-                        type: 'button',
                         'aria-label': isNext
                             ? 'Show next screenshots'
                             : 'Show previous screenshots',
                         'aria-controls': screenshotListId
                     }
                 });
-                button.innerHTML = `<span class="material-symbols-outlined" aria-hidden="true">${
-                    isNext ? 'chevron_right' : 'chevron_left'
-                }</span>`;
-                return button;
             };
 
             const previousButton = createNavButton('previous');

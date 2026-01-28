@@ -1,0 +1,17 @@
+<!-- Change Rationale: Introduce a single actionable card template so home
+     navigation cards share one outlined treatment and consistent CTA styling
+     without per-screen class overrides. -->
+<template data-view="action-card">
+  <a class="feature-card action-card border padding" href="#" aria-label="">
+    <div class="action-card-header">
+      <span class="feature-card-icon material-symbols-outlined" data-slot="icon" aria-hidden="true">link</span>
+      <div class="action-card-title-group">
+        <p class="action-card-kicker type-label-medium" data-slot="kicker"></p>
+        <h3 class="type-title-medium action-card-title" data-slot="title"></h3>
+      </div>
+    </div>
+    <p class="action-card-body type-body-medium" data-slot="description"></p>
+    <ul class="action-card-list type-body-small" data-slot="features"></ul>
+    <span class="action-card-footer type-label-large" data-slot="cta"></span>
+  </a>
+</template>

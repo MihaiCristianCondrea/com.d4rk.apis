@@ -7,6 +7,10 @@ import { githubTools, workspaceCards } from '../data/homeContentDataSource.js';
 // Change Rationale: The Home screen now follows the Screen naming convention, so import the
 // new screen path for bundling and future router usage.
 import homeScreenSource from './HomeScreen.html?raw';
+// Change Rationale: Home cards now hydrate from dedicated view templates so action/info
+// card roles remain consistent without per-screen class overrides.
+import actionCardViewSource from './views/ActionCardView.html?raw';
+import infoCardViewSource from './views/InfoCardView.html?raw';
 
 const globalScope = typeof window !== 'undefined' ? window : globalThis;
 // Change Rationale: Expose the latest home screen HTML after moving it into the feature UI,
@@ -41,52 +45,100 @@ globalScope.__APP_HOME_SCREEN__ = homeScreenSource;
  */
 
 /**
- * Creates a Material icon span element for use in cards.
+ * Parses an HTML view template for card rendering.
  *
- * The icon:
- * - Uses the `material-symbols-outlined` font.
- * - Is marked as decorative via `aria-hidden="true"`.
- *
- * @param {string} name Material symbol name to render (e.g. `"terminal"`).
- * @returns {HTMLSpanElement} Configured icon element.
+ * @param {string} source Raw HTML source.
+ * @param {string} viewName Name of the template to locate.
+ * @returns {HTMLTemplateElement} Template element for the view.
  */
-function createIcon(name) {
-  const icon = document.createElement('span');
-  icon.className = 'feature-card-icon material-symbols-outlined';
-  icon.setAttribute('aria-hidden', 'true');
-  icon.textContent = name;
-  return icon;
+function parseCardTemplate(source, viewName) {
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(source, 'text/html');
+  const template = doc.querySelector(`template[data-view="${viewName}"]`);
+  if (!template) {
+    throw new Error(`HomeRoute: Missing ${viewName} card template.`);
+  }
+  return template;
 }
 
+const actionCardTemplate = parseCardTemplate(actionCardViewSource, 'action-card');
+const infoCardTemplate = parseCardTemplate(infoCardViewSource, 'info-card');
+
 /**
- * Builds the header section for a workspace tile.
+ * Creates a card element from a template and hydrates its data slots.
  *
- * Layout:
- * - Left: Icon in a circular wrapper.
- * - Right: Kicker text and workspace title.
- *
- * @param {WorkspaceCard} card Workspace configuration.
- * @returns {HTMLDivElement} Header element for the workspace tile.
+ * @param {HTMLTemplateElement} template Card template to clone.
+ * @param {Object} data Payload to populate the card.
+ * @param {string} data.href Link URL for action cards.
+ * @param {string} data.ariaLabel Accessibility label for the card.
+ * @param {string} data.icon Material icon name.
+ * @param {string} data.title Card title.
+ * @param {string} data.description Card description.
+ * @param {string} [data.kicker] Optional kicker text.
+ * @param {string[]} [data.features] Optional list of features.
+ * @param {string} [data.cta] Optional footer CTA text.
+ * @returns {HTMLElement} Hydrated card element.
  */
-function createWorkspaceHeader(card) {
-  const header = document.createElement('div');
-  header.className = 'workspace-tile-header';
+function buildCardFromTemplate(template, data) {
+  const fragment = document.importNode(template.content, true);
+  const card = fragment.firstElementChild;
+  if (!card) {
+    throw new Error('HomeRoute: Card template is empty.');
+  }
 
-  const iconWrapper = document.createElement('div');
-  iconWrapper.className = 'workspace-tile-icon';
-  iconWrapper.appendChild(createIcon(card.icon));
+  if (card instanceof HTMLAnchorElement) {
+    card.href = data.href;
+    card.setAttribute('aria-label', data.ariaLabel);
+  }
 
-  const textWrapper = document.createElement('div');
-  const kicker = document.createElement('p');
-  kicker.className = 'workspace-tile-kicker';
-  kicker.textContent = card.kicker;
+  const iconSlot = card.querySelector('[data-slot="icon"]');
+  if (iconSlot) {
+    iconSlot.textContent = data.icon;
+  }
 
-  const title = document.createElement('h3');
-  title.textContent = card.title;
+  const kickerSlot = card.querySelector('[data-slot="kicker"]');
+  if (kickerSlot) {
+    if (data.kicker) {
+      kickerSlot.textContent = data.kicker;
+    } else {
+      kickerSlot.remove();
+    }
+  }
 
-  textWrapper.append(kicker, title);
-  header.append(iconWrapper, textWrapper);
-  return header;
+  const titleSlot = card.querySelector('[data-slot="title"]');
+  if (titleSlot) {
+    titleSlot.textContent = data.title;
+  }
+
+  const descriptionSlot = card.querySelector('[data-slot="description"]');
+  if (descriptionSlot) {
+    descriptionSlot.textContent = data.description;
+  }
+
+  const featureSlot = card.querySelector('[data-slot="features"]');
+  if (featureSlot) {
+    if (Array.isArray(data.features) && data.features.length) {
+      data.features.forEach((feature) => {
+        const item = document.createElement('li');
+        item.textContent = feature;
+        featureSlot.appendChild(item);
+      });
+    } else {
+      featureSlot.remove();
+    }
+  }
+
+  const ctaSlot = card.querySelector('[data-slot="cta"]');
+  if (ctaSlot) {
+    if (data.cta) {
+      ctaSlot.innerHTML =
+        `${data.cta} <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span>`;
+    } else {
+      ctaSlot.remove();
+    }
+  }
+
+  return card;
 }
 
 /**
@@ -107,35 +159,18 @@ function createWorkspaceHeader(card) {
  * @returns {HTMLAnchorElement} Fully assembled workspace tile element.
  */
 function createWorkspaceTile(card) {
-  const tile = document.createElement('a');
-  tile.className = 'feature-card workspace-tile';
-  tile.href = card.href;
-  tile.setAttribute('aria-label', `Open ${card.title} workspace`);
+  const tile = buildCardFromTemplate(actionCardTemplate, {
+    href: card.href,
+    ariaLabel: `Open ${card.title} workspace`,
+    icon: card.icon,
+    kicker: card.kicker,
+    title: card.title,
+    description: card.description,
+    features: card.features,
+    cta: 'Open workspace',
+  });
 
-  tile.appendChild(createWorkspaceHeader(card));
-
-  const description = document.createElement('p');
-  description.className = 'workspace-tile-body';
-  description.textContent = card.description;
-  tile.appendChild(description);
-
-  if (Array.isArray(card.features) && card.features.length) {
-    const list = document.createElement('ul');
-    list.className = 'workspace-tile-list';
-    card.features.forEach((feature) => {
-      const item = document.createElement('li');
-      item.textContent = feature;
-      list.appendChild(item);
-    });
-    tile.appendChild(list);
-  }
-
-  const footer = document.createElement('span');
-  footer.className = 'workspace-tile-footer';
-  footer.innerHTML =
-      'Open workspace <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span>';
-  tile.appendChild(footer);
-
+  tile.classList.add('workspace-card');
   return tile;
 }
 
@@ -156,30 +191,19 @@ function createWorkspaceTile(card) {
  * @returns {HTMLAnchorElement} Fully assembled tool card element.
  */
 function createGithubToolCard(tool) {
-  const card = document.createElement('a');
-  card.className = 'feature-card tool-card';
+  const card = buildCardFromTemplate(actionCardTemplate, {
+    href: tool.href,
+    ariaLabel: `Launch ${tool.title}`,
+    icon: tool.icon,
+    title: tool.title,
+    description: tool.description,
+    cta: 'Launch tool',
+  });
+
+  card.classList.add('tool-card');
   if (tool.wide) {
     card.classList.add('tool-card-wide');
   }
-  card.href = tool.href;
-  card.setAttribute('aria-label', `Launch ${tool.title}`);
-
-  card.appendChild(createIcon(tool.icon));
-
-  const title = document.createElement('h3');
-  title.textContent = tool.title;
-  card.appendChild(title);
-
-  const description = document.createElement('p');
-  description.textContent = tool.description;
-  card.appendChild(description);
-
-  const footer = document.createElement('span');
-  footer.className = 'card-footer';
-  footer.innerHTML =
-      'Launch Tool <span class="material-symbols-outlined">arrow_forward</span>';
-  card.appendChild(footer);
-
   return card;
 }
 
