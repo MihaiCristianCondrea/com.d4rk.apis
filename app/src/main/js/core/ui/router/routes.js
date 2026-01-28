@@ -240,11 +240,29 @@ function sanitizeRouteConfig(config) {
 function registerRoute(config) {
     const sanitized = sanitizeRouteConfig(config);
     const existingRoute = PAGE_ROUTES[sanitized.id];
+    const isStrictMode = typeof process !== 'undefined'
+        && process.env
+        && ['development', 'test'].includes(process.env.NODE_ENV);
 
     // Change Rationale: Inline HTML is the canonical registration for feature routes, so
     // always retain inline markup when present and avoid overwriting with path-only entries.
     // This guarantees deterministic registration regardless of import order.
     if (existingRoute) {
+        // Change Rationale: Detect divergent registrations so accidental overwrites are
+        // surfaced during development or test runs without disrupting production routing.
+        const hasInlineMismatch = existingRoute.inlineHtml
+            && sanitized.inlineHtml
+            && existingRoute.inlineHtml !== sanitized.inlineHtml;
+        const hasConfigMismatch = existingRoute.path !== sanitized.path
+            || existingRoute.title !== sanitized.title
+            || existingRoute.onLoad !== sanitized.onLoad;
+        if (hasInlineMismatch || hasConfigMismatch) {
+            const warning = `RouterRoutes: Route "${sanitized.id}" registration diverged from existing configuration.`;
+            if (isStrictMode && hasInlineMismatch) {
+                throw new Error(warning);
+            }
+            console.warn(warning);
+        }
         if (existingRoute.inlineHtml && !sanitized.inlineHtml) {
             return cloneRoute(existingRoute);
         }

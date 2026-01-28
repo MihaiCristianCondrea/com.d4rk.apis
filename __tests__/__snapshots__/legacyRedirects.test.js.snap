@@ -1,0 +1,26 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`createLegacyRedirectHtml matches the expected template 1`] = `
+"<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="refresh" content="0; url=../../#git-patch" />
+    <meta name="robots" content="noindex" />
+    <title>Redirecting…</title>
+  </head>
+  <body>
+    <script>
+      (function () {
+        const search = window.location.search || '';
+        const hash = window.location.hash || '';
+        const basePath = window.location.pathname.replace(/\\/layout\\/github-tools\\/[^/]*$/i, '/');
+        const base = basePath.endsWith('/') ? basePath : basePath + '/';
+        const target = base + '#git-patch' + search + hash;
+        window.location.replace(target);
+      })();
+    </script>
+    <p>Redirecting to the GitHub Tools console…</p>
+  </body>
+</html>"
+`;

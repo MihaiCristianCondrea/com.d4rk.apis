@@ -42,46 +42,46 @@ jest.mock(
   { virtual: true }
 );
 
-/**
- * Imports a module twice by clearing it from the require cache in between.
- *
- * @param {string} modulePath - Absolute module path to import.
- * @returns {void}
- */
-function importModuleTwice(modulePath) {
-  require(modulePath);
-  delete require.cache[modulePath];
-  require(modulePath);
-}
-
 test('GitPatchRoute registers once even when imported twice', () => {
   jest.resetModules();
-  const { RouterRoutes } = require('../app/src/main/js/core/ui/router/routes.js');
-  const gitPatchRoutePath = require.resolve(
-    '../app/src/main/js/app/githubtools/gitpatch/ui/GitPatchRoute.js'
-  );
-  const initialRoutes = RouterRoutes.getRoutes();
+  let result;
+  jest.isolateModules(() => {
+    const { RouterRoutes } = require('../app/src/main/js/core/ui/router/routes.js');
+    const { registerGitPatchRoute } = require(
+      '../app/src/main/js/app/githubtools/gitpatch/ui/GitPatchRoute.js'
+    );
+    const initialRoutes = RouterRoutes.getRoutes();
 
-  importModuleTwice(gitPatchRoutePath);
+    registerGitPatchRoute();
+    registerGitPatchRoute();
 
-  const routes = RouterRoutes.getRoutes();
-  const gitPatchRoutes = routes.filter((route) => route.id === 'git-patch');
-  expect(gitPatchRoutes).toHaveLength(1);
-  expect(routes).toHaveLength(initialRoutes.length + 1);
+    const routes = RouterRoutes.getRoutes();
+    const gitPatchRoutes = routes.filter((route) => route.id === 'git-patch');
+    result = { routes, gitPatchRoutes, initialCount: initialRoutes.length };
+  });
+
+  expect(result.gitPatchRoutes).toHaveLength(1);
+  expect(result.routes).toHaveLength(result.initialCount);
 });
 
 test('ReleaseStatsRoute registers once even when imported twice', () => {
   jest.resetModules();
-  const { RouterRoutes } = require('../app/src/main/js/core/ui/router/routes.js');
-  const releaseStatsRoutePath = require.resolve(
-    '../app/src/main/js/app/githubtools/releasestats/ui/ReleaseStatsRoute.js'
-  );
-  const initialRoutes = RouterRoutes.getRoutes();
+  let result;
+  jest.isolateModules(() => {
+    const { RouterRoutes } = require('../app/src/main/js/core/ui/router/routes.js');
+    const { registerReleaseStatsRoute } = require(
+      '../app/src/main/js/app/githubtools/releasestats/ui/ReleaseStatsRoute.js'
+    );
+    const initialRoutes = RouterRoutes.getRoutes();
 
-  importModuleTwice(releaseStatsRoutePath);
+    registerReleaseStatsRoute();
+    registerReleaseStatsRoute();
 
-  const routes = RouterRoutes.getRoutes();
-  const releaseStatsRoutes = routes.filter((route) => route.id === 'release-stats');
-  expect(releaseStatsRoutes).toHaveLength(1);
-  expect(routes).toHaveLength(initialRoutes.length + 1);
+    const routes = RouterRoutes.getRoutes();
+    const releaseStatsRoutes = routes.filter((route) => route.id === 'release-stats');
+    result = { routes, releaseStatsRoutes, initialCount: initialRoutes.length };
+  });
+
+  expect(result.releaseStatsRoutes).toHaveLength(1);
+  expect(result.routes).toHaveLength(result.initialCount);
 });

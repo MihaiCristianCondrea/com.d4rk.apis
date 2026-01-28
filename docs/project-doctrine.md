@@ -54,3 +54,9 @@ This document captures the guiding principles for how we build and maintain the 
 - Router ownership remains clear and centralized.
 - Material 3 alignment is required for all surfaces and interactions.
 - Documentation stays consistent with the API data sources in `api/`.
+
+## Legacy URL Compatibility Policy
+
+- Canonical GitHub tools naming uses `githubtools` for folders and `kebab-case` route IDs (e.g., `git-patch`).
+- Legacy `github-tools` URLs may exist only in compatibility normalization and redirect stubs.
+- Remove legacy shims once internal links no longer emit `/layout/github-tools/*` and a release cycle has preserved redirects without new legacy traffic.
