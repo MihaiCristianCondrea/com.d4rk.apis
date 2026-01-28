@@ -60,22 +60,22 @@ export function registerRepoMapperRoute() {
   // registered, which left deployments pointing at a removed layout HTML file. Re-registering when
   // the existing route lacks inline HTML ensures the Screen + Views version always wins, keeping
   // routing stable and aligned with Material 3 layout composition.
-  // Change Rationale: GitHub tools route IDs now share the `githubtools-` prefix
-  // so router identifiers match the canonical feature naming scheme.
-  const existingRoute = RouterRoutes.getRoute('githubtools-repo-mapper');
+  // Change Rationale: GitHub tools route IDs now use human-readable slugs
+  // so legacy hashes stay stable and navigation labels remain concise.
+  const existingRoute = RouterRoutes.getRoute('repo-mapper');
   if (existingRoute?.inlineHtml) {
     return;
   }
 
   RouterRoutes.registerRoute({
-    id: 'githubtools-repo-mapper',
+    id: 'repo-mapper',
     title: 'Repo Mapper',
     onLoad: initRepoMapper,
     inlineHtml: buildRepoMapperScreenHtml(),
     metadata: {
       description: 'Generate ASCII directory trees from any public repository. Perfect for documentation and LLM context.',
       keywords: ['Repo Mapper', 'GitHub', 'ASCII', 'directory tree'],
-      canonicalSlug: 'githubtools-repo-mapper',
+      canonicalSlug: 'repo-mapper',
       openGraph: {
         title: 'Repo Mapper',
         description: 'Generate ASCII directory trees from any public repository. Perfect for documentation and LLM context.',

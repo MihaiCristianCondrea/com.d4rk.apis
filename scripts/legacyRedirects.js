@@ -8,10 +8,10 @@
  */
 const legacyGitHubToolRedirects = Object.freeze({
   // Change Rationale: GitHub tool redirects now point to the canonical
-  // githubtools-prefixed route IDs to keep naming consistent.
-  'git-patch.html': 'githubtools-git-patch',
-  'repo-mapper.html': 'githubtools-repo-mapper',
-  'release-stats.html': 'githubtools-release-stats',
+  // human-readable route IDs so legacy layout URLs map to stable slugs.
+  'git-patch.html': 'git-patch',
+  'repo-mapper.html': 'repo-mapper',
+  'release-stats.html': 'release-stats',
 });
 
 /**

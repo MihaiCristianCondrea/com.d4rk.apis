@@ -1,12 +1,8 @@
 @import "tailwindcss";
 
 @config "../../tailwind.config.js";
-/* Change Rationale: The Home screen now follows the Screen naming convention, so update
-   Tailwind's content source to keep utility extraction aligned with the new location. */
-@source "../js/app/home/ui/HomeScreen.html";
-/* Change Rationale: GitHub tools screens now live under feature UI folders, so include
-   feature HTML screens for utility extraction. */
+/* Change Rationale: Feature screens now live entirely under the app/ feature tree, so
+   Tailwind should only scan canonical screen + view HTML files instead of res/layout. */
 @source "../js/app/**/*.html";
-@source "../../res/layout/**/*.{html,js}";
 @source "../**/*.js";
 @source "../../../assets/**/*.{html,js,css}";

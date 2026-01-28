@@ -8,12 +8,8 @@ import { resolveAssetUrl } from '../../data/config/appConfig.js';
 // so router imports must use the canonical location to avoid Vite resolution errors.
 import { initFavoritesPage } from '@/app/githubtools/common/domain/githubTools.js';
 
-function layoutPath(filename) {
-    return resolveAssetUrl(`layout/${filename}`);
-}
-
-// Change Rationale: GitHub tool screens now live under feature UI folders, so provide a
-// helper for resolving screen paths without relying on res/layout.
+// Change Rationale: Feature screens now live under feature UI folders, so resolve screen
+// paths from the canonical /screens folder instead of res/layout.
 function screenPath(filename) {
     return resolveAssetUrl(`screens/${filename}`);
 }
@@ -299,6 +295,9 @@ function getRoutes() {
 const defaultRoutes = [
     {
         id: 'home',
+        // Change Rationale: Home is now loaded as a screen fragment so the app shell can
+        // remain the sole Vite entrypoint and router content is fetched from /screens.
+        path: screenPath('home/ui/HomeScreen.html'),
         title: 'API Console',
         metadata: {
             description: 'Design and manage the JSON APIs that power App Toolkit, FAQ, English with Lidia, and Android Studio Tutorials using a visual builder.',
@@ -324,7 +323,9 @@ const defaultRoutes = [
     },
     {
         id: 'app-toolkit-api',
-        path: layoutPath('workspaces/app-toolkit/app-toolkit.html'),
+        // Change Rationale: Workspaces now load their screens from feature UI folders
+        // instead of res/layout to enforce the Screen + Views migration.
+        path: screenPath('workspaces/app-toolkit/ui/AppToolkitScreen.html'),
         title: 'API Workspace',
         metadata: {
             description: 'Curate App Toolkit catalog entries with visual tools for managing app metadata, screenshots, and package information.',
@@ -349,7 +350,7 @@ const defaultRoutes = [
     // they can serve Screen + Views markup without relying on res/layout fallbacks.
     {
         id: 'english-with-lidia-api',
-        path: layoutPath('workspaces/english-with-lidia/english-with-lidia.html'),
+        path: screenPath('workspaces/english-with-lidia/ui/EnglishWithLidiaScreen.html'),
         title: 'English with Lidia API',
         metadata: {
             description: 'Build lesson feeds and multimedia content blocks for the English with Lidia Android app.',
@@ -372,7 +373,7 @@ const defaultRoutes = [
     },
     {
         id: 'android-studio-tutorials-api',
-        path: layoutPath('workspaces/android-studio-tutorials/android-studio-tutorials.html'),
+        path: screenPath('workspaces/android-studio-tutorials/ui/AndroidStudioTutorialsScreen.html'),
         title: 'Android Studio Tutorials API',
         metadata: {
             description: 'Design home feed cards and Compose-ready lesson content for Android Studio Tutorials.',
@@ -394,14 +395,14 @@ const defaultRoutes = [
         }
     },
     {
-        id: 'githubtools-favorites',
+        id: 'favorites',
         path: screenPath('githubtools/favorites/ui/GitHubFavoritesScreen.html'),
         title: 'Favorites',
         onLoad: initFavoritesPage,
         metadata: {
             description: 'Quick access to repositories saved from Repo Mapper and Release Stats.',
             keywords: ['favorites', 'GitHub tools'],
-            canonicalSlug: 'githubtools-favorites',
+            canonicalSlug: 'favorites',
             openGraph: {
                 title: 'Favorites',
                 description: 'Quick access to repositories saved from Repo Mapper and Release Stats.',

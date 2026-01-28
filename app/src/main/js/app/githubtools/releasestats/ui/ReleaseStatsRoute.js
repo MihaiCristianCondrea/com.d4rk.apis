@@ -59,22 +59,22 @@ export function registerReleaseStatsRoute() {
   // Change Rationale: Release Stats must prefer the Screen + View composition when legacy
   // `/layout` routes are still registered, keeping the GitHub tools navigation consistent
   // and eliminating 404s tied to removed layout files.
-  // Change Rationale: GitHub tools route IDs now share the `githubtools-` prefix
-  // so router identifiers match the canonical feature naming scheme.
-  const existingRoute = RouterRoutes.getRoute('githubtools-release-stats');
+  // Change Rationale: GitHub tools route IDs now use human-readable slugs
+  // so legacy hashes stay stable and navigation labels remain concise.
+  const existingRoute = RouterRoutes.getRoute('release-stats');
   if (existingRoute?.inlineHtml) {
     return;
   }
 
   RouterRoutes.registerRoute({
-    id: 'githubtools-release-stats',
+    id: 'release-stats',
     title: 'Release Stats',
     onLoad: initReleaseStats,
     inlineHtml: buildReleaseStatsScreenHtml(),
     metadata: {
       description: 'Visualize download counts, analyze asset performance, and track version history in real-time.',
       keywords: ['Release Stats', 'GitHub', 'downloads', 'statistics'],
-      canonicalSlug: 'githubtools-release-stats',
+      canonicalSlug: 'release-stats',
       openGraph: {
         title: 'Release Stats',
         description: 'Visualize download counts, analyze asset performance, and track version history in real-time.',

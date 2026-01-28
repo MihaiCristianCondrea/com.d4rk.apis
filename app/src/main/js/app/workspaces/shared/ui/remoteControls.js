@@ -1,7 +1,6 @@
-// Change Rationale: The shared builder template lives under `res/layout/workspaces/shared/` after the layout refactor,
-// but the previous relative path stopped one directory early, breaking Vite resolution. Pointing to the correct shared
-// partial keeps all workspaces aligned and preserves Material Design 3 consistency across builder surfaces.
-import builderRemoteTemplateSource from '../../../../../res/layout/workspaces/shared/builder-remote.html?raw';
+// Change Rationale: The shared builder template now lives under the workspaces shared UI views
+// folder, so update the import to the canonical Screen + Views location.
+import builderRemoteTemplateSource from './views/BuilderRemoteView.html?raw';
 
 // Change Rationale: Remote fetch and publish controls were duplicated across workspaces, leading to mismatched labels,
 // missing IDs, and preset drift. Centralizing hydration keeps the Material layout consistent, wires existing listeners via
