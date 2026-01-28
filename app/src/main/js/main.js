@@ -94,6 +94,9 @@ import './app/workspaces/app-toolkit/ui/index.js';
 import './app/workspaces/app-toolkit/ui/AppToolkitRoute.js';
 // Change Rationale: The unused Help feature codebase has been removed, so its bootstrapping
 // import is no longer required. FAQ tooling now relies solely on the workspace routes.
+// Change Rationale: FAQ workspace now follows the Screen + Views contract, so its route module
+// must be registered alongside other workspace feature entrypoints.
+import './app/workspaces/faq/ui/FaqRoute.js';
 import './app/workspaces/english-with-lidia/ui/EnglishWithLidiaRoute.js';
 import './app/workspaces/android-studio-tutorials/ui/AndroidStudioTutorialsRoute.js';
 

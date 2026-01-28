@@ -56,7 +56,12 @@ function buildRepoMapperScreenHtml() {
  * @returns {void}
  */
 export function registerRepoMapperRoute() {
-  if (RouterRoutes.hasRoute('repo-mapper')) {
+  // Change Rationale: The Repo Mapper route previously short-circuited if a legacy route was already
+  // registered, which left deployments pointing at a removed layout HTML file. Re-registering when
+  // the existing route lacks inline HTML ensures the Screen + Views version always wins, keeping
+  // routing stable and aligned with Material 3 layout composition.
+  const existingRoute = RouterRoutes.getRoute('repo-mapper');
+  if (existingRoute?.inlineHtml) {
     return;
   }
 
