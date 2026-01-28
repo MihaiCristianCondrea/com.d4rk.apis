@@ -1,6 +1,6 @@
-// Change Rationale: Templates now live under `res/layout/workspaces/shared` to mirror the Android
-// feature-first grouping while preserving the same dashboard markup and Material 3 layout.
-import workspaceDashboardTemplateSource from '../../../../res/layout/workspaces/shared/workspace-dashboard.html?raw';
+// Change Rationale: Workspace dashboard templates now live under the shared workspace UI
+// folder to align with the Screen + Views migration away from res/layout.
+import workspaceDashboardTemplateSource from '@/app/workspaces/shared/ui/WorkspaceDashboardView.html?raw';
 import { renderWorkspaceInsightCards } from './workspaceInsightCard.js';
 
 /**

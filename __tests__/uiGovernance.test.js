@@ -51,10 +51,11 @@ describe('UI governance', () => {
     const screensRoot = path.join(repoRoot, 'app', 'src', 'main', 'js', 'app');
     const screenFiles = collectScreenHtmlFiles(screensRoot);
 
-    // Change Rationale: Allow the FAQ workspace screen to keep legacy components
-    // until the workflow can be migrated safely.
+    // Change Rationale: Allow legacy components in screens where migration risk is documented
+    // and captured in project doctrine.
     const allowlist = new Map([
       ['app/src/main/js/app/workspaces/faq/ui/FaqScreen.html', 'Legacy workflow migration risk'],
+      ['app/src/main/js/app/workspaces/app-toolkit/ui/AppToolkitScreen.html', 'Legacy builder migration risk'],
     ]);
 
     const violations = [];

@@ -136,10 +136,10 @@ function staticPagesPlugin() {
         fs.cpSync(source, targetDir, { recursive: true });
       });
 
-      // Change Rationale: Create temporary legacy redirect pages so `/layout/github-tools/*.html`
+      // Change Rationale: Create temporary legacy redirect pages so `/layout/githubtools/*.html`
       // continues to resolve without reintroducing layout-driven routing. This keeps Git Patch,
       // Repo Mapper, and Release Stats reachable while migration tests are stabilized.
-      const legacyRedirectDir = resolve(__dirname, outDir, 'layout', 'github-tools');
+      const legacyRedirectDir = resolve(__dirname, outDir, 'layout', 'githubtools');
       fs.mkdirSync(legacyRedirectDir, { recursive: true });
       Object.entries(legacyGitHubToolRedirects).forEach(([filename, routeId]) => {
         const redirectHtml = createLegacyRedirectHtml(routeId);
@@ -176,12 +176,12 @@ function staticPagesPlugin() {
         fs.cpSync(drawableDir, resolve(__dirname, outDir, 'drawable'), { recursive: true });
       }
 
-      // Change Rationale: The Home screen now follows the Screen naming convention,
-      // so the build step must locate the updated path for the main shell.
+      // Change Rationale: The app shell is now the sole HTML entrypoint, so the build
+      // step must locate the shell file instead of a feature screen.
       const builtIndex = resolve(
         __dirname,
         outDir,
-        'app/src/main/js/app/home/ui/HomeScreen.html',
+        'app/src/main/js/core/ui/shell/AppShell.html',
       );
       if (fs.existsSync(builtIndex)) {
         const builtHtml = fs.readFileSync(builtIndex, 'utf-8');
@@ -211,9 +211,9 @@ export default defineConfig({
     emptyOutDir: true,
     rollupOptions: {
       input: {
-        // Change Rationale: Align the Vite entry point with the renamed Home screen
-        // so the main shell continues to compile from the canonical home screen file.
-        main: resolve(__dirname, 'app/src/main/js/app/home/ui/HomeScreen.html'),
+        // Change Rationale: Use the app shell as the single Vite entrypoint so feature
+        // screens can be loaded through the router without importing main.js.
+        main: resolve(__dirname, 'app/src/main/js/core/ui/shell/AppShell.html'),
       },
     },
   },

@@ -2,7 +2,9 @@
 // to mirror the flattened Android-style module pattern while keeping component behavior unchanged.
 import {probeImage} from '@/app/workspaces/app-toolkit/data/services/imageProbeService.js';
 import {formatAspectRatio, formatDimensionLabel, normalizeImageUrl} from '@/app/workspaces/app-toolkit/domain/images.js';
-import screenshotFieldTemplate from '../../../../../../res/layout/workspaces/app-toolkit/screenshot-field.html?raw';
+// Change Rationale: Screenshot field markup now lives in the feature UI views folder
+// so the component loads from the canonical Screen + Views location.
+import screenshotFieldTemplate from '../views/ScreenshotFieldView.html?raw';
 
 const styleHref = new URL('../../../../../../styles/features/workspaces/app-toolkit/screenshot-field.css', import.meta.url);
 

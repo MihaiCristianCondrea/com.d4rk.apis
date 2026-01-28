@@ -747,13 +747,17 @@ function renderFavoritesPage() {
     const mapperBtn = card.querySelector('[data-open-mapper]');
     mapperBtn?.addEventListener('click', () => {
       savePrefill('mapper', slug);
-      window.location.hash = '#githubtools-repo-mapper';
+      // Change Rationale: GitHub tool routes now use stable human-readable slugs
+      // so location hashes remain concise and match the canonical route IDs.
+      window.location.hash = '#repo-mapper';
     });
 
     const statsBtn = card.querySelector('[data-open-stats]');
     statsBtn?.addEventListener('click', () => {
       savePrefill('releases', slug);
-      window.location.hash = '#githubtools-release-stats';
+      // Change Rationale: GitHub tool routes now use stable human-readable slugs
+      // so location hashes remain concise and match the canonical route IDs.
+      window.location.hash = '#release-stats';
     });
 
     grid.appendChild(card);

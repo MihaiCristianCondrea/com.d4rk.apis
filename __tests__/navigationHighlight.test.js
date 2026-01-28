@@ -16,11 +16,11 @@ function seedNavigationMarkup() {
   document.body.innerHTML = `
     <nav id="navRail">
       <a href="#home" data-nav-link>Home</a>
-      <a href="#githubtools-repo-mapper" data-nav-link>Repo Mapper</a>
+      <a href="#repo-mapper" data-nav-link>Repo Mapper</a>
     </nav>
     <dialog id="navDrawer">
       <a href="#home" data-nav-link>Home</a>
-      <a href="#githubtools-repo-mapper" data-nav-link>Repo Mapper</a>
+      <a href="#repo-mapper" data-nav-link>Repo Mapper</a>
     </dialog>
   `;
 }
@@ -35,7 +35,7 @@ describe('navigation active state', () => {
   });
 
   test('highlights matching nav links across rail and drawer', () => {
-    updateActiveNavLink('githubtools-repo-mapper');
+    updateActiveNavLink('repo-mapper');
 
     const activeLinks = Array.from(document.querySelectorAll('[data-nav-link].active'));
     expect(activeLinks).toHaveLength(2);

@@ -1,10 +1,10 @@
 // Change Rationale: Legacy GitHub tool URLs previously lived under `/layout/githubtools/*.html`,
-// so normalization now resolves them to the updated githubtools route IDs without reintroducing
+// so normalization now resolves them to the canonical tool route IDs without reintroducing
 // layout dependencies or hyphenated folder names.
 const LEGACY_GITHUB_TOOL_ROUTES = Object.freeze({
-  'githubtools/git-patch.html': 'githubtools-git-patch',
-  'githubtools/repo-mapper.html': 'githubtools-repo-mapper',
-  'githubtools/release-stats.html': 'githubtools-release-stats',
+  'githubtools/git-patch.html': 'git-patch',
+  'githubtools/repo-mapper.html': 'repo-mapper',
+  'githubtools/release-stats.html': 'release-stats',
 });
 
 /**

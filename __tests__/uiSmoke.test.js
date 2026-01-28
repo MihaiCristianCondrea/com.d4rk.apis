@@ -56,20 +56,22 @@ describe('UI smoke', () => {
     expect(drawerOverlay.classList.contains('s')).toBe(true);
   });
 
-  test('home shell mounts navigation outside the main content container', () => {
+  test('app shell mounts navigation outside the main content container', () => {
     const repoRoot = path.join(__dirname, '..');
-    const homeScreenPath = path.join(
+    // Change Rationale: The app shell now owns navigation and global layout,
+    // so UI smoke tests should validate the shell entrypoint instead of a feature screen.
+    const shellPath = path.join(
       repoRoot,
       'app',
       'src',
       'main',
       'js',
-      'app',
-      'home',
+      'core',
       'ui',
-      'HomeScreen.html'
+      'shell',
+      'AppShell.html'
     );
-    const doc = loadHtmlDocument(homeScreenPath);
+    const doc = loadHtmlDocument(shellPath);
 
     const navMount = doc.getElementById('appNavigationMount');
     const mainContent = doc.getElementById('pageContentArea');

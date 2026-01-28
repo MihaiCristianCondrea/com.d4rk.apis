@@ -9,6 +9,7 @@
   - **README.md:** This file is for marketing and human-written context only. **Do not modify the root README.md.**
   - **LICENSE:** Do not modify.
 - **Android-style layout:** The repository mirrors an Android project structure (e.g., `app/src/main/js`, `app/src/main/res`). When adding assets or routes, follow this app-style organization to keep parity between web and Android paradigms.
+- **Architecture guide location:** The canonical architecture guide lives at `docs/architecture/app-architecture.md`.
 - **Architecture check:** At the end of every task, confirm the `data/domain/ui` split, router ownership, Material 3 alignment, and documentation consistency remain intact.
 
 <!--

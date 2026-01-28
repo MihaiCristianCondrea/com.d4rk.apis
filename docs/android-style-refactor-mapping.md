@@ -55,14 +55,14 @@ hooks intact.
 | app/src/main/res/layout/release-stats.html | app/src/main/js/app/githubtools/releasestats/ui/ReleaseStatsScreen.html | githubtools/releasestats |
 | app/src/main/res/layout/git-patch.html | app/src/main/js/app/githubtools/gitpatch/ui/GitPatchScreen.html | githubtools/gitpatch |
 | app/src/main/res/layout/github-favorites.html | app/src/main/js/app/githubtools/favorites/ui/GitHubFavoritesScreen.html | githubtools/favorites |
-| app/src/main/res/layout/app-toolkit.html | app/src/main/res/layout/workspaces/app-toolkit/app-toolkit.html | workspaces/app-toolkit |
+| app/src/main/res/layout/app-toolkit.html | app/src/main/js/app/workspaces/app-toolkit/ui/AppToolkitScreen.html | workspaces/app-toolkit |
 | app/src/main/res/layout/faq.html | app/src/main/js/app/workspaces/faq/ui/FaqScreen.html | workspaces/faq |
-| app/src/main/res/layout/english-with-lidia.html | app/src/main/res/layout/workspaces/english-with-lidia/english-with-lidia.html | workspaces/english-with-lidia |
-| app/src/main/res/layout/android-studio-tutorials.html | app/src/main/res/layout/workspaces/android-studio-tutorials/android-studio-tutorials.html | workspaces/android-studio-tutorials |
-| app/src/main/res/layout/screenshot-field.html | app/src/main/res/layout/workspaces/app-toolkit/screenshot-field.html | workspaces/app-toolkit |
-| app/src/main/res/layout/workspace-dashboard.html | app/src/main/res/layout/workspaces/shared/workspace-dashboard.html | workspaces/shared |
+| app/src/main/res/layout/english-with-lidia.html | app/src/main/js/app/workspaces/english-with-lidia/ui/EnglishWithLidiaScreen.html | workspaces/english-with-lidia |
+| app/src/main/res/layout/android-studio-tutorials.html | app/src/main/js/app/workspaces/android-studio-tutorials/ui/AndroidStudioTutorialsScreen.html | workspaces/android-studio-tutorials |
+| app/src/main/res/layout/screenshot-field.html | app/src/main/js/app/workspaces/app-toolkit/ui/views/ScreenshotFieldView.html | workspaces/app-toolkit |
+| app/src/main/res/layout/workspace-dashboard.html | app/src/main/js/app/workspaces/shared/ui/WorkspaceDashboardView.html | workspaces/shared |
 | app/src/main/res/layout/workspace-insight-card.html | app/src/main/js/app/workspaces/shared/ui/views/WorkspaceInsightCardView.html | workspaces/shared |
-| app/src/main/res/layout/builder-remote.html | app/src/main/res/layout/workspaces/shared/builder-remote.html | workspaces/shared |
+| app/src/main/res/layout/builder-remote.html | app/src/main/js/app/workspaces/shared/ui/views/BuilderRemoteView.html | workspaces/shared |
 
 ## Styles
 

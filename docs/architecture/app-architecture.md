@@ -18,8 +18,8 @@ adopted across the repository.
 - <!-- Change Rationale: The compatibility routing layer is still required for legacy hashes,
      but we need a clear sunset condition so UI work does not depend on it indefinitely and
      the router can return to a single-source flow consistent with Material 3 navigation. -->
-  **Compat layer removal date/condition:** Remove the legacy routing bridge once analytics show
-  <1% legacy-hash usage for 30 consecutive days (target review date: 2024-12-31).
+  **Compat layer sunset condition:** Remove the legacy routing bridge once analytics show
+  <1% legacy-hash usage for 30 consecutive days, reviewed quarterly.
 - **Material 3 first:** navigation, app bars, and layout spacing should follow the Material 3
   system (BeerCSS + Material Web Components are the primary UI tools).
 - **Docs and data:** API JSON lives under `api/` and must remain the single source of truth.
