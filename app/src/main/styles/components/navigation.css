@@ -41,6 +41,14 @@
   overflow-y: auto;
 }
 
+/* Change Rationale: Navigation sections now hydrate dynamically, so the
+ * container uses consistent vertical rhythm across rail and drawer.
+ */
+.navigation-section-stack {
+  display: grid;
+  gap: 0.75rem;
+}
+
 /* --- Navigation Rail --- */
 /* Change Rationale: Pin the rail to the left edge on desktop so content never
  * centers under it and the BeerCSS layout matches the CEO reference.

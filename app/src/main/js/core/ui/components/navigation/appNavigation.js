@@ -5,6 +5,9 @@
 // routing, focus management, and BeerCSS surfaces stay consistent across screens
 // without duplicating markup or event handlers in feature HTML.
 import AppNavigationView from './AppNavigationView.html?raw';
+// Change Rationale: Navigation rendering is now data-driven, so the app shell
+// can hydrate both rail and drawer from a single source of truth.
+import { hydrateNavigationContainers } from './navigationRenderer.js';
 import { initNavigationDrawer } from '@/core/data/services/navigationDrawerService.js';
 import { getDynamicElement } from '@/core/ui/utils/domUtils.js';
 import RouterRoutes from '@/core/ui/router/routes.js';
@@ -97,6 +100,10 @@ export function initAppNavigation({
   if (!navRoot) {
     return null;
   }
+
+  // Change Rationale: Shared navigation data now hydrates both rail and drawer
+  // containers to keep labels, routes, and descriptions consistent.
+  hydrateNavigationContainers(navRoot);
 
   // Change Rationale: Guard against duplicate event handlers if the initializer
   // is called multiple times during hot reload or legacy bootstrap flows.
