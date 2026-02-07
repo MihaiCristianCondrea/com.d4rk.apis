@@ -58,18 +58,14 @@ describe('UI smoke', () => {
 
   test('app shell mounts navigation outside the main content container', () => {
     const repoRoot = path.join(__dirname, '..', '..');
-    // Change Rationale: The app shell now owns navigation and global layout,
-    // so UI smoke tests should validate the shell entrypoint instead of a feature screen.
+    // Change Rationale: The normalized source layout keeps app shell templates under
+    // `src/app/shell`, so the smoke test must read the kebab-case shell filename.
     const shellPath = path.join(
       repoRoot,
-      'app',
       'src',
-      'main',
-      'js',
-      'core',
-      'ui',
+      'app',
       'shell',
-      'AppShell.html'
+      'app-shell.html'
     );
     const doc = loadHtmlDocument(shellPath);
 
