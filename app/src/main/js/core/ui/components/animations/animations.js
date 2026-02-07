@@ -1105,40 +1105,6 @@
         });
     }
 
-    function animateResume(container) {
-        const resumePage = container ? container.querySelector('#resumePage') : null;
-        if (!resumePage) {
-            return animateDefault(container);
-        }
-
-        const formSections = resumePage.querySelectorAll('.form-container .form-section, .form-container h1');
-        const formPromise = animateSequence(formSections, KEYFRAMES.slideInRight, { delay: 24 }, 70, {
-            scheme: 'standard',
-            type: 'spatial',
-            speed: 'default'
-        });
-
-        const previewPanel = resumePage.querySelector('#resume-preview .resume-content');
-        const previewPromise = previewPanel
-            ? whenAnimationFinished(animateElement(previewPanel, KEYFRAMES.hero, { delay: 120 }, {
-                scheme: 'standard',
-                type: 'spatial',
-                speed: 'slow'
-            }))
-            : Promise.resolve();
-
-        const downloadButton = resumePage.querySelector('#downloadResumeButton');
-        const downloadPromise = downloadButton
-            ? whenAnimationFinished(animateElement(downloadButton, KEYFRAMES.pop, { delay: 200 }, {
-                scheme: 'standard',
-                type: 'spatial',
-                speed: 'fast'
-            }))
-            : Promise.resolve();
-
-        return Promise.all([formPromise, previewPromise, downloadPromise]).then(() => { });
-    }
-
     function animateProjects(container) {
         const projectsPage = container ? container.querySelector('#projectsPageContainer') : null;
         if (!projectsPage) {
@@ -1215,8 +1181,6 @@
                 try {
                     if (normalizedId === 'home' || normalizedId === '') {
                         animationResult = animateHome(targetContainer);
-                    } else if (normalizedId === 'resume') {
-                        animationResult = animateResume(targetContainer);
                     } else if (normalizedId === 'projects') {
                         animationResult = animateProjects(targetContainer);
                     } else {

@@ -15,9 +15,6 @@ import '../styles/components/layered-panels.css';
 import '../styles/base/viewport-optimizations.css';
 import './core/data/config/appConfig.js';
 
-import resumeStylesAsset from '../styles/base/resume.css?url';
-import resumePrintStylesAsset from '../styles/base/print.css?url';
-
 import * as jsondiffpatchCore from 'jsondiffpatch';
 import * as jsondiffpatchHtmlFormatter from 'jsondiffpatch/formatters/html';
 import * as jsondiffpatchAnnotatedFormatter from 'jsondiffpatch/formatters/annotated';
@@ -32,8 +29,6 @@ const globalScope = typeof window !== 'undefined' ? window : globalThis;
 const existingStyleUrls = globalScope.__APP_STYLE_URLS__ || {};
 globalScope.__APP_STYLE_URLS__ = {
   ...existingStyleUrls,
-  resume: resumeStylesAsset,
-  print: resumePrintStylesAsset,
 };
 // Change Rationale: Previously, runtime crashes only surfaced in local consoles, preventing reliable observability.
 // Firebase initialization now forwards uncaught errors to Analytics so we can validate crash-free sessions and
@@ -107,6 +102,5 @@ import './app/githubtools/repomapper/ui/RepoMapperRoute.js';
 import './app/githubtools/releasestats/ui/ReleaseStatsRoute.js';
 import './app/githubtools/gitpatch/ui/GitPatchRoute.js';
 import './app/home/ui/HomeRoute.js';
-import './app/resume/ui/ResumeRoute.js';
 
 import './core/ui/appShell.js';
