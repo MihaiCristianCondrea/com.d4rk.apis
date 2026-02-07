@@ -6,7 +6,8 @@ import tailwindcss from '@tailwindcss/vite';
 // to keep URL mapping and redirect HTML generation in one canonical place.
 import legacyRedirects from './scripts/legacyRedirects.js';
 
-const pagesDir = resolve(__dirname, 'app/src/main/res/layout');
+const legacyPagesDir = resolve(__dirname, 'app/src/main/res/layout');
+const pagesDir = fs.existsSync(legacyPagesDir) ? legacyPagesDir : resolve(__dirname, 'app/src/main/js/app');
 const workersDir = resolve(__dirname, 'app/src/main/js/core/data/workers');
 const screensDir = resolve(__dirname, 'app/src/main/js/app');
 const mipmapDir = resolve(__dirname, 'app/src/main/res/mipmap');

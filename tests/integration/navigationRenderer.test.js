@@ -2,7 +2,7 @@ import {
   createNavigationItem,
   createNavigationSection,
   renderNavigationSections,
-} from '../app/src/main/js/core/ui/components/navigation/navigationRenderer.js';
+} from '../../app/src/main/js/core/ui/components/navigation/navigationRenderer.js';
 
 /**
  * Creates a stub navigation item for testing.

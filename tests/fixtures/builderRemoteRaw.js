@@ -7,6 +7,6 @@ const path = require('path');
 module.exports = fs.readFileSync(
   // Change Rationale: Builder remote partials moved into the shared workspace UI views
   // folder, so tests should load the canonical template source.
-  path.join(__dirname, '../app/src/main/js/app/workspaces/shared/ui/views/BuilderRemoteView.html'),
+  path.join(__dirname, '../../app/src/main/js/app/workspaces/shared/ui/views/BuilderRemoteView.html'),
   'utf8'
 );

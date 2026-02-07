@@ -13,7 +13,7 @@ const {
   getDynamicElement,
   showPageLoadingOverlay,
   hidePageLoadingOverlay
-} = require('../app/src/main/js/core/ui/utils/domUtils.js');
+} = require('../../app/src/main/js/core/ui/utils/domUtils.js');
 
 describe('getNestedValue', () => {
   test('retrieves nested values with dot notation', () => {

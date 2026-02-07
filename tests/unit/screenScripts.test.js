@@ -8,7 +8,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const SCREENS_ROOT = path.join(__dirname, '..', 'app', 'src', 'main', 'js', 'app');
+const SCREENS_ROOT = path.join(__dirname, '..', '..', 'app', 'src', 'main', 'js', 'app');
 
 /**
  * Recursively enumerates screen HTML files under the feature tree.

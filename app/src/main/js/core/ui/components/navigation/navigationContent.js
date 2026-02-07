@@ -37,6 +37,12 @@ export const NAVIGATION_SECTIONS = [
         icon: 'home',
         href: '#home',
       },
+      {
+        id: 'resume',
+        label: 'Resume',
+        icon: 'description',
+        href: '#resume',
+      },
     ],
   },
   {

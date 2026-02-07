@@ -17,7 +17,7 @@ const firebaseAnalyticsMocks = require('firebase/analytics');
 function loadCrashReporter() {
   let module;
   jest.isolateModules(() => {
-    module = require('../app/src/main/js/core/data/services/firebaseCrashReporter.js');
+    module = require('../../app/src/main/js/core/data/services/firebaseCrashReporter.js');
   });
   return module;
 }

@@ -7,7 +7,7 @@
 const {
   githubTools,
   workspaceCards,
-} = require('../app/src/main/js/app/home/data/homeContentDataSource.js');
+} = require('../../app/src/main/js/app/home/data/homeContentDataSource.js');
 
 describe('homeContentDataSource', () => {
   test('exports workspace cards with required fields', () => {

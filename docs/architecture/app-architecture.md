@@ -45,6 +45,10 @@ adopted across the repository.
   - `base/` for typography and page-level styling.
   - `components/` for shared UI primitives.
   - `features/` for feature-specific CSS.
+- `tests/`
+  - `unit/` for pure domain/service/router checks.
+  - `integration/` for DOM-level and route wiring smoke tests.
+  - `fixtures/` for reusable raw files and deterministic inputs.
 
 ### File naming
 

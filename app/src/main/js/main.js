@@ -107,5 +107,6 @@ import './app/githubtools/repomapper/ui/RepoMapperRoute.js';
 import './app/githubtools/releasestats/ui/ReleaseStatsRoute.js';
 import './app/githubtools/gitpatch/ui/GitPatchRoute.js';
 import './app/home/ui/HomeRoute.js';
+import './app/resume/ui/ResumeRoute.js';
 
 import './core/ui/appShell.js';

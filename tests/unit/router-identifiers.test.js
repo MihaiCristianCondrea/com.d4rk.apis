@@ -5,7 +5,7 @@
  * Change Rationale: Added coverage for legacy GitHub tool layout URLs to ensure the
  * Screen-based route mapping continues to prevent 404s during migration.
  */
-const { normalizePageId } = require('../app/src/main/js/core/ui/router/identifiers.js');
+const { normalizePageId } = require('../../app/src/main/js/core/ui/router/identifiers.js');
 
 describe('normalizePageId', () => {
   test('maps legacy GitHub tool layout URLs to route IDs', () => {

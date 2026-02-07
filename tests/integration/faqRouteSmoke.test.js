@@ -3,7 +3,7 @@
  */
 
 jest.mock(
-  '../app/src/main/js/app/workspaces/faq/ui/FaqScreen.html?raw',
+  '../../app/src/main/js/app/workspaces/faq/ui/FaqScreen.html?raw',
   /**
    * Returns a mock FAQ screen template string for Jest.
    *
@@ -15,7 +15,7 @@ jest.mock(
   { virtual: true },
 );
 jest.mock(
-  '../app/src/main/js/app/workspaces/shared/ui/views/WorkspaceInsightCardView.html?raw',
+  '../../app/src/main/js/app/workspaces/shared/ui/views/WorkspaceInsightCardView.html?raw',
   /**
    * Returns a mock workspace insight card template string for Jest.
    *
@@ -27,9 +27,9 @@ jest.mock(
   { virtual: true },
 );
 
-const { RouterRoutes } = require('../app/src/main/js/core/ui/router/routes.js');
+const { RouterRoutes } = require('../../app/src/main/js/core/ui/router/routes.js');
 
-require('../app/src/main/js/app/workspaces/faq/ui/FaqRoute.js');
+require('../../app/src/main/js/app/workspaces/faq/ui/FaqRoute.js');
 
 /**
  * Defines the FAQ route smoke test suite.

@@ -6,7 +6,7 @@
  * redirect behavior (base handling, hash/query preservation) are caught automatically.
  */
 
-const { createLegacyRedirectHtml } = require('../scripts/legacyRedirects.js');
+const { createLegacyRedirectHtml } = require('../../scripts/legacyRedirects.js');
 
 test('createLegacyRedirectHtml matches the expected template', () => {
   expect(createLegacyRedirectHtml('git-patch')).toMatchSnapshot();
