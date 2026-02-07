@@ -10,13 +10,13 @@
 const fs = require('fs');
 const path = require('path');
 
-const APP_ROOT = path.join(__dirname, '..', 'app', 'src', 'main', 'js', 'app');
-const RES_LAYOUT_ROOT = path.join(__dirname, '..', 'app', 'src', 'main', 'res', 'layout');
-const STYLES_FEATURES_ROOT = path.join(__dirname, '..', 'app', 'src', 'main', 'styles', 'features');
+const APP_ROOT = path.join(__dirname, '..', 'src', 'app');
+const RES_LAYOUT_ROOT = path.join(__dirname, '..', 'src', 'app', 'shell');
+const STYLES_FEATURES_ROOT = path.join(__dirname, '..', 'src', 'styles', 'features');
 const TESTS_ROOT = path.join(__dirname, '..', 'tests');
 
 const ALLOWED_READMES = new Set();
-const ALLOWED_LAYOUT_HTML = new Set();
+const ALLOWED_LAYOUT_HTML = new Set(['src/app/shell/app-shell.html']);
 
 /**
  * Recursively collects filesystem entries that match a predicate.
@@ -102,7 +102,10 @@ function validateLayoutHtml() {
     dirent.isFile() && entryPath.endsWith('.html')
   );
   return htmlFiles
-    .filter((htmlPath) => !ALLOWED_LAYOUT_HTML.has(formatPath(htmlPath)))
+    .filter((htmlPath) => {
+      const relativePath = formatPath(path.relative(process.cwd(), htmlPath));
+      return !ALLOWED_LAYOUT_HTML.has(relativePath);
+    })
     .map((htmlPath) =>
       `Feature HTML is not allowed under res/layout: ${formatPath(path.relative(process.cwd(), htmlPath))}`
     );

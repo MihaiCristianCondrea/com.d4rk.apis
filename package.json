@@ -7,7 +7,7 @@
     "build": "vite build",
     "preview": "vite preview",
     "test": "node scripts/check-structure.js && jest",
-    "verify:seo": "node -e \"['sitemap.xml','robots.txt'].forEach((file)=>require('fs').accessSync(file));\"",
+    "verify:seo": "node -e \"['public/sitemap.xml','public/robots.txt'].forEach((file)=>require('fs').accessSync(file));\"",
     "deploy": "npm run build && npm run verify:seo"
   },
   "keywords": [],
@@ -33,8 +33,12 @@
       "^.+\\.js$": "babel-jest"
     },
     "moduleNameMapper": {
+      "^@/(.*BuilderRemoteView\\.html\\?raw)$": "<rootDir>/tests/fixtures/builderRemoteRaw.js",
+      "^@/(.*FaqScreen\\.html\\?raw)$": "<rootDir>/tests/fixtures/faqScreenRaw.js",
+      "^@/(.*WorkspaceInsightCardView\\.html\\?raw)$": "<rootDir>/tests/fixtures/workspaceInsightCardRaw.js",
+      "^@/(.*\\.html\\?raw)$": "<rootDir>/tests/fixtures/rawHtmlStub.js",
       "^@/(.*)$": "<rootDir>/app/src/main/js/$1",
-      "BuilderRemoteView\\.html\\?raw$": "<rootDir>/tests/fixtures/builderRemoteRaw.js"
+      "^.+\\.html\\?raw$": "<rootDir>/tests/fixtures/rawHtmlStub.js"
     },
     "testMatch": [
       "<rootDir>/tests/**/*.test.js"
