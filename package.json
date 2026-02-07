@@ -34,8 +34,11 @@
     },
     "moduleNameMapper": {
       "^@/(.*)$": "<rootDir>/app/src/main/js/$1",
-      "BuilderRemoteView\\.html\\?raw$": "<rootDir>/__mocks__/builderRemoteRaw.js"
-    }
+      "BuilderRemoteView\\.html\\?raw$": "<rootDir>/tests/fixtures/builderRemoteRaw.js"
+    },
+    "testMatch": [
+      "<rootDir>/tests/**/*.test.js"
+    ]
   },
   "dependencies": {
     "beercss": "^3.13.1",

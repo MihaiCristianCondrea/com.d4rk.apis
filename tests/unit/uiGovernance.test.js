@@ -47,7 +47,7 @@ function toRepoRelativePath(absolutePath, repoRoot) {
 
 describe('UI governance', () => {
   test('Screen.html files avoid direct Google web component usage', () => {
-    const repoRoot = path.join(__dirname, '..');
+    const repoRoot = path.join(__dirname, '..', '..');
     const screensRoot = path.join(repoRoot, 'app', 'src', 'main', 'js', 'app');
     const screenFiles = collectScreenHtmlFiles(screensRoot);
 

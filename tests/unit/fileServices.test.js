@@ -1,5 +1,5 @@
-import { attachFilePicker } from '../app/src/main/js/core/data/services/filePickerService.js';
-import { readFileAsText } from '../app/src/main/js/core/data/services/fileService.js';
+import { attachFilePicker } from '../../app/src/main/js/core/data/services/filePickerService.js';
+import { readFileAsText } from '../../app/src/main/js/core/data/services/fileService.js';
 
 // Change Rationale: Added comprehensive unit tests to validate the documented file reader contracts and the new error
 // reporting pathway, ensuring builders can rely on predictable behavior when integrating Material 3 validation flows.

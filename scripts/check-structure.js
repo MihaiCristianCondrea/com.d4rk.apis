@@ -13,6 +13,7 @@ const path = require('path');
 const APP_ROOT = path.join(__dirname, '..', 'app', 'src', 'main', 'js', 'app');
 const RES_LAYOUT_ROOT = path.join(__dirname, '..', 'app', 'src', 'main', 'res', 'layout');
 const STYLES_FEATURES_ROOT = path.join(__dirname, '..', 'app', 'src', 'main', 'styles', 'features');
+const TESTS_ROOT = path.join(__dirname, '..', 'tests');
 
 const ALLOWED_READMES = new Set();
 const ALLOWED_LAYOUT_HTML = new Set();
@@ -122,6 +123,37 @@ function validateGithubToolsNaming() {
 }
 
 /**
+ * Validates that tests are organized under tests/unit and tests/integration.
+ *
+ * Change Rationale: Tests previously lived in a root-level __tests__ folder, which made
+ * the architecture harder to scan and diverged from the target layout. This check keeps
+ * the suite grouped by test intent while preserving a Material 3-friendly workflow where
+ * integration-level UI behavior is easy to locate and review.
+ *
+ * @returns {string[]} Error messages for test layout violations.
+ */
+function validateTestLayout() {
+  const legacyTestsRoot = path.join(__dirname, '..', '__tests__');
+  const errors = [];
+  if (fs.existsSync(legacyTestsRoot)) {
+    errors.push('Legacy __tests__/ directory detected; move tests under tests/unit or tests/integration.');
+  }
+
+  const requiredDirs = [
+    path.join(TESTS_ROOT, 'unit'),
+    path.join(TESTS_ROOT, 'integration'),
+  ];
+
+  requiredDirs.forEach((dirPath) => {
+    if (!fs.existsSync(dirPath)) {
+      errors.push(`Missing required test folder: ${formatPath(path.relative(process.cwd(), dirPath))}`);
+    }
+  });
+
+  return errors;
+}
+
+/**
  * Runs all structure checks and returns the aggregated error list.
  *
  * @returns {string[]} Error messages from all checks.
@@ -132,6 +164,7 @@ function runChecks() {
     ...validateReadmePresence(),
     ...validateLayoutHtml(),
     ...validateGithubToolsNaming(),
+    ...validateTestLayout(),
   ];
 }
 

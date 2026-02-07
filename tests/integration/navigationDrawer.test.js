@@ -11,8 +11,8 @@ const mockUtils = {
   getDynamicElement: jest.fn(),
   rafThrottle: (fn) => fn,
 };
-jest.mock('../app/src/main/js/core/ui/utils/domUtils.js', () => {
-  const actual = jest.requireActual('../app/src/main/js/core/ui/utils/domUtils.js');
+jest.mock('../../app/src/main/js/core/ui/utils/domUtils.js', () => {
+  const actual = jest.requireActual('../../app/src/main/js/core/ui/utils/domUtils.js');
   return {
     __esModule: true,
     ...actual,
@@ -21,7 +21,7 @@ jest.mock('../app/src/main/js/core/ui/utils/domUtils.js', () => {
   };
 });
 
-const { initNavigationDrawer } = require('../app/src/main/js/core/data/services/navigationDrawerService.js');
+const { initNavigationDrawer } = require('../../app/src/main/js/core/data/services/navigationDrawerService.js');
 
 /**
  * Builds the DOM skeleton required for exercising navigation drawer interactions.

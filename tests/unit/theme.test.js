@@ -1,4 +1,4 @@
-const { initThemeControls, applyTheme } = require('../app/src/main/js/core/data/services/themeService.js');
+const { initThemeControls, applyTheme } = require('../../app/src/main/js/core/data/services/themeService.js');
 
 function createLocalStorageMock(initial = {}) {
   let store = Object.keys(initial).reduce((acc, key) => {

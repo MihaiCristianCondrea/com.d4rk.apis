@@ -12,41 +12,41 @@ const mockDomUtils = {
   rafThrottle: (fn) => fn,
 };
 
-jest.mock('../app/src/main/js/core/ui/utils/domUtils.js', () => mockDomUtils);
+jest.mock('../../app/src/main/js/core/ui/utils/domUtils.js', () => mockDomUtils);
 
-jest.mock('../app/src/main/js/core/data/services/themeService.js', () => ({
+jest.mock('../../app/src/main/js/core/data/services/themeService.js', () => ({
   initThemeControls: jest.fn(),
 }));
 
-jest.mock('../app/src/main/js/core/data/services/navigationDrawerService.js', () => ({
+jest.mock('../../app/src/main/js/core/data/services/navigationDrawerService.js', () => ({
   initNavigationDrawer: jest.fn(() => ({ close: jest.fn() })),
 }));
 
 // Change Rationale: Mock the navigation view import so appShell can load under Jest
 // without requiring the raw Vite HTML loader in the test environment.
 jest.mock(
-  '../app/src/main/js/core/ui/components/navigation/AppNavigationView.html?raw',
+  '../../app/src/main/js/core/ui/components/navigation/AppNavigationView.html?raw',
   () => '<div data-app-navigation></div>',
   { virtual: true }
 );
 
-jest.mock('../app/src/main/js/core/ui/router/index.js', () => ({
+jest.mock('../../app/src/main/js/core/ui/router/index.js', () => ({
   initRouter: jest.fn(),
   loadPageContent: jest.fn(),
   normalizePageId: jest.fn((id) => id),
 }));
 
-jest.mock('../app/src/main/js/core/ui/router/routes.js', () => ({
+jest.mock('../../app/src/main/js/core/ui/router/routes.js', () => ({
   __esModule: true,
   default: {},
 }));
 
-jest.mock('../app/src/main/js/core/ui/globals.js', () => ({
+jest.mock('../../app/src/main/js/core/ui/globals.js', () => ({
   registerGlobalUtilities: jest.fn(),
   registerCompatibilityGlobals: jest.fn(),
 }));
 
-const { updateActiveNavLink } = require('../app/src/main/js/core/ui/router/navigationState.js');
+const { updateActiveNavLink } = require('../../app/src/main/js/core/ui/router/navigationState.js');
 
 function setupAppShellDom() {
   document.body.innerHTML = `
@@ -75,7 +75,7 @@ test('app shell toggles app bar elevation on scroll', () => {
   });
 
   jest.isolateModules(() => {
-    require('../app/src/main/js/core/ui/appShell.js');
+    require('../../app/src/main/js/core/ui/appShell.js');
   });
 
   document.dispatchEvent(new Event('DOMContentLoaded'));
