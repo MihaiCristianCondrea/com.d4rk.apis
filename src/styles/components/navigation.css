@@ -1,0 +1,118 @@
+/* Change Rationale: Navigation styling now defers to BeerCSS defaults so the drawer
+ * and app bar inherit stock spacing, shapes, and typography. Only minimal layout
+ * glue remains to keep the shell sticky and the nav rows aligned.
+ */
+
+
+/* Change Rationale: The navigation mount is injected before main content, so without
+ * fixed positioning it participates in normal layout and pushes routed pages below the fold.
+ * Keeping the mount out of flow restores the intended Material 3 shell geometry.
+ */
+#appNavigationMount {
+  position: fixed;
+  inset: 0;
+  z-index: 6;
+  pointer-events: none;
+}
+
+#appNavigationMount .app-navigation-rail,
+#appNavigationMount .overlay,
+#appNavigationMount dialog.navigation-drawer {
+  pointer-events: auto;
+}
+
+/* --- Top App Bar --- */
+/* Change Rationale: The top app bar now relies on BeerCSS's `fixed` header
+ * behavior for stickiness, so only minimal sizing remains here.
+ */
+.app-top-app-bar {
+  width: 100%;
+  /* Change Rationale: Keep the app bar tied to the neutral surface tokens so
+   * navigation never drifts to an accent background.
+   */
+  background-color: var(--app-surface);
+  color: var(--app-on-surface);
+}
+
+.app-top-app-bar nav {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.app-top-app-bar h5 {
+  margin: 0;
+}
+
+/* --- Navigation Drawer --- */
+/* Change Rationale: Allow the drawer content to scroll within the dialog while
+ * leaving spacing, dividers, and typography to BeerCSS defaults.
+ */
+/* Change Rationale: Suppress the native dialog backdrop so the BeerCSS overlay
+ * remains the single source of the drawer scrim.
+ */
+:root dialog.navigation-drawer::backdrop {
+  background: transparent;
+}
+
+.drawer-content {
+  overflow-y: auto;
+}
+
+/* Change Rationale: Navigation sections now hydrate dynamically, so the
+ * container uses consistent vertical rhythm across rail and drawer.
+ */
+.navigation-section-stack {
+  display: grid;
+  gap: 0.75rem;
+}
+
+/* --- Navigation Rail --- */
+/* Change Rationale: Pin the rail to the left edge on desktop so content never
+ * centers under it and the BeerCSS layout matches the CEO reference.
+ */
+:root {
+  --app-nav-rail-width: 280px;
+  --app-nav-rail-padding: 0.75rem;
+}
+
+.app-navigation-rail {
+  position: fixed;
+  inset-inline-start: 0;
+  inset-block-start: var(--app-top-app-bar-height);
+  width: var(--app-nav-rail-width);
+  height: calc(100vh - var(--app-top-app-bar-height));
+  padding: var(--app-nav-rail-padding);
+  overflow-y: auto;
+  z-index: 5;
+}
+
+/* Change Rationale: Maintain readable layout when the rail is visible by
+ * offsetting the main shell surfaces instead of centering underneath it.
+ */
+@media (min-width: 960px) {
+  .app-shell-main,
+  .app-shell-footer {
+    padding-inline-start: calc(1rem + var(--safe-area-inset-left) + var(--app-nav-rail-width));
+  }
+}
+
+/* Change Rationale: Keep nav links aligned as rows without custom padding so the
+ * framework controls spacing and state styling.
+ */
+.app-navigation .nav-link {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+}
+
+.app-navigation .nav-link .max {
+  min-width: 0;
+}
+
+.app-navigation .nav-link small {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

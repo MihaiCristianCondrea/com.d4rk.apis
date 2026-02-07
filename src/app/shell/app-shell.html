@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>API Console</title>
+  <meta name="description" content="Design and manage the JSON APIs that power Mihai-Cristian's Android apps with a visual editor built for App Toolkit, FAQ, English with Lidia, and Android Studio Tutorials.">
+  <meta name="keywords" content="API Console, Android API builder, JSON editor, App Toolkit API, FAQ API, English with Lidia API, Android Studio Tutorials API">
+  <meta property="og:title" content="API Console">
+  <meta property="og:description" content="Design and manage JSON APIs visually for D4rK's Android applications, including App Toolkit, FAQ, English with Lidia, and Android Studio Tutorials.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="https://raw.githubusercontent.com/D4rK7355608/com.d4rk.apis/main/drawable/placeholder.png">
+  <meta property="og:image:alt" content="Illustration of JSON blocks connected to Android app screens">
+  <meta property="og:url" content="https://d4rk7355608.github.io/com.d4rk.apis/">
+  <meta property="og:site_name" content="API Console">
+  <link rel="canonical" href="https://d4rk7355608.github.io/com.d4rk.apis/">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="API Console">
+  <meta name="twitter:description" content="Visual tooling for crafting JSON APIs that power D4rK's Android experiences.">
+  <meta name="twitter:image" content="https://raw.githubusercontent.com/D4rK7355608/com.d4rk.apis/main/drawable/placeholder.png">
+  <meta name="twitter:site" content="@MihaiCrstian">
+  <meta name="twitter:creator" content="@MihaiCrstian">
+  <link rel="icon" href="./mipmap/favicon.ico" sizes="any">
+  <link rel="apple-touch-icon" href="./mipmap/apple-touch-icon.png">
+  <link rel="manifest" href="manifest.json">
+  <script src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.6.2/dist/dotlottie-wc.js" type="module" integrity="sha384-OZP/kBQ09BUzBtJHrUq28uANiSKcAs/R1SZMBoo3IIRdqeuHYaWtly7m+dmPVQcn" crossorigin="anonymous"></script>
+  <script type="module" src="https://unpkg.com/@material/web@2.3.0/all.js?module" integrity="sha384-aOmcMDy9kBho0cZT2yrFWshXxdPUL1w999tY2RHdpdco3L6wJ8WAVJe8yf5F6TzL" crossorigin="anonymous"></script>
+  <script type="module" src="https://unpkg.com/@material/web@2.3.0/dialog/dialog.js?module" integrity="sha384-I8fokP3t9XLUdUurD4pOLLPRVsI1UKwHwp5m/50aw5GOvCfKm0WEm46XRK/xzw+8" crossorigin="anonymous"></script>
+  <!-- Change Rationale: Segmented buttons are provided through the Material Web labs bundle and were not registered by all.js, leaving workspace toggles unstyled. Explicit imports ensure the FAQ and Repo Mapper segmented controls render with native Material 3 styling. -->
+  <script type="module" src="https://unpkg.com/@material/web@2.3.0/labs/segmentedbuttonset/segmented-button-set.js?module"></script>
+  <script type="module" src="https://unpkg.com/@material/web@2.3.0/labs/segmentedbutton/outlined-segmented-button.js?module"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&amp;display=swap">
+  <!-- Change Rationale: The document head previously imported Google Sans Regular and Poppins, which conflicted with the new Google Sans Flex typography and limited variable weight support. Importing Google Sans Flex and Google Sans Code directly from Google Fonts aligns the entire experience with Material 3’s variable type guidance and keeps the font load on first-party CDNs. -->
+  <style id="google-sans-flex-import">
+    @import url('https://fonts.googleapis.com/css2?family=Google+Sans+Code:ital,wght@0,300..800;1,300..800&family=Google+Sans+Flex:opsz,wght@6..144,1..1000&display=swap');
+  </style>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer">
+  <!-- Change Rationale: The app shell now owns module bootstrapping so feature screens remain markup-only and load through the router. -->
+  <link rel="modulepreload" href="../../../main.js">
+</head>
+<!-- Change Rationale: The body now relies on the global Material surface token
+     instead of a Tailwind background override so the page inherits BeerCSS's
+     surface styling consistently across themes. -->
+<body>
+<!-- Change Rationale: Navigation markup now mounts from the canonical core/ui
+     component, keeping the shell structure consistent across routes. -->
+<div id="appNavigationMount"></div>
+<div id="pageLoadingOverlay" class="page-loading-overlay"></div>
+<header id="topAppBar" class="app-top-app-bar fixed fill" data-drawer-inert-target="">
+  <nav>
+    <button id="menuButton" class="transparent circle s" aria-label="Open navigation menu">
+      <i aria-hidden="true">menu</i>
+    </button>
+    <h5 id="appBarHeadline" class="type-title-medium max">API Console</h5>
+  </nav>
+</header>
+<!-- Change Rationale: The app shell now ships a minimal placeholder so feature screens are injected
+     through the router instead of being compiled as standalone entrypoints. -->
+<main class="content-wrapper responsive app-shell-main" id="pageContentArea" data-drawer-inert-target="">
+  <div id="mainContentPage" class="page-section app-shell-panel page active"></div>
+</main>
+<footer class="app-footer app-shell-footer">
+  <span id="copyright-message"></span>
+</footer>
+<script type="module" src="../../../main.js"></script>
+</body>
+</html>
