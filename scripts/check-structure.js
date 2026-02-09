@@ -158,72 +158,11 @@ function validateTestLayout() {
 
 
 /**
- * Validates each module under src/pages has page.js, page.html, and page.css.
- *
- * Change Rationale: A previous normalization pass left concerns that some page modules
- * could drift into partial templates. Enforcing the triad keeps module parity and
- * preserves predictable route-to-screen composition.
- *
- * @returns {string[]} Error messages for missing required page module files.
- */
-function validatePageModuleFiles() {
-  const pagesRoot = path.join(__dirname, '..', 'src', 'pages');
-  if (!fs.existsSync(pagesRoot)) {
-    return [];
-  }
-
-  const requiredFiles = ['page.js', 'page.html', 'page.css'];
-  const entries = fs.readdirSync(pagesRoot, { withFileTypes: true });
-  const moduleDirs = entries.filter((entry) => entry.isDirectory());
-
-  return moduleDirs.flatMap((entry) => {
-    const modulePath = path.join(pagesRoot, entry.name);
-    return requiredFiles
-      .filter((fileName) => !fs.existsSync(path.join(modulePath, fileName)))
-      .map((missingFile) =>
-        `Page module missing ${missingFile}: ${formatPath(path.relative(process.cwd(), modulePath))}`
-      );
-  });
-}
-
-
-/**
- * Validates that every route module has a corresponding page module triad.
- *
- * Change Rationale: Review feedback highlighted concerns that `page.html` and `page.css`
- * could be missing from route-backed modules. Mapping routes to `src/pages/<slug>/`
- * guarantees each routed feature resolves a full page bundle.
- *
- * @returns {string[]} Error messages for missing route-backed page module files.
- */
-function validateRouteBackedPageModules() {
-  const routesRoot = path.join(__dirname, '..', 'src', 'routes');
-  const pagesRoot = path.join(__dirname, '..', 'src', 'pages');
-  if (!fs.existsSync(routesRoot) || !fs.existsSync(pagesRoot)) {
-    return [];
-  }
-
-  const routeEntries = fs.readdirSync(routesRoot, { withFileTypes: true })
-    .filter((entry) => entry.isFile() && entry.name.endsWith('.route.js'));
-
-  const requiredFiles = ['page.js', 'page.html', 'page.css'];
-  return routeEntries.flatMap((routeEntry) => {
-    const moduleName = routeEntry.name.replace(/\.route\.js$/, '');
-    const modulePath = path.join(pagesRoot, moduleName);
-    if (!fs.existsSync(modulePath) || !fs.statSync(modulePath).isDirectory()) {
-      return [`Missing page module directory for route ${routeEntry.name}: ${formatPath(path.relative(process.cwd(), modulePath))}`];
-    }
-
-    return requiredFiles
-      .filter((fileName) => !fs.existsSync(path.join(modulePath, fileName)))
-      .map((missingFile) =>
-        `Route-backed page module missing ${missingFile}: ${formatPath(path.relative(process.cwd(), modulePath))}`
-      );
-  });
-}
-
-/**
  * Runs all structure checks and returns the aggregated error list.
+ *
+ * Change Rationale: Legacy `src/pages/*` and `.route.js` parity checks enforced the retired
+ * compatibility scaffold. The router now converges on feature `ui/*Route.js` modules only,
+ * so structure validation should focus on feature-first constraints.
  *
  * @returns {string[]} Error messages from all checks.
  */
@@ -234,8 +173,6 @@ function runChecks() {
     ...validateLayoutHtml(),
     ...validateGithubToolsNaming(),
     ...validateTestLayout(),
-    ...validatePageModuleFiles(),
-    ...validateRouteBackedPageModules(),
   ];
 }
 
