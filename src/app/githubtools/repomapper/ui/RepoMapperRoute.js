@@ -5,7 +5,7 @@
 // Change Rationale: Repo Mapper routes now register with composed Screen + View markup so the
 // GitHub tools suite shares reusable UI fragments without duplicating layout HTML.
 import { RouterRoutes } from '@/core/ui/router/routes.js';
-import { initRepoMapper } from '@/app/githubtools/common/domain/githubTools.js';
+import { initRepoMapper } from '@/app/githubtools/common/ui/githubToolsUi.js';
 import repoMapperScreenTemplate from './RepoMapperScreen.html?raw';
 import repoMapperFormView from './views/RepoMapperFormView.html?raw';
 import toolHeaderViewTemplate from '@/app/githubtools/common/ui/views/GitHubToolHeaderView.html?raw';

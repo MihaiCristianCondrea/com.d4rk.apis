@@ -5,7 +5,7 @@
 // Change Rationale: Git Patch routes now register with composed Screen + View markup so the
 // GitHub tools suite shares reusable UI fragments without duplicating layout HTML.
 import { RouterRoutes } from '@/core/ui/router/routes.js';
-import { initGitPatch } from '@/app/githubtools/common/domain/githubTools.js';
+import { initGitPatch } from '@/app/githubtools/common/ui/githubToolsUi.js';
 import gitPatchScreenTemplate from './GitPatchScreen.html?raw';
 import gitPatchFormView from './views/GitPatchFormView.html?raw';
 import toolHeaderViewTemplate from '@/app/githubtools/common/ui/views/GitHubToolHeaderView.html?raw';
