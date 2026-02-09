@@ -79,6 +79,51 @@ adopted across the repository.
 - Workspace screens must expose at least one `role="status"` region for live validation/progress copy.
 - New feature markup should use semantic feature classes instead of mixed utility-class chains.
 
+
+## Style token policy (Android-green palette)
+
+<!-- Change Rationale: Feature and native component styles occasionally reintroduced old M3
+     purple/literal fallback hex values, causing palette drift from the Android-green theme.
+     This section codifies approved token usage and links automation that blocks regressions. -->
+
+- In `src/styles/components/native/*.css` and `src/styles/features/**/*.css`, prefer semantic
+  tokens from `src/styles/variables.css`:
+  - `var(--app-*)` for app-level semantic aliases (`--app-text-color`, `--app-border-color`).
+  - `var(--md-sys-color-*)` for Material roles (`--md-sys-color-primary`, `--md-sys-color-error`).
+- Do **not** use hardcoded fallback literals for theme roles (for example old seed purple values
+  like `#e6e1e5` and `#cac4d0`) in `var()` fallbacks.
+
+### Approved examples
+
+```css
+/* ✅ approved */
+color: var(--app-text-color);
+border-color: var(--md-sys-color-outline);
+background: color-mix(in srgb, var(--md-sys-color-primary) 16%, transparent);
+
+/* ❌ disallowed fallback */
+color: var(--app-text-color, #e6e1e5);
+```
+
+### Automated guard
+
+- Run `node scripts/audit-style-tokens.js` (also wired into `npm test`) to block disallowed
+  fallback hex literals in feature/native CSS.
+
+## Visual QA checklist
+
+<!-- Change Rationale: Architecture reviews were code-centric and missed recurring visual
+     regressions in shared surfaces. This checklist adds a fast, repeatable QA pass for
+     high-impact Material 3 components before merge. -->
+
+Before merge, verify:
+
+- **Drawer:** active item contrast, icon alignment, expanded/collapsed transitions, focus ring visibility.
+- **Top app bar:** title baseline alignment, action icon spacing, elevation/surface tint consistency.
+- **Button variants:** filled/outlined/text/icon disabled + hover/focus states use approved tokens.
+- **Form controls:** labels, helper/error text, and outline/focus indicators match tokenized color roles.
+- **Cards:** container/background/outline hierarchy stays on-surface and uses consistent radius/elevation.
+
 ## Runtime dependency policy
 
 <!-- Change Rationale: Runtime `index.html` previously loaded UI component registries and font/icon assets

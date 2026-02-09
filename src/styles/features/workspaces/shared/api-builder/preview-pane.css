@@ -1,0 +1,6 @@
+/*
+ * @file App toolkit builder preview-pane styles.
+ *
+ * Change Rationale: Preview/diff presentation styles are staged into a dedicated module
+ * so output rendering can evolve independently from toolbar and dialog controls.
+ */

@@ -1,0 +1,6 @@
+/*
+ * @file App toolkit builder dialog styles.
+ *
+ * Change Rationale: Dialog and wizard surface rules are staged in this module to keep
+ * modal behavior scoped and easier to audit against Material 3 interaction guidance.
+ */

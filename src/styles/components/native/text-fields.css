@@ -120,7 +120,7 @@
   border: none;
   background: transparent;
   font: inherit;
-  color: var(--app-text-color, #e6e1e5);
+  color: var(--app-text-color);
   padding: 1rem 0.75rem 0.35rem;
 }
 
@@ -135,7 +135,7 @@
   top: 1.05rem;
   left: 0.85rem;
   font-size: 0.95rem;
-  color: var(--app-secondary-text-color, #cac4d0);
+  color: var(--app-secondary-text-color);
   transition: transform var(--gh-transition, 160ms ease),
     font-size var(--gh-transition, 160ms ease),
     top var(--gh-transition, 160ms ease),
@@ -155,7 +155,7 @@
 .gh-floating-input:not(:placeholder-shown) + label {
   top: 0.45rem;
   font-size: 0.75rem;
-  color: var(--app-text-color, #e6e1e5);
+  color: var(--app-text-color);
 }
 
 .gh-underline {
@@ -164,7 +164,7 @@
   right: 0;
   bottom: -1px;
   height: 2px;
-  background: var(--md-sys-color-primary, #e6e1e5);
+  background: var(--md-sys-color-primary);
   transform: scaleX(0);
   transform-origin: left;
   transition: transform var(--gh-transition, 160ms ease);
@@ -177,30 +177,30 @@
 
 .gh-helper-text {
   margin: 0.25rem 0 0;
-  color: var(--app-secondary-text-color, #cac4d0);
+  color: var(--app-secondary-text-color);
   font-size: 0.9rem;
 }
 
 .gh-error-text {
   margin: 0.15rem 0 0;
-  color: var(--md-sys-color-error, #b3261e);
+  color: var(--md-sys-color-error);
   font-size: 0.85rem;
 }
 
 .gh-floating-field.error {
-  border-color: var(--md-sys-color-error, #b3261e);
+  border-color: var(--md-sys-color-error);
   box-shadow: 0 12px 36px -28px color-mix(
     in srgb,
-    var(--md-sys-color-error, #b3261e) 35%,
+    var(--md-sys-color-error) 35%,
     transparent
   );
 }
 
 .gh-floating-field.error label {
-  color: var(--md-sys-color-error, #b3261e);
+  color: var(--md-sys-color-error);
 }
 
 .gh-floating-field.error .gh-underline {
-  background: var(--md-sys-color-error, #b3261e);
+  background: var(--md-sys-color-error);
   transform: scaleX(1);
 }

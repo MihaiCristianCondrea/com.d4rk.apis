@@ -11,6 +11,8 @@ const fs = require('fs');
 const path = require('path');
 
 const APP_ROOT = path.join(__dirname, '..', 'src', 'app');
+const WORKSPACES_ROOT = path.join(APP_ROOT, 'workspaces');
+const GITHUB_TOOLS_ROOT = path.join(APP_ROOT, 'githubtools');
 const RES_LAYOUT_ROOT = path.join(__dirname, '..', 'src', 'app', 'shell');
 const STYLES_FEATURES_ROOT = path.join(__dirname, '..', 'src', 'styles', 'features');
 const TESTS_ROOT = path.join(__dirname, '..', 'tests');
@@ -186,6 +188,46 @@ function validateCoreDataImportBoundaries() {
 }
 
 /**
+ * Validates that each feature directory includes `data/`, `domain/`, and `ui/` subfolders.
+ *
+ * Change Rationale: Feature directories previously relied on implicit folder creation, which
+ * allowed partial migrations where UI existed without matching data/domain boundaries. Enforcing
+ * all three subfolders keeps feature-first Android-style layering explicit and makes ownership
+ * of network/storage/business logic easier to review.
+ *
+ * @returns {string[]} Error messages for missing required feature subfolders.
+ */
+function validateFeatureLayerFolders() {
+  const errors = [];
+  const requiredSubfolders = ['data', 'domain', 'ui'];
+  const featureRoots = [WORKSPACES_ROOT, GITHUB_TOOLS_ROOT];
+
+  featureRoots.forEach((rootPath) => {
+    if (!fs.existsSync(rootPath)) {
+      return;
+    }
+
+    const featureDirs = fs
+      .readdirSync(rootPath, { withFileTypes: true })
+      .filter((entry) => entry.isDirectory())
+      .map((entry) => path.join(rootPath, entry.name));
+
+    featureDirs.forEach((featurePath) => {
+      requiredSubfolders.forEach((subfolder) => {
+        const expectedPath = path.join(featurePath, subfolder);
+        if (!fs.existsSync(expectedPath) || !fs.statSync(expectedPath).isDirectory()) {
+          errors.push(
+            `Feature missing required subfolder \`${subfolder}/\`: ${formatPath(path.relative(process.cwd(), featurePath))}`,
+          );
+        }
+      });
+    });
+  });
+
+  return errors;
+}
+
+/**
  * Runs all structure checks and returns the aggregated error list.
  *
  * Change Rationale: Legacy `src/pages/*` and `.route.js` parity checks enforced the retired
@@ -202,6 +244,7 @@ function runChecks() {
     ...validateGithubToolsNaming(),
     ...validateTestLayout(),
     ...validateCoreDataImportBoundaries(),
+    ...validateFeatureLayerFolders(),
   ];
 }
 
