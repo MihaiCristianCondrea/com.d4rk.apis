@@ -14,13 +14,13 @@ adopted across the repository.
 
 - **Android-style layering:** every feature is split into `data/`, `domain/`, and `ui/`.
 - **Routing boundaries:** UI routes live under feature `ui/` as `*Route.js` modules and
-  register directly with `core/ui/router/routes.js`.
+  register directly with `src/core/ui/router/routes.js`.
 - <!-- Change Rationale: Legacy `src/router`, `src/routes`, and `src/pages` compatibility
      scaffolding has been fully removed to complete router convergence. Keeping a single
      registration flow reduces duplication and aligns with Material 3's predictable navigation
      model where one source of truth controls destinations. -->
   **Router convergence status:** Sunset complete. The only supported runtime flow is:
-  feature `ui/*Route.js` registration → `core/ui/router` runtime/navigation.
+  feature route-module registration under src/app/.../ui/Route files → `src/core/ui/router/**` runtime/navigation.
 - <!-- Change Rationale: Feature screens were mixing BeerCSS classes, bespoke button utilities,
      and Material Web tags for core controls. Locking a single policy reduces visual drift,
      keeps control behavior predictable, and preserves Material 3 consistency through one
@@ -29,6 +29,7 @@ adopted across the repository.
   **buttons, app bars, drawers, lists, and inputs**. Avoid mixing in non-BeerCSS component
   patterns for those control families inside feature screens.
 - **Docs and data:** API JSON lives under `api/` and must remain the single source of truth.
+- **Theme policy:** fixed Android-green brand palette from `src/styles/variables.css`; no runtime dynamic color generation.
 
 ## Directory conventions
 
@@ -37,17 +38,17 @@ adopted across the repository.
 
 ### App-level folders
 
-- `app/src/main/js/core/`
+- `src/core/`
   - Shared app shell, router, utilities, and service integrations.
   - Keep feature code **out** of core.
-- `app/src/main/js/app/<feature>/`
+- `src/app/` (feature directories live here; each feature keeps `data/`, `domain/`, and `ui/`)
   - Each feature gets `data/`, `domain/`, and `ui/` subfolders.
   - Routes, screens, and view helpers belong in `ui/`.
-- `app/src/main/js/app/<feature>/ui/`
-  - Feature-specific HTML screens live directly in the UI folder.
-- `app/src/main/js/app/<feature>/ui/views/`
-  - Reusable HTML view snippets for the feature.
-- `app/src/main/styles/`
+- `src/app/` feature `ui/` folders
+  - Feature-specific HTML screens live directly in each feature UI folder.
+- `src/app/` feature `ui/views/` folders
+  - Reusable HTML view snippets for each feature.
+- `src/styles/`
   - `base/` for typography and page-level styling.
   - `components/` for shared UI primitives.
   - `features/` for feature-specific CSS.
@@ -81,14 +82,26 @@ adopted across the repository.
 - Ensure focusable controls are targetable (`id` or `aria-label`) for accessibility and testing.
 - Workspace screens must expose at least one `role="status"` region for live validation/progress copy.
 
+
+## Shell + bootstrap flow
+
+<!-- Change Rationale: The duplicate shell template was removed, so docs now describe the
+     canonical runtime startup path that Vite executes in production and tests. -->
+
+Runtime startup now follows this single path:
+
+1. `index.html` provides the canonical shell markup and navigation mount target.
+2. `src/main.js` is imported by Vite from `index.html`.
+3. `src/app/bootstrap.js` imports feature `*Route.js` modules and initializes core shell wiring.
+4. `src/core/ui/appShell.js` initializes navigation + router integration via `src/core/ui/router/**`.
+
 ## Workflow expectations
 
 1. **Create/modify UI in `ui/`:** expose entrypoints through the router.
 2. **Keep domain logic pure:** avoid DOM access in `domain/` modules.
 3. **Use `data/` for IO:** API calls, storage, and external service wiring.
-4. **Update docs:** when editing API JSON or schemas, verify `api/<app>/docs/`.
-5. **Do not add legacy router scaffolding:** avoid `src/router/`, `src/routes/*.route.js`,
-   and `src/pages/<module>/page.*` patterns.
+4. **Update docs:** when editing API JSON or schemas, verify API documentation folders under `api/`.
+5. **Do not add legacy router scaffolding:** avoid legacy router/page compatibility directories (for example: src/router, src/routes, src/pages) and keep all runtime routing under `src/core/ui/router/**`.
 
 ## Architecture check (required)
 

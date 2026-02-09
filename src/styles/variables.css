@@ -255,6 +255,24 @@ html.dark {
   --md-sys-color-surface-container: #1d2021;
   --md-sys-color-surface-container-high: #272b2b;
   --md-sys-color-surface-container-highest: #323636;
+
+  /* Change Rationale: Mirror BeerCSS semantic tokens in dark mode to keep palette
+   * authority centralized in this stylesheet and prevent framework defaults from drifting
+   * away from the Android-green brand scheme. */
+  --app-surface: var(--md-sys-color-surface);
+  --app-surface-container: var(--md-sys-color-surface-container);
+  --app-surface-container-high: var(--md-sys-color-surface-container-high);
+  --app-outline: var(--md-sys-color-outline);
+  --app-on-surface: var(--md-sys-color-on-surface);
+  --app-primary: var(--md-sys-color-primary);
+  --app-on-primary: var(--md-sys-color-on-primary);
+  --primary: var(--app-primary);
+  --on-primary: var(--app-on-primary);
+  --surface: var(--app-surface);
+  --on-surface: var(--app-on-surface);
+  --outline: var(--app-outline);
+  --surface-container: var(--app-surface-container);
+  --surface-container-high: var(--app-surface-container-high);
   /* Change Rationale: Keep dark mode surfaces anchored to the Material 3
    * surface token so the page background does not fall back to a near-black
    * container variant.

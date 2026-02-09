@@ -34,7 +34,45 @@ function toRepoRelativePath(absolutePath, repoRoot) {
   return path.relative(repoRoot, absolutePath).split(path.sep).join('/');
 }
 
+/**
+ * Recursively collects full-document HTML shell templates.
+ *
+ * @param {string} rootDir Directory to scan.
+ * @returns {string[]} Absolute paths for HTML files that include a DOCTYPE shell marker.
+ */
+function collectFullShellTemplates(rootDir) {
+  const entries = fs.readdirSync(rootDir, { withFileTypes: true });
+  const files = [];
+
+  entries.forEach((entry) => {
+    const fullPath = path.join(rootDir, entry.name);
+    if (entry.isDirectory()) {
+      files.push(...collectFullShellTemplates(fullPath));
+    } else if (entry.isFile() && entry.name.endsWith('.html')) {
+      const content = fs.readFileSync(fullPath, 'utf8');
+      if (/<!DOCTYPE\s+html>/i.test(content) && /id=["']pageContentArea["']/i.test(content)) {
+        files.push(fullPath);
+      }
+    }
+  });
+
+  return files;
+}
+
 describe('UI governance', () => {
+
+  test('runtime shell stays canonical to index.html only', () => {
+    const repoRoot = path.join(__dirname, '..', '..');
+    // Change Rationale:
+    // - The repo previously carried both `index.html` and `src/app/shell/app-shell.html` full shells.
+    // - Dual runtime shells caused drift risk for navigation mount structure and bootstrap metadata.
+    // - Enforcing a single canonical shell keeps routing ownership and Material 3 scaffolding consistent.
+    const fullShellTemplates = collectFullShellTemplates(repoRoot).map((templatePath) =>
+      toRepoRelativePath(templatePath, repoRoot)
+    );
+
+    expect(fullShellTemplates).toEqual(['index.html']);
+  });
   test('Screen.html files follow Material 3 governance signals', () => {
     const repoRoot = path.join(__dirname, '..', '..');
     const screensRoot = path.join(repoRoot, 'app', 'src', 'main', 'js', 'app');

@@ -16,7 +16,7 @@ const STYLES_FEATURES_ROOT = path.join(__dirname, '..', 'src', 'styles', 'featur
 const TESTS_ROOT = path.join(__dirname, '..', 'tests');
 
 const ALLOWED_READMES = new Set();
-const ALLOWED_LAYOUT_HTML = new Set(['src/app/shell/app-shell.html']);
+const ALLOWED_LAYOUT_HTML = new Set();
 
 /**
  * Recursively collects filesystem entries that match a predicate.

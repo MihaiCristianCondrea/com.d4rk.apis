@@ -2,9 +2,10 @@
 // the navigation drawer transform and leaving the drawer permanently visible.
 // Importing the framework first and layering our component styles afterwards
 // restores the intended off-canvas behavior while keeping the Material 3
-// palette provided by beer + dynamic colors.
+// palette aligned with the fixed Android-green brand tokens.
 import 'beercss';
-import 'material-dynamic-colors';
+// Change Rationale: Theme mode policy is now fixed to the Android-green brand palette
+// defined in src/styles/variables.css, so runtime dynamic color generation is disabled.
 import '../styles/tailwind.css';
 import '../styles/variables.css';
 import '../styles/base/base.css';
@@ -103,4 +104,6 @@ import './githubtools/releasestats/ui/ReleaseStatsRoute.js';
 import './githubtools/gitpatch/ui/GitPatchRoute.js';
 import './home/ui/HomeRoute.js';
 
+// Change Rationale: Vite now treats the repository root `index.html` as the only runtime shell,
+// eliminating duplicate shell templates and ensuring route hydration always targets one canonical surface.
 import '../core/ui/appShell.js';

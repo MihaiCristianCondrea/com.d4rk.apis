@@ -129,7 +129,7 @@ describe('navigationRenderer', () => {
 
   it('keeps app shell navigation as a mount-only surface hydrated from AppNavigationView', () => {
     const repoRoot = path.join(__dirname, '..', '..');
-    const shellPath = path.join(repoRoot, 'src', 'app', 'shell', 'app-shell.html');
+    const shellPath = path.join(repoRoot, 'index.html');
     const html = fs.readFileSync(shellPath, 'utf8');
 
     expect(html.includes('id="appNavigationMount"')).toBe(true);
