@@ -1,83 +1,54 @@
-<!-- Change Rationale: Move the Repo Mapper form into a reusable view so the screen can be
-     composed with shared GitHub tool layout components. -->
+<!-- Change Rationale: Replaced Material Web form controls with BeerCSS-native button, input,
+     checkbox, and segmented controls so feature views rely on a single interactive component
+     family while preserving existing IDs used by route logic and accessibility hooks. -->
 <form id="mapper-form" class="gh-form" autocomplete="off" name="mapper-form">
-  <div class="gh-field-row">
-    <md-outlined-text-field
+  <div class="gh-field-row gh-repo-field">
+    <input
       id="mapper-url"
       name="mapper-url"
       type="text"
-      class="gh-md-field"
-      label="Repository URL"
+      class="gh-input"
+      placeholder="Repository URL"
       autocomplete="off"
       aria-describedby="mapper-url-helper mapper-url-error"
       list="mapper-datalist"
       inputmode="url"
       required
-    >
-      <md-icon-button
-        id="mapper-fav-btn"
-        slot="trailing-icon"
-        aria-pressed="false"
-        aria-label="Favorite repository"
-        toggle=""
-        variant="outlined"
-      >
-        <!-- Change Rationale: Material's outlined variant keeps the star framed whether
-             the control is idle or selected, and supplying both the default and
-             `selected` slots preserves the outlined-to-filled transition without
-             collapsing the icon when toggled. Swapping the icon content to
-             `material-symbols-outlined` keeps the trailing affordance visually
-             aligned with the rest of the GitHub tools surface and preserves the
-             outlined weight even before selection. The previous `type="url"`
-             enforcement blocked compact owner/repo slugs (e.g., MihaiCristianCondrea/App-Toolkit-for-Android)
-             with native "Please enter a URL" errors; switching to `type="text"` with
-             `inputmode="url"` keeps keyboard hints while allowing slug inputs that the
-             mapper already normalizes. -->
-        <span class="material-symbols-outlined" aria-hidden="true">star</span>
-        <span slot="selected" class="material-symbols-outlined filled-icon" aria-hidden="true">star</span>
-      </md-icon-button>
-    </md-outlined-text-field>
+    />
+    <button id="mapper-fav-btn" class="button circle border gh-favorite-button" type="button" aria-pressed="false" aria-label="Favorite repository">
+      <span class="material-symbols-outlined" aria-hidden="true">star</span>
+    </button>
   </div>
   <p id="mapper-url-helper" class="gh-helper-text">Paste a GitHub repository URL, owner/repo slug, or compact OwnerRepo name with a dot.</p>
   <p id="mapper-url-error" class="gh-error-text" hidden>Enter a GitHub URL or owner/repo slug.</p>
   <div class="gh-control-row">
     <div class="gh-token-settings" id="mapper-token-settings">
-      <md-filled-tonal-button class="token-toggle" id="mapper-token-reveal" aria-expanded="false" type="button">
-        <md-icon slot="icon">vpn_key</md-icon>
+      <button class="button tonal token-toggle" id="mapper-token-reveal" aria-expanded="false" type="button">
+        <span class="material-symbols-outlined">vpn_key</span>
         <span class="favorite-label">Token settings</span>
-        <md-icon slot="trailing-icon">expand_more</md-icon>
-      </md-filled-tonal-button>
+        <span class="material-symbols-outlined">expand_more</span>
+      </button>
       <div class="gh-collapsible" id="mapper-token-wrapper" hidden>
-        <md-outlined-text-field id="mapper-token" name="mapper-token" type="password" label="Personal Access Token (optional)" autocomplete="off" aria-describedby="mapper-token-helper mapper-token-error" spellcheck="false"></md-outlined-text-field>
+        <input id="mapper-token" name="mapper-token" type="password" class="gh-input" placeholder="Personal Access Token (optional)" autocomplete="off" aria-describedby="mapper-token-helper mapper-token-error" spellcheck="false" />
         <p id="mapper-token-helper" class="gh-helper-text">Use when working with private repositories.</p>
         <p id="mapper-token-error" class="gh-error-text" hidden>Token required for private repos.</p>
         <div class="gh-token-visibility">
-          <md-checkbox id="mapper-token-toggle">
-            <span slot="label" data-token-visibility-label>Show token</span>
-          </md-checkbox>
+          <label><input id="mapper-token-toggle" type="checkbox" /><span data-token-visibility-label>Show token</span></label>
         </div>
       </div>
     </div>
-    <div class="gh-segmented-wrapper">
-      <md-segmented-button-set
-        aria-label="Select mapper output format"
-        id="mapper-format"
-        class="app-segmented segmented-inline"
-      >
-        <md-outlined-segmented-button id="btn-format-ascii" value="ascii" selected>
-          <md-icon slot="icon">terminal</md-icon>
-          <span>ASCII</span>
-        </md-outlined-segmented-button>
-        <md-outlined-segmented-button id="btn-format-paths" value="paths">
-          <md-icon slot="icon">view_list</md-icon>
-          <span>Paths</span>
-        </md-outlined-segmented-button>
-      </md-segmented-button-set>
+    <div class="gh-segmented-wrapper mapper-format-toggle" role="group" aria-label="Select mapper output format" id="mapper-format">
+      <button id="btn-format-ascii" value="ascii" class="button border active" type="button" aria-pressed="true" aria-selected="true">
+        <span class="material-symbols-outlined">terminal</span>
+        <span>ASCII</span>
+      </button>
+      <button id="btn-format-paths" value="paths" class="button border" type="button" aria-pressed="false" aria-selected="false">
+        <span class="material-symbols-outlined">view_list</span>
+        <span>Paths</span>
+      </button>
     </div>
   </div>
   <div class="gh-actions end">
-    <!-- Change Rationale: Primary actions now use the shared app button helpers so the
-         filled CTA treatment stays consistent across GitHub tool screens. -->
     <button type="submit" id="mapper-submit" class="button app-ui-button">
       <span class="material-symbols-outlined">terminal</span>
       <span>Generate Map</span>

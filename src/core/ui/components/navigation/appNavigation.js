@@ -8,7 +8,7 @@ import AppNavigationView from './AppNavigationView.html?raw';
 // Change Rationale: Navigation rendering is now data-driven, so the app shell
 // can hydrate both rail and drawer from a single source of truth.
 import { hydrateNavigationContainers } from './navigationRenderer.js';
-import { initNavigationDrawer } from '@/core/data/services/navigationDrawerService.js';
+import { initNavigationDrawer } from '@/core/ui/components/navigation/navigationDrawerBindings.js';
 import { getDynamicElement } from '@/core/ui/utils/domUtils.js';
 import RouterRoutes from '@/core/ui/router/routes.js';
 import { loadPageContent, normalizePageId, updateActiveNavLink } from '@/core/ui/router/index.js';

@@ -1,38 +1,36 @@
-// Change Rationale: Navigation drawer now pulls shared DOM helpers from the UI utility layer
-// to honor the core/ui separation while keeping behavior identical.
+// Change Rationale: Drawer state/behavior remains in core/data, while all DOM lookup
+// responsibilities moved to core/ui orchestrators.
 // Change Rationale: Drawer logic has been rewritten for Beer CSS so the shell uses semantic
 // HTML (<nav>, <details>, <summary>) instead of Material custom elements. The controller now
 // toggles a simple `.open` class and syncs <details> expansion state instead of relying on the
 // `opened` property from md-navigation-drawer. This removes the body padding shim that pushed
 // content sideways when the drawer opened while preserving accessibility guards.
-import { getDynamicElement } from '@/core/ui/utils/domUtils.js';
+import {
+  createDrawerState,
+  openDrawerState,
+  closeDrawerState,
+  setSectionExpandedState,
+} from '@/core/domain/navigation/navigationDrawerState.js';
 
 /**
  * @typedef {Object} NavigationDrawerOptions
- * @property {string} [menuButtonId='menuButton']
- *   ID of the button that opens the navigation drawer.
- * @property {string} [navDrawerId='navDrawer']
- *   ID of the drawer container element (Beer CSS drawer container).
- * @property {string} [closeDrawerId='closeDrawerButton']
- *   ID of the explicit close button inside the drawer.
- * @property {string} [overlayId='drawerOverlay']
- *   ID of the overlay element that sits behind the drawer.
+ * @property {HTMLElement | null} [menuButton=null] Open button reference.
+ * @property {HTMLElement | null} [navDrawer=null] Drawer root reference.
+ * @property {HTMLElement | null} [closeDrawerButton=null] Close button reference.
+ * @property {HTMLElement | null} [drawerOverlay=null] Overlay reference.
  * @property {string} [closeOnNavSelectMediaQuery='(max-width: 840px)']
  *   Media query that must match before clicking a nav item auto-closes the drawer.
- * @property {string} [aboutToggleId='aboutToggle']
- *   ID of the toggle button controlling the "About" section in the drawer.
- * @property {string} [aboutContentId='aboutContent']
- *   ID of the collapsible content node for the "About" section.
- * @property {string} [androidToggleId='apiWorkspacesToggle']
- *   ID of the toggle button controlling the "API Workspaces" section.
- *   Falls back to "androidAppsToggle" for older markup.
- * @property {string} [androidContentId='apiWorkspacesContent']
- *   ID of the collapsible content node for "API Workspaces".
- *   Falls back to "androidAppsContent" for older markup.
- * @property {string} [githubToggleId='githubToolsToggle']
- *   ID of the toggle button controlling the "GitHub Tools" section.
- * @property {string} [githubContentId='githubToolsContent']
- *   ID of the collapsible content node for the "GitHub Tools" section.
+ * @property {HTMLElement | null} [aboutToggle=null] About toggle reference.
+ * @property {HTMLElement | null} [aboutContent=null] About content reference.
+ * @property {HTMLElement | null} [androidToggle=null] API workspaces toggle reference.
+ * @property {HTMLElement | null} [androidContent=null] API workspaces content reference.
+ * @property {HTMLElement | null} [githubToggle=null] GitHub toggle reference.
+ * @property {HTMLElement | null} [githubContent=null] GitHub content reference.
+ * @property {HTMLElement[]} [inertTargets=[]] Inert target refs.
+ * @property {HTMLElement[]} [navLinks=[]] Navigation links inside drawer.
+ * @property {HTMLElement | null} [firstNavItem=null] First focusable nav item.
+ * @property {Document | null} [documentRef=document] Document adapter.
+ * @property {HTMLElement | null} [bodyElement=document.body] Body element adapter.
  */
 
 /**
@@ -60,52 +58,54 @@ export class NavigationDrawerController {
    * Call {@link init} to attach event listeners and sync the initial state.
    */
   constructor({
-                menuButtonId = 'menuButton',
-                navDrawerId = 'navDrawer',
-                closeDrawerId = 'closeDrawerButton',
-                overlayId = 'drawerOverlay',
+                menuButton = null,
+                navDrawer = null,
+                closeDrawerButton = null,
+                drawerOverlay = null,
                 // Change Rationale: Align the drawer breakpoint with the shared navigation
                 // rail cutoff so modal behavior stays consistent across CSS and JS.
                 closeOnNavSelectMediaQuery = '(max-width: 960px)',
-                aboutToggleId = 'aboutToggle',
-                aboutContentId = 'aboutContent',
-                androidToggleId = 'apiWorkspacesToggle',
-                androidContentId = 'apiWorkspacesContent',
-                githubToggleId = 'githubToolsToggle',
-                githubContentId = 'githubToolsContent',
+                aboutToggle = null,
+                aboutContent = null,
+                androidToggle = null,
+                androidContent = null,
+                githubToggle = null,
+                githubContent = null,
+                inertTargets = [],
+                navLinks = [],
+                firstNavItem = null,
+                documentRef = typeof document !== 'undefined' ? document : null,
+                bodyElement = typeof document !== 'undefined' ? document.body : null,
               } = {}) {
     // Drawer shell and global controls
-    this.menuButton = getDynamicElement(menuButtonId);
-    this.navDrawer = getDynamicElement(navDrawerId);
-    this.closeDrawerButton = getDynamicElement(closeDrawerId);
-    this.drawerOverlay = getDynamicElement(overlayId);
+    this.menuButton = menuButton;
+    this.navDrawer = navDrawer;
+    this.closeDrawerButton = closeDrawerButton;
+    this.drawerOverlay = drawerOverlay;
     this.closeOnNavSelectMediaQuery = closeOnNavSelectMediaQuery;
 
     // Section: About
-    this.aboutToggle = getDynamicElement(aboutToggleId);
-    this.aboutContent = getDynamicElement(aboutContentId);
+    this.aboutToggle = aboutToggle;
+    this.aboutContent = aboutContent;
 
     // Section: API workspaces (with backwards-compatible IDs)
-    this.androidToggle =
-        getDynamicElement(androidToggleId) ||
-        getDynamicElement('androidAppsToggle');
-    this.androidContent =
-        getDynamicElement(androidContentId) ||
-        getDynamicElement('androidAppsContent');
+    this.androidToggle = androidToggle;
+    this.androidContent = androidContent;
 
     // Section: GitHub tools
-    this.githubToggle = getDynamicElement(githubToggleId);
-    this.githubContent = getDynamicElement(githubContentId);
+    this.githubToggle = githubToggle;
+    this.githubContent = githubContent;
 
     /**
      * Elements that should be made inert while the drawer is open.
      * They opt into this behavior using the [data-drawer-inert-target] attribute.
      */
-    this.inertTargets = Array.from(
-        typeof document !== 'undefined'
-            ? document.querySelectorAll('[data-drawer-inert-target]')
-            : [],
-    );
+    this.inertTargets = Array.isArray(inertTargets) ? inertTargets : [];
+    this.navLinks = Array.isArray(navLinks) ? navLinks : [];
+    this.firstNavItem = firstNavItem;
+    this.documentRef = documentRef;
+    this.bodyElement = bodyElement;
+    this.state = createDrawerState();
 
     // Bind instance methods so they can be used as event listeners safely.
     this.syncDrawerState = this.syncDrawerState.bind(this);
@@ -167,7 +167,7 @@ export class NavigationDrawerController {
 
     this.drawerOverlay?.addEventListener('click', () => this.close());
 
-    document.addEventListener('keydown', this.handleKeydown);
+    this.documentRef?.addEventListener('keydown', this.handleKeydown);
 
     // Independent expandable sections inside the drawer
     this.initToggleSection(this.aboutToggle, this.aboutContent, {
@@ -195,8 +195,7 @@ export class NavigationDrawerController {
       return;
     }
 
-    const navLinks = this.navDrawer.querySelectorAll('.nav-link[href]');
-    navLinks.forEach((link) => {
+    this.navLinks.forEach((link) => {
       link.addEventListener('click', this.handleNavItemSelection);
     });
   }
@@ -236,7 +235,8 @@ export class NavigationDrawerController {
       }
     }
     this.navDrawer.classList.add('open');
-    this.syncDrawerState(true);
+    this.state = openDrawerState(this.state);
+    this.syncDrawerState(this.state.isOpen);
     this.focusFirstNavItem();
   }
 
@@ -262,7 +262,8 @@ export class NavigationDrawerController {
       }
     }
     this.navDrawer.classList.remove('open');
-    this.syncDrawerState(false);
+    this.state = closeDrawerState(this.state);
+    this.syncDrawerState(this.state.isOpen);
     this.menuButton?.focus?.();
   }
 
@@ -274,7 +275,7 @@ export class NavigationDrawerController {
    * @param {KeyboardEvent} event - Keydown event dispatched on document.
    */
   handleKeydown(event) {
-    if (event.key === 'Escape' && this.navDrawer?.classList?.contains('open')) {
+    if (event.key === 'Escape' && this.state.isOpen) {
       this.close();
     }
   }
@@ -304,6 +305,8 @@ export class NavigationDrawerController {
     const parentDetails = toggleButton.closest('details');
     const applyExpansion = (expanded) => {
       this.setSectionState(toggleButton, contentElement, Boolean(expanded));
+      const sectionKey = contentElement.id || toggleButton.id || 'section';
+      this.state = setSectionExpandedState(this.state, sectionKey, Boolean(expanded));
       if (parentDetails) {
         parentDetails.open = Boolean(expanded);
       }
@@ -357,9 +360,8 @@ export class NavigationDrawerController {
     if (!this.navDrawer) {
       return false;
     }
-    const firstNavItem = this.navDrawer.querySelector('.nav-link[href]');
-    if (firstNavItem && typeof firstNavItem.focus === 'function') {
-      firstNavItem.focus();
+    if (this.firstNavItem && typeof this.firstNavItem.focus === 'function') {
+      this.firstNavItem.focus();
       return true;
     }
     if (this.closeDrawerButton?.focus) {
@@ -377,11 +379,11 @@ export class NavigationDrawerController {
    * - This prevents keyboard users from being "stuck" on an inert element.
    */
   redirectFocusAwayFromInertAreas() {
-    if (!this.inertTargets.length || typeof document === 'undefined') {
+    if (!this.inertTargets.length || !this.documentRef) {
       return;
     }
 
-    const activeElement = document.activeElement;
+    const activeElement = this.documentRef?.activeElement;
     if (!activeElement) {
       return;
     }
@@ -418,7 +420,7 @@ export class NavigationDrawerController {
     // expects an `active` state to appear; align the controller with the framework.
     this.drawerOverlay?.classList.toggle('active', isDrawerOpen);
     this.drawerOverlay?.setAttribute('aria-hidden', isDrawerOpen ? 'false' : 'true');
-    document.body.classList.toggle('drawer-is-open', isDrawerOpen);
+    this.bodyElement?.classList.toggle('drawer-is-open', isDrawerOpen);
     this.navDrawer?.classList.toggle('open', isDrawerOpen);
     this.menuButton?.setAttribute('aria-expanded', isDrawerOpen ? 'true' : 'false');
 
@@ -496,20 +498,11 @@ export class NavigationDrawerController {
 }
 
 /**
- * Convenience initializer for the navigation drawer controller.
- *
- * - Creates a new {@link NavigationDrawerController}.
- * - Calls {@link NavigationDrawerController.init} immediately.
- * - Returns the controller instance so callers can hook into it
- *   for testing or custom behaviors.
+ * Creates a navigation drawer controller from pre-resolved references.
  *
  * @param {NavigationDrawerOptions} [options={}]
- *   Optional configuration for element IDs.
  * @returns {NavigationDrawerController}
- *   The initialized navigation drawer controller.
  */
-export function initNavigationDrawer(options = {}) {
-  const controller = new NavigationDrawerController(options);
-  controller.init();
-  return controller;
+export function createNavigationDrawerController(options = {}) {
+  return new NavigationDrawerController(options);
 }

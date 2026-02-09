@@ -14,11 +14,11 @@ const mockDomUtils = {
 
 jest.mock('../../app/src/main/js/core/ui/utils/domUtils.js', () => mockDomUtils);
 
-jest.mock('../../app/src/main/js/core/data/services/themeService.js', () => ({
-  initThemeControls: jest.fn(),
+jest.mock('../../app/src/main/js/core/ui/components/navigation/themeControlsOrchestrator.js', () => ({
+  initThemeControlsFromDom: jest.fn(),
 }));
 
-jest.mock('../../app/src/main/js/core/data/services/navigationDrawerService.js', () => ({
+jest.mock('../../app/src/main/js/core/ui/components/navigation/navigationDrawerBindings.js', () => ({
   initNavigationDrawer: jest.fn(() => ({ close: jest.fn() })),
 }));
 

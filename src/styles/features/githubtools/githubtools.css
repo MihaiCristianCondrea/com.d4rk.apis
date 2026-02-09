@@ -53,23 +53,23 @@
 }
 
 .gh-md-field,
-.gh-form md-outlined-text-field {
+.gh-input {
   width: 100%;
-  --md-outlined-field-container-color: var(--gh-card-strong);
-  --md-outlined-field-outline-color: color-mix(in srgb, var(--gh-outline) 60%, transparent);
-  --md-outlined-field-focus-outline-color: var(--md-sys-color-primary, #e6e1e5);
-  --md-outlined-field-text-color: var(--gh-text);
-  --md-outlined-field-label-text-color: var(--gh-subtext);
-  --md-outlined-field-hover-outline-color: color-mix(in srgb, var(--md-sys-color-primary, #e6e1e5) 32%, transparent);
+  border: var(--gh-border);
+  border-radius: 14px;
+  background: var(--gh-card-strong);
+  color: var(--gh-text);
+  padding: 0.75rem 0.9rem;
 }
 
-.gh-md-field md-icon-button {
+.gh-favorite-button {
   border-radius: 14px;
   color: var(--gh-subtext);
 }
 
-.gh-md-field md-icon-button.favorited,
-.gh-md-field md-icon-button[selected] {
+.gh-favorite-button.favorited,
+.gh-favorite-button[selected=''],
+.gh-favorite-button[aria-pressed='true'] {
   background: color-mix(in srgb, var(--md-sys-color-primary) 14%, transparent);
 }
 
@@ -78,10 +78,9 @@
  * hosts keeps the outlined star visible at rest and crisply filled when toggled,
  * matching Material 3's dual-state affordances.
  */
-.gh-md-field md-icon-button.favorited md-icon,
-.gh-md-field md-icon-button[selected] md-icon,
-.gh-md-field md-icon-button.favorited .material-symbols-outlined,
-.gh-md-field md-icon-button[selected] .material-symbols-outlined {
+.gh-favorite-button.favorited .material-symbols-outlined,
+.gh-favorite-button[selected=''] .material-symbols-outlined,
+.gh-favorite-button[aria-pressed='true'] .material-symbols-outlined {
   color: var(--md-sys-color-primary);
   font-variation-settings: 'FILL' 1, 'wght' 600, 'GRAD' 0, 'opsz' 24;
 }

@@ -157,6 +157,34 @@ function validateTestLayout() {
 }
 
 
+
+/**
+ * Validates that core/data modules do not import core/ui modules.
+ *
+ * Change Rationale: Data layer previously pulled UI helpers directly, which
+ * inverted architecture boundaries. This check enforces data->domain/core-only
+ * imports and keeps DOM orchestration inside core/ui.
+ *
+ * @returns {string[]} Error messages for invalid imports.
+ */
+function validateCoreDataImportBoundaries() {
+  const coreDataRoot = path.join(__dirname, '..', 'src', 'core', 'data');
+  const jsFiles = collectEntries(coreDataRoot, (entryPath, dirent) =>
+    dirent.isFile() && entryPath.endsWith('.js')
+  );
+
+  const violations = [];
+  jsFiles.forEach((filePath) => {
+    const content = fs.readFileSync(filePath, 'utf8');
+    const invalidImport = /from\s+['"][^'"]*(?:\/ui\/|@\/core\/ui\/)[^'"]*['"]/g;
+    if (invalidImport.test(content)) {
+      violations.push(`core/data must not import core/ui: ${formatPath(path.relative(process.cwd(), filePath))}`);
+    }
+  });
+
+  return violations;
+}
+
 /**
  * Runs all structure checks and returns the aggregated error list.
  *
@@ -173,6 +201,7 @@ function runChecks() {
     ...validateLayoutHtml(),
     ...validateGithubToolsNaming(),
     ...validateTestLayout(),
+    ...validateCoreDataImportBoundaries(),
   ];
 }
 
