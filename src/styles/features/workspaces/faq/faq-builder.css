@@ -423,7 +423,11 @@
 }
 
 .faq-icon-picker__close:hover {
-  background: rgba(118, 118, 130, 0.12);
+  /* Change Rationale: The hover background previously used a fixed gray rgba token that
+     drifted from the active theme palette in dark mode. Switching to Material color-mix
+     keeps the state layer aligned with Material 3 dynamic color behavior and improves
+     contrast consistency across themes. */
+  background: color-mix(in srgb, var(--md-sys-color-on-surface) 12%, transparent);
   color: var(--app-text-color);
 }
 
@@ -447,6 +451,34 @@
 
 .faq-icon-picker__search .api-field {
   width: 100%;
+}
+
+.faq-icon-picker__search .api-field-label {
+  color: var(--app-secondary-text-color);
+  font-weight: 600;
+}
+
+.faq-icon-picker__search .api-input {
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--md-sys-color-on-surface) 20%, transparent);
+  background: color-mix(in srgb, var(--md-sys-color-surface-container-high) 72%, var(--md-sys-color-surface));
+  padding-inline: 1rem;
+  transition: border-color 160ms ease, box-shadow 160ms ease, background-color 160ms ease;
+}
+
+.faq-icon-picker__search .api-input::placeholder {
+  color: color-mix(in srgb, var(--md-sys-color-on-surface-variant) 76%, transparent);
+}
+
+.faq-icon-picker__search .api-input:hover {
+  border-color: color-mix(in srgb, var(--md-sys-color-primary) 38%, var(--md-sys-color-outline));
+  background: color-mix(in srgb, var(--md-sys-color-surface-container) 82%, var(--md-sys-color-surface));
+}
+
+.faq-icon-picker__search .api-input:focus-visible {
+  outline: none;
+  border-color: var(--md-sys-color-primary);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--md-sys-color-primary) 22%, transparent);
 }
 
 .faq-icon-picker__loading,
@@ -483,13 +515,13 @@
 
 .faq-icon-picker__option:hover {
   border-color: var(--md-sys-color-primary);
-  box-shadow: 0 12px 28px rgba(63, 81, 181, 0.16);
+  box-shadow: 0 12px 28px color-mix(in srgb, var(--md-sys-color-primary) 18%, transparent);
   transform: translateY(-2px);
 }
 
 .faq-icon-picker__option.is-selected {
   border-color: var(--md-sys-color-primary);
-  box-shadow: 0 0 0 2px rgba(63, 81, 181, 0.18);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--md-sys-color-primary) 28%, transparent);
 }
 
 .faq-icon-picker__icon {
@@ -622,5 +654,4 @@
 .github-status {
   min-height: 2.5rem;
 }
-
 
