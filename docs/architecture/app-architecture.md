@@ -13,13 +13,14 @@ adopted across the repository.
 ## Core principles
 
 - **Android-style layering:** every feature is split into `data/`, `domain/`, and `ui/`.
-- **Routing boundaries:** UI routes live under feature `ui/` and are invoked through the
-  core router to keep navigation centralized.
-- <!-- Change Rationale: The compatibility routing layer is still required for legacy hashes,
-     but we need a clear sunset condition so UI work does not depend on it indefinitely and
-     the router can return to a single-source flow consistent with Material 3 navigation. -->
-  **Compat layer sunset condition:** Remove the legacy routing bridge once analytics show
-  <1% legacy-hash usage for 30 consecutive days, reviewed quarterly.
+- **Routing boundaries:** UI routes live under feature `ui/` as `*Route.js` modules and
+  register directly with `core/ui/router/routes.js`.
+- <!-- Change Rationale: Legacy `src/router`, `src/routes`, and `src/pages` compatibility
+     scaffolding has been fully removed to complete router convergence. Keeping a single
+     registration flow reduces duplication and aligns with Material 3's predictable navigation
+     model where one source of truth controls destinations. -->
+  **Router convergence status:** Sunset complete. The only supported runtime flow is:
+  feature `ui/*Route.js` registration → `core/ui/router` runtime/navigation.
 - **Material 3 first:** navigation, app bars, and layout spacing should follow the Material 3
   system (BeerCSS + Material Web Components are the primary UI tools).
 - **Docs and data:** API JSON lives under `api/` and must remain the single source of truth.
@@ -63,6 +64,8 @@ adopted across the repository.
 2. **Keep domain logic pure:** avoid DOM access in `domain/` modules.
 3. **Use `data/` for IO:** API calls, storage, and external service wiring.
 4. **Update docs:** when editing API JSON or schemas, verify `api/<app>/docs/`.
+5. **Do not add legacy router scaffolding:** avoid `src/router/`, `src/routes/*.route.js`,
+   and `src/pages/<module>/page.*` patterns.
 
 ## Architecture check (required)
 
