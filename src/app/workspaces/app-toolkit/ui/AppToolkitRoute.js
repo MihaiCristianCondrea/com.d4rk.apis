@@ -1,9 +1,24 @@
 import { createWorkspaceActivationController } from '../domain/workspaceActivationController.js';
 import { renderWorkspaceDashboards } from '../../../../core/ui/templates/workspaceDashboard.js';
+import {
+    createCategoryCatalog,
+    createEmptyCategory,
+    normalizeCategoryInput
+} from '../domain/NormalizeAppToolkitCategoryUseCase.js';
+import { isValidPackageName } from '../domain/ValidateAppToolkitExportUseCase.js';
 // Change Rationale: Screenshot carousel navigation now uses the shared action button
 // helper so tertiary buttons remain consistent with the global button-role policy.
 import { createTertiaryActionButton } from '@/core/ui/components/actionButtons.js';
 import { createFileHandleStore } from '../data/services/fileHandleStoreService.js';
+import { wireSortMenuController } from './controllers/sortMenuController.js';
+import { wireFetchPresetsController } from './controllers/fetchPresetsController.js';
+import { wireGithubDialogController } from './controllers/githubDialogController.js';
+import { wireToolbarController } from './controllers/toolbarController.js';
+import { APP_TOOLKIT_ACTION } from './contract/AppToolkitAction.js';
+import { APP_TOOLKIT_EVENT } from './contract/AppToolkitEvent.js';
+import { createAppToolkitUiState } from './contract/state/AppToolkitUiState.js';
+import { wireDashboardUpdatesController } from './controllers/dashboardUpdatesController.js';
+import { fetchAppToolkitJson, requestGithubContents } from '../data/services/appToolkitNetworkService.js';
 
 (function (global) {
     const utils = global.ApiBuilderUtils;
@@ -18,137 +33,21 @@ import { createFileHandleStore } from '../data/services/fileHandleStoreService.j
         release: 'api/app_toolkit/v2/release/en/home/api_android_apps.json'
     };
     const MIN_GITHUB_TOKEN_LENGTH = 20;
-    const GOOGLE_PLAY_CATEGORY_LABELS = [
-        'Art & Design',
-        'Auto & Vehicles',
-        'Beauty',
-        'Books & Reference',
-        'Business',
-        'Comics',
-        'Communication',
-        'Dating',
-        'Education',
-        'Entertainment',
-        'Events',
-        'Finance',
-        'Food & Drink',
-        'Health & Fitness',
-        'House & Home',
-        'Libraries & Demo',
-        'Lifestyle',
-        'Maps & Navigation',
-        'Medical',
-        'Music & Audio',
-        'News & Magazines',
-        'Parenting',
-        'Personalization',
-        'Photography',
-        'Productivity',
-        'Shopping',
-        'Social',
-        'Sports',
-        'Tools',
-        'Travel & Local',
-        'Video Players & Editors',
-        'Weather'
-    ];
-    const GOOGLE_PLAY_CATEGORIES = GOOGLE_PLAY_CATEGORY_LABELS.map((label) => ({
-        id: createCategoryId(label),
-        label
-    }));
-    const CATEGORY_BY_ID = new Map(
-        GOOGLE_PLAY_CATEGORIES.map((category) => [category.id.toLowerCase(), category])
-    );
-    const CATEGORY_BY_LABEL = new Map(
-        GOOGLE_PLAY_CATEGORIES.map((category) => [category.label.toLowerCase(), category])
-    );
-    const PACKAGE_NAME_PATTERN = /^[a-z][a-z0-9_]*(\.[a-z][a-z0-9_]*)+$/i;
+    const { categories: GOOGLE_PLAY_CATEGORIES, categoryById: CATEGORY_BY_ID } =
+        createCategoryCatalog(utils.trimString);
 
-    function createCategoryId(value) {
-        const normalized = utils.trimString(value || '');
-        if (!normalized) {
-            return '';
-        }
-        return normalized
-            .toLowerCase()
-            .replace(/&/g, 'and')
-            .replace(/[^a-z0-9]+/g, '_')
-            .replace(/^_+|_+$/g, '');
-    }
-
-    function createEmptyCategory() {
-        return { label: '', category_id: '' };
-    }
-
-    function formatCategoryLabel(label) {
-        const normalized = utils.trimString(label || '');
-        if (!normalized) {
-            return '';
-        }
-        return normalized
-            .replace(/[_-]+/g, ' ')
-            .split(' ')
-            .filter(Boolean)
-            .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-            .join(' ');
-    }
-
-    function resolveCategoryById(categoryId) {
-        if (!categoryId) {
-            return null;
-        }
-        const trimmed = utils.trimString(categoryId);
-        if (!trimmed) {
-            return null;
-        }
-        const lookup =
-            CATEGORY_BY_ID.get(trimmed.toLowerCase()) ||
-            CATEGORY_BY_ID.get(createCategoryId(trimmed));
-        return lookup ? { label: lookup.label, category_id: lookup.id } : null;
-    }
-
-    function normalizeCategoryInput(input) {
-        if (!input) {
-            return createEmptyCategory();
-        }
-        if (typeof input === 'string') {
-            const trimmed = utils.trimString(input);
-            if (!trimmed) {
-                return createEmptyCategory();
-            }
-            const resolved =
-                resolveCategoryById(trimmed) ||
-                resolveCategoryById(createCategoryId(trimmed));
-            if (resolved) {
-                return resolved;
-            }
-            const fallbackId = createCategoryId(trimmed) || trimmed;
-            return { label: formatCategoryLabel(trimmed), category_id: fallbackId };
-        }
-        if (typeof input === 'object') {
-            const rawLabel =
-                typeof input.label === 'string' ? utils.trimString(input.label) : '';
-            const rawIdCandidate =
-                typeof input.category_id === 'string'
-                    ? utils.trimString(input.category_id)
-                    : typeof input.id === 'string'
-                    ? utils.trimString(input.id)
-                    : '';
-            const resolved = resolveCategoryById(rawIdCandidate) || resolveCategoryById(rawLabel);
-            if (resolved) {
-                return resolved;
-            }
-            const derivedId = createCategoryId(rawIdCandidate || rawLabel);
-            if (!rawLabel && !derivedId) {
-                return createEmptyCategory();
-            }
-            const fallbackLabel = rawLabel || rawIdCandidate || derivedId;
-            return {
-                label: formatCategoryLabel(fallbackLabel),
-                category_id: rawIdCandidate || derivedId || rawLabel
-            };
-        }
-        return createEmptyCategory();
+    /**
+     * Change Rationale: Category normalization now delegates to domain use cases so route code
+     * stays focused on UI composition while domain behavior remains unit-testable.
+     *
+     * @param {unknown} input Raw category input.
+     * @returns {{label: string, category_id: string}} Normalized category.
+     */
+    function normalizeCategoryValue(input) {
+        return normalizeCategoryInput(input, {
+            trimString: utils.trimString,
+            categoryById: CATEGORY_BY_ID
+        });
     }
 
     function initAppToolkitWorkspace() {
@@ -326,6 +225,7 @@ import { createFileHandleStore } from '../data/services/fileHandleStoreService.j
         const state = {
             apps: [createEmptyApp()]
         };
+        const uiState = createAppToolkitUiState();
         let currentSortKey = 'name';
         let sortMenuItems = [];
         const SORT_OPTIONS = {
@@ -609,6 +509,7 @@ import { createFileHandleStore } from '../data/services/fileHandleStoreService.j
                 return;
             }
             currentSortKey = normalizedKey;
+            uiState.sortKey = normalizedKey;
             sortAppsInPlace();
             updateSortUi();
             touchWorkspace();
@@ -742,7 +643,7 @@ import { createFileHandleStore } from '../data/services/fileHandleStoreService.j
                     entry.sanitized?.packageName ||
                     `App ${entry.index + 1}`;
                 const packageName = entry.sanitized?.packageName || '';
-                if (!packageName || !PACKAGE_NAME_PATTERN.test(packageName)) {
+                if (!packageName || !isValidPackageName(packageName, utils.trimString)) {
                     reasons.push(`${label}: package name must follow reverse-domain format.`);
                 }
                 const iconUrl = entry.sanitized?.iconLogo || '';
@@ -842,7 +743,7 @@ import { createFileHandleStore } from '../data/services/fileHandleStoreService.j
             if (name) output.name = name;
             const packageName = trimmed(app.packageName);
             if (packageName) output.packageName = packageName;
-            const category = normalizeCategoryInput(app.category);
+            const category = normalizeCategoryValue(app.category);
             if (category.category_id) {
                 output.category = {
                     label: category.label || category.category_id,
@@ -1178,6 +1079,7 @@ import { createFileHandleStore } from '../data/services/fileHandleStoreService.j
 
         function setGithubStep(index) {
             githubStepIndex = Math.max(0, Math.min(index, GITHUB_STEPS.length - 1));
+            uiState.githubStepIndex = githubStepIndex;
             const stepValue = GITHUB_STEPS[githubStepIndex];
             if (githubStepper) {
                 githubStepper.value = stepValue;
@@ -1638,7 +1540,7 @@ import { createFileHandleStore } from '../data/services/fileHandleStoreService.j
                     packageField.error = false;
                     return;
                 }
-                if (!PACKAGE_NAME_PATTERN.test(trimmed)) {
+                if (!isValidPackageName(trimmed, utils.trimString)) {
                     packageHelper.setState(
                         'error',
                         'Enter a reverse-domain package name like com.vendor.app.'
@@ -1672,7 +1574,7 @@ import { createFileHandleStore } from '../data/services/fileHandleStoreService.j
             placeholderOption.textContent = 'Select category';
             categorySelect.appendChild(placeholderOption);
             const knownCategoryIds = new Set();
-            const normalizedCategory = normalizeCategoryInput(app.category);
+            const normalizedCategory = normalizeCategoryValue(app.category);
             const selectedCategoryId = normalizedCategory.category_id;
             GOOGLE_PLAY_CATEGORIES.forEach(({ id, label }) => {
                 const option = document.createElement('md-select-option');
@@ -1695,7 +1597,7 @@ import { createFileHandleStore } from '../data/services/fileHandleStoreService.j
             categorySelect.addEventListener('change', () => {
                 const value = utils.trimString(categorySelect.value || '');
                 state.apps[index].category = value
-                    ? normalizeCategoryInput(value)
+                    ? normalizeCategoryValue(value)
                     : createEmptyCategory();
                 touchWorkspace();
                 requestPreviewUpdate();
@@ -2765,7 +2667,7 @@ import { createFileHandleStore } from '../data/services/fileHandleStoreService.j
                     const app = {
                         name: utils.trimString(raw.name || ''),
                         packageName: utils.trimString(raw.packageName || ''),
-                        category: normalizeCategoryInput(raw.category),
+                        category: normalizeCategoryValue(raw.category),
                         description: utils.trimString(raw.description || ''),
                         iconLogo: utils.trimString(raw.iconLogo || ''),
                         screenshots: (() => {
@@ -2811,7 +2713,10 @@ import { createFileHandleStore } from '../data/services/fileHandleStoreService.j
         }
 
         function setFetchState(state = 'idle', message) {
+            uiState.fetchState = state;
+
             const resolvedState = FETCH_STATE_COPY[state] ? state : 'idle';
+            builderRoot.dataset.lastEvent = APP_TOOLKIT_EVENT.FETCH_STATE_CHANGED;
             if (fetchFieldset) {
                 fetchFieldset.dataset.state = resolvedState;
                 fetchFieldset.title = message || FETCH_STATE_COPY[resolvedState];
@@ -3370,7 +3275,7 @@ import { createFileHandleStore } from '../data/services/fileHandleStoreService.j
                         putBody.sha = currentSha;
                     }
 
-                    const putResponse = await fetch(contentsUrl, {
+                    const putResponse = await requestGithubContents(contentsUrl, {
                         method: 'PUT',
                         headers,
                         body: JSON.stringify(putBody)
@@ -3415,193 +3320,85 @@ import { createFileHandleStore } from '../data/services/fileHandleStoreService.j
             }
         }
 
-        if (addButton) {
-            addButton.addEventListener('click', () => {
+        wireToolbarController({
+            addButton,
+            resetButton,
+            copyButton,
+            downloadButton,
+            previewArea,
+            onAddApp: () => {
+                builderRoot.dataset.lastAction = APP_TOOLKIT_ACTION.ADD_APP;
                 state.apps.push(createEmptyApp());
                 touchWorkspace();
                 render();
-            });
-        }
-
-        if (resetButton) {
-            resetButton.addEventListener('click', () => {
+            },
+            onResetWorkspace: () => {
+                builderRoot.dataset.lastAction = APP_TOOLKIT_ACTION.RESET_WORKSPACE;
                 resetWorkspace({ message: 'Workspace reset. Start fresh with a new app entry.' });
-            });
-        }
-
-        if (copyButton && previewArea) {
-            copyButton.addEventListener('click', async () => {
-                await utils.copyToClipboard(previewArea.value);
+            },
+            onCopyPreview: async (jsonText) => {
+                await utils.copyToClipboard(jsonText);
                 flashButton(copyButton, 'check', 'Copied');
-            });
-        }
-
-        if (downloadButton && previewArea) {
-            downloadButton.addEventListener('click', () => {
-                utils.downloadJson(DEFAULT_FILENAME, previewArea.value);
+            },
+            onDownloadPreview: (jsonText) => {
+                utils.downloadJson(DEFAULT_FILENAME, jsonText);
                 resetWorkspace({ message: 'Export complete. Workspace cleared.' });
-            });
-        }
-
-        if (presetButtons.length) {
-            presetButtons.forEach((button) => {
-                button.addEventListener('click', () => {
-                    const presetUrl = utils.trimString(
-                        button.dataset.appToolkitPreset || ''
-                    );
-                    if (!presetUrl) {
-                        return;
-                    }
-                    fetchRemoteJson(presetUrl, { fromPreset: true, sourceButton: button });
-                });
-            });
-        }
-
-        if (sortMenu) {
-            if (sortButton && 'anchorElement' in sortMenu) {
-                try {
-                    sortMenu.anchorElement = sortButton;
-                } catch (error) {
-                    console.warn('AppToolkit: Unable to set sort menu anchor.', error);
-                }
             }
-            sortMenuItems = Array.from(sortMenu.querySelectorAll('[data-sort-key]'));
-            sortMenuItems.forEach((item) => {
-                item.addEventListener('click', () => {
-                    handleSortSelection(item.dataset.sortKey || '');
-                });
-            });
-            sortMenu.addEventListener('action', (event) => {
-                const index = typeof event.detail?.index === 'number' ? event.detail.index : -1;
-                const selectedItem = index >= 0 ? sortMenuItems[index] : null;
-                if (selectedItem) {
-                    handleSortSelection(selectedItem.dataset.sortKey || '');
-                }
-            });
-            sortMenu.addEventListener('selected', (event) => {
-                const index = typeof event.detail?.index === 'number' ? event.detail.index : -1;
-                const selectedItem = index >= 0 ? sortMenuItems[index] : null;
-                if (selectedItem) {
-                    handleSortSelection(selectedItem.dataset.sortKey || '');
-                }
-            });
-            sortMenu.addEventListener('closed', () => {
-                if (sortButton) {
-                    sortButton.setAttribute('aria-expanded', 'false');
-                }
-            });
-        }
+        });
 
-        if (sortButton && sortMenu) {
-            sortButton.addEventListener('click', () => {
-                const nextState = !sortMenu.open;
-                sortMenu.open = nextState;
-                sortButton.setAttribute('aria-expanded', nextState ? 'true' : 'false');
-            });
-        }
+        wireFetchPresetsController({
+            presetButtons,
+            trimString: utils.trimString,
+            fetchRemoteJson: (url, options) => {
+                builderRoot.dataset.lastAction = APP_TOOLKIT_ACTION.FETCH_PRESET;
+                fetchRemoteJson(url, options);
+            }
+        });
 
-        if (githubTokenFileButton && githubTokenFileInput) {
-            githubTokenFileButton.addEventListener('click', async (event) => {
-                clearGithubStatus();
-                const forcePicker = shouldForceGithubTokenFilePicker(event);
-                if (!forcePicker) {
-                    if (supportsFileSystemAccess) {
-                        const reused = await tryReuseStoredGithubTokenHandle();
-                        if (reused) {
-                            return;
-                        }
-                    } else {
-                        const reusedFallback = await tryReuseFallbackGithubTokenFile();
-                        if (reusedFallback) {
-                            return;
-                        }
-                    }
-                }
+        wireSortMenuController({
+            sortButton,
+            sortMenu,
+            onSelect: (sortKey) => {
+                builderRoot.dataset.lastAction = APP_TOOLKIT_ACTION.SORT_CHANGED;
+                handleSortSelection(sortKey);
+            },
+            onMenuItemsReady: (items) => {
+                sortMenuItems = items;
+            }
+        });
 
-                if (supportsFileSystemAccess) {
-                    const handled = await pickGithubTokenFileWithFsAccess();
-                    if (handled) {
-                        return;
-                    }
-                }
+        wireGithubDialogController({
+            githubTokenFileButton,
+            githubTokenFileInput,
+            clearGithubStatus,
+            shouldForceGithubTokenFilePicker,
+            supportsFileSystemAccess,
+            tryReuseStoredGithubTokenHandle,
+            tryReuseFallbackGithubTokenFile,
+            pickGithubTokenFileWithFsAccess,
+            handleGithubTokenFileSelection,
+            githubWizardButton,
+            githubDialog,
+            setGithubStep,
+            setLoadingState,
+            githubNextButton,
+            githubBackButton,
+            getGithubStepIndex: () => githubStepIndex,
+            validateGithubToken,
+            githubTokenInput,
+            setGithubStatus,
+            parseRepository,
+            githubRepoInput,
+            updateDiffSheet,
+            publishToGithub
+        });
 
-                githubTokenFileInput.value = '';
-                githubTokenFileInput.click();
-            });
-            githubTokenFileInput.addEventListener('change', async () => {
-                const file = githubTokenFileInput.files && githubTokenFileInput.files[0];
-                if (file) {
-                    clearGithubStatus();
-                    await handleGithubTokenFileSelection(file);
-                }
-            });
-        }
-
-        if (githubWizardButton && githubDialog) {
-            githubWizardButton.addEventListener('click', () => {
-                clearGithubStatus();
-                setGithubStep(0);
-                if (typeof AppDialogs !== 'undefined' && AppDialogs && typeof AppDialogs.rememberTrigger === 'function') {
-                    AppDialogs.rememberTrigger(githubDialog, document.activeElement);
-                }
-                githubDialog.open = true;
-            });
-        }
-
-        if (githubDialog) {
-            ['close', 'cancel'].forEach((eventName) => {
-                githubDialog.addEventListener(eventName, () => {
-                    setGithubStep(0);
-                    clearGithubStatus();
-                    setLoadingState(githubNextButton, false);
-                });
-            });
-        }
-
-        if (githubBackButton) {
-            githubBackButton.addEventListener('click', () => {
-                if (githubStepIndex > 0) {
-                    setGithubStep(githubStepIndex - 1);
-                    clearGithubStatus();
-                }
-            });
-        }
-
-        if (githubNextButton) {
-            githubNextButton.addEventListener('click', async () => {
-                clearGithubStatus();
-                if (githubStepIndex === 0) {
-                    try {
-                        validateGithubToken(githubTokenInput ? githubTokenInput.value : '');
-                        setGithubStep(1);
-                    } catch (error) {
-                        setGithubStatus({ status: 'error', message: error.message });
-                    }
-                    return;
-                }
-                if (githubStepIndex === 1) {
-                    try {
-                        parseRepository(githubRepoInput ? githubRepoInput.value : '');
-                    } catch (error) {
-                        setGithubStatus({ status: 'error', message: error.message });
-                        return;
-                    }
-                    setGithubStep(2);
-                    updateDiffSheet();
-                    return;
-                }
-                await publishToGithub();
-            });
-        }
-
-        if (filterChipSet) {
-            filterChipSet.addEventListener('change', () => {
+        wireDashboardUpdatesController({
+            filterChipSet,
+            onFiltersChanged: () => {
                 syncFiltersFromChipSet();
-            });
-            filterChipSet.addEventListener('click', () => {
-                syncFiltersFromChipSet();
-            });
-        }
+            }
+        });
 
         builderRoot.dataset.initialized = 'true';
         render();
