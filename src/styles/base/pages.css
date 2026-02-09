@@ -330,12 +330,23 @@
   gap: 0.65rem;
 }
 
+.workspace-insight-card--stacked {
+  display: grid;
+  gap: 0.65rem;
+}
+
 .workspace-insight-card__header {
   display: flex;
   align-items: center;
   gap: 0.65rem;
   color: var(--app-secondary-text-color);
   font-size: 0.9rem;
+}
+
+.workspace-insight-card__header--inline {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
 }
 
 .workspace-insight-card__icon {

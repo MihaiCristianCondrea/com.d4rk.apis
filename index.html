@@ -23,20 +23,7 @@
   <link rel="icon" href="./mipmap/favicon.ico" sizes="any">
   <link rel="apple-touch-icon" href="./mipmap/apple-touch-icon.png">
   <link rel="manifest" href="manifest.json">
-  <script src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.6.2/dist/dotlottie-wc.js" type="module" integrity="sha384-OZP/kBQ09BUzBtJHrUq28uANiSKcAs/R1SZMBoo3IIRdqeuHYaWtly7m+dmPVQcn" crossorigin="anonymous"></script>
-  <script type="module" src="https://unpkg.com/@material/web@2.3.0/all.js?module" integrity="sha384-aOmcMDy9kBho0cZT2yrFWshXxdPUL1w999tY2RHdpdco3L6wJ8WAVJe8yf5F6TzL" crossorigin="anonymous"></script>
-  <script type="module" src="https://unpkg.com/@material/web@2.3.0/dialog/dialog.js?module" integrity="sha384-I8fokP3t9XLUdUurD4pOLLPRVsI1UKwHwp5m/50aw5GOvCfKm0WEm46XRK/xzw+8" crossorigin="anonymous"></script>
-  <!-- Change Rationale: Segmented buttons are provided through the Material Web labs bundle and were not registered by all.js, leaving workspace toggles unstyled. Explicit imports ensure the FAQ and Repo Mapper segmented controls render with native Material 3 styling. -->
-  <script type="module" src="https://unpkg.com/@material/web@2.3.0/labs/segmentedbuttonset/segmented-button-set.js?module"></script>
-  <script type="module" src="https://unpkg.com/@material/web@2.3.0/labs/segmentedbutton/outlined-segmented-button.js?module"></script>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&amp;display=swap">
-  <!-- Change Rationale: The document head previously imported Google Sans Regular and Poppins, which conflicted with the new Google Sans Flex typography and limited variable weight support. Importing Google Sans Flex and Google Sans Code directly from Google Fonts aligns the entire experience with Material 3’s variable type guidance and keeps the font load on first-party CDNs. -->
-  <style id="google-sans-flex-import">
-    @import url('https://fonts.googleapis.com/css2?family=Google+Sans+Code:ital,wght@0,300..800;1,300..800&family=Google+Sans+Flex:opsz,wght@6..144,1..1000&display=swap');
-  </style>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer">
+  <!-- Change Rationale: Runtime UI libraries and fonts now load from npm packages in bootstrap/main to keep builds deterministic and avoid remote registrations in index.html. -->
   <!-- Change Rationale: The app shell now owns module bootstrapping so feature screens remain markup-only and load through the router. -->
   <link rel="modulepreload" href="/src/main.js">
 </head>

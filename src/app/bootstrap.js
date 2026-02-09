@@ -4,6 +4,18 @@
 // restores the intended off-canvas behavior while keeping the Material 3
 // palette aligned with the fixed Android-green brand tokens.
 import 'beercss';
+// Change Rationale: Runtime icon and font dependencies previously loaded from external CDNs in index.html,
+// which made builds non-deterministic and introduced remote availability risk. Importing dotLottie,
+// Material Symbols, Font Awesome, and Google Sans families from npm keeps runtime assets versioned
+// with the app bundle while preserving Material 3 visual consistency.
+import '@lottiefiles/dotlottie-wc';
+import 'material-symbols/outlined.css';
+import '@fortawesome/fontawesome-free/css/all.min.css';
+import '@fontsource/google-sans/latin-400.css';
+import '@fontsource/google-sans/latin-500.css';
+import '@fontsource/google-sans/latin-700.css';
+import '@fontsource/google-sans-code/latin-400.css';
+import '@fontsource/google-sans-code/latin-500.css';
 // Change Rationale: Theme mode policy is now fixed to the Android-green brand palette
 // defined in src/styles/variables.css, so runtime dynamic color generation is disabled.
 import '../styles/tailwind.css';

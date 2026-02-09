@@ -76,7 +76,7 @@
         ></div>
       </div>
       <div class="workspace-secondary-grid">
-        <md-filled-card class="workspace-plan">
+        <article class="workspace-plan">
           <div class="card-body">
             <div class="plan-header">
               <h2>Today's pipeline</h2><span class="plan-updated">Updated as you edit</span>
@@ -104,8 +104,8 @@
               </li>
             </ul>
           </div>
-        </md-filled-card>
-        <md-filled-card class="workspace-release">
+        </article>
+        <article class="workspace-release">
           <div class="card-body">
             <div class="release-header">
               <h2>Workspace status</h2>
@@ -131,17 +131,17 @@
               </li>
             </ul>
           </div>
-        </md-filled-card>
+        </article>
       </div>
     </section>
     <section class="faq-nav" aria-label="FAQ workspace navigation">
-      <md-filled-card class="faq-nav-card">
+      <article class="faq-nav-card">
         <div class="faq-nav__header">
           <div class="faq-nav__header-actions">
-            <md-text-button id="faqStartOverButton" has-icon>
-              <md-icon slot="icon">restart_alt</md-icon>
+            <button id="faqStartOverButton" has-icon>
+              <span slot="icon">restart_alt</span>
               <span>Start over</span>
-            </md-text-button>
+            </button>
             <p class="faq-segmented__helper">Switch workflows without leaving the FAQ route.</p>
           </div>
           <!-- Change Rationale: The FAQ panel switcher now uses the BeerCSS tabbed navigation
@@ -171,7 +171,7 @@
             </a>
           </nav>
         </div>
-      </md-filled-card>
+      </article>
     </section>
     <section class="faq-panel page padding" data-faq-panel="catalog" id="faqPanelCatalog">
       <div class="card-body">
@@ -200,14 +200,14 @@
               aria-label="Catalog presets"
             >
               <span class="builder-remote-presets-label">Build channel</span>
-              <md-text-button data-faq-catalog-preset="debug" class="builder-remote-inline-button" has-icon>
-                <md-icon slot="icon">download</md-icon>
+              <button data-faq-catalog-preset="debug" class="builder-remote-inline-button" has-icon>
+                <span slot="icon">download</span>
                 <span>Debug · EN</span>
-              </md-text-button>
-              <md-text-button data-faq-catalog-preset="release" class="builder-remote-inline-button" has-icon>
-                <md-icon slot="icon">download</md-icon>
+              </button>
+              <button data-faq-catalog-preset="release" class="builder-remote-inline-button" has-icon>
+                <span slot="icon">download</span>
                 <span>Release · EN</span>
-              </md-text-button>
+              </button>
             </div>
           </div>
           <p id="faqCatalogStatus" class="builder-remote-status" role="status">Choose debug or release to load the FAQ catalog.</p>
@@ -222,14 +222,14 @@
               <p class="catalog-helper">Define every product and the FAQ sources it pulls together.</p>
             </div>
             <div class="catalog-actions__buttons">
-              <md-filled-tonal-button id="faqCatalogAddProduct">
-                <md-icon slot="icon">add_circle</md-icon>
+              <button id="faqCatalogAddProduct">
+                <span slot="icon">add_circle</span>
                 <span>Add product</span>
-              </md-filled-tonal-button>
-              <md-outlined-button id="faqCatalogReset">
-                <md-icon slot="icon">restart_alt</md-icon>
+              </button>
+              <button id="faqCatalogReset">
+                <span slot="icon">restart_alt</span>
                 <span>Reset catalog</span>
-              </md-outlined-button>
+              </button>
             </div>
           </div>
           <div id="faqCatalogProducts" class="catalog-products" aria-live="polite"></div>
@@ -242,14 +242,14 @@
           <textarea id="faqCatalogPreview" class="preview-textarea" readonly spellcheck="false" aria-label="Catalog JSON preview"></textarea>
           <div class="preview-validation" id="faqCatalogValidation" role="status" aria-live="polite"></div>
           <div class="preview-actions">
-            <md-filled-tonal-button id="faqCatalogCopyButton">
-              <md-icon slot="icon">content_copy</md-icon>
+            <button id="faqCatalogCopyButton">
+              <span slot="icon">content_copy</span>
               <span>Copy JSON</span>
-            </md-filled-tonal-button>
-            <md-outlined-button id="faqCatalogDownloadButton">
-              <md-icon slot="icon">download</md-icon>
+            </button>
+            <button id="faqCatalogDownloadButton">
+              <span slot="icon">download</span>
               <span>Download</span>
-            </md-outlined-button>
+            </button>
           </div>
         </aside>
       </section>
@@ -265,10 +265,10 @@
           </div>
           <div class="builder-remote-picker" aria-label="Product selection">
             <div class="builder-remote-picker-select" id="faqCatalogSelect"></div>
-            <md-filled-tonal-button id="faqCatalogFetchButton">
-              <md-icon slot="icon">fact_check</md-icon>
+            <button id="faqCatalogFetchButton">
+              <span slot="icon">fact_check</span>
               <span id="faqCatalogButtonLabel">Fetch selected product</span>
-            </md-filled-tonal-button>
+            </button>
           </div>
           <p id="faqFetchStatus" class="builder-remote-status" role="status">Ready to fetch.</p>
         </div>
@@ -276,14 +276,14 @@
       <section class="api-builder" id="faqBuilder" data-builder-type="faq">
         <div class="builder-toolbar">
           <div class="builder-toolbar-actions">
-            <md-filled-tonal-button id="faqAddEntry">
-              <md-icon slot="icon">add</md-icon>
+            <button id="faqAddEntry">
+              <span slot="icon">add</span>
               <span>Add FAQ</span>
-            </md-filled-tonal-button>
-            <md-outlined-button id="faqImportButton">
-              <md-icon slot="icon">upload</md-icon>
+            </button>
+            <button id="faqImportButton">
+              <span slot="icon">upload</span>
               <span>Import JSON</span>
-            </md-outlined-button>
+            </button>
             <input type="file" id="faqImportInput" accept="application/json" hidden="">
           </div>
           <div class="builder-toolbar-meta">
@@ -304,14 +304,14 @@
                 <textarea id="faqPreview" class="preview-textarea" readonly spellcheck="false" aria-label="FAQ JSON preview"></textarea>
                 <div class="preview-validation" id="faqValidation" role="status" aria-live="polite"></div>
                 <div class="preview-actions">
-                  <md-filled-tonal-button id="faqCopyButton">
-                    <md-icon slot="icon">content_copy</md-icon>
+                  <button id="faqCopyButton">
+                    <span slot="icon">content_copy</span>
                     <span>Copy JSON</span>
-                  </md-filled-tonal-button>
-                  <md-outlined-button id="faqDownloadButton">
-                    <md-icon slot="icon">download</md-icon>
+                  </button>
+                  <button id="faqDownloadButton">
+                    <span slot="icon">download</span>
                     <span>Download</span>
-                  </md-outlined-button>
+                  </button>
                 </div>
               </section>
               <section class="preview-card preview-card--live" aria-label="Live view">

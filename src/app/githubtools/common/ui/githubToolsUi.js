@@ -766,16 +766,14 @@ function setupFavoriteButton(buttonId, inputId) {
   if (!button || !input) return;
 
   /**
-   * Change Rationale: Material icon buttons swap between default and `selected`
-   * slots based on the `selected` state. Explicitly syncing the property,
-   * attribute, and `aria-pressed` flag keeps the outlined icon visible on load
-   * while letting the filled icon render immediately when favorited.
+   * Change Rationale: Favorite toggles are now BeerCSS-styled native buttons.
+   * Syncing only ARIA + a lightweight `selected` attribute keeps styling and
+   * assistive state aligned without relying on Material component internals.
    *
    * @param {boolean} isSelected Whether the favorite control is active.
    * @returns {void}
    */
   const syncSelectionState = (isSelected) => {
-    button.selected = isSelected;
     button.toggleAttribute('selected', isSelected);
     button.setAttribute('aria-pressed', String(isSelected));
   };
@@ -902,18 +900,18 @@ function wireTokenControls({ toggleButtonId, wrapperId, fieldId, visibilityToggl
 }
 
 /**
- * Applies GitHub tools-specific styling to Material text fields within a container.
+ * Applies GitHub tools-specific styling hooks to native input fields.
  *
- * This is a cosmetic helper to attach the `.gh-md-field` class to all
- * `<md-outlined-text-field>` elements under a given DOM subtree.
+ * This helper attaches the `.gh-input` class to tool form text/password/url inputs
+ * so BeerCSS-aligned styling remains consistent across feature views.
  *
  * @param {HTMLElement | Document | null} container Root element to search under.
  * @returns {void}
  */
 function hydrateInputs(container) {
   if (!container) return;
-  container.querySelectorAll('md-outlined-text-field').forEach((field) => {
-    field.classList.add('gh-md-field');
+  container.querySelectorAll('input[type="text"], input[type="url"], input[type="password"]').forEach((field) => {
+    field.classList.add('gh-input');
   });
 }
 

@@ -4,16 +4,20 @@
 
 /*
  * Change Rationale:
- * - The old policy blocked any `md-*` usage, which directly conflicted with the project's
- *   Material 3-first architecture.
- * - Governance now validates the intended quality signals: approved Material components,
- *   semantic status regions, focusable control labeling, and predictable screen scaffolding.
- * - This keeps the checks aligned with UX outcomes instead of enforcing blanket prohibitions.
+ * - Feature screens now follow a strict BeerCSS-only interactive component contract.
+ * - Governance should fail when new `md-*` tags appear in feature-owned screens.
+ * - This keeps component usage predictable and avoids mixed UI systems in feature HTML.
  */
 
 const fs = require('fs');
 const path = require('path');
 
+/**
+ * Recursively collects screen html files.
+ *
+ * @param {string} rootDir Root folder.
+ * @returns {string[]} Absolute file paths.
+ */
 function collectScreenHtmlFiles(rootDir) {
   const entries = fs.readdirSync(rootDir, { withFileTypes: true });
   const files = [];
@@ -30,6 +34,13 @@ function collectScreenHtmlFiles(rootDir) {
   return files;
 }
 
+/**
+ * Converts an absolute path to repo-relative style.
+ *
+ * @param {string} absolutePath Absolute path.
+ * @param {string} repoRoot Repo root path.
+ * @returns {string} Repo-relative path using `/` separators.
+ */
 function toRepoRelativePath(absolutePath, repoRoot) {
   return path.relative(repoRoot, absolutePath).split(path.sep).join('/');
 }
@@ -60,53 +71,28 @@ function collectFullShellTemplates(rootDir) {
 }
 
 describe('UI governance', () => {
-
   test('runtime shell stays canonical to index.html only', () => {
     const repoRoot = path.join(__dirname, '..', '..');
-    // Change Rationale:
-    // - The repo previously carried both `index.html` and `src/app/shell/app-shell.html` full shells.
-    // - Dual runtime shells caused drift risk for navigation mount structure and bootstrap metadata.
-    // - Enforcing a single canonical shell keeps routing ownership and Material 3 scaffolding consistent.
     const fullShellTemplates = collectFullShellTemplates(repoRoot).map((templatePath) =>
       toRepoRelativePath(templatePath, repoRoot)
     );
 
     expect(fullShellTemplates).toEqual(['index.html']);
   });
-  test('Screen.html files follow Material 3 governance signals', () => {
+
+  test('feature Screen.html files enforce BeerCSS-only interactive tags', () => {
     const repoRoot = path.join(__dirname, '..', '..');
     const screensRoot = path.join(repoRoot, 'app', 'src', 'main', 'js', 'app');
     const screenFiles = collectScreenHtmlFiles(screensRoot);
-
-    const allowedMaterialTags = new Set([
-      'md-dialog',
-      'md-filled-button',
-      'md-filled-card',
-      'md-filled-tonal-button',
-      'md-icon',
-      'md-icon-button',
-      'md-menu',
-      'md-menu-item',
-      'md-outlined-button',
-      'md-outlined-select',
-      'md-outlined-text-field',
-      'md-select-option',
-      'md-side-sheet',
-      'md-step',
-      'md-steppers',
-      'md-text-button'
-    ]);
-
     const violations = [];
 
     screenFiles.forEach((filePath) => {
       const relativePath = toRepoRelativePath(filePath, repoRoot);
       const contents = fs.readFileSync(filePath, 'utf8');
-      const mdTags = (contents.match(/<md-[a-z0-9-]+/gi) || []).map((tag) => tag.replace('<', '').toLowerCase());
-      const unknownTags = Array.from(new Set(mdTags.filter((tag) => !allowedMaterialTags.has(tag))));
+      const mdTags = Array.from(new Set((contents.match(/<md-[a-z0-9-]+/gi) || []).map((tag) => tag.replace('<', '').toLowerCase())));
 
-      if (unknownTags.length) {
-        violations.push(`${relativePath} -> unsupported Material tags: ${unknownTags.join(', ')}`);
+      if (mdTags.length) {
+        violations.push(`${relativePath} -> prohibited md-* tags found: ${mdTags.join(', ')}`);
       }
 
       if (/class\s*=\s*['"][^'"]*mdc-/i.test(contents) || /<paper-[a-z0-9-]+/i.test(contents)) {
@@ -116,23 +102,6 @@ describe('UI governance', () => {
       const hasPageSection = /class\s*=\s*['"][^'"]*page-section/i.test(contents);
       if (!hasPageSection) {
         violations.push(`${relativePath} -> missing page-section wrapper for predictable screen structure`);
-      }
-
-      const filledCount = (contents.match(/<md-filled-button\b/gi) || []).length;
-      const secondaryCount = (contents.match(/<md-(outlined|text|filled-tonal)-button\b/gi) || []).length;
-      if (filledCount > 0 && secondaryCount === 0) {
-        violations.push(`${relativePath} -> missing secondary/tertiary button variants (button hierarchy)`);
-      }
-
-      const interactiveWithoutLabel = [];
-      const interactiveMatches = contents.match(/<md-icon-button[^>]*>/gi) || [];
-      interactiveMatches.forEach((tag) => {
-        const hasAriaLabel = /aria-label\s*=\s*['"][^'"]+['"]/i.test(tag);
-        const hasId = /\sid\s*=\s*['"][^'"]+['"]/i.test(tag);
-        if (!hasAriaLabel && !hasId) interactiveWithoutLabel.push(tag.split(/\s+/)[0]);
-      });
-      if (interactiveWithoutLabel.length) {
-        violations.push(`${relativePath} -> icon buttons missing id/aria-label`);
       }
 
       if (relativePath.includes('/workspaces/')) {

@@ -115,7 +115,7 @@
     - Static checklist of schema and workflow rules.
     - JS does not mutate this; it's a source of truth for required fields.
   -->
-  <md-filled-card class="guidance-card">
+  <article class="guidance-card">
     <div class="card-body">
       <h2>Before you start</h2>
       <ul>
@@ -140,7 +140,7 @@
         </li>
       </ul>
     </div>
-  </md-filled-card>
+  </article>
 
   <!--
     Core builder section:
@@ -177,30 +177,30 @@
           <span class="builder-remote-presets-label">Quick links</span>
 
           <!-- Debug preset: loads the debug catalog for EN -->
-          <md-text-button
+          <button
                   class="builder-remote-inline-button"
                   has-icon
                   data-app-toolkit-preset="./api/app_toolkit/v2/debug/en/home/api_android_apps.json"
                   id="appToolkitDebugPreset"
           >
-            <md-icon slot="icon">
+            <span slot="icon">
               <span class="material-symbols-outlined">download</span>
-            </md-icon>
+            </span>
             Debug · EN
-          </md-text-button>
+          </button>
 
           <!-- Release preset: loads the release catalog for EN -->
-          <md-text-button
+          <button
                   class="builder-remote-inline-button"
                   has-icon
                   data-app-toolkit-preset="./api/app_toolkit/v2/release/en/home/api_android_apps.json"
                   id="appToolkitReleasePreset"
           >
-            <md-icon slot="icon">
+            <span slot="icon">
               <span class="material-symbols-outlined">download</span>
-            </md-icon>
+            </span>
             Release · EN
-          </md-text-button>
+          </button>
         </div>
       </div>
     </div>
@@ -219,52 +219,52 @@
       <div class="builder-toolbar">
         <div class="builder-toolbar-actions">
           <!-- Add a new empty app entry -->
-          <md-filled-button id="appToolkitAddApp" has-icon>
-            <md-icon slot="icon">
+          <button id="appToolkitAddApp" has-icon>
+            <span slot="icon">
               <span class="material-symbols-outlined">add</span>
-            </md-icon>
+            </span>
             Add app
-          </md-filled-button>
+          </button>
 
           <!-- Sort menu trigger; JS syncs label + menu selection -->
-          <md-outlined-button
+          <button
                   id="appToolkitSortButton"
                   has-icon
                   trailing-icon
                   aria-haspopup="menu"
                   aria-expanded="false"
           >
-            <md-icon slot="icon">
+            <span slot="icon">
               <span class="material-symbols-outlined">sort</span>
-            </md-icon>
+            </span>
             <span class="builder-sort-label">
               Sort · <span id="appToolkitSortLabel">App name (A–Z)</span>
             </span>
-            <md-icon slot="trailing-icon">
+            <span slot="trailing-icon">
               <span class="material-symbols-outlined">arrow_drop_down</span>
-            </md-icon>
-          </md-outlined-button>
+            </span>
+          </button>
 
           <!-- Sort options; JS applies 'data-sort-key' to the app list -->
-          <md-menu id="appToolkitSortMenu" anchor="appToolkitSortButton">
-            <md-menu-item type="radio" data-sort-key="name" selected>
+          <div id="appToolkitSortMenu" anchor="appToolkitSortButton">
+            <button type="radio" data-sort-key="name" selected>
               <div slot="headline">App name (A–Z)</div>
-            </md-menu-item>
-            <md-menu-item type="radio" data-sort-key="category">
+            </button>
+            <button type="radio" data-sort-key="category">
               <div slot="headline">Category (A–Z)</div>
-            </md-menu-item>
-            <md-menu-item type="radio" data-sort-key="screenshots">
+            </button>
+            <button type="radio" data-sort-key="screenshots">
               <div slot="headline">Screenshot count (high to low)</div>
-            </md-menu-item>
-          </md-menu>
+            </button>
+          </div>
 
           <!-- Clear all entries and reset builder state -->
-          <md-text-button id="appToolkitResetButton" has-icon>
-            <md-icon slot="icon">
+          <button id="appToolkitResetButton" has-icon>
+            <span slot="icon">
               <span class="material-symbols-outlined">refresh</span>
-            </md-icon>
+            </span>
             Clear workspace
-          </md-text-button>
+          </button>
         </div>
 
         <!-- Live textual summary of workspace health -->
@@ -281,7 +281,7 @@
       - Collapsible card that holds GitHub-specific guidance and controls.
       - JS wires the toggle and opens the dialog when "Open publish wizard" is used.
     -->
-    <md-filled-card class="builder-remote-card" id="appToolkitGithubCard" data-collapsible-card data-collapsed="true">
+    <article class="builder-remote-card" id="appToolkitGithubCard" data-collapsible-card data-collapsed="true">
       <div class="card-body">
         <div class="builder-remote-header builder-remote-header--split">
           <div class="builder-remote-title">
@@ -290,15 +290,15 @@
           </div>
           <div class="builder-remote-actions">
             <!-- Launches the stepper dialog (GitHub wizard) -->
-            <md-filled-button id="appToolkitGithubWizardButton" class="builder-github-launch-button" has-icon>
-              <md-icon slot="icon">
+            <button id="appToolkitGithubWizardButton" class="builder-github-launch-button" has-icon>
+              <span slot="icon">
                 <span class="material-symbols-outlined">rocket_launch</span>
-              </md-icon>
+              </span>
               Open publish wizard
-            </md-filled-button>
+            </button>
 
             <!-- Collapsible meta controls for GitHub publishing -->
-            <md-icon-button
+            <button
                     id="appToolkitGithubToggle"
                     class="builder-remote-toggle"
                     data-collapsible-toggle
@@ -307,12 +307,12 @@
                     type="button"
                     aria-label="Toggle Publish to GitHub controls"
             >
-              <md-icon>
+              <span>
                 <span class="material-symbols-outlined" data-collapsible-indicator aria-hidden="true">
                   expand_more
                 </span>
-              </md-icon>
-            </md-icon-button>
+              </span>
+            </button>
           </div>
         </div>
 
@@ -355,7 +355,7 @@
           </div>
         </div>
       </div>
-    </md-filled-card>
+    </article>
 
     <!--
       Builder layout grid:
@@ -388,24 +388,24 @@
         ></div>
         <div class="preview-actions">
           <!-- Copy current JSON to clipboard -->
-          <md-filled-tonal-button id="appToolkitCopyButton" has-icon>
-            <md-icon slot="icon">
+          <button id="appToolkitCopyButton" has-icon>
+            <span slot="icon">
               <span class="material-symbols-outlined">content_copy</span>
-            </md-icon>
+            </span>
             Copy JSON
-          </md-filled-tonal-button>
+          </button>
 
           <!-- Download current JSON to a file -->
-          <md-outlined-button
+          <button
                   id="appToolkitDownloadButton"
                   has-icon
                   trailing-icon
           >
             Download
-            <md-icon slot="icon">
+            <span slot="icon">
               <span class="material-symbols-outlined">download</span>
-            </md-icon>
-          </md-outlined-button>
+            </span>
+          </button>
         </div>
       </aside>
 
@@ -414,7 +414,7 @@
         - Hidden by default, opened when user asks to compare against the last exported payload.
         - JS populates #appToolkitDiffContent with a diff view.
       -->
-      <md-side-sheet
+      <aside
               id="appToolkitDiffSheet"
               class="builder-diff-sheet"
               aria-label="Workspace diff"
@@ -431,7 +431,7 @@
                   aria-live="polite"
           ></div>
         </div>
-      </md-side-sheet>
+      </aside>
     </div>
     </div>
   </section>
@@ -450,21 +450,21 @@
       - API calls to GitHub
       - Status messaging in #appToolkitGithubStatus
   -->
-  <md-dialog id="appToolkitGithubDialog" class="app-dialog github-dialog">
+  <dialog id="appToolkitGithubDialog" class="app-dialog github-dialog">
     <div slot="headline">Publish to GitHub</div>
     <div slot="content" class="github-dialog-content">
-      <md-steppers id="appToolkitGithubStepper" value="authenticate">
+      <div id="appToolkitGithubStepper" value="authenticate">
         <!-- Step 1: authenticate with a personal access token -->
-        <md-step value="authenticate" label="Authenticate">
+        <section value="authenticate" label="Authenticate">
           <div class="github-step" data-step="authenticate">
-            <md-outlined-text-field
+            <input
                     id="appToolkitGithubToken"
                     label="Personal access token"
                     type="password"
                     autocomplete="off"
                     spellcheck="false"
                     supporting-text="Tokens require Contents: Read &amp; write access."
-            ></md-outlined-text-field>
+             />
             <div class="github-step-actions">
               <input
                       type="file"
@@ -472,60 +472,60 @@
                       accept="text/plain,.txt,.token"
                       hidden
               />
-              <md-outlined-button id="appToolkitGithubTokenFileButton" has-icon>
-                <md-icon slot="icon">
+              <button id="appToolkitGithubTokenFileButton" has-icon>
+                <span slot="icon">
                   <span class="material-symbols-outlined">description</span>
-                </md-icon>
+                </span>
                 Load token from file
-              </md-outlined-button>
+              </button>
             </div>
           </div>
-        </md-step>
+        </section>
 
         <!-- Step 2: choose repo, branch, commit message, and target channel -->
-        <md-step value="target" label="Target">
+        <section value="target" label="Target">
           <div class="github-step" data-step="target">
-            <md-outlined-text-field
+            <input
                     id="appToolkitGithubRepo"
                     label="Repository (owner/name)"
                     value="MihaiCristianCondrea/com.d4rk.apis"
                     supporting-text="Use owner/name format."
                     spellcheck="false"
-            ></md-outlined-text-field>
-            <md-outlined-text-field
+             />
+            <input
                     id="appToolkitGithubBranch"
                     label="Branch"
                     value="main"
                     spellcheck="false"
-            ></md-outlined-text-field>
-            <md-outlined-text-field
+             />
+            <input
                     id="appToolkitGithubMessage"
                     label="Commit message"
                     value="chore(app-toolkit): update catalog"
                     spellcheck="false"
-            ></md-outlined-text-field>
-            <md-outlined-select
+             />
+            <select
                     id="appToolkitGithubChannel"
                     label="Target channel"
                     value="debug"
             >
-              <md-select-option value="debug">Debug</md-select-option>
-              <md-select-option value="release">Release</md-select-option>
-              <md-select-option value="both">Debug &amp; Release</md-select-option>
-            </md-outlined-select>
+              <option value="debug">Debug</option>
+              <option value="release">Release</option>
+              <option value="both">Debug &amp; Release</option>
+            </select>
           </div>
-        </md-step>
+        </section>
 
         <!-- Step 3: review diff and publish -->
-        <md-step value="review" label="Review">
+        <section value="review" label="Review">
           <div class="github-step" data-step="review">
             <p class="github-review-copy">
               Confirm the diff in the side sheet and publish when ready.
             </p>
             <div class="github-status" id="appToolkitGithubStatus" role="status" aria-live="polite"></div>
           </div>
-        </md-step>
-      </md-steppers>
+        </section>
+      </div>
     </div>
 
     <!-- Dialog action buttons (Back / Next handled by JS) -->
@@ -533,9 +533,9 @@
       <!-- Change Rationale: Dialog action roles now follow the primary/secondary
            rule set so cancel/back use outlined styling and the confirm action
            remains filled for emphasis. -->
-      <md-outlined-button dialog-action="close">Cancel</md-outlined-button>
-      <md-outlined-button id="appToolkitGithubBack">Back</md-outlined-button>
-      <md-filled-button id="appToolkitGithubNext" data-dialog-initial-focus>Next</md-filled-button>
+      <button dialog-action="close">Cancel</button>
+      <button id="appToolkitGithubBack">Back</button>
+      <button id="appToolkitGithubNext" data-dialog-initial-focus>Next</button>
     </div>
-  </md-dialog>
+  </dialog>
 </div>

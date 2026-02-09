@@ -10,21 +10,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const mockUtils = {
-  getDynamicElement: jest.fn(),
-  rafThrottle: (fn) => fn,
-};
-jest.mock('../../app/src/main/js/core/ui/utils/domUtils.js', () => {
-  const actual = jest.requireActual('../../app/src/main/js/core/ui/utils/domUtils.js');
-  return {
-    __esModule: true,
-    ...actual,
-    getDynamicElement: mockUtils.getDynamicElement,
-    rafThrottle: mockUtils.rafThrottle,
-  };
-});
-
-const { initNavigationDrawer } = require('../../app/src/main/js/core/data/services/navigationDrawerService.js');
+const { initNavigationDrawer } = require('../../app/src/main/js/core/ui/components/navigation/navigationDrawerBindings.js');
 
 /**
  * Builds the DOM skeleton required for exercising navigation drawer interactions.
@@ -86,8 +72,6 @@ function createDrawerMarkup() {
 describe('navigationDrawerService', () => {
   beforeEach(() => {
     document.body.className = '';
-    mockUtils.getDynamicElement.mockReset();
-    mockUtils.getDynamicElement.mockImplementation((id) => document.getElementById(id));
     createDrawerMarkup();
     initNavigationDrawer();
   });

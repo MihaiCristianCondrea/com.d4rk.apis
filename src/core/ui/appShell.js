@@ -12,7 +12,7 @@ import {
     rafThrottle,
 } from './utils/domUtils.js';
 import { PROFILE_AVATAR_FALLBACK_SRC } from '../domain/constants.js';
-import { initThemeControls } from '@/core/data/services/themeService.js';
+import { initThemeControlsFromDom } from '@/core/ui/components/navigation/themeControlsOrchestrator.js';
 import { initRouter, loadPageContent, normalizePageId } from './router/index.js';
 import RouterRoutes from './router/routes.js';
 import { registerGlobalUtilities, registerCompatibilityGlobals } from './globals.js';
@@ -46,7 +46,7 @@ registerGlobalUtilities();
 registerCompatibilityGlobals({
     getDynamicElement,
     initRouter,
-    initTheme: initThemeControls,
+    initTheme: initThemeControlsFromDom,
     // Change Rationale: The canonical navigation component now owns drawer wiring,
     // so legacy initNavigationDrawer calls proxy through the shared initializer.
     initNavigationDrawer: (...args) => {
@@ -74,7 +74,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Initialize Modules ---
     updateCopyrightYear();
-    initThemeControls();
+    initThemeControlsFromDom();
     // Change Rationale: Initialize the canonical navigation component so rail + drawer
     // markup and routing are centralized under core/ui instead of screen HTML.
     navigationController = initAppNavigation();

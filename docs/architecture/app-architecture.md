@@ -25,9 +25,10 @@ adopted across the repository.
      and Material Web tags for core controls. Locking a single policy reduces visual drift,
      keeps control behavior predictable, and preserves Material 3 consistency through one
      component language. -->
-  **Material 3 first (single UI policy):** BeerCSS is the primary component system for
-  **buttons, app bars, drawers, lists, and inputs**. Avoid mixing in non-BeerCSS component
-  patterns for those control families inside feature screens.
+  **Material 3 first (strict UI contract):** BeerCSS is the only interactive component family for
+  **buttons, text fields, selects, drawers, cards, and top bars** inside feature screens and
+  feature views. `md-*` tags are prohibited in feature-owned HTML (`src/app/**/ui/*Screen.html`
+  and `src/app/**/ui/views/*.html`) to prevent mixed control systems.
 - **Docs and data:** API JSON lives under `api/` and must remain the single source of truth.
 - **Theme policy:** fixed Android-green brand palette from `src/styles/variables.css`; no runtime dynamic color generation.
 
@@ -65,23 +66,30 @@ adopted across the repository.
 - **Data modules:** descriptive camelCase (`homeContentDataSource.js`, `images.js`).
 
 
-### UI governance checks (Material 3 quality signals)
+### UI governance checks (BeerCSS enforcement)
 
-<!-- Change Rationale: The governance test now verifies intended Material 3 usage instead of
-     blocking all `md-*` tags, so architecture docs must mirror the same pass/fail criteria. -->
+<!-- Change Rationale: Governance now treats md-* feature controls as a regression to enforce
+     a strict BeerCSS-first contract and eliminate mixed component families in feature UI. -->
 
 `tests/unit/uiGovernance.test.js` enforces these screen-level rules:
 
-- Use only approved Material Web components already standardized in the app shell (`md-filled-button`,
-  `md-outlined-button`, `md-text-button`, `md-filled-tonal-button`, cards, menus, dialog/sheet,
-  steppers, form fields, and icons).
-- Do not introduce legacy patterns (`mdc-*` CSS hooks or `paper-*` elements).
-- Keep predictable screen scaffolding by preserving a `page-section` wrapper per `*Screen.html`.
-- Preserve action hierarchy: screens using filled buttons must also expose secondary/tertiary
-  variants (outlined/text/tonal) where appropriate.
-- Ensure focusable controls are targetable (`id` or `aria-label`) for accessibility and testing.
+- Feature screens (`*Screen.html`) must not contain any `md-*` tags.
+- Legacy patterns remain blocked (`mdc-*` CSS hooks or `paper-*` elements).
+- Screen scaffolding keeps a `page-section` wrapper for predictable composition.
 - Workspace screens must expose at least one `role="status"` region for live validation/progress copy.
+- New feature markup should use semantic feature classes instead of mixed utility-class chains.
 
+## Runtime dependency policy
+
+<!-- Change Rationale: Runtime `index.html` previously loaded UI component registries and font/icon assets
+     from third-party CDNs, which bypassed lockfile governance and introduced deployment drift.
+     Moving these dependencies into npm imports keeps runtime deterministic and auditable. -->
+
+- `index.html` must not register external UI libraries with `<script src="https://...">` tags.
+- UI libraries (BeerCSS, dotLottie web component, icon packs, and font packages) must load through
+  package imports in `src/main.js` / `src/app/bootstrap.js`.
+- Runtime guard: `scripts/verify-runtime-dependencies.js` fails builds/tests when disallowed
+  external UI library script tags are added to `index.html`.
 
 ## Shell + bootstrap flow
 
