@@ -1,5 +1,6 @@
 import { wireSortMenuController } from '../../app/src/main/js/app/workspaces/app-toolkit/ui/controllers/sortMenuController.js';
 import { wireFetchPresetsController } from '../../app/src/main/js/app/workspaces/app-toolkit/ui/controllers/fetchPresetsController.js';
+import { wireDashboardUpdatesController } from '../../app/src/main/js/app/workspaces/app-toolkit/ui/controllers/dashboardUpdatesController.js';
 
 /**
  * Change Rationale:
@@ -41,5 +42,18 @@ describe('App Toolkit controllers integration', () => {
     expect(calls).toHaveLength(1);
     expect(calls[0].url).toBe('./api/app_toolkit/v2/debug/en/home/api_android_apps.json');
     expect(calls[0].options.fromPreset).toBe(true);
+  });
+
+  test('dashboard updates controller reacts to filter interactions', () => {
+    document.body.innerHTML = '<div id="chips"></div>';
+    const chips = document.getElementById('chips');
+    const calls = [];
+
+    wireDashboardUpdatesController({ filterChipSet: chips, onFiltersChanged: () => calls.push('changed') });
+
+    chips.dispatchEvent(new Event('change'));
+    chips.dispatchEvent(new Event('click'));
+
+    expect(calls).toEqual(['changed', 'changed']);
   });
 });
