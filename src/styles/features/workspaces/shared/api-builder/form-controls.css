@@ -1,0 +1,7 @@
+/*
+ * @file App toolkit builder form-control styles.
+ *
+ * Change Rationale: The API builder stylesheet is being decomposed by component area.
+ * This file is reserved for text fields, chips, and input affordances as the split
+ * progresses so form rules stay isolated from preview and dialog surfaces.
+ */
