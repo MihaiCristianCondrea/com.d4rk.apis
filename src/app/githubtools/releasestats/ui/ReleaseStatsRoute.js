@@ -5,7 +5,7 @@
 // Change Rationale: Release Stats routes now register with composed Screen + View markup so the
 // GitHub tools suite shares reusable UI fragments without duplicating layout HTML.
 import { RouterRoutes } from '@/core/ui/router/routes.js';
-import { initReleaseStats } from '@/app/githubtools/common/domain/githubTools.js';
+import { initReleaseStats } from '@/app/githubtools/common/ui/githubToolsUi.js';
 import releaseStatsScreenTemplate from './ReleaseStatsScreen.html?raw';
 import releaseStatsFormView from './views/ReleaseStatsFormView.html?raw';
 import toolHeaderViewTemplate from '@/app/githubtools/common/ui/views/GitHubToolHeaderView.html?raw';
