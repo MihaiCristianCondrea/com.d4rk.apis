@@ -26,6 +26,22 @@
   <!-- Change Rationale: Runtime UI libraries and fonts now load from npm packages in bootstrap/main to keep builds deterministic and avoid remote registrations in index.html. -->
   <!-- Change Rationale: The app shell now owns module bootstrapping so feature screens remain markup-only and load through the router. -->
   <link rel="modulepreload" href="/src/main.js">
+  <!-- Change Rationale: Apply persisted theme mode before module hydration so the shell avoids
+       first-paint flashes between light/dark when the app bootstraps. -->
+  <script>
+    (() => {
+      try {
+        const key = 'theme';
+        const stored = localStorage.getItem(key) || 'auto';
+        const mode = ['light', 'dark', 'auto'].includes(stored) ? stored : 'auto';
+        const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const shouldDark = mode === 'dark' || (mode === 'auto' && prefersDark);
+        document.documentElement.classList.toggle('dark', shouldDark);
+      } catch (_error) {
+        // Ignore prepaint theme errors and allow runtime theme service to recover state.
+      }
+    })();
+  </script>
 </head>
 <!-- Change Rationale: The body now relies on the global Material surface token
      instead of a Tailwind background override so the page inherits BeerCSS's

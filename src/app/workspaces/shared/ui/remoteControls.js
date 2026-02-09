@@ -3,7 +3,7 @@
 import builderRemoteTemplateSource from './views/BuilderRemoteView.html?raw';
 
 // Change Rationale: Remote fetch and publish controls were duplicated across workspaces, leading to mismatched labels,
-// missing IDs, and preset drift. Centralizing hydration keeps the Material layout consistent, wires existing listeners via
+// missing IDs, and preset drift. Centralizing hydration keeps the BeerCSS layout consistent, wires existing listeners via
 // data attributes, and lets each workspace declare presets without repeating markup.
 
 /**
@@ -168,8 +168,8 @@ function hydratePreset(fragment, config) {
  */
 function setSelectOptions(fragment, homeLabel, lessonLabel) {
   const select = fragment.querySelector('[data-slot-target="fetch-target"]');
-  const homeOption = fragment.querySelector('md-select-option[value="home"] div[slot="headline"]');
-  const lessonOption = fragment.querySelector('md-select-option[value="lesson"] div[slot="headline"]');
+  const homeOption = fragment.querySelector('[data-slot-target="fetch-target"] option[value="home"]');
+  const lessonOption = fragment.querySelector('[data-slot-target="fetch-target"] option[value="lesson"]');
   if (select && select.setAttribute) {
     select.setAttribute('aria-label', 'Fetch target');
   }
@@ -209,11 +209,11 @@ function applyTargetToggle(fragment, slot, label) {
   if (!toggle) {
     return;
   }
-  const textNode = Array.from(toggle.childNodes).find((node) => node.nodeType === Node.TEXT_NODE);
-  if (textNode) {
-    textNode.textContent = ` ${label}`;
+  const toggleLabel = toggle.querySelector('.builder-remote-toggle-label');
+  if (toggleLabel) {
+    toggleLabel.textContent = label;
   } else {
-    toggle.append(document.createTextNode(label));
+    toggle.textContent = label;
   }
   toggle.dataset.remoteTarget = slot.startsWith('home') ? 'home' : 'lesson';
 }

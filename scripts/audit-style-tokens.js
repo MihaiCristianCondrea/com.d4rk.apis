@@ -26,6 +26,9 @@ const DISALLOWED_HEX_FALLBACKS = [
   '#49454f',
 ];
 
+const INTERACTIVE_SELECTOR_PATTERN = /(button|input|select|textarea|a\b|dialog|overlay|nav-link|toggle|trigger|menu|chip|field|card|toolbar|floating|screenshot)/i;
+const INTERACTIVE_COLOR_DECLARATION_PATTERN = /\b(color|background(?:-color)?|border(?:-color)?|box-shadow|outline(?:-color)?|fill|stroke)\s*:\s*[^;]*(#[0-9a-fA-F]{3,8}|rgba?\([^)]*\)|hsla?\([^)]*\))/i;
+
 /** @param {string} filePath */
 function toDisplayPath(filePath) {
   return filePath.split(path.sep).join('/');
@@ -76,17 +79,57 @@ function findDisallowedFallbacks(content) {
   return matches;
 }
 
+/**
+ * @param {string} content
+ * @returns {Array<{line:number,text:string}>}
+ */
+function findInteractiveHardcodedColors(content) {
+  const findings = [];
+  const lines = content.split(/\r?\n/);
+  let selectorBuffer = '';
+
+  lines.forEach((line, index) => {
+    const trimmed = line.trim();
+
+    if (!trimmed || trimmed.startsWith('/*')) {
+      return;
+    }
+
+    if (trimmed.includes('{')) {
+      selectorBuffer = trimmed.split('{')[0].trim() || selectorBuffer;
+    }
+
+    if (
+      INTERACTIVE_SELECTOR_PATTERN.test(selectorBuffer)
+      && INTERACTIVE_COLOR_DECLARATION_PATTERN.test(trimmed)
+    ) {
+      findings.push({ line: index + 1, text: trimmed });
+    }
+
+    if (trimmed.includes('}')) {
+      selectorBuffer = '';
+    }
+  });
+
+  return findings;
+}
+
 const errors = [];
 STYLE_ROOTS.flatMap(collectCssFiles).forEach((filePath) => {
   const content = fs.readFileSync(filePath, 'utf8');
-  const findings = findDisallowedFallbacks(content);
-  findings.forEach((finding) => {
+  const fallbackFindings = findDisallowedFallbacks(content);
+  fallbackFindings.forEach((finding) => {
+    errors.push(`${toDisplayPath(path.relative(ROOT, filePath))}:${finding.line} -> ${finding.text}`);
+  });
+
+  const hardcodedInteractiveColors = findInteractiveHardcodedColors(content);
+  hardcodedInteractiveColors.forEach((finding) => {
     errors.push(`${toDisplayPath(path.relative(ROOT, filePath))}:${finding.line} -> ${finding.text}`);
   });
 });
 
 if (errors.length) {
-  console.error('Style token audit failed. Replace disallowed hex fallbacks with approved tokens:\n');
+  console.error('Style token audit failed. Replace hardcoded style colors with approved semantic tokens:\n');
   errors.forEach((error) => console.error(`- ${error}`));
   process.exit(1);
 }

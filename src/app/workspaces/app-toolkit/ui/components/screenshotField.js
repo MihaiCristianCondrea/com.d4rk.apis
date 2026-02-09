@@ -20,7 +20,7 @@ const EMPTY_THUMBNAIL_SRC = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAA
  */
 export class AppToolkitScreenshotField extends HTMLElement {
   /**
-   * Custom element that renders a Material-inspired screenshot input with preview metadata.
+   * Custom element that renders a BeerCSS-style screenshot input with preview metadata.
    *
    * The component exposes `value`, `position`, `appName`, and `meta` properties for builder wiring
    * and dispatches custom events (`screenshot-change`, `screenshot-remove`, `screenshot-meta`)
@@ -183,8 +183,8 @@ export class AppToolkitScreenshotField extends HTMLElement {
   _updateLabel() {
     if (this._input) {
       const label = `Screenshot ${this._position}`;
-      this._input.label = label;
-      this._input.setAttribute('label', label);
+      this._input.setAttribute('aria-label', label);
+      this._input.setAttribute('title', label);
     }
     if (this._image) {
       const base = `Screenshot ${this._position}`;

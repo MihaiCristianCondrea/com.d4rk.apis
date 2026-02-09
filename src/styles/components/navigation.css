@@ -118,6 +118,13 @@
 }
 
 
+/* Change Rationale: BeerCSS already styles list rows; this only reinforces that selected
+ * navigation rows keep the rounded container shape across rail and drawer surfaces. */
+.app-navigation li.nav-item.active {
+  border-radius: 999px;
+}
+
+
 /* Change Rationale: Navigation icon actions now use one shared BeerCSS contract across app bar and drawer controls. */
 .app-navigation .app-nav-icon-button,
 .app-top-app-bar .app-nav-icon-button,

@@ -20,7 +20,7 @@
 }
 
 .app-ui-inline-button--danger:hover {
-  background-color: rgba(176, 0, 32, 0.1);
+  background-color: color-mix(in srgb, var(--md-sys-color-error) 10%, transparent);
 }
 
 .app-ui-inline-icon {

@@ -118,9 +118,9 @@ describe('themeService', () => {
     expect(buttons.dark.classList.contains('selected')).toBe(true);
     expect(buttons.light.classList.contains('selected')).toBe(false);
     expect(buttons.auto.classList.contains('selected')).toBe(false);
-    expect(buttons.dark.getAttribute('aria-pressed')).toBe('');
-    expect(buttons.light.getAttribute('aria-pressed')).toBe(null);
-    expect(buttons.auto.getAttribute('aria-pressed')).toBe(null);
+    expect(buttons.dark.getAttribute('aria-pressed')).toBe('true');
+    expect(buttons.light.getAttribute('aria-pressed')).toBe('false');
+    expect(buttons.auto.getAttribute('aria-pressed')).toBe('false');
     expect(matchMediaMock.mediaQueryList.addEventListener).toHaveBeenCalledWith(
       'change',
       expect.any(Function)
@@ -134,8 +134,8 @@ describe('themeService', () => {
     expect(buttons.dark.classList.contains('selected')).toBe(false);
     expect(localStorageMock.setItem).toHaveBeenLastCalledWith('theme', 'light');
     expect(localStorageMock.peek('theme')).toBe('light');
-    expect(buttons.light.getAttribute('aria-pressed')).toBe('');
-    expect(buttons.dark.getAttribute('aria-pressed')).toBe(null);
+    expect(buttons.light.getAttribute('aria-pressed')).toBe('true');
+    expect(buttons.dark.getAttribute('aria-pressed')).toBe('false');
   });
 
   test('auto theme tracks media preference changes and keeps storage in sync', () => {

@@ -12,9 +12,8 @@ import normalizePageId from './identifiers.js';
  * - Clearing any previous "active" styling and ARIA state from each item.
  * - Comparing each item's `href` (normalized) to the current page.
  * - Marking the matching item as active using:
- *   - `.active` CSS class
- *   - `aria-current="page"`
- *   - `aria-selected="true"`
+ *   - `.active` + `.primary-container` on the parent list row (`li[data-nav-item]`)
+ *   - `.active`, `aria-current="page"`, and `aria-selected="true"` on the link
  * - Ensuring parent nested lists are expanded when the active item is in a nested group
  *   by programmatically clicking the associated toggle button.
  *
@@ -46,7 +45,9 @@ export function updateActiveNavLink(currentPageId) {
   const normalizedCurrentPage = normalizePageId(currentPageId);
 
   document.querySelectorAll('[data-nav-link][href]').forEach((item) => {
-    item.classList.remove('active', 'primary-container');
+    const listItem = item.closest('[data-nav-item]');
+    listItem?.classList.remove('active', 'primary-container');
+    item.classList.remove('active');
     item.removeAttribute('aria-current');
     item.removeAttribute('aria-selected');
 
@@ -60,7 +61,8 @@ export function updateActiveNavLink(currentPageId) {
       return;
     }
 
-    item.classList.add('active', 'primary-container');
+    listItem?.classList.add('active', 'primary-container');
+    item.classList.add('active');
     item.setAttribute('aria-current', 'page');
     item.setAttribute('aria-selected', 'true');
   });

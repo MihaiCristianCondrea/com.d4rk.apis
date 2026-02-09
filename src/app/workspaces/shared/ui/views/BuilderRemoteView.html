@@ -8,72 +8,59 @@
         <p data-slot-target="fetch-helper">Pull the latest home or lesson payload before editing entries.</p>
       </div>
       <div class="builder-remote-actions" aria-label="Fetch target">
-        <md-filled-tonal-button class="builder-remote-toggle" data-slot-target="home-target" type="button">
-          <md-icon slot="icon">
-            <span class="material-symbols-outlined">home</span>
-          </md-icon>
-          Home
-        </md-filled-tonal-button>
-        <md-outlined-button class="builder-remote-toggle" data-slot-target="lesson-target" type="button">
-          <md-icon slot="icon">
-            <span class="material-symbols-outlined">menu_book</span>
-          </md-icon>
-          Lesson
-        </md-outlined-button>
+        <button class="builder-remote-toggle border" data-slot-target="home-target" data-remote-target="home" type="button">
+          <span class="material-symbols-outlined" aria-hidden="true">home</span>
+          <span class="builder-remote-toggle-label">Home</span>
+        </button>
+        <button class="builder-remote-toggle border" data-slot-target="lesson-target" data-remote-target="lesson" type="button">
+          <span class="material-symbols-outlined" aria-hidden="true">menu_book</span>
+          <span class="builder-remote-toggle-label">Lesson</span>
+        </button>
       </div>
     </div>
     <div class="builder-remote-inline-action builder-remote-controls builder-remote-controls--stacked">
       <div class="builder-remote-controls" data-slot-target="fetch-row">
-        <md-outlined-select data-slot-target="fetch-target">
-          <md-select-option value="home" selected>
-            <div slot="headline">Home</div>
-          </md-select-option>
-          <md-select-option value="lesson">
-            <div slot="headline">Lesson</div>
-          </md-select-option>
-        </md-outlined-select>
-        <md-outlined-text-field
-          data-slot-target="fetch-input"
-          label="Fetch from URL"
-          type="url"
-          autocomplete="url"
-          supporting-text="Paste a JSON URL or choose a preset."
-        ></md-outlined-text-field>
-        <md-filled-tonal-button class="builder-remote-inline-button" data-slot-target="fetch-button" has-icon type="button">
-          <md-icon slot="icon">
-            <span class="material-symbols-outlined">cloud_download</span>
-          </md-icon>
+        <label class="field border small-round builder-remote-picker-select">
+          <select data-slot-target="fetch-target" aria-label="Fetch target">
+            <option value="home" selected>Home</option>
+            <option value="lesson">Lesson</option>
+          </select>
+          <span class="builder-remote-picker-caret material-symbols-outlined" aria-hidden="true">expand_more</span>
+        </label>
+        <label class="field border small-round builder-remote-fetch-input-shell">
+          <input
+            data-slot-target="fetch-input"
+            type="url"
+            autocomplete="url"
+            placeholder="Fetch from URL"
+            aria-label="Fetch from URL"
+          />
+        </label>
+        <button class="builder-remote-inline-button builder-button tonal" data-slot-target="fetch-button" type="button">
+          <span class="material-symbols-outlined" aria-hidden="true">cloud_download</span>
           Fetch JSON
-        </md-filled-tonal-button>
+        </button>
       </div>
       <p class="builder-remote-feedback" data-slot-target="fetch-status" role="status" aria-live="polite"></p>
     </div>
     <div class="builder-remote-presets builder-remote-presets--buttons" aria-label="Quick fetch shortcuts">
       <span class="builder-remote-presets-label" data-slot-target="preset-label">Quick links</span>
-      <md-text-button class="builder-remote-inline-button" data-slot-target="home-debug" has-icon type="button">
-        <md-icon slot="icon">
-          <span class="material-symbols-outlined">download</span>
-        </md-icon>
+      <button class="builder-remote-inline-button builder-button transparent" data-slot-target="home-debug" type="button">
+        <span class="material-symbols-outlined" aria-hidden="true">download</span>
         <span class="builder-remote-preset-label" data-slot-target="home-debug-label">Home · Debug</span>
-      </md-text-button>
-      <md-text-button class="builder-remote-inline-button" data-slot-target="home-release" has-icon type="button">
-        <md-icon slot="icon">
-          <span class="material-symbols-outlined">download</span>
-        </md-icon>
+      </button>
+      <button class="builder-remote-inline-button builder-button transparent" data-slot-target="home-release" type="button">
+        <span class="material-symbols-outlined" aria-hidden="true">download</span>
         <span class="builder-remote-preset-label" data-slot-target="home-release-label">Home · Release</span>
-      </md-text-button>
-      <md-text-button class="builder-remote-inline-button" data-slot-target="lesson-debug" has-icon type="button">
-        <md-icon slot="icon">
-          <span class="material-symbols-outlined">download</span>
-        </md-icon>
+      </button>
+      <button class="builder-remote-inline-button builder-button transparent" data-slot-target="lesson-debug" type="button">
+        <span class="material-symbols-outlined" aria-hidden="true">download</span>
         <span class="builder-remote-preset-label" data-slot-target="lesson-debug-label">Lesson · Debug</span>
-      </md-text-button>
-      <md-text-button class="builder-remote-inline-button" data-slot-target="lesson-release" has-icon type="button">
-        <md-icon slot="icon">
-          <span class="material-symbols-outlined">download</span>
-        </md-icon>
+      </button>
+      <button class="builder-remote-inline-button builder-button transparent" data-slot-target="lesson-release" type="button">
+        <span class="material-symbols-outlined" aria-hidden="true">download</span>
         <span class="builder-remote-preset-label" data-slot-target="lesson-release-label">Lesson · Release</span>
-      </md-text-button>
+      </button>
     </div>
   </div>
   <div class="card-body builder-remote-card" data-remote-section="publish">
@@ -91,12 +78,10 @@
       </p>
     </div>
     <div class="builder-github-launch">
-      <md-filled-button class="builder-github-launch-button" data-slot-target="github-launch" has-icon type="button">
-        <md-icon slot="icon">
-          <span class="material-symbols-outlined">rocket_launch</span>
-        </md-icon>
+      <button class="builder-github-launch-button builder-button" data-slot-target="github-launch" type="button">
+        <span class="material-symbols-outlined" aria-hidden="true">rocket_launch</span>
         Open publish wizard
-      </md-filled-button>
+      </button>
       <p class="builder-github-helper" data-slot-target="github-launch-helper">
         Validate the previews first, then follow the guided steps to publish.
       </p>

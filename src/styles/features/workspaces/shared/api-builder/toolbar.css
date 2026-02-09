@@ -34,7 +34,7 @@
   padding: 1.1rem 1.25rem;
   border-radius: 24px;
   background: var(--md-sys-color-surface-container-high);
-  box-shadow: 0 14px 32px rgba(15, 20, 25, 0.08);
+  box-shadow: 0 14px 32px color-mix(in srgb, var(--md-sys-color-shadow) 8%, transparent);
 }
 
 .builder-toolbar--filters {
@@ -44,7 +44,7 @@
   background: var(--md-sys-color-surface-container);
   border-radius: 18px;
   padding: 1rem 1.25rem;
-  box-shadow: 0 12px 24px rgba(15, 20, 25, 0.08);
+  box-shadow: 0 12px 24px color-mix(in srgb, var(--md-sys-color-shadow) 8%, transparent);
   flex-wrap: wrap;
 }
 
@@ -169,7 +169,7 @@
   padding: 1rem 1.25rem;
   border-radius: 18px;
   background: var(--md-sys-color-surface-container-high);
-  box-shadow: 0 12px 28px rgba(15, 20, 25, 0.1);
+  box-shadow: 0 12px 28px color-mix(in srgb, var(--md-sys-color-shadow) 10%, transparent);
   gap: 1rem;
   align-items: center;
 }
@@ -202,7 +202,7 @@
 .workspace-dashboard .workspace-insight-card {
   background: var(--md-sys-color-surface-container);
   border: 1px solid color-mix(in srgb, var(--md-sys-color-outline) 12%, transparent);
-  box-shadow: 0 12px 28px rgba(15, 20, 25, 0.08);
+  box-shadow: 0 12px 28px color-mix(in srgb, var(--md-sys-color-shadow) 8%, transparent);
 }
 
 .workspace-dashboard :where(.workspace-plan, .workspace-release) .card-body {
@@ -330,8 +330,8 @@
   min-width: min(280px, 100%);
 }
 
-.builder-remote-picker md-filled-tonal-button {
-  --md-filled-tonal-button-container-height: 46px;
+.builder-remote-picker .builder-button {
+  min-height: 46px;
 }
 
 .builder-github-launch-button {
@@ -342,43 +342,24 @@
   color: var(--app-text-color);
 }
 
-/* Change Rationale: Icon-only publish controls were misaligned within their circular surface. We size and center the glyph consistently across states to avoid the vertical drift shown in the previous toolbar. */
-md-icon-button.builder-remote-toggle {
-  --md-icon-button-container-shape: var(--app-button-shape);
-  --md-icon-button-container-height: 44px;
-  --md-icon-button-container-width: 44px;
-  --md-icon-button-icon-size: 24px;
-  --md-focus-ring-shape: var(--app-button-shape);
-  box-shadow: 0 10px 24px rgba(15, 20, 25, 0.12);
-  align-self: center;
+/* Change Rationale: Remote target toggles now render as native buttons in the shared BeerCSS partial,
+ * so toolbar sizing and icon alignment move from md-* parts to class-based styling. */
+.builder-remote-toggle {
+  min-height: 44px;
+  border-radius: var(--app-button-shape);
+  border: 1px solid color-mix(in srgb, var(--md-sys-color-outline) 65%, transparent);
   display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  box-shadow: 0 10px 24px color-mix(in srgb, var(--md-sys-color-shadow) 12%, transparent);
+  padding: 0.55rem 0.9rem;
 }
 
-md-icon-button.builder-remote-toggle md-icon,
-md-icon-button.builder-remote-toggle .material-symbols-outlined {
+.builder-remote-toggle .material-symbols-outlined {
   display: grid;
   place-items: center;
   line-height: 1;
-}
-
-md-outlined-button.builder-remote-toggle {
-  --md-outlined-button-container-shape: var(--app-button-shape);
-  --md-outlined-button-container-height: 44px;
-  --md-outlined-button-outline-color: color-mix(
-    in srgb,
-    var(--md-sys-color-outline) 65%,
-    transparent
-  );
-  /* Change Rationale: Remote toggle buttons previously forced a bold (700) label that clashed with
-   * the newly normalized button typography. Returning to normal weight (400) keeps toggles cohesive
-   * with the rest of the controls while relying on outline and icon styling for affordance, matching
-   * Material 3's guidance to use color and shape over heavy typography.
-   */
-  --md-outlined-button-label-text-weight: 400;
-  --md-outlined-button-icon-size: 22px;
-  --md-focus-ring-shape: var(--app-button-shape);
-  gap: 0.35rem;
-  box-shadow: 0 10px 24px rgba(15, 20, 25, 0.12);
+  font-size: 1.35rem;
 }
 
 .builder-remote-controls {
@@ -386,7 +367,7 @@ md-outlined-button.builder-remote-toggle {
   gap: 0.75rem;
 }
 
-.builder-remote-controls md-filled-tonal-button::part(button) {
+.builder-remote-controls .builder-button {
   height: 100%;
   min-height: 100%;
 }
@@ -420,10 +401,9 @@ md-outlined-button.builder-remote-toggle {
   gap: 0.75rem;
 }
 
-.builder-remote-presets--buttons md-outlined-button {
-  --md-outlined-button-container-shape: var(--app-button-shape);
-  --md-outlined-button-label-text-size: 0.95rem;
-  --md-outlined-button-icon-size: 20px;
+.builder-remote-presets--buttons .builder-button {
+  border-radius: var(--app-button-shape);
+  font-size: 0.95rem;
 }
 
 .builder-remote-presets--pulse {
@@ -440,15 +420,6 @@ md-outlined-button.builder-remote-toggle {
   align-items: stretch;
   min-width: 0;
   --control-row-height: 56px;
-  --md-outlined-text-field-container-height: var(--control-row-height);
-  --md-filled-text-field-container-height: var(--control-row-height);
-  --md-outlined-text-field-container-shape: var(--app-field-shape);
-  --md-outlined-select-container-height: var(--control-row-height);
-  --md-outlined-select-container-shape: var(--app-field-shape);
-  --md-outlined-field-container-shape: var(--app-field-shape);
-  --md-filled-select-container-height: var(--control-row-height);
-  --md-filled-select-container-shape: var(--app-field-shape);
-  --md-filled-field-container-shape: var(--app-field-shape);
 }
 
 .builder-remote-inline-action::after {
@@ -493,22 +464,17 @@ md-outlined-button.builder-remote-toggle {
   }
 }
 
-.builder-remote-inline-action md-outlined-text-field { 
+.builder-remote-inline-action [data-slot-target="fetch-input"] { 
   width: 100%;
 }
 
-.builder-remote-inline-button::part(button) { 
+.builder-remote-inline-button { 
   min-block-size: var(--control-row-height);
   padding-inline: 1.25rem;
   border-radius: 16px;
-  border-width: 1px;
-  border-color: var(--app-border-color);
+  border: 1px solid var(--app-border-color);
   color: var(--md-sys-color-primary);
   font-weight: 600;
-}
-
-.builder-remote-inline-button::part(focus-ring) { 
-  border-radius: 16px;
 }
 
 .builder-remote-feedback {
@@ -641,7 +607,7 @@ md-outlined-button.builder-remote-toggle {
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  box-shadow: 0 12px 32px rgba(15, 20, 25, 0.12);
+  box-shadow: 0 12px 32px color-mix(in srgb, var(--md-sys-color-shadow) 12%, transparent);
   position: sticky;
   top: 1rem;
   max-height: calc(100vh - 6rem);
@@ -658,7 +624,7 @@ md-outlined-button.builder-remote-toggle {
   align-self: stretch;
   max-height: calc(100vh - 6rem);
   overflow: hidden;
-  box-shadow: 0 12px 32px rgba(15, 20, 25, 0.12);
+  box-shadow: 0 12px 32px color-mix(in srgb, var(--md-sys-color-shadow) 12%, transparent);
   width: min(100%, var(--md-side-sheet-container-width));
   max-width: 100%;
   box-sizing: border-box;
@@ -690,7 +656,7 @@ md-outlined-button.builder-remote-toggle {
     gap: 0.5rem;
   }
 
-  .builder-remote-inline-button::part(button) {
+  .builder-remote-inline-button {
     justify-content: center;
   }
 }
@@ -844,7 +810,7 @@ md-outlined-button.builder-remote-toggle {
   border-radius: 18px;
   object-fit: contain;
   background: var(--md-sys-color-surface-container-highest);
-  box-shadow: 0 14px 36px rgba(15, 20, 25, 0.16);
+  box-shadow: 0 14px 36px color-mix(in srgb, var(--md-sys-color-shadow) 16%, transparent);
 }
 
 .screenshot-dialog-caption {
@@ -1061,8 +1027,7 @@ md-outlined-button.builder-remote-toggle {
   margin-top: 0.35rem;
 }
 
-.builder-screenshots md-text-button,
-.builder-screenshots md-outlined-button {
+.builder-screenshots .builder-button {
   align-self: start;
 }
 
@@ -1079,8 +1044,6 @@ md-outlined-button.builder-remote-toggle {
   margin-inline: auto;
   padding-inline: var(--screenshot-scroll-padding, var(--app-screenshot-padding));
   --screenshot-action-control-height: 40px;
-  --md-outlined-text-field-container-height: var(--screenshot-action-control-height);
-  --md-outlined-text-field-container-shape: var(--app-field-shape);
   --control-row-height: var(--screenshot-action-control-height);
 }
 
@@ -1091,7 +1054,7 @@ md-outlined-button.builder-remote-toggle {
   width: min(520px, 100%);
 }
 
-.screenshot-actions md-outlined-text-field {
+.screenshot-actions__input {
   flex: 1 1 280px;
   min-width: min(260px, 100%);
   max-width: min(520px, 100%);
