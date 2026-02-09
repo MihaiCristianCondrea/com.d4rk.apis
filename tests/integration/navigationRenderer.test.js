@@ -109,21 +109,27 @@ describe('navigationRenderer', () => {
 
     document.body.innerHTML = `
       <nav>
-        <a href="#home" data-nav-link class="nav-link">Home</a>
-        <a href="#repo-mapper" data-nav-link class="nav-link">Repo Mapper</a>
+        <ul class="list">
+          <li class="wave round nav-item" data-nav-item><a href="#home" data-nav-link class="nav-link">Home</a></li>
+          <li class="wave round nav-item" data-nav-item><a href="#repo-mapper" data-nav-link class="nav-link">Repo Mapper</a></li>
+        </ul>
       </nav>
       <dialog>
-        <a href="#repo-mapper" data-nav-link class="nav-link">Repo Mapper</a>
+        <ul class="list">
+          <li class="wave round nav-item" data-nav-item><a href="#repo-mapper" data-nav-link class="nav-link">Repo Mapper</a></li>
+        </ul>
       </dialog>
     `;
     updateActiveNavLink('repo-mapper');
 
-    const activeLinks = Array.from(document.querySelectorAll('[data-nav-link].active'));
-    expect(activeLinks).toHaveLength(2);
-    activeLinks.forEach((link) => {
-      expect(link.getAttribute('aria-current')).toBe('page');
-      expect(link.classList.contains('primary-container')).toBe(true);
+    const activeRows = Array.from(document.querySelectorAll('[data-nav-item].active'));
+    expect(activeRows).toHaveLength(2);
+    activeRows.forEach((row) => {
+      expect(row.classList.contains('primary-container')).toBe(true);
     });
+
+    const activeLinks = Array.from(document.querySelectorAll('[data-nav-link][aria-current="page"]'));
+    expect(activeLinks).toHaveLength(2);
   });
 
 

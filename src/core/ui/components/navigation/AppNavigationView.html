@@ -6,18 +6,20 @@
     with Material 3 guidance while letting the router own active state updates.
 -->
 <div class="app-navigation" data-app-navigation>
-  <div id="drawerOverlay" class="overlay s" aria-hidden="true"></div>
+  <div id="drawerOverlay" class="overlay s" aria-hidden="true" data-ui="#navDrawer"></div>
   <!-- Change Rationale: The navigation rail now defers to a data-driven renderer so rail
        and drawer sections stay in sync and extend cleanly without duplicating markup. -->
+  <!-- Change Rationale: Drawer surfaces now expose BeerCSS trigger attributes (`data-ui`)
+       so framework hooks and controller wiring stay aligned on one canonical target. -->
   <nav id="navRail" class="m l left app-navigation-rail surface-container" aria-label="Primary navigation" data-drawer-inert-target>
     <div class="navigation-section-stack" data-navigation-sections="rail"></div>
   </nav>
-  <dialog id="navDrawer" class="navigation-drawer left s" aria-label="Main navigation">
+  <dialog id="navDrawer" class="left s navigation-drawer" aria-label="Main navigation" data-ui="#navDrawer">
     <header class="drawer-header padding">
       <!-- Change Rationale: Navigation and app-bar actions now share one BeerCSS contract (`button transparent circle app-nav-icon-button`) so icon controls render and test consistently. -->
       <nav>
         <h6 class="type-title-small max">Menu</h6>
-        <button id="closeDrawerButton" class="button transparent circle app-nav-icon-button" aria-label="Close navigation" type="button">
+        <button id="closeDrawerButton" class="button transparent circle app-nav-icon-button" aria-label="Close navigation" aria-controls="navDrawer" data-ui="#navDrawer" type="button">
           <i aria-hidden="true">close</i>
         </button>
       </nav>

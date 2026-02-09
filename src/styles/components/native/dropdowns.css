@@ -28,7 +28,7 @@
 .faq-category-trigger:hover,
 .faq-category-trigger:focus {
   border-color: var(--md-sys-color-primary);
-  box-shadow: 0 0 0 1px rgba(63, 81, 181, 0.18);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--md-sys-color-primary) 18%, transparent);
   outline: none;
 }
 
@@ -56,7 +56,7 @@
   background-color: var(--md-sys-color-surface);
   border: 1px solid var(--app-border-color);
   border-radius: 14px;
-  box-shadow: 0 18px 40px rgba(15, 20, 25, 0.14);
+  box-shadow: 0 18px 40px color-mix(in srgb, var(--md-sys-color-shadow) 14%, transparent);
   padding: 0.75rem;
   display: none;
   z-index: 30;

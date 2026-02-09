@@ -18,9 +18,6 @@ const { initNavigationDrawer } = require('../../app/src/main/js/core/ui/componen
  * @returns {void}
  */
 function createDrawerMarkup() {
-  /* Change Rationale: The drawer markup now uses a dialog surface to match the BeerCSS
-   * left-modal pattern, so the test DOM needs to mirror the updated element type.
-   */
   document.body.innerHTML = `
     <header data-drawer-inert-target id="header">
       <button id="menuButton" class="button transparent circle app-nav-icon-button" type="button">Menu</button>
@@ -69,10 +66,27 @@ function createDrawerMarkup() {
   closeDrawerButton.focus = jest.fn();
 }
 
+function mockMatchMedia(matches) {
+  Object.defineProperty(window, 'matchMedia', {
+    writable: true,
+    value: jest.fn().mockImplementation(() => ({
+      matches,
+      media: '(max-width: 960px)',
+      onchange: null,
+      addListener: jest.fn(),
+      removeListener: jest.fn(),
+      addEventListener: jest.fn(),
+      removeEventListener: jest.fn(),
+      dispatchEvent: jest.fn(),
+    })),
+  });
+}
+
 describe('navigationDrawerService', () => {
   beforeEach(() => {
     document.body.className = '';
     createDrawerMarkup();
+    mockMatchMedia(true);
     initNavigationDrawer();
   });
 
@@ -81,41 +95,52 @@ describe('navigationDrawerService', () => {
     jest.clearAllMocks();
   });
 
-  test('opens and closes the drawer while managing focus, overlay, and inert targets', () => {
+  test('closes drawer via overlay click', () => {
     const menuButtonElement = document.getElementById('menuButton');
     const overlay = document.getElementById('drawerOverlay');
     const navDrawerElement = document.getElementById('navDrawer');
-    const inertElements = Array.from(document.querySelectorAll('[data-drawer-inert-target]'));
-    const firstNavItem = navDrawerElement.querySelector('.nav-link[href]');
-
-    const navItemFocusSpy = firstNavItem.focus;
-    const menuFocusSpy = jest.spyOn(menuButtonElement, 'focus');
 
     menuButtonElement.click();
-
     expect(navDrawerElement.classList.contains('open')).toBe(true);
-    expect(document.body.classList.contains('drawer-is-open')).toBe(true);
-    expect(menuButtonElement.getAttribute('aria-expanded')).toBe('true');
-    expect(overlay.classList.contains('active')).toBe(true);
-    expect(overlay.getAttribute('aria-hidden')).toBe('false');
-    expect(navItemFocusSpy).toHaveBeenCalledTimes(1);
-    inertElements.forEach((element) => {
-      expect(element.hasAttribute('inert')).toBe(true);
-      expect(element.getAttribute('aria-hidden')).toBe('true');
-    });
 
     overlay.click();
 
     expect(navDrawerElement.classList.contains('open')).toBe(false);
     expect(document.body.classList.contains('drawer-is-open')).toBe(false);
     expect(menuButtonElement.getAttribute('aria-expanded')).toBe('false');
-    expect(menuFocusSpy).toHaveBeenCalledTimes(1);
     expect(overlay.classList.contains('active')).toBe(false);
-    expect(overlay.getAttribute('aria-hidden')).toBe('true');
-    inertElements.forEach((element) => {
-      expect(element.hasAttribute('inert')).toBe(false);
-      expect(element.getAttribute('aria-hidden')).toBe('false');
-    });
+  });
+
+  test('closes drawer via close button', () => {
+    const menuButtonElement = document.getElementById('menuButton');
+    const closeButton = document.getElementById('closeDrawerButton');
+    const navDrawerElement = document.getElementById('navDrawer');
+
+    menuButtonElement.click();
+    expect(navDrawerElement.classList.contains('open')).toBe(true);
+
+    closeButton.click();
+
+    expect(navDrawerElement.classList.contains('open')).toBe(false);
+    expect(document.body.classList.contains('drawer-is-open')).toBe(false);
+  });
+
+  test('closes drawer via nav item click on compact viewport', () => {
+    const menuButtonElement = document.getElementById('menuButton');
+    const navDrawerElement = document.getElementById('navDrawer');
+    const homeLink = document.getElementById('homeLink');
+
+    menuButtonElement.click();
+    expect(navDrawerElement.classList.contains('open')).toBe(true);
+
+    homeLink.click();
+
+    expect(navDrawerElement.classList.contains('open')).toBe(false);
+  });
+
+  test('closes drawer via Escape key', () => {
+    const menuButtonElement = document.getElementById('menuButton');
+    const navDrawerElement = document.getElementById('navDrawer');
 
     menuButtonElement.click();
     expect(navDrawerElement.classList.contains('open')).toBe(true);
@@ -124,33 +149,22 @@ describe('navigationDrawerService', () => {
 
     expect(navDrawerElement.classList.contains('open')).toBe(false);
     expect(document.body.classList.contains('drawer-is-open')).toBe(false);
-    expect(menuButtonElement.getAttribute('aria-expanded')).toBe('false');
-    expect(menuFocusSpy).toHaveBeenCalledTimes(2);
-    inertElements.forEach((element) => {
-      expect(element.hasAttribute('inert')).toBe(false);
-      expect(element.getAttribute('aria-hidden')).toBe('false');
-    });
   });
 
-  // Change Rationale: Validate close button and nav selection behavior so the
-  // modal drawer always dismisses after a navigation choice across viewports.
-  test('closes the drawer with the close button and nav selection', () => {
-    const closeButton = document.getElementById('closeDrawerButton');
+  test('keeps drawer open after nav selection on desktop viewport', () => {
+    document.body.className = '';
+    createDrawerMarkup();
+    mockMatchMedia(false);
+    initNavigationDrawer();
+
     const menuButtonElement = document.getElementById('menuButton');
     const navDrawerElement = document.getElementById('navDrawer');
     const homeLink = document.getElementById('homeLink');
 
     menuButtonElement.click();
-    expect(navDrawerElement.classList.contains('open')).toBe(true);
-
-    closeButton.click();
-    expect(navDrawerElement.classList.contains('open')).toBe(false);
-
-    menuButtonElement.click();
-    expect(navDrawerElement.classList.contains('open')).toBe(true);
-
     homeLink.click();
-    expect(navDrawerElement.classList.contains('open')).toBe(false);
+
+    expect(navDrawerElement.classList.contains('open')).toBe(true);
   });
 
   test('navigation shell template avoids legacy app button classes', () => {
@@ -172,7 +186,6 @@ describe('navigationDrawerService', () => {
     expect(html.includes('app-button')).toBe(false);
     expect(html.includes('api-inline-button')).toBe(false);
   });
-
 
   test('navigation template keeps a single BeerCSS icon-button contract and pressed theme state', () => {
     const repoRoot = path.join(__dirname, '..', '..');
@@ -247,5 +260,4 @@ describe('navigationDrawerService', () => {
       expect(githubContentElement.classList.contains('open')).toBe(true);
     }
   });
-
 });

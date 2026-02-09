@@ -2277,25 +2277,26 @@ let routeLifecycleMount = () => {};
             screenshotActions.classList.add('screenshot-actions');
             screenshotActions.setAttribute('role', 'group');
 
-            const urlField = document.createElement('md-outlined-text-field');
-            urlField.setAttribute('label', 'Screenshot URL');
+            // Change Rationale: Screenshot URL quick-add now uses BeerCSS-native field + button markup
+            // so the interaction no longer depends on Material Web form components.
+            const urlField = document.createElement('input');
+            urlField.classList.add('screenshot-actions__input');
+            urlField.type = 'url';
+            urlField.setAttribute('aria-label', 'Screenshot URL');
             urlField.setAttribute('placeholder', 'https://example.com/screenshot.png');
             urlField.setAttribute('inputmode', 'url');
-            urlField.supportingText = 'Paste an HTTPS link and click Add URL';
 
-            const addUrlButton = document.createElement('md-outlined-button');
-            addUrlButton.classList.add('builder-remote-inline-button', 'builder-button');
-            const addUrlIcon = document.createElement('md-icon');
-            addUrlIcon.setAttribute('slot', 'icon');
-            addUrlIcon.innerHTML =
-                '<span class="material-symbols-outlined">add_link</span>';
-            addUrlButton.setAttribute('has-icon', '');
-            addUrlButton.appendChild(addUrlIcon);
-            addUrlButton.appendChild(document.createTextNode('Add URL'));
+            const addUrlButton = document.createElement('button');
+            addUrlButton.classList.add('builder-remote-inline-button', 'builder-button', 'border');
+            addUrlButton.type = 'button';
+            addUrlButton.innerHTML =
+                '<span class="material-symbols-outlined" aria-hidden="true">add_link</span><span>Add URL</span>';
 
             const setUrlFeedback = (message, { isError = false } = {}) => {
-                urlField.supportingText = message || '';
-                urlField.error = Boolean(isError && message);
+                const nextMessage = utils.trimString(message || '');
+                urlField.dataset.error = isError && nextMessage ? 'true' : 'false';
+                urlField.setCustomValidity(isError && nextMessage ? nextMessage : '');
+                urlField.title = nextMessage || 'Paste an HTTPS link and click Add URL';
             };
 
             const commitUrl = async () => {
@@ -2334,8 +2335,8 @@ let routeLifecycleMount = () => {};
                 }
             });
 
-            const urlFieldContainer = document.createElement('div');
-            urlFieldContainer.classList.add('screenshot-actions__field');
+            const urlFieldContainer = document.createElement('label');
+            urlFieldContainer.classList.add('screenshot-actions__field', 'field', 'border', 'small-round');
             urlFieldContainer.appendChild(urlField);
 
             screenshotActions.appendChild(urlFieldContainer);

@@ -5,6 +5,7 @@
  * Change Rationale: Verify the router-owned active state highlights both rail and
  * drawer links so navigation stays synchronized across breakpoints.
  */
+const { initNavigationDrawer } = require('../../app/src/main/js/core/ui/components/navigation/navigationDrawerBindings.js');
 const { updateActiveNavLink } = require('../../app/src/main/js/core/ui/router/navigationState.js');
 
 /**
@@ -14,20 +15,57 @@ const { updateActiveNavLink } = require('../../app/src/main/js/core/ui/router/na
  */
 function seedNavigationMarkup() {
   document.body.innerHTML = `
+    <button id="menuButton" type="button">Menu</button>
+    <div id="drawerOverlay" class="overlay" aria-hidden="true"></div>
     <nav id="navRail">
-      <a href="#home" data-nav-link>Home</a>
-      <a href="#repo-mapper" data-nav-link>Repo Mapper</a>
+      <ul class="list">
+        <li class="wave round nav-item" data-nav-item><a href="#home" data-nav-link class="nav-link">Home</a></li>
+        <li class="wave round nav-item" data-nav-item><a href="#repo-mapper" data-nav-link class="nav-link">Repo Mapper</a></li>
+      </ul>
     </nav>
     <dialog id="navDrawer">
-      <a href="#home" data-nav-link>Home</a>
-      <a href="#repo-mapper" data-nav-link>Repo Mapper</a>
+      <button id="closeDrawerButton" type="button">Close</button>
+      <ul class="list">
+        <li class="wave round nav-item" data-nav-item><a href="#home" data-nav-link class="nav-link">Home</a></li>
+        <li class="wave round nav-item" data-nav-item><a href="#repo-mapper" data-nav-link class="nav-link">Repo Mapper</a></li>
+      </ul>
     </dialog>
   `;
+
+  const navDrawerElement = document.getElementById('navDrawer');
+  if (typeof HTMLDialogElement === 'undefined') {
+    global.HTMLDialogElement = navDrawerElement.constructor;
+  }
+  navDrawerElement.open = false;
+  navDrawerElement.showModal = jest.fn(() => {
+    navDrawerElement.open = true;
+  });
+  navDrawerElement.close = jest.fn(() => {
+    navDrawerElement.open = false;
+  });
+}
+
+function mockMatchMedia(matches) {
+  Object.defineProperty(window, 'matchMedia', {
+    writable: true,
+    value: jest.fn().mockImplementation(() => ({
+      matches,
+      media: '(max-width: 960px)',
+      onchange: null,
+      addListener: jest.fn(),
+      removeListener: jest.fn(),
+      addEventListener: jest.fn(),
+      removeEventListener: jest.fn(),
+      dispatchEvent: jest.fn(),
+    })),
+  });
 }
 
 describe('navigation active state', () => {
   beforeEach(() => {
     seedNavigationMarkup();
+    mockMatchMedia(true);
+    initNavigationDrawer();
   });
 
   afterEach(() => {
@@ -37,12 +75,54 @@ describe('navigation active state', () => {
   test('highlights matching nav links across rail and drawer', () => {
     updateActiveNavLink('repo-mapper');
 
-    const activeLinks = Array.from(document.querySelectorAll('[data-nav-link].active'));
-    expect(activeLinks).toHaveLength(2);
+    const activeRows = Array.from(document.querySelectorAll('[data-nav-item].active'));
+    expect(activeRows).toHaveLength(2);
 
-    activeLinks.forEach((link) => {
-      expect(link.classList.contains('primary-container')).toBe(true);
-      expect(link.getAttribute('aria-current')).toBe('page');
+    activeRows.forEach((row) => {
+      expect(row.classList.contains('primary-container')).toBe(true);
+      expect(row.classList.contains('round')).toBe(true);
     });
+
+    const activeLinks = Array.from(document.querySelectorAll('[data-nav-link][aria-current="page"]'));
+    expect(activeLinks).toHaveLength(2);
+  });
+
+  test('selected nav rows keep rounded BeerCSS shape', () => {
+    updateActiveNavLink('home');
+
+    const selectedRows = Array.from(document.querySelectorAll('[data-nav-item].active'));
+    expect(selectedRows).toHaveLength(2);
+    selectedRows.forEach((row) => {
+      expect(row.classList.contains('round')).toBe(true);
+    });
+  });
+
+  test('nav item selection closes drawer on compact viewports while preserving active state sync', () => {
+    const menuButtonElement = document.getElementById('menuButton');
+    const navDrawerElement = document.getElementById('navDrawer');
+    const repoMapperLink = Array.from(navDrawerElement.querySelectorAll('.nav-link')).find((link) => link.getAttribute('href') === '#repo-mapper');
+
+    menuButtonElement.click();
+    repoMapperLink.click();
+    updateActiveNavLink('repo-mapper');
+
+    expect(navDrawerElement.classList.contains('open')).toBe(false);
+    const activeRows = Array.from(document.querySelectorAll('[data-nav-item].active'));
+    expect(activeRows).toHaveLength(2);
+  });
+
+  test('nav item selection does not force close on desktop rail layouts', () => {
+    seedNavigationMarkup();
+    mockMatchMedia(false);
+    initNavigationDrawer();
+
+    const menuButtonElement = document.getElementById('menuButton');
+    const navDrawerElement = document.getElementById('navDrawer');
+    const homeLink = navDrawerElement.querySelector('.nav-link[href="#home"]');
+
+    menuButtonElement.click();
+    homeLink.click();
+
+    expect(navDrawerElement.classList.contains('open')).toBe(true);
   });
 });

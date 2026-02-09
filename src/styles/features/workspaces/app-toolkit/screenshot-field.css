@@ -22,7 +22,7 @@
 :host(.dragging) {
   opacity: 0.7;
   transform: scale(0.98);
-  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.18);
+  box-shadow: 0 18px 40px color-mix(in srgb, var(--md-sys-color-shadow) 18%, transparent);
 }
 
 :host(.drag-over) {
@@ -32,7 +32,7 @@
 :host(.is-active),
 :host(:focus-within) {
   border-color: color-mix(in srgb, var(--md-sys-color-primary) 45%, transparent);
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.16);
+  box-shadow: 0 12px 30px color-mix(in srgb, var(--md-sys-color-shadow) 16%, transparent);
 }
 
 .actions {
@@ -46,6 +46,19 @@
   display: flex;
   align-items: center;
   gap: 0.25rem;
+}
+
+
+.drag-handle,
+.remove-button {
+  border: none;
+  background: transparent;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  min-height: 2rem;
+  min-width: 2rem;
 }
 
 .drag-handle {
@@ -115,10 +128,18 @@
 }
 
 .input {
-  --md-outlined-text-field-container-shape: var(--app-field-shape, 16px);
   width: 100%;
   max-width: 100%;
   min-width: 0;
+  border: none;
+  background: transparent;
+  color: var(--app-text-color);
+  min-height: 2.6rem;
+  padding-inline: 0.75rem;
+}
+
+.field {
+  width: 100%;
 }
 
 .meta {

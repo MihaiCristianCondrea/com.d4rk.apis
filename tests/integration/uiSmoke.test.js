@@ -10,6 +10,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const { initThemeControls } = require('../../app/src/main/js/core/data/services/themeService.js');
 
 /**
  * Loads an HTML file and parses it into a document.
@@ -73,7 +74,6 @@ describe('UI smoke', () => {
     expect(drawerOverlay.classList.contains('s')).toBe(true);
   });
 
-
   test('feature and core UI templates avoid mixed legacy button systems', () => {
     const repoRoot = path.join(__dirname, '..', '..');
     const htmlPaths = [
@@ -95,8 +95,6 @@ describe('UI smoke', () => {
 
     expect(legacyFiles).toEqual([]);
 
-    // Change Rationale: Material Web tags may remain in selected screens during migration,
-    // but they must never coexist with deprecated legacy helper classes.
     const mixedSystems = auditRows.filter(
       (row) => row.hasMaterialWebTag && (row.hasLegacyAppButton || row.hasLegacyInlineButton),
     );
@@ -106,7 +104,6 @@ describe('UI smoke', () => {
 
   test('app shell mounts navigation outside the main content container', () => {
     const repoRoot = path.join(__dirname, '..', '..');
-    // Change Rationale: Vite uses the repository root `index.html` as the single runtime shell.
     const shellPath = path.join(repoRoot, 'index.html');
     const doc = loadHtmlDocument(shellPath);
 
@@ -116,5 +113,75 @@ describe('UI smoke', () => {
     expect(navMount).not.toBeNull();
     expect(mainContent).not.toBeNull();
     expect(mainContent.contains(navMount)).toBe(false);
+  });
+
+  test('app shell defines a prepaint theme hydration script', () => {
+    const repoRoot = path.join(__dirname, '..', '..');
+    const shellPath = path.join(repoRoot, 'index.html');
+    const html = fs.readFileSync(shellPath, 'utf8');
+
+    expect(html).toMatch(/localStorage\.getItem\(/);
+    expect(html).toMatch(/document\.documentElement\.classList\.toggle\('dark'/);
+  });
+
+  test('theme controls stay synchronized for light/dark/auto and system transitions', () => {
+    document.body.innerHTML = `
+      <button id="lightThemeButton" data-theme="light"></button>
+      <button id="darkThemeButton" data-theme="dark"></button>
+      <button id="autoThemeButton" data-theme="auto"></button>
+    `;
+
+    const storage = {
+      value: 'auto',
+      getItem: jest.fn(() => storage.value),
+      setItem: jest.fn((_k, v) => {
+        storage.value = v;
+      }),
+    };
+
+    let listener = null;
+    const mediaQueryList = {
+      matches: false,
+      addEventListener: jest.fn((_event, handler) => {
+        listener = handler;
+      }),
+    };
+
+    initThemeControls({
+      htmlElement: document.documentElement,
+      buttons: Array.from(document.querySelectorAll('[data-theme]')),
+      storage,
+      mediaQueryList,
+    });
+
+    const lightButton = document.getElementById('lightThemeButton');
+    const darkButton = document.getElementById('darkThemeButton');
+    const autoButton = document.getElementById('autoThemeButton');
+
+    expect(autoButton.classList.contains('selected')).toBe(true);
+    expect(autoButton.getAttribute('aria-pressed')).toBe('true');
+    expect(document.documentElement.classList.contains('dark')).toBe(false);
+
+    darkButton.click();
+    expect(storage.value).toBe('dark');
+    expect(darkButton.classList.contains('selected')).toBe(true);
+    expect(darkButton.getAttribute('aria-pressed')).toBe('true');
+    expect(autoButton.getAttribute('aria-pressed')).toBe('false');
+    expect(document.documentElement.classList.contains('dark')).toBe(true);
+
+    lightButton.click();
+    expect(storage.value).toBe('light');
+    expect(lightButton.classList.contains('selected')).toBe(true);
+    expect(document.documentElement.classList.contains('dark')).toBe(false);
+
+    autoButton.click();
+    expect(storage.value).toBe('auto');
+    mediaQueryList.matches = true;
+    listener?.({ matches: true });
+    expect(document.documentElement.classList.contains('dark')).toBe(true);
+
+    mediaQueryList.matches = false;
+    listener?.({ matches: false });
+    expect(document.documentElement.classList.contains('dark')).toBe(false);
   });
 });

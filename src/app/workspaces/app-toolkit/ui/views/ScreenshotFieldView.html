@@ -1,13 +1,13 @@
 <div class="actions" part="actions">
   <slot name="drag">
-    <md-icon-button class="drag-handle" aria-label="Reorder screenshot" part="drag-handle">
+    <button class="drag-handle circle transparent" type="button" aria-label="Reorder screenshot" part="drag-handle">
       <span class="material-symbols-outlined">drag_indicator</span>
-    </md-icon-button>
+    </button>
   </slot>
   <div class="actions-end" part="actions-end">
-    <md-icon-button class="remove-button" aria-label="Remove screenshot" part="remove-button">
+    <button class="remove-button circle transparent" type="button" aria-label="Remove screenshot" part="remove-button">
       <span class="material-symbols-outlined">delete</span>
-    </md-icon-button>
+    </button>
   </div>
 </div>
 <div class="thumbnail" data-state="empty" part="thumbnail">
@@ -21,7 +21,9 @@
   />
 </div>
 <div class="info" part="info">
-  <md-outlined-text-field class="input" label="Screenshot" placeholder="https://example.com/screenshot.png" part="input"></md-outlined-text-field>
+  <label class="field border small-round" part="input-wrapper">
+    <input class="input" type="url" aria-label="Screenshot" placeholder="https://example.com/screenshot.png" part="input" />
+  </label>
   <div class="meta" data-state="info" part="meta">
     <span class="meta__hint" part="meta-hint">Drop an image or paste a URL to preview size.</span>
   </div>

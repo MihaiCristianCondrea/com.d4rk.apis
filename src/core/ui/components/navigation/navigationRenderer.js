@@ -20,7 +20,10 @@ import { NAVIGATION_SECTIONS } from './navigationContent.js';
  */
 export function createNavigationItem(item) {
   const listItem = document.createElement('li');
-  listItem.classList.add('wave', 'round');
+  // Change Rationale: Navigation selected-state semantics are now explicit: the list row owns
+  // visual selection shape while the anchor owns ARIA current state.
+  listItem.classList.add('wave', 'round', 'nav-item');
+  listItem.setAttribute('data-nav-item', '');
 
   const link = document.createElement('a');
   link.classList.add('nav-link');

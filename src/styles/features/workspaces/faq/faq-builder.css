@@ -118,7 +118,7 @@
 .faq-landing-card.is-active,
 .faq-landing-card:hover {
   border-color: color-mix(in srgb, var(--md-sys-color-primary) 45%, var(--app-border-color));
-  box-shadow: 0 14px 42px -24px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 14px 42px -24px color-mix(in srgb, var(--md-sys-color-shadow) 40%, transparent);
   transform: translateY(-1px);
   background: color-mix(
     in srgb,
@@ -138,10 +138,10 @@
 
 @keyframes faq-mode-pulse {
   0% {
-    box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.45);
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--md-sys-color-primary) 45%, transparent);
   }
   100% {
-    box-shadow: 0 0 0 18px rgba(99, 102, 241, 0);
+    box-shadow: 0 0 0 18px color-mix(in srgb, var(--md-sys-color-primary) 0%, transparent);
   }
 }
 
@@ -370,7 +370,7 @@
 .faq-icon-picker__backdrop {
   position: absolute;
   inset: 0;
-  background: rgba(12, 18, 28, 0.5);
+  background: color-mix(in srgb, var(--md-sys-color-scrim) 50%, transparent);
 }
 
 .faq-icon-picker__panel {
@@ -382,7 +382,7 @@
   gap: 1rem;
   background: var(--md-sys-color-surface-container-high);
   border-radius: 28px;
-  box-shadow: 0 30px 70px rgba(15, 20, 30, 0.24);
+  box-shadow: 0 30px 70px color-mix(in srgb, var(--md-sys-color-shadow) 24%, transparent);
   overflow: hidden;
 }
 

@@ -1,6 +1,5 @@
 import { MEDIA_QUERY, STORAGE_KEYS } from '../../domain/constants.js';
 
-const THEME_DATA_ATTR = 'data-theme';
 const THEME_OPTIONS = ['light', 'dark', 'auto'];
 
 /**
@@ -45,7 +44,11 @@ export function isDarkPreferred(explicitTheme, prefersDark = false) {
 }
 
 /**
- * Applies the theme state to a provided html element.
+ * Applies the canonical BeerCSS-compatible mode contract on the document root.
+ *
+ * Change Rationale: Theme mode now uses one canonical contract (`html.dark`) instead
+ * of mixing class toggles and service-specific data attributes. This matches the
+ * BeerCSS/Dynamic Color expectation and avoids redundant state.
  *
  * @param {HTMLElement | null} htmlElement HTML root element.
  * @param {'light'|'dark'|'auto'} theme Theme value.
@@ -56,7 +59,6 @@ export function applyThemeClass(htmlElement, theme, prefersDark = false) {
   if (!htmlElement) return;
   const shouldUseDark = isDarkPreferred(theme, prefersDark);
   htmlElement.classList.toggle('dark', shouldUseDark);
-  htmlElement.setAttribute(THEME_DATA_ATTR, theme);
 }
 
 /**
@@ -68,29 +70,30 @@ export function applyThemeClass(htmlElement, theme, prefersDark = false) {
  */
 export function updateSelectionState(buttons, selectedTheme) {
   buttons.forEach((button) => {
-    button.toggleAttribute('aria-pressed', button.dataset.theme === selectedTheme);
-    button.classList.toggle('selected', button.dataset.theme === selectedTheme);
+    const isSelected = button.dataset.theme === selectedTheme;
+    button.setAttribute('aria-pressed', isSelected ? 'true' : 'false');
+    button.classList.toggle('selected', isSelected);
   });
 }
 
 /**
  * Wires theme controls using provided element references and adapters.
  *
- * Change Rationale: Theme behavior previously queried DOM nodes directly from the
- * data service. The new contract receives element refs and environment adapters
- * from UI orchestrators, preserving Android-style layering and testability.
+ * Change Rationale: Theme wiring now supports both explicit dependency injection and
+ * zero-arg DOM hydration so app shell bootstrap can apply persisted mode consistently
+ * before and after navigation mount.
  *
  * @param {{
- *   htmlElement: HTMLElement | null,
- *   buttons: HTMLElement[],
+ *   htmlElement?: HTMLElement | null,
+ *   buttons?: HTMLElement[],
  *   storage?: { getItem: (key: string) => string | null, setItem: (key: string, value: string) => void } | null,
  *   mediaQueryList?: MediaQueryList | null,
  * }} options Theme wiring dependencies.
  * @returns {void}
  */
 export function initThemeControls({
-  htmlElement,
-  buttons,
+  htmlElement = typeof document !== 'undefined' ? document.documentElement : null,
+  buttons = typeof document !== 'undefined' ? Array.from(document.querySelectorAll('[data-theme]')) : [],
   storage = globalThis.localStorage,
   mediaQueryList = typeof window !== 'undefined' ? window.matchMedia?.(MEDIA_QUERY.prefersDark) ?? null : null,
 } = {}) {

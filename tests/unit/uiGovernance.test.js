@@ -5,7 +5,7 @@
 /*
  * Change Rationale:
  * - Feature screens now follow a strict BeerCSS-only interactive component contract.
- * - Governance should fail when new `md-*` tags appear in feature-owned screens.
+ * - Governance should fail when new `md-*` tags appear in feature-owned screens and views.
  * - This keeps component usage predictable and avoids mixed UI systems in feature HTML.
  */
 
@@ -13,20 +13,30 @@ const fs = require('fs');
 const path = require('path');
 
 /**
- * Recursively collects screen html files.
+ * Recursively collects feature HTML templates that must remain free of md-* tags.
  *
  * @param {string} rootDir Root folder.
  * @returns {string[]} Absolute file paths.
  */
-function collectScreenHtmlFiles(rootDir) {
+function collectFeatureHtmlTemplates(rootDir) {
   const entries = fs.readdirSync(rootDir, { withFileTypes: true });
   const files = [];
 
   entries.forEach((entry) => {
     const fullPath = path.join(rootDir, entry.name);
     if (entry.isDirectory()) {
-      files.push(...collectScreenHtmlFiles(fullPath));
-    } else if (entry.isFile() && entry.name.endsWith('Screen.html')) {
+      files.push(...collectFeatureHtmlTemplates(fullPath));
+      return;
+    }
+
+    if (!entry.isFile() || !entry.name.endsWith('.html')) {
+      return;
+    }
+
+    const normalizedPath = fullPath.split(path.sep).join('/');
+    const isFeatureScreen = entry.name.endsWith('Screen.html');
+    const isFeatureView = /\/ui\/views\/.+\.html$/i.test(normalizedPath);
+    if (isFeatureScreen || isFeatureView) {
       files.push(fullPath);
     }
   });
@@ -80,13 +90,13 @@ describe('UI governance', () => {
     expect(fullShellTemplates).toEqual(['index.html']);
   });
 
-  test('feature Screen.html files enforce BeerCSS-only interactive tags', () => {
+  test('feature HTML templates enforce BeerCSS-only interactive tags', () => {
     const repoRoot = path.join(__dirname, '..', '..');
-    const screensRoot = path.join(repoRoot, 'app', 'src', 'main', 'js', 'app');
-    const screenFiles = collectScreenHtmlFiles(screensRoot);
+    const screensRoot = path.join(repoRoot, 'src', 'app');
+    const featureHtmlFiles = collectFeatureHtmlTemplates(screensRoot);
     const violations = [];
 
-    screenFiles.forEach((filePath) => {
+    featureHtmlFiles.forEach((filePath) => {
       const relativePath = toRepoRelativePath(filePath, repoRoot);
       const contents = fs.readFileSync(filePath, 'utf8');
       const mdTags = Array.from(new Set((contents.match(/<md-[a-z0-9-]+/gi) || []).map((tag) => tag.replace('<', '').toLowerCase())));
@@ -99,15 +109,17 @@ describe('UI governance', () => {
         violations.push(`${relativePath} -> contains legacy MDC/Paper patterns`);
       }
 
-      const hasPageSection = /class\s*=\s*['"][^'"]*page-section/i.test(contents);
-      if (!hasPageSection) {
-        violations.push(`${relativePath} -> missing page-section wrapper for predictable screen structure`);
-      }
+      if (relativePath.endsWith('Screen.html')) {
+        const hasPageSection = /class\s*=\s*['"][^'"]*page-section/i.test(contents);
+        if (!hasPageSection) {
+          violations.push(`${relativePath} -> missing page-section wrapper for predictable screen structure`);
+        }
 
-      if (relativePath.includes('/workspaces/')) {
-        const statusRegions = (contents.match(/role=['"]status['"]/gi) || []).length;
-        if (statusRegions === 0) {
-          violations.push(`${relativePath} -> workspace screen missing role="status" feedback region`);
+        if (relativePath.includes('/workspaces/')) {
+          const statusRegions = (contents.match(/role=['"]status['"]/gi) || []).length;
+          if (statusRegions === 0) {
+            violations.push(`${relativePath} -> workspace screen missing role="status" feedback region`);
+          }
         }
       }
     });
