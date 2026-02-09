@@ -1,3 +1,5 @@
+const fs = require('fs');
+const path = require('path');
 const { initThemeControls, applyTheme } = require('../../app/src/main/js/core/data/services/themeService.js');
 
 function createLocalStorageMock(initial = {}) {
@@ -171,5 +173,37 @@ describe('themeService', () => {
 
     applyTheme('light');
     expect(document.documentElement.classList.contains('dark')).toBe(false);
+  });
+});
+
+
+describe('theme palette tokens', () => {
+  /**
+   * Returns the `src/styles/variables.css` content for token assertions.
+   *
+   * @returns {string} Raw variables stylesheet text.
+   */
+  function readThemeVariablesCss() {
+    const repoRoot = path.join(__dirname, '..', '..');
+    const variablesPath = path.join(repoRoot, 'src', 'styles', 'variables.css');
+    return fs.readFileSync(variablesPath, 'utf8');
+  }
+
+  test('light mode keeps Android-green brand token mapping for BeerCSS variables', () => {
+    const css = readThemeVariablesCss();
+
+    expect(css).toMatch(/:root\s*\{[\s\S]*--md-sys-color-primary:\s*#3ddc84;/);
+    expect(css).toMatch(/:root\s*\{[\s\S]*--app-primary:\s*var\(--md-sys-color-primary\);/);
+    expect(css).toMatch(/:root\s*\{[\s\S]*--primary:\s*var\(--app-primary\);/);
+    expect(css).toMatch(/:root\s*\{[\s\S]*--surface:\s*var\(--app-surface\);/);
+  });
+
+  test('dark mode keeps Android-green brand token mapping for BeerCSS variables', () => {
+    const css = readThemeVariablesCss();
+
+    expect(css).toMatch(/html\.dark\s*\{[\s\S]*--md-sys-color-primary:\s*#96dea1;/);
+    expect(css).toMatch(/html\.dark\s*\{[\s\S]*--app-primary:\s*var\(--md-sys-color-primary\);/);
+    expect(css).toMatch(/html\.dark\s*\{[\s\S]*--primary:\s*var\(--app-primary\);/);
+    expect(css).toMatch(/html\.dark\s*\{[\s\S]*--surface:\s*var\(--app-surface\);/);
   });
 });

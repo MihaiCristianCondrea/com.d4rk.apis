@@ -6,9 +6,10 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "test": "node scripts/check-structure.js && jest",
+    "test": "node scripts/check-structure.js && npm run verify:architecture && jest",
     "verify:seo": "node -e \"['public/sitemap.xml','public/robots.txt'].forEach((file)=>require('fs').accessSync(file));\"",
-    "deploy": "npm run build && npm run verify:seo"
+    "deploy": "npm run build && npm run verify:seo",
+    "verify:architecture": "node scripts/verify-architecture-docs.js"
   },
   "keywords": [],
   "author": "",

@@ -106,15 +106,8 @@ describe('UI smoke', () => {
 
   test('app shell mounts navigation outside the main content container', () => {
     const repoRoot = path.join(__dirname, '..', '..');
-    // Change Rationale: The normalized source layout keeps app shell templates under
-    // `src/app/shell`, so the smoke test must read the kebab-case shell filename.
-    const shellPath = path.join(
-      repoRoot,
-      'src',
-      'app',
-      'shell',
-      'app-shell.html'
-    );
+    // Change Rationale: Vite uses the repository root `index.html` as the single runtime shell.
+    const shellPath = path.join(repoRoot, 'index.html');
     const doc = loadHtmlDocument(shellPath);
 
     const navMount = doc.getElementById('appNavigationMount');
