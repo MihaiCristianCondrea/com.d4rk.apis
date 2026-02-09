@@ -58,6 +58,24 @@ adopted across the repository.
 - **Views:** reusable HTML snippets under `ui/views/`.
 - **Data modules:** descriptive camelCase (`homeContentDataSource.js`, `images.js`).
 
+
+### UI governance checks (Material 3 quality signals)
+
+<!-- Change Rationale: The governance test now verifies intended Material 3 usage instead of
+     blocking all `md-*` tags, so architecture docs must mirror the same pass/fail criteria. -->
+
+`tests/unit/uiGovernance.test.js` enforces these screen-level rules:
+
+- Use only approved Material Web components already standardized in the app shell (`md-filled-button`,
+  `md-outlined-button`, `md-text-button`, `md-filled-tonal-button`, cards, menus, dialog/sheet,
+  steppers, form fields, and icons).
+- Do not introduce legacy patterns (`mdc-*` CSS hooks or `paper-*` elements).
+- Keep predictable screen scaffolding by preserving a `page-section` wrapper per `*Screen.html`.
+- Preserve action hierarchy: screens using filled buttons must also expose secondary/tertiary
+  variants (outlined/text/tonal) where appropriate.
+- Ensure focusable controls are targetable (`id` or `aria-label`) for accessibility and testing.
+- Workspace screens must expose at least one `role="status"` region for live validation/progress copy.
+
 ## Workflow expectations
 
 1. **Create/modify UI in `ui/`:** expose entrypoints through the router.
