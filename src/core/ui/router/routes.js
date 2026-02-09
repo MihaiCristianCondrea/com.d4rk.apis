@@ -251,8 +251,7 @@ function registerRoute(config) {
             && sanitized.inlineHtml
             && existingRoute.inlineHtml !== sanitized.inlineHtml;
         const hasConfigMismatch = existingRoute.path !== sanitized.path
-            || existingRoute.title !== sanitized.title
-            || existingRoute.onLoad !== sanitized.onLoad;
+            || existingRoute.title !== sanitized.title;
         if (hasInlineMismatch || hasConfigMismatch) {
             const warning = `RouterRoutes: Route "${sanitized.id}" registration diverged from existing configuration.`;
             if (isStrictMode && hasInlineMismatch) {
@@ -267,6 +266,24 @@ function registerRoute(config) {
         if (!existingRoute.inlineHtml && sanitized.inlineHtml) {
             PAGE_ROUTES[sanitized.id] = sanitized;
             return cloneRoute(sanitized);
+        }
+
+        /* Change Rationale: Feature Route modules now register explicit lifecycle handlers
+         * after baseline route metadata is seeded. Allowing onLoad upgrades for matching
+         * route identity (same id/path/title) removes reliance on global init fallbacks
+         * while preserving deterministic inline HTML precedence. */
+        const canUpgradeOnLoad = existingRoute.path === sanitized.path
+            && existingRoute.title === sanitized.title
+            && !existingRoute.inlineHtml
+            && !sanitized.inlineHtml
+            && typeof sanitized.onLoad === 'function'
+            && existingRoute.onLoad !== sanitized.onLoad;
+        if (canUpgradeOnLoad) {
+            PAGE_ROUTES[sanitized.id] = {
+                ...existingRoute,
+                onLoad: sanitized.onLoad,
+            };
+            return cloneRoute(PAGE_ROUTES[sanitized.id]);
         }
 
         return cloneRoute(existingRoute);

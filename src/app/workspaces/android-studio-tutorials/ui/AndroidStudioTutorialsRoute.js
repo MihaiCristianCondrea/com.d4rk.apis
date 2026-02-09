@@ -1,5 +1,6 @@
 // Change Rationale: Focus timer controller now resolves from the shared core data services layer.
 import { createFocusTimerController } from '@/core/data/services/focusTimerController.js';
+import { RouterRoutes } from '@/core/ui/router/routes.js';
 // Change Rationale: Wizard controller now comes from the shared workspace data services,
 // keeping cross-workspace adapters in the feature data layer without altering behavior.
 import { createGithubWizardController } from '../../shared/data/services/githubWizardController.js';
@@ -8,6 +9,8 @@ import { initBuilderRemoteControls } from '../../shared/ui/remoteControls.js';
 
 // Change Rationale: Consolidated focus timer and GitHub wizard wiring through shared controllers to ensure consistent UX
 // across workspaces and reduce duplicated logic while keeping Material-inspired controls predictable.
+
+let routeLifecycleMount = () => {};
 
 (function (global) {
     const utils = global.ApiBuilderUtils;
@@ -1825,5 +1828,41 @@ import { initBuilderRemoteControls } from '../../shared/ui/remoteControls.js';
         }, 1500);
     }
 
-    global.initAndroidTutorialsWorkspace = initAndroidTutorialsWorkspace;
+    routeLifecycleMount = initAndroidTutorialsWorkspace;
 })(typeof window !== 'undefined' ? window : globalThis);
+
+
+/**
+ * Mount lifecycle for Android Studio Tutorials workspace route.
+ *
+ * @returns {} Returns any cleanup payload emitted by the workspace initializer.
+ */
+export function mountAndroidStudioTutorialsRoute() {
+  return routeLifecycleMount();
+}
+
+/**
+ * No-op unmount lifecycle for Android Studio Tutorials workspace route.
+ *
+ * @returns {void}
+ */
+export function unmountAndroidStudioTutorialsRoute() {}
+
+/**
+ * Registers Android Studio Tutorials route lifecycle through RouterRoutes.
+ *
+ * @returns {void}
+ */
+export function registerAndroidStudioTutorialsRoute() {
+  const existing = RouterRoutes.getRoute('android-studio-tutorials-api');
+  if (!existing) {
+    return;
+  }
+
+  RouterRoutes.registerRoute({
+    ...existing,
+    onLoad: mountAndroidStudioTutorialsRoute,
+  });
+}
+
+registerAndroidStudioTutorialsRoute();

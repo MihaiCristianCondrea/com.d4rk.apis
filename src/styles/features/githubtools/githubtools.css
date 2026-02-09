@@ -712,13 +712,13 @@
   flex-wrap: wrap;
 }
 
-.gh-favorite-actions .app-button {
+.gh-favorite-actions .app-ui-button {
   flex: 1 1 0;
   min-width: 140px;
   justify-content: center;
 }
 
-.gh-favorite-actions .app-button--secondary {
+.gh-favorite-actions .button.border.app-ui-button {
   border-color: color-mix(in srgb, var(--gh-outline) 55%, transparent);
 }
 
@@ -768,9 +768,9 @@
   color: var(--gh-subtext);
 }
 
-/* Change Rationale: Favorite card actions now inherit the global app button styles,
- * so sizing and emphasis stay aligned with shared button roles. */
-.gh-favorite-card .app-button {
+/* Change Rationale: Favorite card actions now inherit shared BeerCSS utility classes,
+ * so sizing and emphasis stay aligned with the single control policy. */
+.gh-favorite-card .app-ui-button {
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;

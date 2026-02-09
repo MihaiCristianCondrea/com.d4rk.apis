@@ -218,6 +218,3 @@ function applyTargetToggle(fragment, slot, label) {
   toggle.dataset.remoteTarget = slot.startsWith('home') ? 'home' : 'lesson';
 }
 
-if (typeof window !== 'undefined') {
-  window.initBuilderRemoteControls = initBuilderRemoteControls;
-}

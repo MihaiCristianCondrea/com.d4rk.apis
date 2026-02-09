@@ -93,8 +93,13 @@ document.addEventListener('DOMContentLoaded', () => {
     } else {
         console.error("App.js: Initial home content (#mainContentPage) not found!");
     }
-    const routerOptions = buildRouterOptions();
-    initRouter(pageContentAreaEl, appBarHeadlineEl, initialHomeHTMLString, routerOptions);
+    /* Change Rationale: Route lifecycle handlers now register directly in feature Route modules
+     * through RouterRoutes, so app shell no longer discovers global init hooks. */
+    initRouter(pageContentAreaEl, appBarHeadlineEl, initialHomeHTMLString, {
+        showOverlay: () => showPageLoadingOverlay(),
+        hideOverlay: () => hidePageLoadingOverlay(),
+        closeDrawer: () => navigationController?.close(),
+    });
 
     // --- Setup Event Listeners for SPA Navigation ---
     setupRouteLinkInterception();
@@ -139,79 +144,6 @@ function applyAppBarScrollState(appBarEl) {
     const isScrolled = window.scrollY > 0;
     appBarEl.classList.add('fill');
     appBarEl.classList.toggle('elevate', isScrolled);
-}
-
-/**
- * Builds the router options payload, wiring global page handlers when present.
- *
- * @returns {{ showOverlay: Function, hideOverlay: Function, closeDrawer: Function, onHomeLoad?: Function, pageHandlers?: Record<string, Function> }}
- *   Router configuration including optional page handlers.
- */
-function buildRouterOptions() {
-  const options = {
-    showOverlay: () => showPageLoadingOverlay(),
-    hideOverlay: () => hidePageLoadingOverlay(),
-    closeDrawer: () => navigationController?.close(),
-  };
-
-  const pageHandlers = {};
-  const globalScope = typeof window !== 'undefined' ? window : globalThis;
-
-  if (typeof globalScope.initHomePage === 'function') {
-    options.onHomeLoad = globalScope.initHomePage;
-  }
-
-    if (typeof globalScope.initAppToolkitWorkspace === 'function') {
-        pageHandlers['app-toolkit-api'] = globalScope.initAppToolkitWorkspace;
-    }
-
-    // Change Rationale: FAQ workspace initialization now registers through the feature route module,
-    // so the app shell no longer needs a workspace-specific fallback hook.
-
-    if (typeof globalScope.initEnglishWorkspace === 'function') {
-        pageHandlers['english-with-lidia-api'] = globalScope.initEnglishWorkspace;
-    }
-
-    if (typeof globalScope.initAndroidTutorialsWorkspace === 'function') {
-        pageHandlers['android-studio-tutorials-api'] = globalScope.initAndroidTutorialsWorkspace;
-    }
-
-    if (typeof globalScope.initPagerControls === 'function') {
-        pageHandlers['english-with-lidia-api'] = chainHandlers(
-            pageHandlers['english-with-lidia-api'],
-            () => globalScope.initPagerControls('englishPager'),
-        );
-        pageHandlers['android-studio-tutorials-api'] = chainHandlers(
-            pageHandlers['android-studio-tutorials-api'],
-            () => globalScope.initPagerControls('androidPager'),
-        );
-    }
-
-    if (Object.keys(pageHandlers).length > 0) {
-        options.pageHandlers = pageHandlers;
-    }
-
-    return options;
-}
-
-/**
- * Chains two route handler callbacks, ensuring both run sequentially.
- *
- * @param {Function | null | undefined} existingHandler First handler to invoke.
- * @param {Function} nextHandler Handler to execute after the first.
- * @returns {Function} Combined handler.
- */
-function chainHandlers(existingHandler, nextHandler) {
-    if (typeof existingHandler !== 'function') {
-        return nextHandler;
-    }
-    return () => {
-        try {
-            existingHandler();
-        } finally {
-            nextHandler();
-        }
-    };
 }
 
 /**

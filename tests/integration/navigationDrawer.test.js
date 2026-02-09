@@ -7,6 +7,9 @@
  * - Pointing tests at app/src/main/js/core/ui/utils/domUtils consolidates utility usage and prevents namespace drift between domain and core layers.
  * - The consolidation safeguards consistent drawer interactions, which supports the predictable navigation patterns expected in Material Design 3 UIs.
  */
+const fs = require('fs');
+const path = require('path');
+
 const mockUtils = {
   getDynamicElement: jest.fn(),
   rafThrottle: (fn) => fn,
@@ -34,11 +37,11 @@ function createDrawerMarkup() {
    */
   document.body.innerHTML = `
     <header data-drawer-inert-target id="header">
-      <button id="menuButton" type="button">Menu</button>
+      <button id="menuButton" class="button transparent circle app-nav-icon-button" type="button">Menu</button>
     </header>
     <div id="drawerOverlay" class="overlay" aria-hidden="true"></div>
     <dialog id="navDrawer" class="navigation-drawer">
-      <button id="closeDrawerButton" type="button">Close</button>
+      <button id="closeDrawerButton" class="button transparent circle app-nav-icon-button" type="button">Close</button>
       <nav>
         <ul class="list">
           <li><a href="#home" id="homeLink" class="nav-link">Home</a></li>
@@ -52,6 +55,11 @@ function createDrawerMarkup() {
         <summary id="androidAppsToggle" aria-controls="androidAppsContent" aria-expanded="true">Apps</summary>
         <div id="androidAppsContent" class="open" aria-hidden="false">Apps section</div>
       </details>
+      <div class="theme-button-container">
+        <button id="lightThemeButton" data-theme="light" aria-pressed="false" class="button transparent circle app-nav-icon-button" type="button">Light</button>
+        <button id="darkThemeButton" data-theme="dark" aria-pressed="false" class="button transparent circle app-nav-icon-button" type="button">Dark</button>
+        <button id="autoThemeButton" data-theme="auto" aria-pressed="true" class="button transparent circle app-nav-icon-button selected" type="button">Auto</button>
+      </div>
     </dialog>
     <main data-drawer-inert-target id="mainContent">Main content</main>
     <footer data-drawer-inert-target id="footerContent">Footer content</footer>
@@ -159,6 +167,64 @@ describe('navigationDrawerService', () => {
 
     homeLink.click();
     expect(navDrawerElement.classList.contains('open')).toBe(false);
+  });
+
+  test('navigation shell template avoids legacy app button classes', () => {
+    const repoRoot = path.join(__dirname, '..', '..');
+    const navTemplatePath = path.join(
+      repoRoot,
+      'app',
+      'src',
+      'main',
+      'js',
+      'core',
+      'ui',
+      'components',
+      'navigation',
+      'AppNavigationView.html',
+    );
+    const html = fs.readFileSync(navTemplatePath, 'utf8');
+
+    expect(html.includes('app-button')).toBe(false);
+    expect(html.includes('api-inline-button')).toBe(false);
+  });
+
+
+  test('navigation template keeps a single BeerCSS icon-button contract and pressed theme state', () => {
+    const repoRoot = path.join(__dirname, '..', '..');
+    const navTemplatePath = path.join(
+      repoRoot,
+      'app',
+      'src',
+      'main',
+      'js',
+      'core',
+      'ui',
+      'components',
+      'navigation',
+      'AppNavigationView.html',
+    );
+    const html = fs.readFileSync(navTemplatePath, 'utf8');
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(html, 'text/html');
+
+    const menuButton = document.getElementById('menuButton');
+    const closeButton = doc.getElementById('closeDrawerButton');
+    const themeButtons = [
+      doc.getElementById('lightThemeButton'),
+      doc.getElementById('darkThemeButton'),
+      doc.getElementById('autoThemeButton'),
+    ];
+
+    expect(menuButton.className).toContain('app-nav-icon-button');
+    expect(closeButton.className).toContain('button transparent circle app-nav-icon-button');
+    themeButtons.forEach((button) => {
+      expect(button.className).toContain('button transparent circle app-nav-icon-button');
+    });
+
+    expect(themeButtons[0].getAttribute('aria-pressed')).toBe('false');
+    expect(themeButtons[1].getAttribute('aria-pressed')).toBe('false');
+    expect(themeButtons[2].getAttribute('aria-pressed')).toBe('true');
   });
 
   test('toggle sections open independently with default expansions', () => {

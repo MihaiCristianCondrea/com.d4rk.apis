@@ -21,8 +21,13 @@ adopted across the repository.
      model where one source of truth controls destinations. -->
   **Router convergence status:** Sunset complete. The only supported runtime flow is:
   feature `ui/*Route.js` registration → `core/ui/router` runtime/navigation.
-- **Material 3 first:** navigation, app bars, and layout spacing should follow the Material 3
-  system (BeerCSS + Material Web Components are the primary UI tools).
+- <!-- Change Rationale: Feature screens were mixing BeerCSS classes, bespoke button utilities,
+     and Material Web tags for core controls. Locking a single policy reduces visual drift,
+     keeps control behavior predictable, and preserves Material 3 consistency through one
+     component language. -->
+  **Material 3 first (single UI policy):** BeerCSS is the primary component system for
+  **buttons, app bars, drawers, lists, and inputs**. Avoid mixing in non-BeerCSS component
+  patterns for those control families inside feature screens.
 - **Docs and data:** API JSON lives under `api/` and must remain the single source of truth.
 
 ## Directory conventions

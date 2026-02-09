@@ -1,8 +1,12 @@
+const fs = require('fs');
+const path = require('path');
+
 import {
   createNavigationItem,
   createNavigationSection,
   renderNavigationSections,
 } from '../../app/src/main/js/core/ui/components/navigation/navigationRenderer.js';
+import { updateActiveNavLink } from '../../app/src/main/js/core/ui/router/navigationState.js';
 
 /**
  * Creates a stub navigation item for testing.
@@ -58,6 +62,79 @@ describe('navigationRenderer', () => {
 
     expect(label.textContent).toBe('Primary');
     expect(listItems).toHaveLength(1);
+  });
+
+
+
+  it('keeps github feature screens on BeerCSS button class patterns', () => {
+    const repoRoot = path.join(__dirname, '..', '..');
+    const screenPaths = [
+      path.join(repoRoot, 'app', 'src', 'main', 'js', 'app', 'githubtools', 'releasestats', 'ui', 'ReleaseStatsScreen.html'),
+      path.join(repoRoot, 'app', 'src', 'main', 'js', 'app', 'githubtools', 'repomapper', 'ui', 'RepoMapperScreen.html'),
+      path.join(repoRoot, 'app', 'src', 'main', 'js', 'app', 'githubtools', 'gitpatch', 'ui', 'GitPatchScreen.html'),
+    ];
+
+    const html = screenPaths.map((screenPath) => fs.readFileSync(screenPath, 'utf8')).join('\n');
+
+    expect(html.includes('app-button')).toBe(false);
+    expect(html.includes('api-inline-button')).toBe(false);
+    expect(html.includes('class="button small border app-ui-button"')).toBe(true);
+  });
+
+
+  it('keeps navigation active-state and icon-button class contracts consistent', () => {
+    const repoRoot = path.join(__dirname, '..', '..');
+    const navTemplatePath = path.join(
+      repoRoot,
+      'app',
+      'src',
+      'main',
+      'js',
+      'core',
+      'ui',
+      'components',
+      'navigation',
+      'AppNavigationView.html',
+    );
+    const html = fs.readFileSync(navTemplatePath, 'utf8');
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(html, 'text/html');
+
+    const allIconButtons = Array.from(
+      doc.querySelectorAll('#closeDrawerButton, #lightThemeButton, #darkThemeButton, #autoThemeButton'),
+    );
+    allIconButtons.forEach((button) => {
+      expect(button.className).toContain('button transparent circle app-nav-icon-button');
+    });
+
+    document.body.innerHTML = `
+      <nav>
+        <a href="#home" data-nav-link class="nav-link">Home</a>
+        <a href="#repo-mapper" data-nav-link class="nav-link">Repo Mapper</a>
+      </nav>
+      <dialog>
+        <a href="#repo-mapper" data-nav-link class="nav-link">Repo Mapper</a>
+      </dialog>
+    `;
+    updateActiveNavLink('repo-mapper');
+
+    const activeLinks = Array.from(document.querySelectorAll('[data-nav-link].active'));
+    expect(activeLinks).toHaveLength(2);
+    activeLinks.forEach((link) => {
+      expect(link.getAttribute('aria-current')).toBe('page');
+      expect(link.classList.contains('primary-container')).toBe(true);
+    });
+  });
+
+
+  it('keeps app shell navigation as a mount-only surface hydrated from AppNavigationView', () => {
+    const repoRoot = path.join(__dirname, '..', '..');
+    const shellPath = path.join(repoRoot, 'src', 'app', 'shell', 'app-shell.html');
+    const html = fs.readFileSync(shellPath, 'utf8');
+
+    expect(html.includes('id="appNavigationMount"')).toBe(true);
+    expect(html.includes('id="navDrawer"')).toBe(false);
+    expect(html.includes('id="navRail"')).toBe(false);
   });
 
   it('renders sections with dividers between them', () => {

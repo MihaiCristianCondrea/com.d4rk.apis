@@ -85,3 +85,46 @@ test('ReleaseStatsRoute registers once even when imported twice', () => {
   expect(result.releaseStatsRoutes).toHaveLength(1);
   expect(result.routes).toHaveLength(result.initialCount);
 });
+
+jest.mock(
+  '../../app/src/main/js/app/home/ui/HomeScreen.html?raw',
+  () => '<div>Home Screen</div>',
+  { virtual: true }
+);
+
+jest.mock(
+  '../../app/src/main/js/app/home/ui/views/ActionCardView.html?raw',
+  () => '<template data-view="action-card"><article>Action Card</article></template>',
+  { virtual: true }
+);
+
+jest.mock(
+  '../../app/src/main/js/app/home/ui/views/InfoCardView.html?raw',
+  () => '<template data-view="info-card"><article>Info Card</article></template>',
+  { virtual: true }
+);
+
+
+test('HomeRoute registers mount lifecycle through RouterRoutes without globals', () => {
+  jest.resetModules();
+  let result;
+  jest.isolateModules(() => {
+    const { RouterRoutes } = require('../../app/src/main/js/core/ui/router/routes.js');
+    const homeRouteModule = require('../../app/src/main/js/app/home/ui/HomeRoute.js');
+
+    homeRouteModule.registerHomeRoute();
+    const homeRoute = RouterRoutes.getRoute('home');
+
+    result = {
+      hasMount: typeof homeRouteModule.mountHomeRoute === 'function',
+      hasUnmount: typeof homeRouteModule.unmountHomeRoute === 'function',
+      hasOnLoad: typeof homeRoute?.onLoad === 'function',
+      globalInitHomePage: typeof window.initHomePage,
+    };
+  });
+
+  expect(result.hasMount).toBe(true);
+  expect(result.hasUnmount).toBe(true);
+  expect(result.hasOnLoad).toBe(true);
+  expect(result.globalInitHomePage).toBe('undefined');
+});

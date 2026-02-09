@@ -74,9 +74,8 @@ test('app shell toggles app bar elevation on scroll', () => {
     configurable: true,
   });
 
-  jest.isolateModules(() => {
-    require('../../app/src/main/js/core/ui/appShell.js');
-  });
+  jest.resetModules();
+  require('../../app/src/main/js/core/ui/appShell.js');
 
   document.dispatchEvent(new Event('DOMContentLoaded'));
 
@@ -88,6 +87,34 @@ test('app shell toggles app bar elevation on scroll', () => {
   window.dispatchEvent(new Event('scroll'));
 
   expect(appBar.classList.contains('elevate')).toBe(true);
+});
+
+
+// Change Rationale: Route lifecycle now resolves from registered feature modules,
+// so app shell must not pass legacy global fallback handlers to the router runtime.
+test('app shell initializes router without global lifecycle fallbacks', () => {
+  setupAppShellDom();
+  mockDomUtils.getDynamicElement.mockImplementation((id) => document.getElementById(id));
+
+  jest.resetModules();
+  require('../../app/src/main/js/core/ui/appShell.js');
+
+  document.dispatchEvent(new Event('DOMContentLoaded'));
+
+  const { initRouter } = require('../../app/src/main/js/core/ui/router/index.js');
+  const { registerCompatibilityGlobals } = require('../../app/src/main/js/core/ui/globals.js');
+
+  expect(initRouter).toHaveBeenCalled();
+  const options = initRouter.mock.calls[0][3];
+  expect(options.onHomeLoad).toBeUndefined();
+  expect(options.pageHandlers).toBeUndefined();
+
+  expect(registerCompatibilityGlobals).toHaveBeenCalled();
+  const globalsConfig = registerCompatibilityGlobals.mock.calls[0][0];
+  expect(globalsConfig.initHomePage).toBeUndefined();
+  expect(globalsConfig.initAppToolkitWorkspace).toBeUndefined();
+  expect(globalsConfig.initEnglishWorkspace).toBeUndefined();
+  expect(globalsConfig.initAndroidTutorialsWorkspace).toBeUndefined();
 });
 
 // Change Rationale: Guard the active navigation state so only one drawer item

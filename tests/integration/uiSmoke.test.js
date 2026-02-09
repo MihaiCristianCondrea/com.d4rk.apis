@@ -23,6 +23,23 @@ function loadHtmlDocument(filePath) {
   return parser.parseFromString(html, 'text/html');
 }
 
+/**
+ * Recursively gathers HTML files from a directory.
+ *
+ * @param {string} rootDir Directory to scan.
+ * @returns {string[]} Absolute HTML file paths.
+ */
+function collectHtmlFiles(rootDir) {
+  const entries = fs.readdirSync(rootDir, { withFileTypes: true });
+  return entries.flatMap((entry) => {
+    const fullPath = path.join(rootDir, entry.name);
+    if (entry.isDirectory()) {
+      return collectHtmlFiles(fullPath);
+    }
+    return entry.isFile() && entry.name.endsWith('.html') ? [fullPath] : [];
+  });
+}
+
 describe('UI smoke', () => {
   test('navigation surfaces follow rail vs drawer breakpoint rules', () => {
     const repoRoot = path.join(__dirname, '..', '..');
@@ -54,6 +71,37 @@ describe('UI smoke', () => {
 
     expect(drawerOverlay).not.toBeNull();
     expect(drawerOverlay.classList.contains('s')).toBe(true);
+  });
+
+
+  test('feature and core UI templates avoid mixed legacy button systems', () => {
+    const repoRoot = path.join(__dirname, '..', '..');
+    const htmlPaths = [
+      ...collectHtmlFiles(path.join(repoRoot, 'app', 'src', 'main', 'js', 'app')),
+      ...collectHtmlFiles(path.join(repoRoot, 'app', 'src', 'main', 'js', 'core', 'ui')),
+    ];
+
+    const auditRows = htmlPaths.map((filePath) => {
+      const html = fs.readFileSync(filePath, 'utf8');
+      return {
+        filePath,
+        hasMaterialWebTag: /<md-[a-z0-9-]+/i.test(html),
+        hasLegacyAppButton: /\bapp-button\b/.test(html),
+        hasLegacyInlineButton: /\bapi-inline-button\b/.test(html),
+      };
+    });
+
+    const legacyFiles = auditRows.filter((row) => row.hasLegacyAppButton || row.hasLegacyInlineButton);
+
+    expect(legacyFiles).toEqual([]);
+
+    // Change Rationale: Material Web tags may remain in selected screens during migration,
+    // but they must never coexist with deprecated legacy helper classes.
+    const mixedSystems = auditRows.filter(
+      (row) => row.hasMaterialWebTag && (row.hasLegacyAppButton || row.hasLegacyInlineButton),
+    );
+
+    expect(mixedSystems).toEqual([]);
   });
 
   test('app shell mounts navigation outside the main content container', () => {

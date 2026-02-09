@@ -5,6 +5,7 @@ import {
     createEmptyCategory,
     normalizeCategoryInput
 } from '../domain/NormalizeAppToolkitCategoryUseCase.js';
+import { RouterRoutes } from '@/core/ui/router/routes.js';
 import { isValidPackageName } from '../domain/ValidateAppToolkitExportUseCase.js';
 // Change Rationale: Screenshot carousel navigation now uses the shared action button
 // helper so tertiary buttons remain consistent with the global button-role policy.
@@ -19,6 +20,8 @@ import { APP_TOOLKIT_EVENT } from './contract/AppToolkitEvent.js';
 import { createAppToolkitUiState } from './contract/state/AppToolkitUiState.js';
 import { wireDashboardUpdatesController } from './controllers/dashboardUpdatesController.js';
 import { fetchAppToolkitJson, requestGithubContents } from '../data/services/appToolkitNetworkService.js';
+
+let routeLifecycleMount = () => {};
 
 (function (global) {
     const utils = global.ApiBuilderUtils;
@@ -3404,5 +3407,41 @@ import { fetchAppToolkitJson, requestGithubContents } from '../data/services/app
         render();
     }
 
-    global.initAppToolkitWorkspace = initAppToolkitWorkspace;
+    routeLifecycleMount = initAppToolkitWorkspace;
 })(typeof window !== 'undefined' ? window : globalThis);
+
+
+/**
+ * Mount lifecycle for App Toolkit workspace route.
+ *
+ * @returns {} Returns any cleanup payload emitted by the workspace initializer.
+ */
+export function mountAppToolkitRoute() {
+  return routeLifecycleMount();
+}
+
+/**
+ * No-op unmount lifecycle for App Toolkit workspace route.
+ *
+ * @returns {void}
+ */
+export function unmountAppToolkitRoute() {}
+
+/**
+ * Registers App Toolkit route lifecycle through RouterRoutes.
+ *
+ * @returns {void}
+ */
+export function registerAppToolkitRoute() {
+  const existing = RouterRoutes.getRoute('app-toolkit-api');
+  if (!existing) {
+    return;
+  }
+
+  RouterRoutes.registerRoute({
+    ...existing,
+    onLoad: mountAppToolkitRoute,
+  });
+}
+
+registerAppToolkitRoute();
