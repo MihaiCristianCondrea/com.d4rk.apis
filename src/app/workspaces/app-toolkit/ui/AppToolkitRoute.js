@@ -3,6 +3,7 @@ import { renderWorkspaceDashboards } from '../../../../core/ui/templates/workspa
 // Change Rationale: Screenshot carousel navigation now uses the shared action button
 // helper so tertiary buttons remain consistent with the global button-role policy.
 import { createTertiaryActionButton } from '@/core/ui/components/actionButtons.js';
+import { createFileHandleStore } from '../data/services/fileHandleStoreService.js';
 
 (function (global) {
     const utils = global.ApiBuilderUtils;
@@ -2982,137 +2983,6 @@ import { createTertiaryActionButton } from '@/core/ui/components/actionButtons.j
                 throw new Error('The selected file does not contain a personal access token.');
             }
             return lines[0];
-        }
-
-        function createFileHandleStore({ dbName, storeName, key }) {
-            if (typeof indexedDB === 'undefined') {
-                return {
-                    async set() {
-                        // IndexedDB is unavailable; persist in-memory only.
-                    },
-                    async clear() {
-                        // IndexedDB is unavailable; nothing to clear.
-                    },
-                    async get() {
-                        return null;
-                    }
-                };
-            }
-
-            function openDb() {
-                return new Promise((resolve, reject) => {
-                    const request = indexedDB.open(dbName, 1);
-                    request.addEventListener('upgradeneeded', () => {
-                        const db = request.result;
-                        if (!db.objectStoreNames.contains(storeName)) {
-                            db.createObjectStore(storeName);
-                        }
-                    });
-                    request.addEventListener('success', () => {
-                        resolve(request.result);
-                    });
-                    request.addEventListener('error', () => {
-                        reject(request.error);
-                    });
-                });
-            }
-
-            async function runTransaction(mode, executor) {
-                const db = await openDb();
-                return new Promise((resolve, reject) => {
-                    const tx = db.transaction(storeName, mode);
-                    const store = tx.objectStore(storeName);
-                    let settled = false;
-
-                    const safeResolve = (value) => {
-                        if (!settled) {
-                            settled = true;
-                            resolve(value);
-                        }
-                    };
-
-                    const safeReject = (error) => {
-                        if (!settled) {
-                            settled = true;
-                            reject(error);
-                        }
-                    };
-
-                    tx.addEventListener('complete', () => {
-                        db.close();
-                        safeResolve(undefined);
-                    });
-                    tx.addEventListener('abort', () => {
-                        const error = tx.error || new Error('Transaction aborted.');
-                        db.close();
-                        safeReject(error);
-                    });
-                    tx.addEventListener('error', () => {
-                        // handled via abort
-                    });
-                    executor(store, safeResolve, safeReject);
-                });
-            }
-
-            return {
-                async get() {
-                    try {
-                        const db = await openDb();
-                        return await new Promise((resolve, reject) => {
-                            const tx = db.transaction(storeName, 'readonly');
-                            const store = tx.objectStore(storeName);
-                            const request = store.get(key);
-                            request.addEventListener('success', () => {
-                                resolve(request.result || null);
-                            });
-                            request.addEventListener('error', () => {
-                                reject(request.error);
-                            });
-                            tx.addEventListener('complete', () => {
-                                db.close();
-                            });
-                            tx.addEventListener('abort', () => {
-                                const error = tx.error || request.error || new Error('Transaction aborted.');
-                                db.close();
-                                reject(error);
-                            });
-                        });
-                    } catch (error) {
-                        console.warn('AppToolkit: Unable to read stored GitHub token file handle.', error);
-                        return null;
-                    }
-                },
-                async set(value) {
-                    try {
-                        await runTransaction('readwrite', (store, resolve, reject) => {
-                            const request = store.put(value, key);
-                            request.addEventListener('success', () => {
-                                resolve();
-                            });
-                            request.addEventListener('error', () => {
-                                reject(request.error);
-                            });
-                        });
-                    } catch (error) {
-                        console.warn('AppToolkit: Unable to store GitHub token file handle.', error);
-                    }
-                },
-                async clear() {
-                    try {
-                        await runTransaction('readwrite', (store, resolve, reject) => {
-                            const request = store.delete(key);
-                            request.addEventListener('success', () => {
-                                resolve();
-                            });
-                            request.addEventListener('error', () => {
-                                reject(request.error);
-                            });
-                        });
-                    } catch (error) {
-                        console.warn('AppToolkit: Unable to clear stored GitHub token file handle.', error);
-                    }
-                }
-            };
         }
 
         async function persistGithubTokenFileHandle(handle) {
