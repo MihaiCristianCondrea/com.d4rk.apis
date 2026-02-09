@@ -14,9 +14,10 @@
   </nav>
   <dialog id="navDrawer" class="navigation-drawer left s" aria-label="Main navigation">
     <header class="drawer-header padding">
+      <!-- Change Rationale: Navigation and app-bar actions now share one BeerCSS contract (`button transparent circle app-nav-icon-button`) so icon controls render and test consistently. -->
       <nav>
         <h6 class="type-title-small max">Menu</h6>
-        <button id="closeDrawerButton" class="transparent circle" aria-label="Close navigation" type="button">
+        <button id="closeDrawerButton" class="button transparent circle app-nav-icon-button" aria-label="Close navigation" type="button">
           <i aria-hidden="true">close</i>
         </button>
       </nav>
@@ -29,13 +30,13 @@
     <div class="drawer-footer padding">
       <div class="theme-toggle-title">Theme</div>
       <div class="theme-button-container">
-        <button id="lightThemeButton" data-theme="light" aria-label="Use light theme" aria-pressed="false" class="transparent circle" type="button">
+        <button id="lightThemeButton" data-theme="light" aria-label="Use light theme" aria-pressed="false" class="button transparent circle app-nav-icon-button" type="button">
           <i class="material-symbols-outlined" aria-hidden="true">light_mode</i>
         </button>
-        <button id="darkThemeButton" data-theme="dark" aria-label="Use dark theme" aria-pressed="false" class="transparent circle" type="button">
+        <button id="darkThemeButton" data-theme="dark" aria-label="Use dark theme" aria-pressed="false" class="button transparent circle app-nav-icon-button" type="button">
           <i class="material-symbols-outlined" aria-hidden="true">dark_mode</i>
         </button>
-        <button id="autoThemeButton" data-theme="auto" aria-label="Match system theme" aria-pressed="true" class="transparent circle" type="button">
+        <button id="autoThemeButton" data-theme="auto" aria-label="Match system theme" aria-pressed="true" class="button transparent circle app-nav-icon-button" type="button">
           <i class="material-symbols-outlined" aria-hidden="true">brightness_auto</i>
         </button>
       </div>

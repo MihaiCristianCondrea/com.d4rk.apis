@@ -681,8 +681,8 @@ function renderFavoritesPage() {
      * monospace slugs, keeping the remove action aligned to the top-right and actions in
      * a single row for consistent scanning on narrow layouts.
      */
-    // Change Rationale: Button classes now lean on the shared app button helpers
-    // so favorites actions stay consistent across GitHub tool surfaces.
+    // Change Rationale: Button classes now lean on BeerCSS-native `.button` controls with shared
+    // `app-ui-button` utilities so favorites actions stay consistent across GitHub tool surfaces.
     const card = document.createElement('article');
     card.className = 'gh-favorite-card';
     card.innerHTML = `
@@ -702,15 +702,15 @@ function renderFavoritesPage() {
         </div>
       </div>
       <div class="gh-favorite-actions">
-        <button class="app-button app-button--primary app-button--small" type="button" data-open-mapper>
+        <button class="button small app-ui-button" type="button" data-open-mapper>
           <span class="material-symbols-outlined">terminal</span>
           <span>Map</span>
         </button>
-        <button class="app-button app-button--secondary app-button--small" type="button" data-open-stats>
+        <button class="button small border app-ui-button" type="button" data-open-stats>
           <span class="material-symbols-outlined">bar_chart</span>
           <span>Stats</span>
         </button>
-        <a class="app-button app-button--secondary app-button--small" href="https://github.com/${slug}" target="_blank" rel="noopener noreferrer">
+        <a class="button small border app-ui-button" href="https://github.com/${slug}" target="_blank" rel="noopener noreferrer">
           <span class="material-symbols-outlined">open_in_new</span>
           <span>Open</span>
         </a>

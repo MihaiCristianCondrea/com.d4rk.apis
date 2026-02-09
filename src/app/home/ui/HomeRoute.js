@@ -11,11 +11,7 @@ import homeScreenSource from './HomeScreen.html?raw';
 // card roles remain consistent without per-screen class overrides.
 import actionCardViewSource from './views/ActionCardView.html?raw';
 import infoCardViewSource from './views/InfoCardView.html?raw';
-
-const globalScope = typeof window !== 'undefined' ? window : globalThis;
-// Change Rationale: Expose the latest home screen HTML after moving it into the feature UI,
-// ensuring any runtime loader can reference the canonical in-feature screen path.
-globalScope.__APP_HOME_SCREEN__ = homeScreenSource;
+import { RouterRoutes } from '@/core/ui/router/routes.js';
 
 /**
  * Configuration for a workspace tile on the home page.
@@ -55,10 +51,17 @@ function parseCardTemplate(source, viewName) {
   const parser = new DOMParser();
   const doc = parser.parseFromString(source, 'text/html');
   const template = doc.querySelector(`template[data-view="${viewName}"]`);
-  if (!template) {
-    throw new Error(`HomeRoute: Missing ${viewName} card template.`);
+  if (template) {
+    return template;
   }
-  return template;
+
+  /* Change Rationale: In tests or compatibility builds the raw view source may be delivered
+   * without the wrapper template node. Falling back to an in-memory template keeps route
+   * lifecycle registration deterministic without relying on globals. */
+  const fallbackTemplate = document.createElement('template');
+  fallbackTemplate.dataset.view = viewName;
+  fallbackTemplate.innerHTML = source;
+  return fallbackTemplate;
 }
 
 const actionCardTemplate = parseCardTemplate(actionCardViewSource, 'action-card');
@@ -261,26 +264,38 @@ function renderGithubToolsGrid() {
  * - Renders the GitHub tools grid.
  *
  * It is:
- * - Exported for module usage.
- * - Attached to `globalScope` for non-module contexts.
- * - Invoked automatically on `DOMContentLoaded` (or immediately if the
- *   document is already loaded).
+ * - Exported as an explicit route lifecycle mount hook and registered through RouterRoutes.
  *
  * @returns {void}
  */
-export function initHomePage() {
+export function mountHomeRoute() {
   renderWorkspaceGrid();
   renderGithubToolsGrid();
 }
 
-// Expose for scripts that may call it from inline HTML or other globals.
-globalScope.initHomePage = initHomePage;
 
-// Auto-initialize when the DOM is ready (browser environments only).
-if (typeof document !== 'undefined') {
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initHomePage, { once: true });
-  } else {
-    initHomePage();
+/**
+ * No-op unmount hook for the home route.
+ *
+ * @returns {void}
+ */
+export function unmountHomeRoute() {}
+
+/**
+ * Registers home lifecycle hooks through the canonical RouterRoutes API.
+ *
+ * @returns {void}
+ */
+export function registerHomeRoute() {
+  const existingRoute = RouterRoutes.getRoute('home');
+  if (!existingRoute) {
+    return;
   }
+
+  RouterRoutes.registerRoute({
+    ...existingRoute,
+    onLoad: mountHomeRoute,
+  });
 }
+
+registerHomeRoute();

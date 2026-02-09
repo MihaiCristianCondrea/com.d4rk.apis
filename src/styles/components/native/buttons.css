@@ -149,63 +149,8 @@ md-text-button[has-icon][trailing-icon] {
   line-height: 1;
 }
 
-/* Change Rationale: Provide shared helper classes for non-MWC buttons so screens
- * can declare primary/secondary intent without bespoke class stacks.
- */
-.app-button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  border-radius: 999px;
-  padding: 0.6rem 1.1rem;
-  border: 1px solid transparent;
-  font-weight: 500;
-  line-height: 1.1;
-  cursor: pointer;
-  text-decoration: none;
-  transition: background-color var(--app-motion-duration-short, 200ms)
-      var(--app-motion-ease-standard, cubic-bezier(0, 0, 0.2, 1)),
-    color var(--app-motion-duration-short, 200ms)
-      var(--app-motion-ease-standard, cubic-bezier(0, 0, 0.2, 1)),
-    border-color var(--app-motion-duration-short, 200ms)
-      var(--app-motion-ease-standard, cubic-bezier(0, 0, 0.2, 1));
-}
-
-.app-button--primary {
-  background-color: var(--app-primary);
-  color: var(--app-on-primary);
-  border-color: transparent;
-}
-
-.app-button--secondary {
-  background-color: transparent;
-  color: var(--app-on-surface);
-  border-color: var(--app-outline);
-}
-
-.app-button--primary:hover {
-  background-color: color-mix(in srgb, var(--app-primary) 88%, #000);
-}
-
-.app-button--secondary:hover {
-  background-color: color-mix(in srgb, var(--app-primary) 12%, transparent);
-  border-color: color-mix(in srgb, var(--app-primary) 55%, var(--app-outline));
-}
-
-.app-button--small {
-  padding: 0.4rem 0.85rem;
-  font-size: 0.85rem;
-}
-
-.app-button--large {
-  padding: 0.75rem 1.5rem;
-  font-size: 1rem;
-}
-
-.app-button:focus-visible {
-  outline: 2px solid var(--app-primary);
-  outline-offset: 2px;
-}
+/* Change Rationale: Legacy `.app-button*` helpers emulated component variants outside BeerCSS.
+ * They are deprecated and intentionally removed from active styling so feature screens rely on
+ * BeerCSS-native `.button` primitives plus shared `app-ui-*` utility classes. */
 
 /* stylelint-enable selector-type-no-unknown */

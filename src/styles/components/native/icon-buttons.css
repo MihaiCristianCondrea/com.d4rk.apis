@@ -16,37 +16,25 @@
   gap: 12px;
 }
 
-.theme-button-container md-icon-button {
-  --md-icon-button-icon-color: var(--app-text-color);
-  --md-icon-button-icon-size: 20px;
-  border-radius: 50%;
-  background-color: transparent;
+/* Change Rationale: Navigation theme toggles now use native BeerCSS buttons instead of `md-icon-button`, so state styling must target the shared icon-button contract. */
+.theme-button-container .app-nav-icon-button {
+  color: var(--app-text-color);
   transition: background-color var(--app-motion-duration-short, 200ms)
     var(--app-motion-ease-standard, cubic-bezier(0, 0, 0.2, 1));
 }
 
-.theme-button-container md-icon-button.selected {
+.theme-button-container .app-nav-icon-button.selected {
   background-color: var(--app-theme-button-selected-bg);
-  --md-icon-button-icon-color: var(--md-sys-color-primary);
+  color: var(--md-sys-color-primary);
 }
 
-.theme-button-container md-icon-button .material-symbols-outlined {
-  font-family: 'Material Symbols SemiBold', 'Material Symbols Outlined',
-    sans-serif;
-}
-
-.theme-button-container md-icon-button.selected .material-symbols-outlined {
-  font-family: 'Material Symbols Filled', 'Material Symbols Outlined', sans-serif;
-}
-
-/* Change Rationale: Icon-only buttons were sitting on the text baseline, leaving glyphs visibly off-center inside circular containers across hover and disabled states. Explicit centering keeps the Material icons aligned. */
-md-icon-button md-icon,
-md-icon-button .material-symbols-outlined {
+.theme-button-container .app-nav-icon-button .material-symbols-outlined {
+  font-family: 'Material Symbols SemiBold', 'Material Symbols Outlined', sans-serif;
   display: grid;
   place-items: center;
   line-height: 1;
 }
 
-md-icon-button {
-  vertical-align: middle;
+.theme-button-container .app-nav-icon-button.selected .material-symbols-outlined {
+  font-family: 'Material Symbols Filled', 'Material Symbols Outlined', sans-serif;
 }

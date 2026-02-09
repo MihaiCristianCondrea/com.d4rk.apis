@@ -356,11 +356,9 @@
           <p class="faq-icon-picker__empty" id="faqIconPickerEmpty" hidden="">No icons match "<span id="faqIconPickerQuery"></span>"</p>
           <div class="faq-icon-picker__grid" id="faqIconPickerList" role="listbox" aria-label="Material Symbols options"></div>
           <div class="faq-icon-picker__footer">
-            <!-- Change Rationale: Inline actions previously depended on custom spacing alone, which
-                 left their shape and size out of sync with BeerCSS buttons. Applying BeerCSS size
-                 and shape helpers preserves the lightweight styling while aligning with Material 3
-                 button geometry. -->
-            <button type="button" class="api-inline-button variant-ghost small round transparent" id="faqIconPickerClear"><span class="material-symbols-outlined api-inline-icon">backspace</span> <span>Clear selection</span></button> <span class="material-symbols-outlined">done</span> Done
+            <!-- Change Rationale: Inline actions now use BeerCSS-native button classes with shared inline utilities
+                 so lightweight footer actions stay within one control system and Material 3 sizing. -->
+            <button type="button" class="button small transparent round app-ui-inline-button" id="faqIconPickerClear"><span class="material-symbols-outlined app-ui-inline-icon">backspace</span> <span>Clear selection</span></button> <span class="material-symbols-outlined">done</span> Done
           </div>
         </div>
       </div>

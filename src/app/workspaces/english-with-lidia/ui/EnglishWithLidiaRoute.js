@@ -1,5 +1,6 @@
 // Change Rationale: Focus timer controller is a shared service now centralized under core data services.
 import { createFocusTimerController } from '@/core/data/services/focusTimerController.js';
+import { RouterRoutes } from '@/core/ui/router/routes.js';
 // Change Rationale: Wizard controller now lives in `app/workspaces/shared/data/services`
 // to keep shared adapters within the feature layer while preserving initialization behavior.
 import { createGithubWizardController } from '../../shared/data/services/githubWizardController.js';
@@ -8,6 +9,8 @@ import { initBuilderRemoteControls } from '../../shared/ui/remoteControls.js';
 
 // Change Rationale: Replaced workspace-specific focus and GitHub wiring with shared controllers to deliver consistent flows
 // across experiences and simplify maintenance without altering existing UI affordances.
+
+let routeLifecycleMount = () => {};
 
 (function (global) {
     const utils = global.ApiBuilderUtils;
@@ -1692,5 +1695,41 @@ import { initBuilderRemoteControls } from '../../shared/ui/remoteControls.js';
         }, 1500);
     }
 
-    global.initEnglishWorkspace = initEnglishWorkspace;
+    routeLifecycleMount = initEnglishWorkspace;
 })(typeof window !== 'undefined' ? window : globalThis);
+
+
+/**
+ * Mount lifecycle for English with Lidia workspace route.
+ *
+ * @returns {} Returns any cleanup payload emitted by the workspace initializer.
+ */
+export function mountEnglishWithLidiaRoute() {
+  return routeLifecycleMount();
+}
+
+/**
+ * No-op unmount lifecycle for English with Lidia workspace route.
+ *
+ * @returns {void}
+ */
+export function unmountEnglishWithLidiaRoute() {}
+
+/**
+ * Registers English with Lidia route lifecycle through RouterRoutes.
+ *
+ * @returns {void}
+ */
+export function registerEnglishWithLidiaRoute() {
+  const existing = RouterRoutes.getRoute('english-with-lidia-api');
+  if (!existing) {
+    return;
+  }
+
+  RouterRoutes.registerRoute({
+    ...existing,
+    onLoad: mountEnglishWithLidiaRoute,
+  });
+}
+
+registerEnglishWithLidiaRoute();

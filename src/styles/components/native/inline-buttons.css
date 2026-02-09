@@ -1,31 +1,32 @@
-/* --- Inline Buttons --- */
-.api-inline-button {
+/* --- BeerCSS Inline Action Utilities --- */
+/* Change Rationale: Feature screens previously relied on `.api-inline-button` variants that
+ * recreated button semantics outside BeerCSS. This stylesheet now provides only additive
+ * utility classes layered on BeerCSS-native `.button` controls to keep one control system.
+ */
+
+.app-ui-button {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.app-ui-inline-button {
   gap: 0.35rem;
-  border: none;
-  border-radius: 999px;
-  padding: 0.4rem 0.9rem;
-  background-color: transparent;
-  color: var(--md-sys-color-on-surface-variant);
-  cursor: pointer;
-  font-size: 0.85rem;
-  transition: background-color 120ms ease, color 120ms ease;
 }
 
-.api-inline-button:hover {
-  background-color: rgba(0, 0, 0, 0.08);
-}
-
-.api-inline-button.variant-danger {
+.app-ui-inline-button--danger {
   color: var(--md-sys-color-error);
 }
 
-.api-inline-button.variant-danger:hover {
+.app-ui-inline-button--danger:hover {
   background-color: rgba(176, 0, 32, 0.1);
 }
 
-.api-inline-icon {
+.app-ui-inline-icon {
   font-size: 18px;
 }
 
+/* Change Rationale: Legacy `.api-inline-button` styles are deprecated and intentionally
+ * removed to prevent non-BeerCSS component emulation.
+ */

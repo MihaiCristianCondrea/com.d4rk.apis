@@ -93,17 +93,22 @@ export function createSelectField({ label, value = '', options = [], onChange = 
 
 /**
  * @param {{label: string, icon?: string|null, onClick?: () => void, variant?: string, title?: string}} options
+ * @returns {HTMLButtonElement} BeerCSS-aligned inline button element.
  */
+/* Change Rationale: Inline action factories previously emitted legacy `api-inline-button` classes
+ * that duplicated component semantics outside BeerCSS. Emitting BeerCSS-native classes with
+ * shared app utilities keeps generated controls consistent with the single UI policy while
+ * preserving compact inline affordances for fast actions. */
 export function createInlineButton({ label, icon = '', onClick = noop, variant = 'ghost', title = '' }) {
   const button = createElement('button', {
-    classNames: ['api-inline-button', `variant-${variant}`],
+    classNames: ['button', 'small', 'transparent', 'round', 'app-ui-inline-button', `app-ui-inline-button--${variant}`],
     attrs: { type: 'button', title },
   });
 
   if (icon) {
     button.appendChild(
       createElement('span', {
-        classNames: ['material-symbols-outlined', 'api-inline-icon'],
+        classNames: ['material-symbols-outlined', 'app-ui-inline-icon'],
         text: icon,
       }),
     );
