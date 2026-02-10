@@ -10,7 +10,7 @@
 
 const fs = require('fs');
 const path = require('path');
-const { initThemeControls } = require('../../app/src/main/js/core/data/services/themeService.js');
+const { initThemeControls } = require('../../src/core/data/services/themeService.js');
 
 /**
  * Loads an HTML file and parses it into a document.

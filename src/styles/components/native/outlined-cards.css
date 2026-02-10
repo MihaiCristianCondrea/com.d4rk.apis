@@ -1,9 +1,8 @@
 /* --- Outlined Cards --- */
 /* Change Rationale: Outlined card shape/elevation now defer to BeerCSS defaults
- * so this layer does not recreate a parallel native component style. */
+ * so this layer does not recreate a parallel native component style. The
+ * stylesheet exports spacing and content flow only. */
 .outlined-card {
-  background: var(--app-outlined-card-bg-color);
-  border: 1px solid var(--app-border-color);
   padding: 1.1rem 1.25rem;
   display: grid;
   gap: 0.75rem;

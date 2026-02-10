@@ -5,8 +5,8 @@ import {
   createNavigationItem,
   createNavigationSection,
   renderNavigationSections,
-} from '../../app/src/main/js/core/ui/components/navigation/navigationRenderer.js';
-import { updateActiveNavLink } from '../../app/src/main/js/core/ui/router/navigationState.js';
+} from '../../src/core/ui/components/navigation/navigationRenderer.js';
+import { updateActiveNavLink } from '../../src/core/ui/router/navigationState.js';
 
 /**
  * Creates a stub navigation item for testing.

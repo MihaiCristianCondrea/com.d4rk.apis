@@ -3,14 +3,14 @@
  */
 /*
  * Change Rationale:
- * - This suite previously mocked app/src/main/js/domain/utils, a duplicate alias for the core utilities.
- * - Pointing tests at app/src/main/js/core/ui/utils/domUtils consolidates utility usage and prevents namespace drift between domain and core layers.
+ * - This suite previously mocked src/domain/utils, a duplicate alias for the core utilities.
+ * - Pointing tests at src/core/ui/utils/domUtils consolidates utility usage and prevents namespace drift between domain and core layers.
  * - The consolidation safeguards consistent drawer interactions, which supports the predictable navigation patterns expected in Material Design 3 UIs.
  */
 const fs = require('fs');
 const path = require('path');
 
-const { initNavigationDrawer } = require('../../app/src/main/js/core/ui/components/navigation/navigationDrawerBindings.js');
+const { initNavigationDrawer } = require('../../src/core/ui/components/navigation/navigationDrawerBindings.js');
 
 /**
  * Builds the DOM skeleton required for exercising navigation drawer interactions.

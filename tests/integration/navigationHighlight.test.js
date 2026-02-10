@@ -5,8 +5,8 @@
  * Change Rationale: Verify the router-owned active state highlights both rail and
  * drawer links so navigation stays synchronized across breakpoints.
  */
-const { initNavigationDrawer } = require('../../app/src/main/js/core/ui/components/navigation/navigationDrawerBindings.js');
-const { updateActiveNavLink } = require('../../app/src/main/js/core/ui/router/navigationState.js');
+const { initNavigationDrawer } = require('../../src/core/ui/components/navigation/navigationDrawerBindings.js');
+const { updateActiveNavLink } = require('../../src/core/ui/router/navigationState.js');
 
 /**
  * Seeds the DOM with navigation rail + drawer links for active state testing.

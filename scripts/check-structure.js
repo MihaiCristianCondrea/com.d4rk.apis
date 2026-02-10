@@ -16,6 +16,8 @@ const GITHUB_TOOLS_ROOT = path.join(APP_ROOT, 'githubtools');
 const RES_LAYOUT_ROOT = path.join(__dirname, '..', 'src', 'app', 'shell');
 const STYLES_FEATURES_ROOT = path.join(__dirname, '..', 'src', 'styles', 'features');
 const TESTS_ROOT = path.join(__dirname, '..', 'tests');
+const ROUTE_MANIFEST_PATH = path.join(__dirname, '..', 'src', 'routes', 'routeManifest.js');
+const BOOTSTRAP_PATH = path.join(__dirname, '..', 'src', 'app', 'bootstrap.js');
 
 const ALLOWED_READMES = new Set();
 const ALLOWED_LAYOUT_HTML = new Set();

@@ -1,4 +1,4 @@
-/* Dialog layout is applied inside the Material shadow DOM via app/src/main/js/core/ui/components/dialogs/dialogs.js */
+/* Dialog layout is applied inside the Material shadow DOM via src/core/ui/components/dialogs/dialogs.js */
 body[data-dialog-open='true'] {
   overflow: hidden;
 }

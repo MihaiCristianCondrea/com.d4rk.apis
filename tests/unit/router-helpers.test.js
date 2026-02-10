@@ -3,12 +3,12 @@
  */
 /*
  * Change Rationale:
- * - Previously, these tests imported from app/src/main/js/router, a partial facade that duplicated core/router.
- * - Consolidating imports to app/src/main/js/core/ui/router removes the duplicate surface and ensures the tests exercise the single source of truth.
+ * - Previously, these tests imported from src/router, a partial facade that duplicated core/router.
+ * - Consolidating imports to src/core/ui/router removes the duplicate surface and ensures the tests exercise the single source of truth.
  * - This alignment reduces navigation drift, keeping routing behavior predictable for Material Design 3-driven flows.
  */
-const { RouterAnimation, fadeIn, fadeOut } = require('../../app/src/main/js/core/ui/router/animation.js');
-const { RouterHistory, updateTitle, pushState } = require('../../app/src/main/js/core/ui/router/history.js');
+const { RouterAnimation, fadeIn, fadeOut } = require('../../src/core/ui/router/animation.js');
+const { RouterHistory, updateTitle, pushState } = require('../../src/core/ui/router/history.js');
 
 describe('router helper modules', () => {
   beforeEach(() => {

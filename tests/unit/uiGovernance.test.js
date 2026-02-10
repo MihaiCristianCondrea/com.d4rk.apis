@@ -115,11 +115,13 @@ describe('UI governance', () => {
           violations.push(`${relativePath} -> missing page-section wrapper for predictable screen structure`);
         }
 
-        if (relativePath.includes('/workspaces/')) {
-          const statusRegions = (contents.match(/role=['"]status['"]/gi) || []).length;
-          if (statusRegions === 0) {
-            violations.push(`${relativePath} -> workspace screen missing role="status" feedback region`);
-          }
+        /* Change Rationale: status live regions are now mandatory for every screen so
+         * loading, success, and error transitions remain accessible across all features.
+         * Route-level template composition is allowed via `{{...STATUS...}}` placeholders. */
+        const statusRegions = (contents.match(/role=['"]status['"]/gi) || []).length;
+        const hasStatusPlaceholder = /\{\{[A-Z0-9_]*STATUS[A-Z0-9_]*\}\}/i.test(contents);
+        if (statusRegions === 0 && !hasStatusPlaceholder) {
+          violations.push(`${relativePath} -> screen missing role="status" feedback region (or status placeholder token)`);
         }
       }
     });

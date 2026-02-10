@@ -1,8 +1,8 @@
 /* --- Cards --- */
 /* Change Rationale: BeerCSS card surfaces already provide default shape/elevation.
- * Keep only layout spacing here to avoid a duplicate native-layer card system. */
+ * This module now relies on BeerCSS card containers for surface paint while
+ * keeping only layout spacing to avoid a duplicate native-layer card system. */
 .builder-card {
-  background-color: var(--md-sys-color-surface-container);
   padding: 1.25rem;
   display: flex;
   flex-direction: column;

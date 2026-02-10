@@ -4,7 +4,7 @@ const {
   isDarkPreferred,
   applyThemeClass,
   initThemeControls,
-} = require('../../app/src/main/js/core/data/services/themeService.js');
+} = require('../../src/core/data/services/themeService.js');
 
 describe('themeService pure/value behavior', () => {
   test('readStoredTheme falls back to auto', () => {

@@ -11,12 +11,14 @@ import releaseStatsFormView from './views/ReleaseStatsFormView.html?raw';
 import toolHeaderViewTemplate from '@/app/githubtools/common/ui/views/GitHubToolHeaderView.html?raw';
 import toolCardViewTemplate from '@/app/githubtools/common/ui/views/GitHubToolCardView.html?raw';
 import emptyStateViewTemplate from '@/app/githubtools/common/ui/views/GitHubEmptyStateView.html?raw';
+import statusRegionViewTemplate from '@/core/ui/views/StatusRegionView.html?raw';
 import {
   composeGitHubToolScreen,
   renderEmptyStateView,
   renderToolCardView,
   renderToolHeaderView,
 } from '@/app/githubtools/common/ui/githubToolsViewComposer.js';
+import { renderStatusRegionView } from '@/core/ui/templates/statusRegionView.js';
 
 /**
  * Builds the Release Stats screen markup using shared GitHub tool views.
@@ -36,6 +38,15 @@ function buildReleaseStatsScreenHtml() {
     content: releaseStatsFormView,
   });
 
+  /* Change Rationale: The status region slot now renders from the shared core view so
+   * every GitHub tool announces idle/loading/success/error states consistently. */
+  const statusView = renderStatusRegionView({
+    template: statusRegionViewTemplate,
+    id: 'release-stats-status',
+    state: 'idle',
+    message: 'Ready to analyze releases.',
+  });
+
   const errorView = renderEmptyStateView({
     template: emptyStateViewTemplate,
     id: 'releases-error',
@@ -46,6 +57,7 @@ function buildReleaseStatsScreenHtml() {
     screenTemplate: releaseStatsScreenTemplate,
     headerView,
     cardView,
+    statusView,
     emptyStateView: errorView,
   });
 }

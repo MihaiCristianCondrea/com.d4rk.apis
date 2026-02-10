@@ -7,6 +7,8 @@
  * - GitHub tool screens now reuse shared header, card, and error views.
  * - Centralizing the string replacement logic avoids duplicating placeholder
  *   handling in each Route module while keeping UI composition in the UI layer.
+ * - A dedicated status live region slot keeps loading/error announcements
+ *   reusable and consistent with Material 3 feedback patterns.
  * - This keeps screens modular and consistent with Material 3 layout patterns.
  */
 
@@ -70,6 +72,7 @@ export function renderEmptyStateView({ template, id, message }) {
  *   screenTemplate: string,
  *   headerView: string,
  *   cardView: string,
+ *   statusView?: string,
  *   emptyStateView: string
  * }} options Screen composition inputs.
  * @returns {string} Fully composed screen HTML.
@@ -78,11 +81,13 @@ export function composeGitHubToolScreen({
   screenTemplate,
   headerView,
   cardView,
+  statusView = '',
   emptyStateView,
 }) {
   return applyTemplateTokens(screenTemplate, {
     GH_TOOL_HEADER: headerView,
     GH_TOOL_CARD: cardView,
+    GH_TOOL_STATUS: statusView,
     GH_TOOL_ERROR: emptyStateView,
   });
 }

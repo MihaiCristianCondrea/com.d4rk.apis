@@ -1,0 +1,39 @@
+/* --- Shared Status Region --- */
+/* Change Rationale: A reusable status surface keeps `role="status"` feedback consistent
+ * across screens and avoids one-off loading banners that diverge from BeerCSS progress
+ * patterns. This styling is token-only and maps directly to Material 3 semantic colors. */
+.app-status-region {
+  display: grid;
+  gap: 0.45rem;
+  align-items: start;
+  border: 1px solid color-mix(in srgb, var(--md-sys-color-outline) 25%, transparent);
+  border-radius: 14px;
+  padding: 0.65rem 0.9rem;
+  background: color-mix(in srgb, var(--md-sys-color-surface-container-high) 92%, transparent);
+  color: var(--md-sys-color-on-surface);
+}
+
+.app-status-region__loading {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  color: var(--md-sys-color-primary);
+}
+
+.app-status-region__message {
+  margin: 0;
+  color: var(--app-secondary-text-color);
+  font-size: 0.9rem;
+}
+
+.app-status-region[data-state='success'] {
+  border-color: color-mix(in srgb, var(--md-sys-color-primary) 35%, var(--md-sys-color-outline));
+}
+
+.app-status-region[data-state='error'] {
+  border-color: color-mix(in srgb, var(--md-sys-color-error) 45%, var(--md-sys-color-outline));
+}
+
+.app-status-region[data-state='error'] .app-status-region__message {
+  color: var(--md-sys-color-error);
+}

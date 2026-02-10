@@ -6,12 +6,15 @@
     "dev": "vite",
     "build": "npm run verify:runtime-dependencies && vite build",
     "preview": "vite preview",
-    "test": "node scripts/check-structure.js && npm run verify:architecture && npm run verify:runtime-dependencies && npm run verify:style-tokens && jest",
+    "test": "node scripts/check-structure.js && npm run verify:architecture && npm run verify:runtime-dependencies && npm run verify:style-tokens && npm run verify:canonical-paths && npm run verify:spa-structure && npm run verify:spa-import-rules && jest",
     "verify:seo": "node -e \"['public/sitemap.xml','public/robots.txt'].forEach((file)=>require('fs').accessSync(file));\"",
     "deploy": "npm run build && npm run verify:seo",
     "verify:architecture": "node scripts/verify-architecture-docs.js",
     "verify:runtime-dependencies": "node scripts/verify-runtime-dependencies.js",
-    "verify:style-tokens": "node scripts/audit-style-tokens.js"
+    "verify:style-tokens": "node scripts/audit-style-tokens.js",
+    "verify:canonical-paths": "node scripts/check-canonical-paths.js",
+    "verify:spa-structure": "node scripts/verify-spa-structure.js",
+    "verify:spa-import-rules": "node scripts/verify-spa-import-rules.js"
   },
   "keywords": [],
   "author": "",
@@ -40,7 +43,7 @@
       "^@/(.*FaqScreen\\.html\\?raw)$": "<rootDir>/tests/fixtures/faqScreenRaw.js",
       "^@/(.*WorkspaceInsightCardView\\.html\\?raw)$": "<rootDir>/tests/fixtures/workspaceInsightCardRaw.js",
       "^@/(.*\\.html\\?raw)$": "<rootDir>/tests/fixtures/rawHtmlStub.js",
-      "^@/(.*)$": "<rootDir>/app/src/main/js/$1",
+      "^@/(.*)$": "<rootDir>/src/$1",
       "^.+\\.html\\?raw$": "<rootDir>/tests/fixtures/rawHtmlStub.js"
     },
     "testMatch": [

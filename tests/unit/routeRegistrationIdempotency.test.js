@@ -7,37 +7,37 @@
  */
 
 jest.mock(
-  '../../app/src/main/js/app/githubtools/gitpatch/ui/GitPatchScreen.html?raw',
+  '../../src/app/githubtools/gitpatch/ui/GitPatchScreen.html?raw',
   () => '<div>Git Patch Screen</div>',
   { virtual: true }
 );
 jest.mock(
-  '../../app/src/main/js/app/githubtools/gitpatch/ui/views/GitPatchFormView.html?raw',
+  '../../src/app/githubtools/gitpatch/ui/views/GitPatchFormView.html?raw',
   () => '<div>Git Patch Form</div>',
   { virtual: true }
 );
 jest.mock(
-  '../../app/src/main/js/app/githubtools/releasestats/ui/ReleaseStatsScreen.html?raw',
+  '../../src/app/githubtools/releasestats/ui/ReleaseStatsScreen.html?raw',
   () => '<div>Release Stats Screen</div>',
   { virtual: true }
 );
 jest.mock(
-  '../../app/src/main/js/app/githubtools/releasestats/ui/views/ReleaseStatsFormView.html?raw',
+  '../../src/app/githubtools/releasestats/ui/views/ReleaseStatsFormView.html?raw',
   () => '<div>Release Stats Form</div>',
   { virtual: true }
 );
 jest.mock(
-  '../../app/src/main/js/app/githubtools/common/ui/views/GitHubToolHeaderView.html?raw',
+  '../../src/app/githubtools/common/ui/views/GitHubToolHeaderView.html?raw',
   () => '<header>Header</header>',
   { virtual: true }
 );
 jest.mock(
-  '../../app/src/main/js/app/githubtools/common/ui/views/GitHubToolCardView.html?raw',
+  '../../src/app/githubtools/common/ui/views/GitHubToolCardView.html?raw',
   () => '<section>Card</section>',
   { virtual: true }
 );
 jest.mock(
-  '../../app/src/main/js/app/githubtools/common/ui/views/GitHubEmptyStateView.html?raw',
+  '../../src/app/githubtools/common/ui/views/GitHubEmptyStateView.html?raw',
   () => '<div>Empty</div>',
   { virtual: true }
 );
@@ -46,9 +46,9 @@ test('GitPatchRoute registers once even when imported twice', () => {
   jest.resetModules();
   let result;
   jest.isolateModules(() => {
-    const { RouterRoutes } = require('../../app/src/main/js/core/ui/router/routes.js');
+    const { RouterRoutes } = require('../../src/core/ui/router/routes.js');
     const { registerGitPatchRoute } = require(
-      '../../app/src/main/js/app/githubtools/gitpatch/ui/GitPatchRoute.js'
+      '../../src/app/githubtools/gitpatch/ui/GitPatchRoute.js'
     );
     const initialRoutes = RouterRoutes.getRoutes();
 
@@ -68,9 +68,9 @@ test('ReleaseStatsRoute registers once even when imported twice', () => {
   jest.resetModules();
   let result;
   jest.isolateModules(() => {
-    const { RouterRoutes } = require('../../app/src/main/js/core/ui/router/routes.js');
+    const { RouterRoutes } = require('../../src/core/ui/router/routes.js');
     const { registerReleaseStatsRoute } = require(
-      '../../app/src/main/js/app/githubtools/releasestats/ui/ReleaseStatsRoute.js'
+      '../../src/app/githubtools/releasestats/ui/ReleaseStatsRoute.js'
     );
     const initialRoutes = RouterRoutes.getRoutes();
 
@@ -87,19 +87,19 @@ test('ReleaseStatsRoute registers once even when imported twice', () => {
 });
 
 jest.mock(
-  '../../app/src/main/js/app/home/ui/HomeScreen.html?raw',
+  '../../src/app/home/ui/HomeScreen.html?raw',
   () => '<div>Home Screen</div>',
   { virtual: true }
 );
 
 jest.mock(
-  '../../app/src/main/js/app/home/ui/views/ActionCardView.html?raw',
+  '../../src/app/home/ui/views/ActionCardView.html?raw',
   () => '<template data-view="action-card"><article>Action Card</article></template>',
   { virtual: true }
 );
 
 jest.mock(
-  '../../app/src/main/js/app/home/ui/views/InfoCardView.html?raw',
+  '../../src/app/home/ui/views/InfoCardView.html?raw',
   () => '<template data-view="info-card"><article>Info Card</article></template>',
   { virtual: true }
 );
@@ -109,8 +109,8 @@ test('HomeRoute registers mount lifecycle through RouterRoutes without globals',
   jest.resetModules();
   let result;
   jest.isolateModules(() => {
-    const { RouterRoutes } = require('../../app/src/main/js/core/ui/router/routes.js');
-    const homeRouteModule = require('../../app/src/main/js/app/home/ui/HomeRoute.js');
+    const { RouterRoutes } = require('../../src/core/ui/router/routes.js');
+    const homeRouteModule = require('../../src/app/home/ui/HomeRoute.js');
 
     homeRouteModule.registerHomeRoute();
     const homeRoute = RouterRoutes.getRoute('home');

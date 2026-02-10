@@ -3,7 +3,7 @@ const {
   openDrawerState,
   closeDrawerState,
   setSectionExpandedState,
-} = require('../../app/src/main/js/core/domain/navigation/navigationDrawerState.js');
+} = require('../../src/core/domain/navigation/navigationDrawerState.js');
 
 describe('navigationDrawerState', () => {
   test('creates normalized state', () => {
