@@ -22,3 +22,5 @@
    CSS imports and the canonical tool identifiers without impacting Material 3 styling. */
 @import '../features/githubtools/githubtools.css';
 /* stylelint-enable selector-type-no-unknown */
+
+@import './native/status-region.css';

@@ -3,9 +3,9 @@ import {
   createEmptyCategory,
   normalizeCategoryInput,
   createCategoryId
-} from '../../app/src/main/js/app/workspaces/app-toolkit/domain/NormalizeAppToolkitCategoryUseCase.js';
-import { isValidPackageName } from '../../app/src/main/js/app/workspaces/app-toolkit/domain/ValidateAppToolkitExportUseCase.js';
-import { createFileHandleStore } from '../../app/src/main/js/app/workspaces/app-toolkit/data/services/fileHandleStoreService.js';
+} from '../../src/app/workspaces/app-toolkit/domain/NormalizeAppToolkitCategoryUseCase.js';
+import { isValidPackageName } from '../../src/app/workspaces/app-toolkit/domain/ValidateAppToolkitExportUseCase.js';
+import { createFileHandleStore } from '../../src/app/workspaces/app-toolkit/data/services/fileHandleStoreService.js';
 
 /**
  * Change Rationale:

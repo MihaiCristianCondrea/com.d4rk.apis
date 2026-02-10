@@ -26,6 +26,7 @@ import {
   renderAsciiTree,
   renderPathList,
 } from '@/app/githubtools/common/domain/githubTools.js';
+import { setStatusRegionState } from '@/core/ui/templates/statusRegionView.js';
 
 
 /**
@@ -728,6 +729,23 @@ function clearError(containerId) {
   }
 }
 
+
+/**
+ * Updates a GitHub tool status region to a specific lifecycle state.
+ *
+ * @param {string} statusId Status element id.
+ * @param {'idle'|'loading'|'success'|'error'} state Lifecycle state.
+ * @param {string} message Announced status message.
+ * @param {string} [loadingLabel='Loading'] Label shown near the BeerCSS spinner.
+ * @returns {void}
+ */
+function updateToolStatus(statusId, state, message, loadingLabel = 'Loading') {
+  /* Change Rationale: A centralized status updater keeps all GitHub tools on the
+   * same idle/loading/success/error contract and prevents divergent live-region behavior. */
+  const statusElement = document.getElementById(statusId);
+  setStatusRegionState(statusElement, { state, message, loadingLabel });
+}
+
 /**
  * Initializes shared GitHub tools page behavior.
  *
@@ -847,6 +865,8 @@ function initRepoMapper() {
 
   if (!form || !codeEl || !resultEl || !asciiBtn || !pathsBtn) return;
 
+  updateToolStatus('repo-mapper-status', 'idle', 'Ready to map a repository tree.', 'Mapping repository');
+
   /** @type {'ascii'|'paths'} */
   let currentFormat = 'ascii';
   /** @type {RepoTreeEntry[]} */
@@ -922,6 +942,7 @@ function initRepoMapper() {
 
     mapperIsLoading = true;
     clearError('mapper-error');
+    updateToolStatus('repo-mapper-status', 'loading', 'Analyzing repository structure…', 'Mapping repository');
     if (!currentTree.length) {
       resultEl.hidden = true;
       codeEl.textContent = '';
@@ -942,12 +963,15 @@ function initRepoMapper() {
       if (!Array.isArray(tree) || tree.length === 0) {
         currentTree = [];
         renderError('mapper-error', 'No repository contents detected for this slug.');
+        updateToolStatus('repo-mapper-status', 'error', 'No repository contents detected for this slug.', 'Mapping repository');
         return;
       }
       currentTree = tree;
       renderOutput();
+      updateToolStatus('repo-mapper-status', 'success', 'Repository map generated successfully.', 'Mapping repository');
     } catch (error) {
       renderError('mapper-error', error.message);
+      updateToolStatus('repo-mapper-status', 'error', error.message || 'Unable to map repository.', 'Mapping repository');
     } finally {
       stopLoading();
       mapperIsLoading = false;
@@ -1073,6 +1097,8 @@ function initReleaseStats() {
 
   if (!form || !releaseListEl || !assetsListEl || !resultEl) return;
 
+  updateToolStatus('release-stats-status', 'idle', 'Ready to analyze releases.', 'Analyzing releases');
+
   /** @type {ReleaseStats | null} */
   let releaseData = null;
 
@@ -1181,6 +1207,7 @@ function initReleaseStats() {
   const handleSubmit = async (slug) => {
     resultEl.hidden = true;
     clearError('releases-error');
+    updateToolStatus('release-stats-status', 'loading', 'Fetching release analytics…', 'Analyzing releases');
     const [owner, repo] = slug.split('/');
     const stopLoading = setButtonBusy(
         submitButton,
@@ -1193,8 +1220,10 @@ function initReleaseStats() {
           tokenField?.value?.trim(),
       );
       renderResult(data);
+      updateToolStatus('release-stats-status', 'success', 'Release analytics updated successfully.', 'Analyzing releases');
     } catch (error) {
       renderError('releases-error', error.message);
+      updateToolStatus('release-stats-status', 'error', error.message || 'Unable to load release analytics.', 'Analyzing releases');
     } finally {
       stopLoading();
     }
@@ -1272,6 +1301,8 @@ function initGitPatch() {
 
   if (!form || !codeEl || !resultEl) return;
 
+  updateToolStatus('git-patch-status', 'idle', 'Ready to fetch a commit patch.', 'Fetching patch');
+
   /**
    * Handles the Git Patch submission lifecycle:
    * - Clears previous result and error state.
@@ -1285,6 +1316,7 @@ function initGitPatch() {
     clearError('patch-error');
     resultEl.hidden = true;
     codeEl.textContent = '';
+    updateToolStatus('git-patch-status', 'loading', 'Fetching patch data…', 'Fetching patch');
 
     const stopLoading = setButtonBusy(
         submitButton,
@@ -1295,8 +1327,10 @@ function initGitPatch() {
       const patch = await fetchCommitPatch(detail, tokenField?.value?.trim());
       codeEl.textContent = patch;
       resultEl.hidden = false;
+      updateToolStatus('git-patch-status', 'success', 'Patch fetched successfully.', 'Fetching patch');
     } catch (error) {
       renderError('patch-error', error.message);
+      updateToolStatus('git-patch-status', 'error', error.message || 'Unable to fetch patch.', 'Fetching patch');
     } finally {
       stopLoading();
     }
@@ -1328,7 +1362,15 @@ function initGitPatch() {
  * @returns {void}
  */
 function initFavoritesPage() {
-  renderFavoritesPage();
+  updateToolStatus('favorites-status', 'idle', 'Ready to read saved repositories.', 'Loading favorites');
+  updateToolStatus('favorites-status', 'loading', 'Loading saved repositories…', 'Loading favorites');
+  try {
+    renderFavoritesPage();
+    updateToolStatus('favorites-status', 'success', 'Favorites are up to date.', 'Loading favorites');
+  } catch (error) {
+    updateToolStatus('favorites-status', 'error', error?.message || 'Unable to load favorites.', 'Loading favorites');
+    throw error;
+  }
 }
 
 export {

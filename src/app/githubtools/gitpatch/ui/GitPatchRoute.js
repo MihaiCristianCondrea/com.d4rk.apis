@@ -11,12 +11,14 @@ import gitPatchFormView from './views/GitPatchFormView.html?raw';
 import toolHeaderViewTemplate from '@/app/githubtools/common/ui/views/GitHubToolHeaderView.html?raw';
 import toolCardViewTemplate from '@/app/githubtools/common/ui/views/GitHubToolCardView.html?raw';
 import emptyStateViewTemplate from '@/app/githubtools/common/ui/views/GitHubEmptyStateView.html?raw';
+import statusRegionViewTemplate from '@/core/ui/views/StatusRegionView.html?raw';
 import {
   composeGitHubToolScreen,
   renderEmptyStateView,
   renderToolCardView,
   renderToolHeaderView,
 } from '@/app/githubtools/common/ui/githubToolsViewComposer.js';
+import { renderStatusRegionView } from '@/core/ui/templates/statusRegionView.js';
 
 /**
  * Builds the Git Patch screen markup using shared GitHub tool views.
@@ -36,6 +38,15 @@ function buildGitPatchScreenHtml() {
     content: gitPatchFormView,
   });
 
+  /* Change Rationale: The status region slot now renders from the shared core view so
+   * every GitHub tool announces idle/loading/success/error states consistently. */
+  const statusView = renderStatusRegionView({
+    template: statusRegionViewTemplate,
+    id: 'git-patch-status',
+    state: 'idle',
+    message: 'Ready to fetch a commit patch.',
+  });
+
   const errorView = renderEmptyStateView({
     template: emptyStateViewTemplate,
     id: 'patch-error',
@@ -46,6 +57,7 @@ function buildGitPatchScreenHtml() {
     screenTemplate: gitPatchScreenTemplate,
     headerView,
     cardView,
+    statusView,
     emptyStateView: errorView,
   });
 }

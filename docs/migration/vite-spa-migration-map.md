@@ -10,10 +10,10 @@
 
 | Old path | New path |
 | --- | --- |
-| `app/src/main/js/**` | `src/**` |
+| `src/**` | `src/**` |
 | `app/src/main/styles/**` | `src/styles/**` |
-| `app/src/main/js/main.js` | `src/app/bootstrap.js` |
-| `app/src/main/js/core/ui/shell/AppShell.html` | `index.html` |
+| `src/main.js` | `src/app/bootstrap.js` |
+| `src/core/ui/shell/AppShell.html` | `index.html` |
 | `app/src/assets/data/material-symbols.json` | `public/data/material-symbols.json` |
 | `app/src/main/res/mipmap/**` | `public/mipmap/**` |
 | `app/src/main/res/drawable/**` | `public/drawable/**` |

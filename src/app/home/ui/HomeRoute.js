@@ -11,7 +11,9 @@ import homeScreenSource from './HomeScreen.html?raw';
 // card roles remain consistent without per-screen class overrides.
 import actionCardViewSource from './views/ActionCardView.html?raw';
 import infoCardViewSource from './views/InfoCardView.html?raw';
+import statusRegionViewTemplate from '@/core/ui/views/StatusRegionView.html?raw';
 import { RouterRoutes } from '@/core/ui/router/routes.js';
+import { renderStatusRegionView, setStatusRegionState } from '@/core/ui/templates/statusRegionView.js';
 
 /**
  * Configuration for a workspace tile on the home page.
@@ -144,6 +146,25 @@ function buildCardFromTemplate(template, data) {
   return card;
 }
 
+
+/**
+ * Builds home screen markup with a shared live status region.
+ *
+ * @returns {string} Composed screen HTML.
+ */
+function buildHomeScreenHtml() {
+  /* Change Rationale: Home now composes the shared status fragment to expose
+   * explicit loading/success/error announcements with one reusable pattern. */
+  const statusView = renderStatusRegionView({
+    template: statusRegionViewTemplate,
+    id: 'home-screen-status',
+    state: 'idle',
+    message: 'Ready to load home content.',
+  });
+
+  return homeScreenSource.replace('{{HOME_STATUS_REGION}}', statusView);
+}
+
 /**
  * Creates a full workspace tile anchor element for the home page.
  *
@@ -269,8 +290,29 @@ function renderGithubToolsGrid() {
  * @returns {void}
  */
 export function mountHomeRoute() {
-  renderWorkspaceGrid();
-  renderGithubToolsGrid();
+  const statusRegion = document.getElementById('home-screen-status');
+  setStatusRegionState(statusRegion, {
+    state: 'loading',
+    message: 'Loading workspace and tool cards…',
+    loadingLabel: 'Loading home content',
+  });
+
+  try {
+    renderWorkspaceGrid();
+    renderGithubToolsGrid();
+    setStatusRegionState(statusRegion, {
+      state: 'success',
+      message: 'Home content is ready.',
+      loadingLabel: 'Loading home content',
+    });
+  } catch (error) {
+    setStatusRegionState(statusRegion, {
+      state: 'error',
+      message: 'Unable to load home content.',
+      loadingLabel: 'Loading home content',
+    });
+    throw error;
+  }
 }
 
 
@@ -292,9 +334,13 @@ export function registerHomeRoute() {
     return;
   }
 
+  /* Change Rationale: Home now renders a shared status live region from the reusable
+   * status view fragment. Registering inline HTML ensures placeholder tokens are resolved
+   * before route mount while preserving the same screen structure and router ownership. */
   RouterRoutes.registerRoute({
     ...existingRoute,
     onLoad: mountHomeRoute,
+    inlineHtml: buildHomeScreenHtml(),
   });
 }
 

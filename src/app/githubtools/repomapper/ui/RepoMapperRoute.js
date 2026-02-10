@@ -11,12 +11,14 @@ import repoMapperFormView from './views/RepoMapperFormView.html?raw';
 import toolHeaderViewTemplate from '@/app/githubtools/common/ui/views/GitHubToolHeaderView.html?raw';
 import toolCardViewTemplate from '@/app/githubtools/common/ui/views/GitHubToolCardView.html?raw';
 import emptyStateViewTemplate from '@/app/githubtools/common/ui/views/GitHubEmptyStateView.html?raw';
+import statusRegionViewTemplate from '@/core/ui/views/StatusRegionView.html?raw';
 import {
   composeGitHubToolScreen,
   renderEmptyStateView,
   renderToolCardView,
   renderToolHeaderView,
 } from '@/app/githubtools/common/ui/githubToolsViewComposer.js';
+import { renderStatusRegionView } from '@/core/ui/templates/statusRegionView.js';
 
 /**
  * Builds the Repo Mapper screen markup using shared GitHub tool views.
@@ -36,6 +38,15 @@ function buildRepoMapperScreenHtml() {
     content: repoMapperFormView,
   });
 
+  /* Change Rationale: The status region slot now renders from the shared core view so
+   * every GitHub tool announces idle/loading/success/error states consistently. */
+  const statusView = renderStatusRegionView({
+    template: statusRegionViewTemplate,
+    id: 'repo-mapper-status',
+    state: 'idle',
+    message: 'Ready to map a repository tree.',
+  });
+
   const errorView = renderEmptyStateView({
     template: emptyStateViewTemplate,
     id: 'mapper-error',
@@ -46,6 +57,7 @@ function buildRepoMapperScreenHtml() {
     screenTemplate: repoMapperScreenTemplate,
     headerView,
     cardView,
+    statusView,
     emptyStateView: errorView,
   });
 }

@@ -92,30 +92,19 @@ import '../core/ui/components/animations/animations.js';
 
 import '../core/ui/legacyBridge.js';
 
+
 /*
  * Change Rationale:
- * - Consolidate feature entrypoints under the new feature-first directory to avoid a monolithic `app/` tree.
- * - Keep legacy import paths working via compatibility barrels while the router targets the canonical feature modules.
- * - This aligns with Material Design 3’s modular guidance by keeping each surface isolated yet discoverable.
+ * - Route ownership now lives in `src/routes/routeManifest.js` so startup no
+ *   longer depends on ad-hoc feature route imports in bootstrap.
+ * - The manifest keeps deep-link route IDs centralized while preserving
+ *   existing hash-based compatibility.
  */
-import './workspaces/app-toolkit/ui/index.js';
-import './workspaces/app-toolkit/ui/AppToolkitRoute.js';
-// Change Rationale: The unused Help feature codebase has been removed, so its bootstrapping
-// import is no longer required. FAQ tooling now relies solely on the workspace routes.
-// Change Rationale: FAQ workspace now follows the Screen + Views contract, so its route module
-// must be registered alongside other workspace feature entrypoints.
-import './workspaces/faq/ui/FaqRoute.js';
-import './workspaces/english-with-lidia/ui/EnglishWithLidiaRoute.js';
-import './workspaces/android-studio-tutorials/ui/AndroidStudioTutorialsRoute.js';
-
-// Change Rationale: GitHub tool entrypoints now resolve from the `app/githubtools` feature
-// tree to match the flattened Android-style layout and avoid missing-module errors in Vite.
-// Change Rationale: Repo Mapper routes live in the feature UI layer to keep routing out of domain logic.
-import './githubtools/repomapper/ui/RepoMapperRoute.js';
-import './githubtools/releasestats/ui/ReleaseStatsRoute.js';
-import './githubtools/gitpatch/ui/GitPatchRoute.js';
-import './home/ui/HomeRoute.js';
+import { registerRouteManifest } from '@/routes/routeManifest.js';
 
 // Change Rationale: Vite now treats the repository root `index.html` as the only runtime shell,
 // eliminating duplicate shell templates and ensuring route hydration always targets one canonical surface.
 import '../core/ui/appShell.js';
+
+
+registerRouteManifest();

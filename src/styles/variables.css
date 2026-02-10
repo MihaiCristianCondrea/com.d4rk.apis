@@ -46,14 +46,16 @@
   --app-on-surface: var(--md-sys-color-on-surface);
   --app-primary: var(--md-sys-color-primary);
   --app-on-primary: var(--md-sys-color-on-primary);
+  --app-primary-container: var(--md-sys-color-primary-container);
+  --app-on-primary-container: var(--md-sys-color-on-primary-container);
   /* Change Rationale: BeerCSS surfaces now reference the Material 3 tokens to
    * eliminate the default purple palette while keeping the theme anchored to
    * the same system colors used by Material Web Components.
    */
   --primary: var(--app-primary);
   --on-primary: var(--app-on-primary);
-  --primary-container: var(--md-sys-color-primary-container);
-  --on-primary-container: var(--md-sys-color-on-primary-container);
+  --primary-container: var(--app-primary-container);
+  --on-primary-container: var(--app-on-primary-container);
   --secondary: var(--md-sys-color-secondary);
   --on-secondary: var(--md-sys-color-on-secondary);
   --secondary-container: var(--md-sys-color-secondary-container);
@@ -266,8 +268,12 @@ html.dark {
   --app-on-surface: var(--md-sys-color-on-surface);
   --app-primary: var(--md-sys-color-primary);
   --app-on-primary: var(--md-sys-color-on-primary);
+  --app-primary-container: var(--md-sys-color-primary-container);
+  --app-on-primary-container: var(--md-sys-color-on-primary-container);
   --primary: var(--app-primary);
   --on-primary: var(--app-on-primary);
+  --primary-container: var(--app-primary-container);
+  --on-primary-container: var(--app-on-primary-container);
   --surface: var(--app-surface);
   --on-surface: var(--app-on-surface);
   --outline: var(--app-outline);

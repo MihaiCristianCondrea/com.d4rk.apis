@@ -1,0 +1,21 @@
+<!--
+  Change Rationale: Multiple screens duplicated ad-hoc loading/status copy and lacked a
+  consistent ARIA-live region. This shared status fragment centralizes the BeerCSS progress
+  pattern with explicit `idle/loading/success/error` state hooks, improving accessibility and
+  maintaining Material 3 feedback consistency across feature screens.
+-->
+<template data-view="status-region">
+  <div
+    id="{{id}}"
+    class="app-status-region"
+    role="status"
+    aria-live="polite"
+    data-state="{{state}}"
+  >
+    <div class="app-status-region__loading" data-status-loading hidden>
+      <progress class="circle small" aria-hidden="true"></progress>
+      <span class="app-status-region__label" data-status-label>Loading</span>
+    </div>
+    <p class="app-status-region__message" data-status-message>{{message}}</p>
+  </div>
+</template>

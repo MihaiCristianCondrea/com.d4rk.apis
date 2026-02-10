@@ -12,41 +12,41 @@ const mockDomUtils = {
   rafThrottle: (fn) => fn,
 };
 
-jest.mock('../../app/src/main/js/core/ui/utils/domUtils.js', () => mockDomUtils);
+jest.mock('../../src/core/ui/utils/domUtils.js', () => mockDomUtils);
 
-jest.mock('../../app/src/main/js/core/ui/components/navigation/themeControlsOrchestrator.js', () => ({
+jest.mock('../../src/core/ui/components/navigation/themeControlsOrchestrator.js', () => ({
   initThemeControlsFromDom: jest.fn(),
 }));
 
-jest.mock('../../app/src/main/js/core/ui/components/navigation/navigationDrawerBindings.js', () => ({
+jest.mock('../../src/core/ui/components/navigation/navigationDrawerBindings.js', () => ({
   initNavigationDrawer: jest.fn(() => ({ close: jest.fn() })),
 }));
 
 // Change Rationale: Mock the navigation view import so appShell can load under Jest
 // without requiring the raw Vite HTML loader in the test environment.
 jest.mock(
-  '../../app/src/main/js/core/ui/components/navigation/AppNavigationView.html?raw',
+  '../../src/core/ui/components/navigation/AppNavigationView.html?raw',
   () => '<div data-app-navigation></div>',
   { virtual: true }
 );
 
-jest.mock('../../app/src/main/js/core/ui/router/index.js', () => ({
+jest.mock('../../src/core/ui/router/index.js', () => ({
   initRouter: jest.fn(),
   loadPageContent: jest.fn(),
   normalizePageId: jest.fn((id) => id),
 }));
 
-jest.mock('../../app/src/main/js/core/ui/router/routes.js', () => ({
+jest.mock('../../src/core/ui/router/routes.js', () => ({
   __esModule: true,
   default: {},
 }));
 
-jest.mock('../../app/src/main/js/core/ui/globals.js', () => ({
+jest.mock('../../src/core/ui/globals.js', () => ({
   registerGlobalUtilities: jest.fn(),
   registerCompatibilityGlobals: jest.fn(),
 }));
 
-const { updateActiveNavLink } = require('../../app/src/main/js/core/ui/router/navigationState.js');
+const { updateActiveNavLink } = require('../../src/core/ui/router/navigationState.js');
 
 function setupAppShellDom() {
   document.body.innerHTML = `
@@ -75,7 +75,7 @@ test('app shell toggles app bar elevation on scroll', () => {
   });
 
   jest.resetModules();
-  require('../../app/src/main/js/core/ui/appShell.js');
+  require('../../src/core/ui/appShell.js');
 
   document.dispatchEvent(new Event('DOMContentLoaded'));
 
@@ -97,12 +97,12 @@ test('app shell initializes router without global lifecycle fallbacks', () => {
   mockDomUtils.getDynamicElement.mockImplementation((id) => document.getElementById(id));
 
   jest.resetModules();
-  require('../../app/src/main/js/core/ui/appShell.js');
+  require('../../src/core/ui/appShell.js');
 
   document.dispatchEvent(new Event('DOMContentLoaded'));
 
-  const { initRouter } = require('../../app/src/main/js/core/ui/router/index.js');
-  const { registerCompatibilityGlobals } = require('../../app/src/main/js/core/ui/globals.js');
+  const { initRouter } = require('../../src/core/ui/router/index.js');
+  const { registerCompatibilityGlobals } = require('../../src/core/ui/globals.js');
 
   expect(initRouter).toHaveBeenCalled();
   const options = initRouter.mock.calls[0][3];
