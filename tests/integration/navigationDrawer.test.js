@@ -54,20 +54,49 @@ function createDrawerMarkup() {
   closeDrawerButton.focus = jest.fn();
 }
 
+/**
+ * Installs a controllable `matchMedia` mock.
+ *
+ * @param {boolean} matches Initial match state.
+ * @returns {{__setMatches: (nextMatches: boolean) => void}} Mock media query list.
+ */
 function mockMatchMedia(matches) {
+  const listeners = new Set();
+  const mediaQueryList = {
+    matches,
+    media: '(max-width: 959px)',
+    onchange: null,
+    addListener: jest.fn((listener) => listeners.add(listener)),
+    removeListener: jest.fn((listener) => listeners.delete(listener)),
+    addEventListener: jest.fn((eventName, listener) => {
+      if (eventName === 'change') {
+        listeners.add(listener);
+      }
+    }),
+    removeEventListener: jest.fn((eventName, listener) => {
+      if (eventName === 'change') {
+        listeners.delete(listener);
+      }
+    }),
+    dispatchEvent: jest.fn((event) => {
+      listeners.forEach((listener) => listener(event));
+      if (typeof mediaQueryList.onchange === 'function') {
+        mediaQueryList.onchange(event);
+      }
+      return true;
+    }),
+    __setMatches(nextMatches) {
+      this.matches = nextMatches;
+      this.dispatchEvent({ matches: nextMatches, media: this.media });
+    },
+  };
+
   Object.defineProperty(window, 'matchMedia', {
     writable: true,
-    value: jest.fn().mockImplementation(() => ({
-      matches,
-      media: '(max-width: 960px)',
-      onchange: null,
-      addListener: jest.fn(),
-      removeListener: jest.fn(),
-      addEventListener: jest.fn(),
-      removeEventListener: jest.fn(),
-      dispatchEvent: jest.fn(),
-    })),
+    value: jest.fn().mockImplementation(() => mediaQueryList),
   });
+
+  return mediaQueryList;
 }
 
 describe('navigationDrawerService', () => {
@@ -195,7 +224,7 @@ describe('navigationDrawerService', () => {
     expect(menuButtonElement.getAttribute('aria-expanded')).toBe('false');
   });
 
-  test('keeps drawer open after nav selection on desktop viewport', () => {
+  test('menu trigger remains visible and can open drawer on desktop viewport', () => {
     document.body.className = '';
     createDrawerMarkup();
     mockMatchMedia(false);
@@ -203,12 +232,37 @@ describe('navigationDrawerService', () => {
 
     const menuButtonElement = document.getElementById('menuButton');
     const navDrawerElement = document.getElementById('navDrawer');
-    const homeLink = document.getElementById('homeLink');
 
     menuButtonElement.click();
-    homeLink.click();
 
     expect(navDrawerElement.classList.contains('active')).toBe(true);
+    expect(document.body.classList.contains('drawer-is-open')).toBe(true);
+    expect(menuButtonElement.getAttribute('aria-expanded')).toBe('true');
+    expect(navDrawerElement.getAttribute('aria-hidden')).toBe('false');
+  });
+
+  test('switching from compact to desktop layout closes and resets drawer state', () => {
+    document.body.className = '';
+    createDrawerMarkup();
+    const mediaQueryList = mockMatchMedia(true);
+    initNavigationDrawer();
+
+    const menuButtonElement = document.getElementById('menuButton');
+    const navDrawerElement = document.getElementById('navDrawer');
+    const navDrawerBackdrop = document.getElementById('navDrawerBackdrop');
+
+    menuButtonElement.click();
+    expect(navDrawerElement.classList.contains('active')).toBe(true);
+    expect(document.body.classList.contains('drawer-is-open')).toBe(true);
+
+    mediaQueryList.__setMatches(false);
+
+    expect(navDrawerElement.classList.contains('active')).toBe(false);
+    expect(navDrawerBackdrop.classList.contains('active')).toBe(false);
+    expect(document.body.classList.contains('drawer-is-open')).toBe(false);
+    expect(menuButtonElement.getAttribute('aria-expanded')).toBe('false');
+    expect(navDrawerElement.getAttribute('aria-hidden')).toBe('true');
+    expect(navDrawerBackdrop.getAttribute('aria-hidden')).toBe('true');
   });
 
   test('template keeps rail for m/l and drawer for s breakpoints', () => {

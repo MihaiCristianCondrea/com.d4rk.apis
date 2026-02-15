@@ -15,7 +15,7 @@ import {
  * @property {HTMLElement | null} [navDrawer=null] Drawer root reference.
  * @property {HTMLElement | null} [drawerBackdrop=null] Drawer backdrop reference.
  * @property {HTMLElement | null} [closeDrawerButton=null] Close button reference.
- * @property {string} [closeOnNavSelectMediaQuery='(max-width: 960px)']
+ * @property {string} [closeOnNavSelectMediaQuery='(max-width: 959px)']
  *   Media query that must match before clicking a nav item auto-closes the drawer.
  * @property {HTMLElement | null} [aboutToggle=null] About toggle reference.
  * @property {HTMLElement | null} [aboutContent=null] About content reference.
@@ -43,7 +43,7 @@ export class NavigationDrawerController {
     closeDrawerButton = null,
     // Change Rationale: Align the drawer breakpoint with the shared navigation
     // rail cutoff so compact drawer behavior matches CSS and BeerCSS helpers.
-    closeOnNavSelectMediaQuery = '(max-width: 960px)',
+    closeOnNavSelectMediaQuery = '(max-width: 959px)',
     aboutToggle = null,
     aboutContent = null,
     androidToggle = null,
@@ -77,6 +77,8 @@ export class NavigationDrawerController {
     this.handleKeydown = this.handleKeydown.bind(this);
     this.focusFirstNavItem = this.focusFirstNavItem.bind(this);
     this.handleNavItemSelection = this.handleNavItemSelection.bind(this);
+    this.handleCompactLayoutChange = this.handleCompactLayoutChange.bind(this);
+    this.compactLayoutMediaQueryList = null;
   }
 
   init() {
@@ -86,13 +88,62 @@ export class NavigationDrawerController {
 
     this.wireButtons();
     this.wireNavLinkCloseBehavior();
+    this.initCompactLayoutWatcher();
+    this.reconcileLayoutState();
     this.syncDrawerStateFromDom();
+  }
+
+  /**
+   * Watches compact-layout media query changes to keep drawer state in sync.
+   *
+   * @returns {void}
+   */
+  initCompactLayoutWatcher() {
+    // Change Rationale: Viewport breakpoint changes can leave stale drawer/body
+    // classes behind, so state is reconciled whenever the media query changes.
+    if (typeof window === 'undefined' || typeof window.matchMedia !== 'function') {
+      return;
+    }
+
+    this.compactLayoutMediaQueryList = window.matchMedia(this.closeOnNavSelectMediaQuery);
+    if (typeof this.compactLayoutMediaQueryList.addEventListener === 'function') {
+      this.compactLayoutMediaQueryList.addEventListener('change', this.handleCompactLayoutChange);
+      return;
+    }
+
+    if (typeof this.compactLayoutMediaQueryList.addListener === 'function') {
+      this.compactLayoutMediaQueryList.addListener(this.handleCompactLayoutChange);
+    }
+  }
+
+  /**
+   * Handles viewport transitions that switch between compact drawer and desktop rail.
+   *
+   * @returns {void}
+   */
+  handleCompactLayoutChange() {
+    this.reconcileLayoutState();
+  }
+
+  /**
+   * Ensures compact-only drawer classes/ARIA are reset when desktop rail is active.
+   *
+   * @returns {void}
+   */
+  reconcileLayoutState() {
+    if (this.isCompactLayout()) {
+      return;
+    }
+
+    this.navDrawer?.classList.remove('active');
+    this.syncDrawerState(false);
+    this.state = closeDrawerState(this.state);
   }
 
   wireButtons() {
     if (this.menuButton) {
-      // Change Rationale: Menu action now toggles the compact BeerCSS drawer,
-      // matching Android-style open/close behavior on repeated taps.
+      // Change Rationale: Menu action now toggles the shared drawer surface so
+      // app-bar navigation remains available across compact and desktop layouts.
       this.menuButton.addEventListener('click', () => this.toggle());
       this.menuButton.setAttribute('aria-expanded', 'false');
       this.menuButton.setAttribute('aria-controls', 'navDrawer');
@@ -272,7 +323,23 @@ export class NavigationDrawerController {
     if (typeof window === 'undefined' || typeof window.matchMedia !== 'function') {
       return true;
     }
-    return window.matchMedia(this.closeOnNavSelectMediaQuery).matches;
+    return this.isCompactLayout();
+  }
+
+  /**
+   * Determines whether the viewport is currently in compact drawer mode.
+   *
+   * @returns {boolean}
+   */
+  isCompactLayout() {
+    if (this.compactLayoutMediaQueryList) {
+      return this.compactLayoutMediaQueryList.matches;
+    }
+    if (typeof window === 'undefined' || typeof window.matchMedia !== 'function') {
+      return true;
+    }
+    this.compactLayoutMediaQueryList = window.matchMedia(this.closeOnNavSelectMediaQuery);
+    return this.compactLayoutMediaQueryList.matches;
   }
 }
 
