@@ -16,8 +16,7 @@
 }
 
 #appNavigationMount .app-navigation-rail,
-#appNavigationMount .overlay,
-#appNavigationMount dialog.navigation-drawer {
+#appNavigationMount .navigation-drawer {
   pointer-events: auto;
 }
 
@@ -47,36 +46,47 @@
 }
 
 /* --- Navigation Drawer --- */
-/* Change Rationale: Allow the drawer content to scroll within the dialog while
- * leaving spacing, dividers, and typography to BeerCSS defaults.
+/* Change Rationale: Compact drawer now uses BeerCSS `nav.left.s` structure,
+ * with explicit off-canvas behavior controlled by `.active` instead of dialog APIs.
  */
-/* Change Rationale: Suppress the native dialog backdrop so the BeerCSS overlay
- * remains the single source of the drawer scrim.
- */
-:root dialog.navigation-drawer::backdrop {
-  background: transparent;
-}
-
-/* Change Rationale: The drawer now follows the BeerCSS dialog shell pattern where
- * header/footer stay reachable and only destination links scroll.
- */
-dialog.navigation-drawer {
-  overflow: hidden;
+.navigation-drawer {
+  position: fixed;
+  inset-inline-start: 0;
+  inset-block-start: var(--app-top-app-bar-height);
   inline-size: var(--app-drawer-inline-size);
-  /* Change Rationale: Drawer colors now bind directly to the shared Material 3
-   * drawer tokens so BeerCSS no longer falls back to its default lavender palette.
-   */
-  background-color: var(--app-drawer-bg-color);
-  color: var(--app-text-color);
-  border-color: var(--md-sys-color-outline-variant);
-}
-
-/* Change Rationale: Keep BeerCSS responsible for closed-state visibility and only
- * apply the internal flex column layout while the dialog is open.
- */
-dialog.navigation-drawer[open] {
+  block-size: calc(100vh - var(--app-top-app-bar-height));
+  overflow: hidden;
   display: flex;
   flex-direction: column;
+  background-color: var(--app-drawer-bg-color);
+  color: var(--app-text-color);
+  border-inline-end: 1px solid var(--md-sys-color-outline-variant);
+  transform: translateX(calc(-1 * var(--app-drawer-inline-size) - 1rem));
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: transform 220ms var(--app-motion-ease-standard), opacity 220ms var(--app-motion-ease-standard);
+  z-index: 8;
+}
+
+.navigation-drawer.active {
+  transform: translateX(0);
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+/* Change Rationale: Drawer icon controls require explicit contrast tokens so
+ * actions remain legible across light/dark surfaces and selected states.
+ */
+.navigation-drawer .app-nav-icon-button {
+  color: var(--app-text-color);
+}
+
+.navigation-drawer .app-nav-icon-button:hover,
+.navigation-drawer .app-nav-icon-button:focus-visible {
+  background-color: var(--app-primary-container);
+  color: var(--app-on-primary-container);
 }
 
 /* Change Rationale: Footer legal actions should inherit the same palette as the
@@ -98,7 +108,11 @@ dialog.navigation-drawer[open] {
 }
 
 .drawer-footer {
+  flex-shrink: 0;
+  position: sticky;
+  bottom: 0;
   border-top: 1px solid var(--md-sys-color-outline-variant);
+  background-color: var(--app-drawer-bg-color);
 }
 
 .drawer-legal-links {
@@ -136,10 +150,23 @@ dialog.navigation-drawer[open] {
   z-index: 5;
 }
 
+/* Change Rationale: Explicitly separate compact drawer and desktop rail behavior
+ * by breakpoint so only one lateral navigation surface is interactive at a time.
+ */
+@media (max-width: 959px) {
+  .app-navigation-rail {
+    display: none;
+  }
+}
+
 /* Change Rationale: Maintain readable layout when the rail is visible by
  * offsetting the main shell surfaces instead of centering underneath it.
  */
 @media (min-width: 960px) {
+  .navigation-drawer {
+    display: none;
+  }
+
   /* Change Rationale: When the rail is visible, the app bar headline and actions
    * should align with the routed page content instead of rendering beneath the rail.
    */

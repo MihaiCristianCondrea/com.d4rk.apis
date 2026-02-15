@@ -19,13 +19,20 @@
 /* Change Rationale: Navigation theme toggles now use native BeerCSS buttons instead of `md-icon-button`, so state styling must target the shared icon-button contract. */
 .theme-button-container .app-nav-icon-button {
   color: var(--app-text-color);
+  background-color: transparent;
   transition: background-color var(--app-motion-duration-short, 200ms)
     var(--app-motion-ease-standard, cubic-bezier(0, 0, 0.2, 1));
 }
 
+/* Change Rationale: Theme toggles now apply high-contrast selected/hover pairs
+ * (`primary-container` + `on-primary-container`) for reliable icon readability
+ * across both light and dark drawer surfaces.
+ */
+.theme-button-container .app-nav-icon-button:hover,
+.theme-button-container .app-nav-icon-button:focus-visible,
 .theme-button-container .app-nav-icon-button.selected {
-  background-color: var(--app-theme-button-selected-bg);
-  color: var(--md-sys-color-primary);
+  background-color: var(--app-primary-container);
+  color: var(--app-on-primary-container);
 }
 
 .theme-button-container .app-nav-icon-button .material-symbols-outlined {

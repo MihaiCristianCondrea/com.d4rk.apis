@@ -239,7 +239,7 @@ describe('theme palette tokens', () => {
 
     expect(css).toMatch(/\.app-top-app-bar\s*\{[\s\S]*background-color:\s*var\(--app-surface\);/);
     expect(css).toMatch(/\.app-top-app-bar\s*\{[\s\S]*color:\s*var\(--app-on-surface\);/);
-    expect(css).toMatch(/dialog\.navigation-drawer\s*\{[\s\S]*background-color:\s*var\(--app-drawer-bg-color\);/);
+    expect(css).toMatch(/\.navigation-drawer\s*\{[\s\S]*background-color:\s*var\(--app-drawer-bg-color\);/);
     expect(css).toMatch(/\.app-navigation\s+li\.nav-item\.active,[\s\S]*background-color:\s*var\(--app-primary-container\)\s*!important;/);
     expect(css).toMatch(/\.app-navigation\s+li\.nav-item\.active\s+\.nav-link,[\s\S]*color:\s*var\(--app-on-primary-container\);/);
   });

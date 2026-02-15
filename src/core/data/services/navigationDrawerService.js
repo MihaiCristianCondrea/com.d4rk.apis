@@ -1,8 +1,7 @@
 // Change Rationale: Drawer state/behavior remains in core/data, while all DOM lookup
 // responsibilities moved to core/ui orchestrators.
-// Change Rationale: Drawer logic now uses a single canonical state source (`dialog.open`)
-// and mirrors that state into BeerCSS helper classes/ARIA. This removes conflicting
-// state toggles across `open`, custom classes, and overlay activation.
+// Change Rationale: Compact drawer interactions now follow BeerCSS nav-left behavior,
+// using one canonical source (`.active`) for open state instead of dialog APIs.
 import {
   createDrawerState,
   openDrawerState,
@@ -15,7 +14,6 @@ import {
  * @property {HTMLElement | null} [menuButton=null] Open button reference.
  * @property {HTMLElement | null} [navDrawer=null] Drawer root reference.
  * @property {HTMLElement | null} [closeDrawerButton=null] Close button reference.
- * @property {HTMLElement | null} [drawerOverlay=null] Overlay reference.
  * @property {string} [closeOnNavSelectMediaQuery='(max-width: 960px)']
  *   Media query that must match before clicking a nav item auto-closes the drawer.
  * @property {HTMLElement | null} [aboutToggle=null] About toggle reference.
@@ -42,9 +40,8 @@ export class NavigationDrawerController {
     menuButton = null,
     navDrawer = null,
     closeDrawerButton = null,
-    drawerOverlay = null,
     // Change Rationale: Align the drawer breakpoint with the shared navigation
-    // rail cutoff so modal behavior stays consistent across CSS and JS.
+    // rail cutoff so compact drawer behavior matches CSS and BeerCSS helpers.
     closeOnNavSelectMediaQuery = '(max-width: 960px)',
     aboutToggle = null,
     aboutContent = null,
@@ -61,7 +58,6 @@ export class NavigationDrawerController {
     this.menuButton = menuButton;
     this.navDrawer = navDrawer;
     this.closeDrawerButton = closeDrawerButton;
-    this.drawerOverlay = drawerOverlay;
     this.closeOnNavSelectMediaQuery = closeOnNavSelectMediaQuery;
     this.aboutToggle = aboutToggle;
     this.aboutContent = aboutContent;
@@ -95,7 +91,9 @@ export class NavigationDrawerController {
 
   wireButtons() {
     if (this.menuButton) {
-      this.menuButton.addEventListener('click', () => this.open());
+      // Change Rationale: Menu action now toggles the compact BeerCSS drawer,
+      // matching Android-style open/close behavior on repeated taps.
+      this.menuButton.addEventListener('click', () => this.toggle());
       this.menuButton.setAttribute('aria-expanded', 'false');
       this.menuButton.setAttribute('aria-controls', 'navDrawer');
     }
@@ -105,12 +103,7 @@ export class NavigationDrawerController {
       this.closeDrawerButton.setAttribute('aria-controls', 'navDrawer');
     }
 
-    this.drawerOverlay?.addEventListener('click', () => this.close());
     this.documentRef?.addEventListener('keydown', this.handleKeydown);
-    // Change Rationale: Canonical drawer state is now the dialog `open` attribute,
-    // so native dialog close/cancel events must refresh mirrored CSS + aria state.
-    this.navDrawer?.addEventListener('close', this.syncDrawerStateFromDom);
-    this.navDrawer?.addEventListener('cancel', this.syncDrawerStateFromDom);
 
     this.initToggleSection(this.aboutToggle, this.aboutContent, {
       defaultExpanded: false,
@@ -145,17 +138,21 @@ export class NavigationDrawerController {
       return;
     }
 
-    if (this.isDialogDrawer() && !this.navDrawer.open) {
-      if (typeof this.navDrawer.showModal === 'function') {
-        this.navDrawer.showModal();
-      } else {
-        this.navDrawer.setAttribute('open', '');
-      }
-    } else if (!this.isDialogDrawer()) {
-      this.navDrawer.classList.add('open');
-    }
-
+    this.navDrawer.classList.add('active');
     this.syncDrawerStateFromDom({ focusAfterOpen: true });
+  }
+
+  /**
+   * Toggles the drawer based on the canonical nav active state.
+   *
+   * @returns {void}
+   */
+  toggle() {
+    if (this.state.isOpen) {
+      this.close();
+      return;
+    }
+    this.open();
   }
 
   close() {
@@ -163,16 +160,7 @@ export class NavigationDrawerController {
       return;
     }
 
-    if (this.isDialogDrawer() && this.navDrawer.open) {
-      if (typeof this.navDrawer.close === 'function') {
-        this.navDrawer.close();
-      } else {
-        this.navDrawer.removeAttribute('open');
-      }
-    } else if (!this.isDialogDrawer()) {
-      this.navDrawer.classList.remove('open');
-    }
-
+    this.navDrawer.classList.remove('active');
     this.syncDrawerStateFromDom({ focusMenuAfterClose: true });
   }
 
@@ -263,17 +251,11 @@ export class NavigationDrawerController {
     const hasDrawer = Boolean(this.navDrawer);
     const isDrawerOpen = Boolean(isOpened && hasDrawer);
 
-    this.drawerOverlay?.classList.toggle('active', isDrawerOpen);
-    this.drawerOverlay?.setAttribute('aria-hidden', isDrawerOpen ? 'false' : 'true');
     this.bodyElement?.classList.toggle('drawer-is-open', isDrawerOpen);
-    this.navDrawer?.classList.toggle('open', isDrawerOpen);
     this.menuButton?.setAttribute('aria-expanded', isDrawerOpen ? 'true' : 'false');
+    this.navDrawer?.setAttribute('aria-hidden', isDrawerOpen ? 'false' : 'true');
 
     this.updateModalAccessibilityState(isDrawerOpen);
-
-    if (!hasDrawer) {
-      return;
-    }
   }
 
   /**
@@ -282,9 +264,7 @@ export class NavigationDrawerController {
    * @param {{focusAfterOpen?: boolean, focusMenuAfterClose?: boolean}} [options]
    */
   syncDrawerStateFromDom({ focusAfterOpen = false, focusMenuAfterClose = false } = {}) {
-    const isDrawerOpen = this.isDialogDrawer()
-      ? Boolean(this.navDrawer?.open)
-      : Boolean(this.navDrawer?.classList?.contains('open'));
+    const isDrawerOpen = Boolean(this.navDrawer?.classList?.contains('active'));
 
     this.state = isDrawerOpen ? openDrawerState(this.state) : closeDrawerState(this.state);
     this.syncDrawerState(this.state.isOpen);
@@ -296,11 +276,6 @@ export class NavigationDrawerController {
     if (!isDrawerOpen && focusMenuAfterClose) {
       this.menuButton?.focus?.();
     }
-  }
-
-  isDialogDrawer() {
-    return typeof HTMLDialogElement !== 'undefined'
-      && this.navDrawer instanceof HTMLDialogElement;
   }
 
   setBodyScrollbarCompensation() {
@@ -324,7 +299,7 @@ export class NavigationDrawerController {
 
   shouldCloseOnNavSelection() {
     // Change Rationale: Keep desktop rail workflows uninterrupted while ensuring
-    // modal drawer taps on compact screens always dismiss the drawer.
+    // compact drawer taps on phones/tablets dismiss the drawer.
     if (typeof window === 'undefined' || typeof window.matchMedia !== 'function') {
       return true;
     }
