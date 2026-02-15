@@ -111,6 +111,66 @@ describe('navigationDrawerService', () => {
     expect(overlay.classList.contains('active')).toBe(false);
   });
 
+  /*
+   * Change Rationale:
+   * - Guard against regressions where custom drawer styles force the dialog visible at boot.
+   * - Ensures canonical behavior: the drawer begins closed and only appears after explicit user intent.
+   */
+  test('drawer is not visible/open by default', () => {
+    const menuButtonElement = document.getElementById('menuButton');
+    const overlay = document.getElementById('drawerOverlay');
+    const navDrawerElement = document.getElementById('navDrawer');
+
+    expect(navDrawerElement.open).toBe(false);
+    expect(navDrawerElement.classList.contains('open')).toBe(false);
+    expect(document.body.classList.contains('drawer-is-open')).toBe(false);
+    expect(menuButtonElement.getAttribute('aria-expanded')).toBe('false');
+    expect(overlay.classList.contains('active')).toBe(false);
+    expect(overlay.getAttribute('aria-hidden')).toBe('true');
+  });
+
+
+  /*
+   * Change Rationale:
+   * - Repeated user toggles must not leave global shell state (body class/inert markers) stuck.
+   * - Verifies the controller remains the sole open/close authority across consecutive cycles.
+   */
+  test('repeated open/close cycles reset body and inert state correctly', () => {
+    const menuButtonElement = document.getElementById('menuButton');
+    const closeButton = document.getElementById('closeDrawerButton');
+    const navDrawerElement = document.getElementById('navDrawer');
+    const header = document.getElementById('header');
+    const mainContent = document.getElementById('mainContent');
+    const footerContent = document.getElementById('footerContent');
+
+    menuButtonElement.click();
+    expect(navDrawerElement.open).toBe(true);
+    expect(document.body.classList.contains('drawer-is-open')).toBe(true);
+    expect(header.hasAttribute('inert')).toBe(true);
+    expect(mainContent.hasAttribute('inert')).toBe(true);
+    expect(footerContent.hasAttribute('inert')).toBe(true);
+
+    closeButton.click();
+    expect(navDrawerElement.open).toBe(false);
+    expect(document.body.classList.contains('drawer-is-open')).toBe(false);
+    expect(header.hasAttribute('inert')).toBe(false);
+    expect(mainContent.hasAttribute('inert')).toBe(false);
+    expect(footerContent.hasAttribute('inert')).toBe(false);
+
+    menuButtonElement.click();
+    expect(navDrawerElement.open).toBe(true);
+    expect(document.body.classList.contains('drawer-is-open')).toBe(true);
+    expect(header.getAttribute('aria-hidden')).toBe('true');
+    expect(mainContent.getAttribute('aria-hidden')).toBe('true');
+    expect(footerContent.getAttribute('aria-hidden')).toBe('true');
+
+    closeButton.click();
+    expect(document.body.classList.contains('drawer-is-open')).toBe(false);
+    expect(header.getAttribute('aria-hidden')).toBe('false');
+    expect(mainContent.getAttribute('aria-hidden')).toBe('false');
+    expect(footerContent.getAttribute('aria-hidden')).toBe('false');
+  });
+
   test('closes drawer via close button', () => {
     const menuButtonElement = document.getElementById('menuButton');
     const closeButton = document.getElementById('closeDrawerButton');

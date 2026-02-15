@@ -107,7 +107,7 @@
   --app-drawer-inline-size: min(360px, 100vw);
   --app-overlay-bg-color: rgba(0, 0, 0, 0.32);
   --app-nested-list-bg: rgba(0, 0, 0, 0.02);
-  --app-theme-button-selected-bg: rgba(61, 220, 132, 0.15);
+  --app-theme-button-selected-bg: color-mix(in srgb, var(--md-sys-color-primary) 15%, transparent);
   --app-footer-text-color: #5f6368;
   /* Change Rationale: Link color now derives from the Android green primary token so
    * links remain consistent with the updated palette across light/dark themes.
@@ -221,7 +221,7 @@
 /* stylelint-enable function-no-unknown */
 
 html.dark {
-  --md-sys-color-primary: #96dea1;
+  --md-sys-color-primary: #3ddc84;
   --md-sys-color-on-primary: #003912;
   --md-sys-color-primary-container: #20512a;
   --md-sys-color-on-primary-container: #b1fbbb;
@@ -283,8 +283,8 @@ html.dark {
    * surface token so the page background does not fall back to a near-black
    * container variant.
    */
-  --app-bg-color: var(--md-sys-color-surface);
-  --app-text-color: var(--md-sys-color-on-surface);
+  --app-bg-color: var(--app-surface);
+  --app-text-color: var(--app-on-surface);
   --app-secondary-text-color: var(--md-sys-color-on-surface-variant);
   --app-card-bg-color: var(--md-sys-color-surface-container);
   --app-outlined-card-bg-color: var(--md-sys-color-surface-container);
@@ -299,7 +299,7 @@ html.dark {
   --app-drawer-inline-size: min(360px, 100vw);
   --app-overlay-bg-color: rgba(0, 0, 0, 0.32);
   --app-nested-list-bg: rgba(255, 255, 255, 0.03);
-  --app-theme-button-selected-bg: rgba(150, 222, 161, 0.2);
+  --app-theme-button-selected-bg: color-mix(in srgb, var(--md-sys-color-primary) 20%, transparent);
   --app-footer-text-color: #a0a0a0;
   /* Change Rationale: Dark theme links now inherit the Android green primary token,
    * keeping interactive text consistent with the rest of the palette.

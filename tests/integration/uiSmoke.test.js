@@ -184,4 +184,70 @@ describe('UI smoke', () => {
     listener?.({ matches: false });
     expect(document.documentElement.classList.contains('dark')).toBe(false);
   });
+
+  /*
+   * Change Rationale:
+   * - Route transitions replace page content, but the navigation drawer/footer remains mounted.
+   * - Theme controls must stay visible and interactive after route updates.
+   */
+  test('drawer footer theme controls remain available and interactive after route changes', () => {
+    document.body.innerHTML = `
+      <div id="appNavigationMount">
+        <dialog id="navDrawer" class="navigation-drawer" open>
+          <div class="drawer-footer">
+            <button id="lightThemeButton" data-theme="light">Light</button>
+            <button id="darkThemeButton" data-theme="dark">Dark</button>
+            <button id="autoThemeButton" data-theme="auto">Auto</button>
+          </div>
+        </dialog>
+      </div>
+      <main id="pageContentArea"><section data-route="#home">Home</section></main>
+    `;
+
+    const storage = {
+      value: 'light',
+      getItem: jest.fn(() => storage.value),
+      setItem: jest.fn((_k, v) => {
+        storage.value = v;
+      }),
+    };
+
+    const mediaQueryList = {
+      matches: false,
+      addEventListener: jest.fn(),
+      removeEventListener: jest.fn(),
+    };
+
+    initThemeControls({
+      htmlElement: document.documentElement,
+      buttons: [
+        document.getElementById('lightThemeButton'),
+        document.getElementById('darkThemeButton'),
+        document.getElementById('autoThemeButton'),
+      ],
+      storage,
+      mediaQueryList,
+    });
+
+    document.getElementById('pageContentArea').innerHTML = '<section data-route="#faq-api">FAQ</section>';
+
+    const drawerFooter = document.querySelector('#navDrawer .drawer-footer');
+    const lightButton = document.getElementById('lightThemeButton');
+    const darkButton = document.getElementById('darkThemeButton');
+    const autoButton = document.getElementById('autoThemeButton');
+
+    expect(drawerFooter).not.toBeNull();
+    expect(lightButton).not.toBeNull();
+    expect(darkButton).not.toBeNull();
+    expect(autoButton).not.toBeNull();
+
+    darkButton.click();
+
+    expect(storage.value).toBe('dark');
+    expect(document.documentElement.classList.contains('dark')).toBe(true);
+    expect(darkButton.classList.contains('selected')).toBe(true);
+    expect(darkButton.getAttribute('aria-pressed')).toBe('true');
+    expect(lightButton.getAttribute('aria-pressed')).toBe('false');
+    expect(autoButton.getAttribute('aria-pressed')).toBe('false');
+  });
 });

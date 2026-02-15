@@ -13,6 +13,7 @@ import {
 } from './utils/domUtils.js';
 import { PROFILE_AVATAR_FALLBACK_SRC } from '../domain/constants.js';
 import { initThemeControlsFromDom } from '@/core/ui/components/navigation/themeControlsOrchestrator.js';
+import { applyThemeClass, readStoredTheme } from '@/core/data/services/themeService.js';
 import { initRouter, loadPageContent, normalizePageId } from './router/index.js';
 import RouterRoutes from './router/routes.js';
 import { registerGlobalUtilities, registerCompatibilityGlobals } from './globals.js';
@@ -74,10 +75,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Initialize Modules ---
     updateCopyrightYear();
-    initThemeControlsFromDom();
+    // Change Rationale: Preserve first-paint theme continuity before navigation mount,
+    // while deferring control button wiring until drawer/footer nodes exist.
+    applyInitialThemeClassFromStorage();
     // Change Rationale: Initialize the canonical navigation component so rail + drawer
     // markup and routing are centralized under core/ui instead of screen HTML.
     navigationController = initAppNavigation();
+    initThemeControlsFromDom();
 
     if (typeof SiteAnimations !== 'undefined' && SiteAnimations && typeof SiteAnimations.init === 'function') {
         try {
@@ -133,6 +137,29 @@ document.addEventListener('DOMContentLoaded', () => {
         window.addEventListener('scroll', () => applyAppBarScrollState(topAppBarEl));
     }
 });
+
+/**
+ * Applies the persisted theme mode to `html.dark` before control wiring.
+ *
+ * Change Rationale: Theme buttons can mount with navigation; applying the
+ * root class early keeps first render stable without binding listeners twice.
+ *
+ * @returns {void}
+ */
+function applyInitialThemeClassFromStorage() {
+    const htmlElement = typeof document !== 'undefined' ? document.documentElement : null;
+    if (!htmlElement) {
+        return;
+    }
+
+    const storedTheme = readStoredTheme(
+        typeof window !== 'undefined' ? window.localStorage : null,
+    );
+    const prefersDark = typeof window !== 'undefined'
+        ? window.matchMedia?.('(prefers-color-scheme: dark)')?.matches ?? false
+        : false;
+    applyThemeClass(htmlElement, storedTheme, prefersDark);
+}
 
 /**
  * Applies the app bar surface classes based on the current scroll position.

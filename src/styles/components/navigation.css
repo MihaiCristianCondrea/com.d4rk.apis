@@ -61,15 +61,22 @@
  * header/footer stay reachable and only destination links scroll.
  */
 dialog.navigation-drawer {
-  display: flex;
-  flex-direction: column;
   overflow: hidden;
+  inline-size: var(--app-drawer-inline-size);
   /* Change Rationale: Drawer colors now bind directly to the shared Material 3
    * drawer tokens so BeerCSS no longer falls back to its default lavender palette.
    */
   background-color: var(--app-drawer-bg-color);
   color: var(--app-text-color);
   border-color: var(--md-sys-color-outline-variant);
+}
+
+/* Change Rationale: Keep BeerCSS responsible for closed-state visibility and only
+ * apply the internal flex column layout while the dialog is open.
+ */
+dialog.navigation-drawer[open] {
+  display: flex;
+  flex-direction: column;
 }
 
 /* Change Rationale: Footer legal actions should inherit the same palette as the

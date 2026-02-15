@@ -141,4 +141,52 @@ describe('themeService wiring', () => {
     applyThemeClass(html, 'auto', true);
     expect(html.classList.contains('dark')).toBe(true);
   });
+
+  /*
+   * Change Rationale:
+   * - Route/layout re-initialization may call theme wiring repeatedly.
+   * - The service must remain idempotent so each click persists once and keeps
+   *   html class + selected/aria states synchronized.
+   */
+  test('re-initializing theme controls keeps click behavior idempotent', () => {
+    document.body.innerHTML = `
+      <button id="lightThemeButton" data-theme="light"></button>
+      <button id="darkThemeButton" data-theme="dark"></button>
+      <button id="autoThemeButton" data-theme="auto"></button>
+    `;
+
+    const htmlElement = document.documentElement;
+    const buttons = [
+      document.getElementById('lightThemeButton'),
+      document.getElementById('darkThemeButton'),
+      document.getElementById('autoThemeButton'),
+    ];
+
+    const storage = {
+      value: 'auto',
+      getItem: jest.fn(() => storage.value),
+      setItem: jest.fn((_key, value) => {
+        storage.value = value;
+      }),
+    };
+
+    const mediaQueryList = {
+      matches: false,
+      addEventListener: jest.fn(),
+      removeEventListener: jest.fn(),
+    };
+
+    initThemeControls({ htmlElement, buttons, storage, mediaQueryList });
+    initThemeControls({ htmlElement, buttons, storage, mediaQueryList });
+
+    buttons[1].click();
+
+    expect(storage.setItem).toHaveBeenCalledTimes(1);
+    expect(storage.setItem).toHaveBeenCalledWith('theme', 'dark');
+    expect(htmlElement.classList.contains('dark')).toBe(true);
+    expect(buttons[1].classList.contains('selected')).toBe(true);
+    expect(buttons[1].getAttribute('aria-pressed')).toBe('true');
+    expect(buttons[0].getAttribute('aria-pressed')).toBe('false');
+    expect(buttons[2].getAttribute('aria-pressed')).toBe('false');
+  });
 });
