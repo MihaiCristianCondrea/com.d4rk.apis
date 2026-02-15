@@ -37,7 +37,7 @@ function mockMatchMedia(matches) {
     writable: true,
     value: jest.fn().mockImplementation(() => ({
       matches,
-      media: '(max-width: 960px)',
+      media: '(max-width: 959px)',
       onchange: null,
       addListener: jest.fn(),
       removeListener: jest.fn(),
@@ -98,7 +98,7 @@ describe('navigation active state', () => {
     expect(activeRows).toHaveLength(2);
   });
 
-  test('nav item selection does not force close on desktop rail layouts', () => {
+  test('desktop rail layouts keep menu trigger functional for drawer access', () => {
     seedNavigationMarkup();
     mockMatchMedia(false);
     initNavigationDrawer();
@@ -111,5 +111,7 @@ describe('navigation active state', () => {
     homeLink.click();
 
     expect(navDrawerElement.classList.contains('active')).toBe(true);
+    expect(document.body.classList.contains('drawer-is-open')).toBe(true);
+    expect(menuButtonElement.getAttribute('aria-expanded')).toBe('true');
   });
 });
