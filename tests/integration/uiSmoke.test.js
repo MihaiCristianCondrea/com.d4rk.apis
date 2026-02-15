@@ -60,7 +60,6 @@ describe('UI smoke', () => {
 
     const navRail = doc.getElementById('navRail');
     const navDrawer = doc.getElementById('navDrawer');
-    const drawerOverlay = doc.getElementById('drawerOverlay');
 
     expect(navRail).not.toBeNull();
     expect(navRail.classList.contains('m')).toBe(true);
@@ -69,9 +68,7 @@ describe('UI smoke', () => {
 
     expect(navDrawer).not.toBeNull();
     expect(navDrawer.classList.contains('s')).toBe(true);
-
-    expect(drawerOverlay).not.toBeNull();
-    expect(drawerOverlay.classList.contains('s')).toBe(true);
+    expect(doc.getElementById('drawerOverlay')).toBeNull();
   });
 
   test('feature and core UI templates avoid mixed legacy button systems', () => {
@@ -193,13 +190,13 @@ describe('UI smoke', () => {
   test('drawer footer theme controls remain available and interactive after route changes', () => {
     document.body.innerHTML = `
       <div id="appNavigationMount">
-        <dialog id="navDrawer" class="navigation-drawer" open>
+        <nav id="navDrawer" class="navigation-drawer active">
           <div class="drawer-footer">
             <button id="lightThemeButton" data-theme="light">Light</button>
             <button id="darkThemeButton" data-theme="dark">Dark</button>
             <button id="autoThemeButton" data-theme="auto">Auto</button>
           </div>
-        </dialog>
+        </nav>
       </div>
       <main id="pageContentArea"><section data-route="#home">Home</section></main>
     `;

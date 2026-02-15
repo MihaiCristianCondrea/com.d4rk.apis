@@ -5,6 +5,7 @@ const {
   applyThemeClass,
   initThemeControls,
 } = require('../../src/core/data/services/themeService.js');
+const { initThemeControlsFromDom } = require('../../src/core/ui/components/navigation/themeControlsOrchestrator.js');
 
 describe('themeService pure/value behavior', () => {
   test('readStoredTheme falls back to auto', () => {
@@ -188,5 +189,69 @@ describe('themeService wiring', () => {
     expect(buttons[1].getAttribute('aria-pressed')).toBe('true');
     expect(buttons[0].getAttribute('aria-pressed')).toBe('false');
     expect(buttons[2].getAttribute('aria-pressed')).toBe('false');
+  });
+});
+
+
+describe('themeControlsOrchestrator', () => {
+  test('initThemeControlsFromDom retries once when buttons mount on next frame', () => {
+    document.body.innerHTML = '<div id="appNavigationMount"></div>';
+
+    const rafQueue = [];
+    Object.defineProperty(window, 'requestAnimationFrame', {
+      value: jest.fn((callback) => {
+        rafQueue.push(callback);
+        return 1;
+      }),
+      configurable: true,
+    });
+
+    const storage = {
+      value: 'auto',
+      getItem: jest.fn(() => storage.value),
+      setItem: jest.fn((_key, nextValue) => {
+        storage.value = nextValue;
+      }),
+    };
+
+    const mediaQueryList = {
+      matches: false,
+      addEventListener: jest.fn(),
+      removeEventListener: jest.fn(),
+    };
+
+    Object.defineProperty(window, 'localStorage', {
+      value: storage,
+      configurable: true,
+    });
+    Object.defineProperty(window, 'matchMedia', {
+      value: jest.fn(() => mediaQueryList),
+      configurable: true,
+    });
+
+    initThemeControlsFromDom();
+    expect(window.requestAnimationFrame).toHaveBeenCalledTimes(1);
+
+    document.getElementById('appNavigationMount').innerHTML = `
+      <button id="lightThemeButton" data-theme="light"></button>
+      <button id="darkThemeButton" data-theme="dark"></button>
+      <button id="autoThemeButton" data-theme="auto"></button>
+    `;
+
+    rafQueue.shift()?.();
+
+    const lightButton = document.getElementById('lightThemeButton');
+    const darkButton = document.getElementById('darkThemeButton');
+    const autoButton = document.getElementById('autoThemeButton');
+
+    expect(lightButton).not.toBeNull();
+    expect(darkButton).not.toBeNull();
+    expect(autoButton).not.toBeNull();
+
+    darkButton.click();
+    expect(storage.setItem).toHaveBeenCalledWith('theme', 'dark');
+    expect(darkButton.getAttribute('aria-pressed')).toBe('true');
+    expect(lightButton.getAttribute('aria-pressed')).toBe('false');
+    expect(autoButton.getAttribute('aria-pressed')).toBe('false');
   });
 });

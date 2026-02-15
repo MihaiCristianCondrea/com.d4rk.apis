@@ -16,33 +16,20 @@ const { updateActiveNavLink } = require('../../src/core/ui/router/navigationStat
 function seedNavigationMarkup() {
   document.body.innerHTML = `
     <button id="menuButton" type="button">Menu</button>
-    <div id="drawerOverlay" class="overlay" aria-hidden="true"></div>
     <nav id="navRail">
       <ul class="list">
         <li class="wave round nav-item" data-nav-item><a href="#home" data-nav-link class="nav-link">Home</a></li>
         <li class="wave round nav-item" data-nav-item><a href="#repo-mapper" data-nav-link class="nav-link">Repo Mapper</a></li>
       </ul>
     </nav>
-    <dialog id="navDrawer">
+    <nav id="navDrawer" class="navigation-drawer left s" aria-hidden="true">
       <button id="closeDrawerButton" type="button">Close</button>
       <ul class="list">
         <li class="wave round nav-item" data-nav-item><a href="#home" data-nav-link class="nav-link">Home</a></li>
         <li class="wave round nav-item" data-nav-item><a href="#repo-mapper" data-nav-link class="nav-link">Repo Mapper</a></li>
       </ul>
-    </dialog>
+    </nav>
   `;
-
-  const navDrawerElement = document.getElementById('navDrawer');
-  if (typeof HTMLDialogElement === 'undefined') {
-    global.HTMLDialogElement = navDrawerElement.constructor;
-  }
-  navDrawerElement.open = false;
-  navDrawerElement.showModal = jest.fn(() => {
-    navDrawerElement.open = true;
-  });
-  navDrawerElement.close = jest.fn(() => {
-    navDrawerElement.open = false;
-  });
 }
 
 function mockMatchMedia(matches) {
@@ -106,7 +93,7 @@ describe('navigation active state', () => {
     repoMapperLink.click();
     updateActiveNavLink('repo-mapper');
 
-    expect(navDrawerElement.classList.contains('open')).toBe(false);
+    expect(navDrawerElement.classList.contains('active')).toBe(false);
     const activeRows = Array.from(document.querySelectorAll('[data-nav-item].active'));
     expect(activeRows).toHaveLength(2);
   });
@@ -123,6 +110,6 @@ describe('navigation active state', () => {
     menuButtonElement.click();
     homeLink.click();
 
-    expect(navDrawerElement.classList.contains('open')).toBe(true);
+    expect(navDrawerElement.classList.contains('active')).toBe(true);
   });
 });

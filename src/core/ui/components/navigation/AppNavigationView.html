@@ -6,15 +6,15 @@
     with Material 3 guidance while letting the router own active state updates.
 -->
 <div class="app-navigation" data-app-navigation>
-  <div id="drawerOverlay" class="overlay s" aria-hidden="true"></div>
   <!-- Change Rationale: The navigation rail now defers to a data-driven renderer so rail
        and drawer sections stay in sync and extend cleanly without duplicating markup. -->
-  <!-- Change Rationale: Drawer open/close is now owned by the navigation controller,
-       preventing duplicated framework-triggered toggles on the same dialog. -->
   <nav id="navRail" class="m l left app-navigation-rail surface-container" aria-label="Primary navigation" data-drawer-inert-target>
     <div class="navigation-section-stack" data-navigation-sections="rail"></div>
   </nav>
-  <dialog id="navDrawer" class="left s navigation-drawer" aria-label="Main navigation">
+  <!-- Change Rationale: Compact navigation now follows BeerCSS's nav-left structure
+       (`nav.left.s`) instead of dialog semantics, so mobile drawers behave like
+       canonical off-canvas nav surfaces. -->
+  <nav id="navDrawer" class="s left navigation-drawer surface-container" aria-label="Main navigation" aria-hidden="true">
     <header class="drawer-header padding">
       <!-- Change Rationale: Navigation and app-bar actions now share one BeerCSS contract (`button transparent circle app-nav-icon-button`) so icon controls render and test consistently. -->
       <nav>
@@ -48,5 +48,5 @@
         <a href="https://mihaicristiancondrea.github.io/profile/#code-of-conduct" target="_blank" rel="noreferrer">Code of Conduct</a>
       </div>
     </div>
-  </dialog>
+  </nav>
 </div>

@@ -114,11 +114,11 @@ describe('navigationRenderer', () => {
           <li class="wave round nav-item" data-nav-item><a href="#repo-mapper" data-nav-link class="nav-link">Repo Mapper</a></li>
         </ul>
       </nav>
-      <dialog>
+      <nav class="navigation-drawer">
         <ul class="list">
           <li class="wave round nav-item" data-nav-item><a href="#repo-mapper" data-nav-link class="nav-link">Repo Mapper</a></li>
         </ul>
-      </dialog>
+      </nav>
     `;
     updateActiveNavLink('repo-mapper');
 
@@ -130,6 +130,38 @@ describe('navigationRenderer', () => {
 
     const activeLinks = Array.from(document.querySelectorAll('[data-nav-link][aria-current="page"]'));
     expect(activeLinks).toHaveLength(2);
+  });
+
+
+  it('keeps drawer/rail hydration containers and breakpoint ownership in navigation template', () => {
+    const repoRoot = path.join(__dirname, '..', '..');
+    const navTemplatePath = path.join(
+      repoRoot,
+      'app',
+      'src',
+      'main',
+      'js',
+      'core',
+      'ui',
+      'components',
+      'navigation',
+      'AppNavigationView.html',
+    );
+    const html = fs.readFileSync(navTemplatePath, 'utf8');
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(html, 'text/html');
+
+    const railContainer = doc.querySelector('[data-navigation-sections="rail"]');
+    const drawerContainer = doc.querySelector('[data-navigation-sections="drawer"]');
+    const navRail = doc.getElementById('navRail');
+    const navDrawer = doc.getElementById('navDrawer');
+
+    expect(railContainer).not.toBeNull();
+    expect(drawerContainer).not.toBeNull();
+    expect(navRail.classList.contains('m')).toBe(true);
+    expect(navRail.classList.contains('l')).toBe(true);
+    expect(navDrawer.classList.contains('s')).toBe(true);
+    expect(navDrawer.tagName).toBe('NAV');
   });
 
 

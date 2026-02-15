@@ -3,9 +3,8 @@
  */
 /*
  * Change Rationale:
- * - This suite previously mocked src/domain/utils, a duplicate alias for the core utilities.
- * - Pointing tests at src/core/ui/utils/domUtils consolidates utility usage and prevents namespace drift between domain and core layers.
- * - The consolidation safeguards consistent drawer interactions, which supports the predictable navigation patterns expected in Material Design 3 UIs.
+ * - This suite validates the BeerCSS nav-based compact drawer (`nav.left.s`) contract.
+ * - It guards against regressions where drawer state, aria-expanded, and inert handling drift.
  */
 const fs = require('fs');
 const path = require('path');
@@ -22,8 +21,7 @@ function createDrawerMarkup() {
     <header data-drawer-inert-target id="header">
       <button id="menuButton" class="button transparent circle app-nav-icon-button" type="button">Menu</button>
     </header>
-    <div id="drawerOverlay" class="overlay" aria-hidden="true"></div>
-    <dialog id="navDrawer" class="navigation-drawer">
+    <nav id="navDrawer" class="navigation-drawer left s" aria-hidden="true">
       <button id="closeDrawerButton" class="button transparent circle app-nav-icon-button" type="button">Close</button>
       <nav>
         <ul class="list">
@@ -43,23 +41,12 @@ function createDrawerMarkup() {
         <button id="darkThemeButton" data-theme="dark" aria-pressed="false" class="button transparent circle app-nav-icon-button" type="button">Dark</button>
         <button id="autoThemeButton" data-theme="auto" aria-pressed="true" class="button transparent circle app-nav-icon-button selected" type="button">Auto</button>
       </div>
-    </dialog>
+    </nav>
     <main data-drawer-inert-target id="mainContent">Main content</main>
     <footer data-drawer-inert-target id="footerContent">Footer content</footer>
   `;
 
-  const navDrawerElement = document.getElementById('navDrawer');
-  if (typeof HTMLDialogElement === 'undefined') {
-    global.HTMLDialogElement = navDrawerElement.constructor;
-  }
-  navDrawerElement.open = false;
-  navDrawerElement.showModal = jest.fn(() => {
-    navDrawerElement.open = true;
-  });
-  navDrawerElement.close = jest.fn(() => {
-    navDrawerElement.open = false;
-  });
-  const firstNavItem = navDrawerElement.querySelector('.nav-link[href]');
+  const firstNavItem = document.querySelector('#navDrawer .nav-link[href]');
   firstNavItem.focus = jest.fn();
 
   const closeDrawerButton = document.getElementById('closeDrawerButton');
@@ -95,46 +82,35 @@ describe('navigationDrawerService', () => {
     jest.clearAllMocks();
   });
 
-  test('closes drawer via overlay click', () => {
+  test('first menu click opens drawer and second click closes it', () => {
     const menuButtonElement = document.getElementById('menuButton');
-    const overlay = document.getElementById('drawerOverlay');
     const navDrawerElement = document.getElementById('navDrawer');
 
     menuButtonElement.click();
-    expect(navDrawerElement.classList.contains('open')).toBe(true);
 
-    overlay.click();
+    expect(navDrawerElement.classList.contains('active')).toBe(true);
+    expect(document.body.classList.contains('drawer-is-open')).toBe(true);
+    expect(menuButtonElement.getAttribute('aria-expanded')).toBe('true');
+    expect(navDrawerElement.getAttribute('aria-hidden')).toBe('false');
 
-    expect(navDrawerElement.classList.contains('open')).toBe(false);
+    menuButtonElement.click();
+
+    expect(navDrawerElement.classList.contains('active')).toBe(false);
     expect(document.body.classList.contains('drawer-is-open')).toBe(false);
     expect(menuButtonElement.getAttribute('aria-expanded')).toBe('false');
-    expect(overlay.classList.contains('active')).toBe(false);
+    expect(navDrawerElement.getAttribute('aria-hidden')).toBe('true');
   });
 
-  /*
-   * Change Rationale:
-   * - Guard against regressions where custom drawer styles force the dialog visible at boot.
-   * - Ensures canonical behavior: the drawer begins closed and only appears after explicit user intent.
-   */
   test('drawer is not visible/open by default', () => {
     const menuButtonElement = document.getElementById('menuButton');
-    const overlay = document.getElementById('drawerOverlay');
     const navDrawerElement = document.getElementById('navDrawer');
 
-    expect(navDrawerElement.open).toBe(false);
-    expect(navDrawerElement.classList.contains('open')).toBe(false);
+    expect(navDrawerElement.classList.contains('active')).toBe(false);
     expect(document.body.classList.contains('drawer-is-open')).toBe(false);
     expect(menuButtonElement.getAttribute('aria-expanded')).toBe('false');
-    expect(overlay.classList.contains('active')).toBe(false);
-    expect(overlay.getAttribute('aria-hidden')).toBe('true');
+    expect(navDrawerElement.getAttribute('aria-hidden')).toBe('true');
   });
 
-
-  /*
-   * Change Rationale:
-   * - Repeated user toggles must not leave global shell state (body class/inert markers) stuck.
-   * - Verifies the controller remains the sole open/close authority across consecutive cycles.
-   */
   test('repeated open/close cycles reset body and inert state correctly', () => {
     const menuButtonElement = document.getElementById('menuButton');
     const closeButton = document.getElementById('closeDrawerButton');
@@ -144,21 +120,21 @@ describe('navigationDrawerService', () => {
     const footerContent = document.getElementById('footerContent');
 
     menuButtonElement.click();
-    expect(navDrawerElement.open).toBe(true);
+    expect(navDrawerElement.classList.contains('active')).toBe(true);
     expect(document.body.classList.contains('drawer-is-open')).toBe(true);
     expect(header.hasAttribute('inert')).toBe(true);
     expect(mainContent.hasAttribute('inert')).toBe(true);
     expect(footerContent.hasAttribute('inert')).toBe(true);
 
     closeButton.click();
-    expect(navDrawerElement.open).toBe(false);
+    expect(navDrawerElement.classList.contains('active')).toBe(false);
     expect(document.body.classList.contains('drawer-is-open')).toBe(false);
     expect(header.hasAttribute('inert')).toBe(false);
     expect(mainContent.hasAttribute('inert')).toBe(false);
     expect(footerContent.hasAttribute('inert')).toBe(false);
 
     menuButtonElement.click();
-    expect(navDrawerElement.open).toBe(true);
+    expect(navDrawerElement.classList.contains('active')).toBe(true);
     expect(document.body.classList.contains('drawer-is-open')).toBe(true);
     expect(header.getAttribute('aria-hidden')).toBe('true');
     expect(mainContent.getAttribute('aria-hidden')).toBe('true');
@@ -177,12 +153,13 @@ describe('navigationDrawerService', () => {
     const navDrawerElement = document.getElementById('navDrawer');
 
     menuButtonElement.click();
-    expect(navDrawerElement.classList.contains('open')).toBe(true);
+    expect(navDrawerElement.classList.contains('active')).toBe(true);
 
     closeButton.click();
 
-    expect(navDrawerElement.classList.contains('open')).toBe(false);
+    expect(navDrawerElement.classList.contains('active')).toBe(false);
     expect(document.body.classList.contains('drawer-is-open')).toBe(false);
+    expect(menuButtonElement.getAttribute('aria-expanded')).toBe('false');
   });
 
   test('closes drawer via nav item click on compact viewport', () => {
@@ -191,11 +168,11 @@ describe('navigationDrawerService', () => {
     const homeLink = document.getElementById('homeLink');
 
     menuButtonElement.click();
-    expect(navDrawerElement.classList.contains('open')).toBe(true);
+    expect(navDrawerElement.classList.contains('active')).toBe(true);
 
     homeLink.click();
 
-    expect(navDrawerElement.classList.contains('open')).toBe(false);
+    expect(navDrawerElement.classList.contains('active')).toBe(false);
   });
 
   test('closes drawer via Escape key', () => {
@@ -203,12 +180,13 @@ describe('navigationDrawerService', () => {
     const navDrawerElement = document.getElementById('navDrawer');
 
     menuButtonElement.click();
-    expect(navDrawerElement.classList.contains('open')).toBe(true);
+    expect(navDrawerElement.classList.contains('active')).toBe(true);
 
     document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
 
-    expect(navDrawerElement.classList.contains('open')).toBe(false);
+    expect(navDrawerElement.classList.contains('active')).toBe(false);
     expect(document.body.classList.contains('drawer-is-open')).toBe(false);
+    expect(menuButtonElement.getAttribute('aria-expanded')).toBe('false');
   });
 
   test('keeps drawer open after nav selection on desktop viewport', () => {
@@ -224,7 +202,36 @@ describe('navigationDrawerService', () => {
     menuButtonElement.click();
     homeLink.click();
 
-    expect(navDrawerElement.classList.contains('open')).toBe(true);
+    expect(navDrawerElement.classList.contains('active')).toBe(true);
+  });
+
+  test('template keeps rail for m/l and drawer for s breakpoints', () => {
+    const repoRoot = path.join(__dirname, '..', '..');
+    const navTemplatePath = path.join(
+      repoRoot,
+      'app',
+      'src',
+      'main',
+      'js',
+      'core',
+      'ui',
+      'components',
+      'navigation',
+      'AppNavigationView.html',
+    );
+    const html = fs.readFileSync(navTemplatePath, 'utf8');
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(html, 'text/html');
+
+    const navRail = doc.getElementById('navRail');
+    const navDrawer = doc.getElementById('navDrawer');
+
+    expect(navRail.classList.contains('m')).toBe(true);
+    expect(navRail.classList.contains('l')).toBe(true);
+    expect(navRail.classList.contains('s')).toBe(false);
+    expect(navDrawer.classList.contains('s')).toBe(true);
+    expect(navDrawer.classList.contains('m')).toBe(false);
+    expect(navDrawer.classList.contains('l')).toBe(false);
   });
 
   test('navigation shell template avoids legacy app button classes', () => {
