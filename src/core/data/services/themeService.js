@@ -1,6 +1,8 @@
 import { MEDIA_QUERY, STORAGE_KEYS } from '../../domain/constants.js';
 
 const THEME_OPTIONS = ['light', 'dark', 'auto'];
+const BUTTON_CLICK_HANDLER = Symbol('themeButtonClickHandler');
+const MEDIA_QUERY_CHANGE_HANDLERS = new WeakMap();
 
 /**
  * Reads the persisted theme preference from storage.
@@ -109,20 +111,41 @@ export function initThemeControls({
   buttons.forEach((button) => {
     const { theme } = button.dataset;
     if (!THEME_OPTIONS.includes(theme)) return;
-    button.addEventListener('click', () => {
+
+    const priorHandler = button[BUTTON_CLICK_HANDLER];
+    if (typeof priorHandler === 'function') {
+      button.removeEventListener('click', priorHandler);
+    }
+
+    const clickHandler = () => {
       persistTheme(theme, storage);
       applyThemeClass(htmlElement, theme, getPrefersDark());
       updateSelectionState(buttons, theme);
-    });
+    };
+
+    button.addEventListener('click', clickHandler);
+    button[BUTTON_CLICK_HANDLER] = clickHandler;
   });
 
-  mediaQueryList?.addEventListener?.('change', () => {
+  const previousMediaHandler = mediaQueryList
+    ? MEDIA_QUERY_CHANGE_HANDLERS.get(mediaQueryList)
+    : null;
+  if (previousMediaHandler && typeof mediaQueryList?.removeEventListener === 'function') {
+    mediaQueryList.removeEventListener('change', previousMediaHandler);
+  }
+
+  const mediaHandler = () => {
     const latestTheme = readStoredTheme(storage);
     if (latestTheme === 'auto') {
       applyThemeClass(htmlElement, latestTheme, getPrefersDark());
       updateSelectionState(buttons, latestTheme);
     }
-  });
+  };
+
+  mediaQueryList?.addEventListener?.('change', mediaHandler);
+  if (mediaQueryList) {
+    MEDIA_QUERY_CHANGE_HANDLERS.set(mediaQueryList, mediaHandler);
+  }
 }
 
 /**

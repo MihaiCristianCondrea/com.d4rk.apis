@@ -17,6 +17,8 @@ export function initThemeControlsFromDom({
   autoId = 'autoThemeButton',
 } = {}) {
   const htmlElement = typeof document !== 'undefined' ? document.documentElement : null;
+  // Change Rationale: Keep explicit ID lookups as the canonical contract with
+  // AppNavigationView while allowing safe re-initialization after shell remounts.
   const buttons = [
     getDynamicElement(lightId),
     getDynamicElement(darkId),

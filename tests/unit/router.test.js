@@ -18,6 +18,10 @@ jest.mock('../../src/core/ui/components/navigation/themeControlsOrchestrator.js'
   initThemeControlsFromDom: jest.fn(),
 }));
 
+jest.mock('../../src/core/ui/components/navigation/appNavigation.js', () => ({
+  initAppNavigation: jest.fn(() => ({ close: jest.fn() })),
+}));
+
 jest.mock('../../src/core/ui/components/navigation/navigationDrawerBindings.js', () => ({
   initNavigationDrawer: jest.fn(() => ({ close: jest.fn() })),
 }));
@@ -115,6 +119,25 @@ test('app shell initializes router without global lifecycle fallbacks', () => {
   expect(globalsConfig.initAppToolkitWorkspace).toBeUndefined();
   expect(globalsConfig.initEnglishWorkspace).toBeUndefined();
   expect(globalsConfig.initAndroidTutorialsWorkspace).toBeUndefined();
+});
+
+// Change Rationale: Theme controls live in the navigation footer, so shell init
+// must mount navigation first and then bind the footer theme buttons.
+test('app shell initializes navigation before wiring theme controls', () => {
+  setupAppShellDom();
+  mockDomUtils.getDynamicElement.mockImplementation((id) => document.getElementById(id));
+
+  jest.resetModules();
+  require('../../src/core/ui/appShell.js');
+  document.dispatchEvent(new Event('DOMContentLoaded'));
+
+  const { initAppNavigation } = require('../../src/core/ui/components/navigation/appNavigation.js');
+  const { initThemeControlsFromDom } = require('../../src/core/ui/components/navigation/themeControlsOrchestrator.js');
+
+  expect(initAppNavigation).toHaveBeenCalled();
+  expect(initThemeControlsFromDom).toHaveBeenCalled();
+  expect(initAppNavigation.mock.invocationCallOrder[0])
+    .toBeLessThan(initThemeControlsFromDom.mock.invocationCallOrder[0]);
 });
 
 // Change Rationale: Guard the active navigation state so only one drawer item

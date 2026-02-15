@@ -189,6 +189,17 @@ describe('theme palette tokens', () => {
     return fs.readFileSync(variablesPath, 'utf8');
   }
 
+  /**
+   * Returns the `src/styles/components/navigation.css` content for token assertions.
+   *
+   * @returns {string} Raw navigation stylesheet text.
+   */
+  function readNavigationCss() {
+    const repoRoot = path.join(__dirname, '..', '..');
+    const navigationPath = path.join(repoRoot, 'src', 'styles', 'components', 'navigation.css');
+    return fs.readFileSync(navigationPath, 'utf8');
+  }
+
   test('light mode keeps Android-green brand token mapping for BeerCSS variables', () => {
     const css = readThemeVariablesCss();
 
@@ -201,9 +212,35 @@ describe('theme palette tokens', () => {
   test('dark mode keeps Android-green brand token mapping for BeerCSS variables', () => {
     const css = readThemeVariablesCss();
 
-    expect(css).toMatch(/html\.dark\s*\{[\s\S]*--md-sys-color-primary:\s*#96dea1;/);
+    expect(css).toMatch(/html\.dark\s*\{[\s\S]*--md-sys-color-primary:\s*#3ddc84;/);
     expect(css).toMatch(/html\.dark\s*\{[\s\S]*--app-primary:\s*var\(--md-sys-color-primary\);/);
     expect(css).toMatch(/html\.dark\s*\{[\s\S]*--primary:\s*var\(--app-primary\);/);
     expect(css).toMatch(/html\.dark\s*\{[\s\S]*--surface:\s*var\(--app-surface\);/);
+  });
+
+  test('shell surface and drawer/app-bar tokens derive from Material tokens in both themes', () => {
+    const css = readThemeVariablesCss();
+
+    expect(css).toMatch(/:root\s*\{[\s\S]*--app-surface:\s*var\(--md-sys-color-surface\);/);
+    expect(css).toMatch(/:root\s*\{[\s\S]*--app-text-color:\s*var\(--app-on-surface\);/);
+    expect(css).toMatch(/:root\s*\{[\s\S]*--app-drawer-bg-color:\s*var\(--md-sys-color-surface-container-low\);/);
+    expect(css).toMatch(/:root\s*\{[\s\S]*--app-link-color:\s*var\(--md-sys-color-primary\);/);
+    expect(css).toMatch(/:root\s*\{[\s\S]*--app-theme-button-selected-bg:\s*color-mix\(in srgb, var\(--md-sys-color-primary\) 15%, transparent\);/);
+
+    expect(css).toMatch(/html\.dark\s*\{[\s\S]*--app-surface:\s*var\(--md-sys-color-surface\);/);
+    expect(css).toMatch(/html\.dark\s*\{[\s\S]*--app-text-color:\s*var\(--app-on-surface\);/);
+    expect(css).toMatch(/html\.dark\s*\{[\s\S]*--app-drawer-bg-color:\s*var\(--md-sys-color-surface-container\);/);
+    expect(css).toMatch(/html\.dark\s*\{[\s\S]*--app-link-color:\s*var\(--md-sys-color-primary\);/);
+    expect(css).toMatch(/html\.dark\s*\{[\s\S]*--app-theme-button-selected-bg:\s*color-mix\(in srgb, var\(--md-sys-color-primary\) 20%, transparent\);/);
+  });
+
+  test('navigation app bar, drawer, and active rows use app semantic tokens', () => {
+    const css = readNavigationCss();
+
+    expect(css).toMatch(/\.app-top-app-bar\s*\{[\s\S]*background-color:\s*var\(--app-surface\);/);
+    expect(css).toMatch(/\.app-top-app-bar\s*\{[\s\S]*color:\s*var\(--app-on-surface\);/);
+    expect(css).toMatch(/dialog\.navigation-drawer\s*\{[\s\S]*background-color:\s*var\(--app-drawer-bg-color\);/);
+    expect(css).toMatch(/\.app-navigation\s+li\.nav-item\.active,[\s\S]*background-color:\s*var\(--app-primary-container\)\s*!important;/);
+    expect(css).toMatch(/\.app-navigation\s+li\.nav-item\.active\s+\.nav-link,[\s\S]*color:\s*var\(--app-on-primary-container\);/);
   });
 });
