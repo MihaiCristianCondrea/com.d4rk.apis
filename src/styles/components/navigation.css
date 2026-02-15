@@ -62,6 +62,24 @@ dialog.navigation-drawer {
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  /* Change Rationale: Drawer colors now bind directly to the shared Material 3
+   * drawer tokens so BeerCSS no longer falls back to its default lavender palette.
+   */
+  background-color: var(--app-drawer-bg-color);
+  color: var(--app-text-color);
+  border-color: var(--md-sys-color-outline-variant);
+}
+
+/* Change Rationale: Footer legal actions should inherit the same palette as the
+ * rest of the drawer surface instead of browser default anchor/link colors.
+ */
+.drawer-footer a {
+  color: var(--app-text-color);
+}
+
+.drawer-footer a:hover,
+.drawer-footer a:focus-visible {
+  color: var(--app-link-color);
 }
 
 .drawer-content {
@@ -142,8 +160,24 @@ dialog.navigation-drawer {
 
 /* Change Rationale: BeerCSS already styles list rows; this only reinforces that selected
  * navigation rows keep the rounded container shape across rail and drawer surfaces. */
-.app-navigation li.nav-item.active {
+.app-navigation li.nav-item.active,
+.app-navigation li.nav-item.primary-container,
+.app-navigation .nav-link.active,
+.app-navigation .nav-link.primary-container {
   border-radius: 999px;
+  background-color: var(--app-primary-container) !important;
+}
+
+/* Change Rationale: Active destination text/icons should use the Material 3 on-primary
+ * container color so selected rows match the canonical app palette instead of defaults.
+ */
+.app-navigation li.nav-item.active .nav-link,
+.app-navigation li.nav-item.active .nav-link i,
+.app-navigation li.nav-item.active .nav-link small,
+.app-navigation .nav-link.active,
+.app-navigation .nav-link.active i,
+.app-navigation .nav-link.active small {
+  color: var(--app-on-primary-container);
 }
 
 
