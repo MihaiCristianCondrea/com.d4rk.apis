@@ -27,6 +27,7 @@
  */
 .app-top-app-bar {
   width: 100%;
+  z-index: 7;
   /* Change Rationale: Keep the app bar tied to the neutral surface tokens so
    * navigation never drifts to an accent background.
    */
@@ -38,6 +39,7 @@
   display: flex;
   align-items: center;
   width: 100%;
+  min-height: var(--app-top-app-bar-height);
 }
 
 .app-top-app-bar h5 {
@@ -131,6 +133,13 @@ dialog.navigation-drawer {
  * offsetting the main shell surfaces instead of centering underneath it.
  */
 @media (min-width: 960px) {
+  /* Change Rationale: When the rail is visible, the app bar headline and actions
+   * should align with the routed page content instead of rendering beneath the rail.
+   */
+  .app-top-app-bar nav {
+    padding-inline-start: calc(1rem + var(--safe-area-inset-left) + var(--app-nav-rail-width));
+  }
+
   .app-shell-main,
   .app-shell-footer {
     padding-inline-start: calc(1rem + var(--safe-area-inset-left) + var(--app-nav-rail-width));
