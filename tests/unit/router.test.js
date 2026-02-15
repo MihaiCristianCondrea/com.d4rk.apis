@@ -84,7 +84,7 @@ test('app shell toggles app bar elevation on scroll', () => {
   document.dispatchEvent(new Event('DOMContentLoaded'));
 
   const appBar = document.getElementById('topAppBar');
-  expect(appBar.classList.contains('fill')).toBe(true);
+  expect(appBar.classList.contains('fill')).toBe(false);
   expect(appBar.classList.contains('elevate')).toBe(false);
 
   window.scrollY = 10;

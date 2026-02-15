@@ -13,6 +13,7 @@ import {
  * @typedef {Object} NavigationDrawerOptions
  * @property {HTMLElement | null} [menuButton=null] Open button reference.
  * @property {HTMLElement | null} [navDrawer=null] Drawer root reference.
+ * @property {HTMLElement | null} [drawerBackdrop=null] Drawer backdrop reference.
  * @property {HTMLElement | null} [closeDrawerButton=null] Close button reference.
  * @property {string} [closeOnNavSelectMediaQuery='(max-width: 960px)']
  *   Media query that must match before clicking a nav item auto-closes the drawer.
@@ -22,7 +23,6 @@ import {
  * @property {HTMLElement | null} [androidContent=null] API workspaces content reference.
  * @property {HTMLElement | null} [githubToggle=null] GitHub toggle reference.
  * @property {HTMLElement | null} [githubContent=null] GitHub content reference.
- * @property {HTMLElement[]} [inertTargets=[]] Inert target refs.
  * @property {HTMLElement[]} [navLinks=[]] Navigation links inside drawer.
  * @property {HTMLElement | null} [firstNavItem=null] First focusable nav item.
  * @property {Document | null} [documentRef=document] Document adapter.
@@ -32,13 +32,14 @@ import {
 /**
  * Manages the application navigation drawer, including:
  * - Open/close interactions for the main drawer.
- * - Focus management and inert state when the drawer is active.
+ * - Focus management when the drawer is active.
  * - Independent expansion of logical sections inside the drawer.
  */
 export class NavigationDrawerController {
   constructor({
     menuButton = null,
     navDrawer = null,
+    drawerBackdrop = null,
     closeDrawerButton = null,
     // Change Rationale: Align the drawer breakpoint with the shared navigation
     // rail cutoff so compact drawer behavior matches CSS and BeerCSS helpers.
@@ -49,7 +50,6 @@ export class NavigationDrawerController {
     androidContent = null,
     githubToggle = null,
     githubContent = null,
-    inertTargets = [],
     navLinks = [],
     firstNavItem = null,
     documentRef = typeof document !== 'undefined' ? document : null,
@@ -57,6 +57,7 @@ export class NavigationDrawerController {
   } = {}) {
     this.menuButton = menuButton;
     this.navDrawer = navDrawer;
+    this.drawerBackdrop = drawerBackdrop;
     this.closeDrawerButton = closeDrawerButton;
     this.closeOnNavSelectMediaQuery = closeOnNavSelectMediaQuery;
     this.aboutToggle = aboutToggle;
@@ -65,7 +66,6 @@ export class NavigationDrawerController {
     this.androidContent = androidContent;
     this.githubToggle = githubToggle;
     this.githubContent = githubContent;
-    this.inertTargets = Array.isArray(inertTargets) ? inertTargets : [];
     this.navLinks = Array.isArray(navLinks) ? navLinks : [];
     this.firstNavItem = firstNavItem;
     this.documentRef = documentRef;
@@ -101,6 +101,11 @@ export class NavigationDrawerController {
     if (this.closeDrawerButton) {
       this.closeDrawerButton.addEventListener('click', () => this.close());
       this.closeDrawerButton.setAttribute('aria-controls', 'navDrawer');
+    }
+
+    if (this.drawerBackdrop) {
+      this.drawerBackdrop.addEventListener('click', () => this.close());
+      this.drawerBackdrop.setAttribute('aria-controls', 'navDrawer');
     }
 
     this.documentRef?.addEventListener('keydown', this.handleKeydown);
@@ -221,27 +226,6 @@ export class NavigationDrawerController {
     return false;
   }
 
-  redirectFocusAwayFromInertAreas() {
-    if (!this.inertTargets.length || !this.documentRef) {
-      return;
-    }
-
-    const activeElement = this.documentRef?.activeElement;
-    if (!activeElement) {
-      return;
-    }
-
-    const isInsideInert = this.inertTargets.some(
-      (element) => element && element.contains(activeElement),
-    );
-    if (isInsideInert) {
-      const moved = this.focusFirstNavItem();
-      if (!moved && typeof this.navDrawer?.focus === 'function') {
-        this.navDrawer.focus();
-      }
-    }
-  }
-
   /**
    * Synchronizes visual/ARIA state from canonical drawer open state.
    *
@@ -254,8 +238,8 @@ export class NavigationDrawerController {
     this.bodyElement?.classList.toggle('drawer-is-open', isDrawerOpen);
     this.menuButton?.setAttribute('aria-expanded', isDrawerOpen ? 'true' : 'false');
     this.navDrawer?.setAttribute('aria-hidden', isDrawerOpen ? 'false' : 'true');
-
-    this.updateModalAccessibilityState(isDrawerOpen);
+    this.drawerBackdrop?.classList.toggle('active', isDrawerOpen);
+    this.drawerBackdrop?.setAttribute('aria-hidden', isDrawerOpen ? 'false' : 'true');
   }
 
   /**
@@ -280,21 +264,6 @@ export class NavigationDrawerController {
 
   setBodyScrollbarCompensation() {
     // Change Rationale: Beer CSS drawers overlay content without shifting layout.
-  }
-
-  updateModalAccessibilityState(isDrawerOpen) {
-    const inert = Boolean(isDrawerOpen);
-    if (inert) {
-      this.redirectFocusAwayFromInertAreas();
-    }
-
-    this.inertTargets.forEach((element) => {
-      if (!element) {
-        return;
-      }
-      element.toggleAttribute('inert', inert);
-      element.setAttribute('aria-hidden', String(inert));
-    });
   }
 
   shouldCloseOnNavSelection() {

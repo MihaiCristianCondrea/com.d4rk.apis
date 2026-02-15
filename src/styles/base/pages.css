@@ -165,6 +165,9 @@
  * outlined cards indicate navigation while filled cards remain informational.
  */
 .action-card {
+  /* Change Rationale: GitHub helper cards now share the same rounded container
+   * language as workspace cards so all home destinations feel part of one system. */
+  border-radius: var(--app-screenshot-radius);
   border: 1px solid var(--md-sys-color-outline-variant);
   background-color: var(--md-sys-color-surface);
   transition: border-color 160ms ease, box-shadow 160ms ease,

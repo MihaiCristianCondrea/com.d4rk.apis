@@ -6,9 +6,12 @@
     with Material 3 guidance while letting the router own active state updates.
 -->
 <div class="app-navigation" data-app-navigation>
+  <!-- Change Rationale: Add the BeerCSS-style scrim companion for compact drawer navigation so
+       the panel closes on backdrop taps without relying on dialog/inert side effects. -->
+  <button id="navDrawerBackdrop" class="navigation-drawer-backdrop" type="button" aria-label="Close navigation menu" aria-hidden="true" tabindex="-1"></button>
   <!-- Change Rationale: The navigation rail now defers to a data-driven renderer so rail
        and drawer sections stay in sync and extend cleanly without duplicating markup. -->
-  <nav id="navRail" class="m l left app-navigation-rail surface-container" aria-label="Primary navigation" data-drawer-inert-target>
+  <nav id="navRail" class="m l left app-navigation-rail surface-container" aria-label="Primary navigation">
     <div class="navigation-section-stack" data-navigation-sections="rail"></div>
   </nav>
   <!-- Change Rationale: Compact navigation now follows BeerCSS's nav-left structure

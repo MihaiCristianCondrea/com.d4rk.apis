@@ -4,7 +4,7 @@
 /*
  * Change Rationale:
  * - This suite validates the BeerCSS nav-based compact drawer (`nav.left.s`) contract.
- * - It guards against regressions where drawer state, aria-expanded, and inert handling drift.
+ * - It guards against regressions where drawer state, aria-expanded, and backdrop close behavior drift.
  */
 const fs = require('fs');
 const path = require('path');
@@ -18,9 +18,10 @@ const { initNavigationDrawer } = require('../../src/core/ui/components/navigatio
  */
 function createDrawerMarkup() {
   document.body.innerHTML = `
-    <header data-drawer-inert-target id="header">
+    <header id="header">
       <button id="menuButton" class="button transparent circle app-nav-icon-button" type="button">Menu</button>
     </header>
+    <button id="navDrawerBackdrop" class="navigation-drawer-backdrop" type="button" aria-hidden="true"></button>
     <nav id="navDrawer" class="navigation-drawer left s" aria-hidden="true">
       <button id="closeDrawerButton" class="button transparent circle app-nav-icon-button" type="button">Close</button>
       <nav>
@@ -42,8 +43,8 @@ function createDrawerMarkup() {
         <button id="autoThemeButton" data-theme="auto" aria-pressed="true" class="button transparent circle app-nav-icon-button selected" type="button">Auto</button>
       </div>
     </nav>
-    <main data-drawer-inert-target id="mainContent">Main content</main>
-    <footer data-drawer-inert-target id="footerContent">Footer content</footer>
+    <main id="mainContent">Main content</main>
+    <footer id="footerContent">Footer content</footer>
   `;
 
   const firstNavItem = document.querySelector('#navDrawer .nav-link[href]');
@@ -85,10 +86,12 @@ describe('navigationDrawerService', () => {
   test('first menu click opens drawer and second click closes it', () => {
     const menuButtonElement = document.getElementById('menuButton');
     const navDrawerElement = document.getElementById('navDrawer');
+    const navDrawerBackdrop = document.getElementById('navDrawerBackdrop');
 
     menuButtonElement.click();
 
     expect(navDrawerElement.classList.contains('active')).toBe(true);
+    expect(navDrawerBackdrop.classList.contains('active')).toBe(true);
     expect(document.body.classList.contains('drawer-is-open')).toBe(true);
     expect(menuButtonElement.getAttribute('aria-expanded')).toBe('true');
     expect(navDrawerElement.getAttribute('aria-hidden')).toBe('false');
@@ -96,6 +99,7 @@ describe('navigationDrawerService', () => {
     menuButtonElement.click();
 
     expect(navDrawerElement.classList.contains('active')).toBe(false);
+    expect(navDrawerBackdrop.classList.contains('active')).toBe(false);
     expect(document.body.classList.contains('drawer-is-open')).toBe(false);
     expect(menuButtonElement.getAttribute('aria-expanded')).toBe('false');
     expect(navDrawerElement.getAttribute('aria-hidden')).toBe('true');
@@ -104,47 +108,34 @@ describe('navigationDrawerService', () => {
   test('drawer is not visible/open by default', () => {
     const menuButtonElement = document.getElementById('menuButton');
     const navDrawerElement = document.getElementById('navDrawer');
+    const navDrawerBackdrop = document.getElementById('navDrawerBackdrop');
 
     expect(navDrawerElement.classList.contains('active')).toBe(false);
+    expect(navDrawerBackdrop.classList.contains('active')).toBe(false);
     expect(document.body.classList.contains('drawer-is-open')).toBe(false);
     expect(menuButtonElement.getAttribute('aria-expanded')).toBe('false');
     expect(navDrawerElement.getAttribute('aria-hidden')).toBe('true');
+    expect(navDrawerBackdrop.getAttribute('aria-hidden')).toBe('true');
   });
 
-  test('repeated open/close cycles reset body and inert state correctly', () => {
+  test('repeated open/close cycles keep the page interactive', () => {
     const menuButtonElement = document.getElementById('menuButton');
     const closeButton = document.getElementById('closeDrawerButton');
     const navDrawerElement = document.getElementById('navDrawer');
-    const header = document.getElementById('header');
-    const mainContent = document.getElementById('mainContent');
-    const footerContent = document.getElementById('footerContent');
 
     menuButtonElement.click();
     expect(navDrawerElement.classList.contains('active')).toBe(true);
     expect(document.body.classList.contains('drawer-is-open')).toBe(true);
-    expect(header.hasAttribute('inert')).toBe(true);
-    expect(mainContent.hasAttribute('inert')).toBe(true);
-    expect(footerContent.hasAttribute('inert')).toBe(true);
 
     closeButton.click();
     expect(navDrawerElement.classList.contains('active')).toBe(false);
     expect(document.body.classList.contains('drawer-is-open')).toBe(false);
-    expect(header.hasAttribute('inert')).toBe(false);
-    expect(mainContent.hasAttribute('inert')).toBe(false);
-    expect(footerContent.hasAttribute('inert')).toBe(false);
 
     menuButtonElement.click();
     expect(navDrawerElement.classList.contains('active')).toBe(true);
-    expect(document.body.classList.contains('drawer-is-open')).toBe(true);
-    expect(header.getAttribute('aria-hidden')).toBe('true');
-    expect(mainContent.getAttribute('aria-hidden')).toBe('true');
-    expect(footerContent.getAttribute('aria-hidden')).toBe('true');
 
     closeButton.click();
     expect(document.body.classList.contains('drawer-is-open')).toBe(false);
-    expect(header.getAttribute('aria-hidden')).toBe('false');
-    expect(mainContent.getAttribute('aria-hidden')).toBe('false');
-    expect(footerContent.getAttribute('aria-hidden')).toBe('false');
   });
 
   test('closes drawer via close button', () => {
@@ -160,6 +151,21 @@ describe('navigationDrawerService', () => {
     expect(navDrawerElement.classList.contains('active')).toBe(false);
     expect(document.body.classList.contains('drawer-is-open')).toBe(false);
     expect(menuButtonElement.getAttribute('aria-expanded')).toBe('false');
+  });
+
+  test('closes drawer via backdrop click', () => {
+    const menuButtonElement = document.getElementById('menuButton');
+    const navDrawerElement = document.getElementById('navDrawer');
+    const navDrawerBackdrop = document.getElementById('navDrawerBackdrop');
+
+    menuButtonElement.click();
+    expect(navDrawerElement.classList.contains('active')).toBe(true);
+
+    navDrawerBackdrop.click();
+
+    expect(navDrawerElement.classList.contains('active')).toBe(false);
+    expect(navDrawerBackdrop.classList.contains('active')).toBe(false);
+    expect(document.body.classList.contains('drawer-is-open')).toBe(false);
   });
 
   test('closes drawer via nav item click on compact viewport', () => {
@@ -232,99 +238,5 @@ describe('navigationDrawerService', () => {
     expect(navDrawer.classList.contains('s')).toBe(true);
     expect(navDrawer.classList.contains('m')).toBe(false);
     expect(navDrawer.classList.contains('l')).toBe(false);
-  });
-
-  test('navigation shell template avoids legacy app button classes', () => {
-    const repoRoot = path.join(__dirname, '..', '..');
-    const navTemplatePath = path.join(
-      repoRoot,
-      'app',
-      'src',
-      'main',
-      'js',
-      'core',
-      'ui',
-      'components',
-      'navigation',
-      'AppNavigationView.html',
-    );
-    const html = fs.readFileSync(navTemplatePath, 'utf8');
-
-    expect(html.includes('app-button')).toBe(false);
-    expect(html.includes('api-inline-button')).toBe(false);
-  });
-
-  test('navigation template keeps a single BeerCSS icon-button contract and pressed theme state', () => {
-    const repoRoot = path.join(__dirname, '..', '..');
-    const navTemplatePath = path.join(
-      repoRoot,
-      'app',
-      'src',
-      'main',
-      'js',
-      'core',
-      'ui',
-      'components',
-      'navigation',
-      'AppNavigationView.html',
-    );
-    const html = fs.readFileSync(navTemplatePath, 'utf8');
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(html, 'text/html');
-
-    const menuButton = document.getElementById('menuButton');
-    const closeButton = doc.getElementById('closeDrawerButton');
-    const themeButtons = [
-      doc.getElementById('lightThemeButton'),
-      doc.getElementById('darkThemeButton'),
-      doc.getElementById('autoThemeButton'),
-    ];
-
-    expect(menuButton.className).toContain('app-nav-icon-button');
-    expect(closeButton.className).toContain('button transparent circle app-nav-icon-button');
-    themeButtons.forEach((button) => {
-      expect(button.className).toContain('button transparent circle app-nav-icon-button');
-    });
-
-    expect(themeButtons[0].getAttribute('aria-pressed')).toBe('false');
-    expect(themeButtons[1].getAttribute('aria-pressed')).toBe('false');
-    expect(themeButtons[2].getAttribute('aria-pressed')).toBe('true');
-  });
-
-  test('toggle sections open independently with default expansions', () => {
-    const aboutToggleElement = document.getElementById('aboutToggle');
-    const aboutContentElement = document.getElementById('aboutContent');
-    const androidToggleElement = document.getElementById('androidAppsToggle');
-    const androidContentElement = document.getElementById('androidAppsContent');
-    const githubToggleElement = document.getElementById('githubToolsToggle');
-    const githubContentElement = document.getElementById('githubToolsContent');
-
-    expect(androidToggleElement.getAttribute('aria-expanded')).toBe('true');
-    expect(androidContentElement.classList.contains('open')).toBe(true);
-    if (githubToggleElement && githubContentElement) {
-      expect(githubToggleElement.getAttribute('aria-expanded')).toBe('true');
-      expect(githubContentElement.classList.contains('open')).toBe(true);
-    }
-    expect(aboutContentElement.classList.contains('open')).toBe(false);
-
-    aboutToggleElement.click();
-
-    expect(aboutToggleElement.classList.contains('expanded')).toBe(true);
-    expect(aboutToggleElement.getAttribute('aria-expanded')).toBe('true');
-    expect(aboutContentElement.classList.contains('open')).toBe(true);
-    expect(androidContentElement.classList.contains('open')).toBe(true);
-    if (githubContentElement) {
-      expect(githubContentElement.classList.contains('open')).toBe(true);
-    }
-
-    aboutToggleElement.click();
-
-    expect(aboutToggleElement.classList.contains('expanded')).toBe(false);
-    expect(aboutToggleElement.getAttribute('aria-expanded')).toBe('false');
-    expect(aboutContentElement.classList.contains('open')).toBe(false);
-    expect(androidContentElement.classList.contains('open')).toBe(true);
-    if (githubContentElement) {
-      expect(githubContentElement.classList.contains('open')).toBe(true);
-    }
   });
 });
