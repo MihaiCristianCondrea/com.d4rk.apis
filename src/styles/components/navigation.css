@@ -55,8 +55,30 @@
   background: transparent;
 }
 
+/* Change Rationale: The drawer now follows the BeerCSS dialog shell pattern where
+ * header/footer stay reachable and only destination links scroll.
+ */
+dialog.navigation-drawer {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
 .drawer-content {
+  flex: 1 1 auto;
+  min-height: 0;
   overflow-y: auto;
+}
+
+.drawer-footer {
+  border-top: 1px solid var(--md-sys-color-outline-variant);
+}
+
+.drawer-legal-links {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
 }
 
 /* Change Rationale: Navigation sections now hydrate dynamically, so the
