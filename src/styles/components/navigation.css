@@ -27,11 +27,11 @@
 .app-top-app-bar {
   width: 100%;
   z-index: 7;
-  /* Change Rationale: Keep the app bar tied to the neutral surface tokens so
-   * navigation never drifts to an accent background.
+  /* Change Rationale: Keep the app bar tied to neutral surface tokens and
+   * explicitly override BeerCSS tint helpers so the header never turns purple.
    */
-  background-color: var(--app-surface);
-  color: var(--app-on-surface);
+  background-color: var(--app-surface) !important;
+  color: var(--app-on-surface) !important;
 }
 
 .app-top-app-bar nav {
@@ -46,6 +46,26 @@
 }
 
 /* --- Navigation Drawer --- */
+
+.navigation-drawer-backdrop {
+  position: fixed;
+  inset: 0;
+  inset-block-start: var(--app-top-app-bar-height);
+  background: var(--app-overlay-bg-color);
+  border: 0;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 220ms var(--app-motion-ease-standard), visibility 220ms var(--app-motion-ease-standard);
+  z-index: 7;
+}
+
+.navigation-drawer-backdrop.active {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
 /* Change Rationale: Compact drawer now uses BeerCSS `nav.left.s` structure,
  * with explicit off-canvas behavior controlled by `.active` instead of dialog APIs.
  */
@@ -58,7 +78,7 @@
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  background-color: var(--app-drawer-bg-color);
+  background-color: var(--app-drawer-bg-color) !important;
   color: var(--app-text-color);
   border-inline-end: 1px solid var(--md-sys-color-outline-variant);
   transform: translateX(calc(-1 * var(--app-drawer-inline-size) - 1rem));
@@ -109,10 +129,9 @@
 
 .drawer-footer {
   flex-shrink: 0;
-  position: sticky;
-  bottom: 0;
+  margin-top: auto;
   border-top: 1px solid var(--md-sys-color-outline-variant);
-  background-color: var(--app-drawer-bg-color);
+  background-color: var(--app-drawer-bg-color) !important;
 }
 
 .drawer-legal-links {
@@ -163,7 +182,8 @@
  * offsetting the main shell surfaces instead of centering underneath it.
  */
 @media (min-width: 960px) {
-  .navigation-drawer {
+  .navigation-drawer,
+  .navigation-drawer-backdrop {
     display: none;
   }
 

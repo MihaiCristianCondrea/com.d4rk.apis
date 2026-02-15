@@ -7,6 +7,7 @@ import { getDynamicElement } from '@/core/ui/utils/domUtils.js';
  * @param {{
  *   menuButtonId?: string,
  *   navDrawerId?: string,
+ *   backdropId?: string,
  *   closeDrawerId?: string,
  *   aboutToggleId?: string,
  *   aboutContentId?: string,
@@ -20,6 +21,7 @@ import { getDynamicElement } from '@/core/ui/utils/domUtils.js';
 export function resolveNavigationDrawerBindings({
   menuButtonId = 'menuButton',
   navDrawerId = 'navDrawer',
+  backdropId = 'navDrawerBackdrop',
   closeDrawerId = 'closeDrawerButton',
   aboutToggleId = 'aboutToggle',
   aboutContentId = 'aboutContent',
@@ -32,6 +34,7 @@ export function resolveNavigationDrawerBindings({
   return {
     menuButton: getDynamicElement(menuButtonId),
     navDrawer,
+    drawerBackdrop: getDynamicElement(backdropId),
     closeDrawerButton: getDynamicElement(closeDrawerId),
     aboutToggle: getDynamicElement(aboutToggleId),
     aboutContent: getDynamicElement(aboutContentId),
@@ -39,7 +42,6 @@ export function resolveNavigationDrawerBindings({
     androidContent: getDynamicElement(androidContentId) || getDynamicElement('androidAppsContent'),
     githubToggle: getDynamicElement(githubToggleId),
     githubContent: getDynamicElement(githubContentId),
-    inertTargets: Array.from(typeof document !== 'undefined' ? document.querySelectorAll('[data-drawer-inert-target]') : []),
     navLinks: Array.from(navDrawer?.querySelectorAll('.nav-link[href]') || []),
     firstNavItem: navDrawer?.querySelector('.nav-link[href]') || null,
     documentRef: typeof document !== 'undefined' ? document : null,

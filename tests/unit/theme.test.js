@@ -200,6 +200,17 @@ describe('theme palette tokens', () => {
     return fs.readFileSync(navigationPath, 'utf8');
   }
 
+  /**
+   * Returns the `src/styles/base/pages.css` content for home-card assertions.
+   *
+   * @returns {string} Raw pages stylesheet text.
+   */
+  function readPagesCss() {
+    const repoRoot = path.join(__dirname, '..', '..');
+    const pagesPath = path.join(repoRoot, 'src', 'styles', 'base', 'pages.css');
+    return fs.readFileSync(pagesPath, 'utf8');
+  }
+
   test('light mode keeps Android-green brand token mapping for BeerCSS variables', () => {
     const css = readThemeVariablesCss();
 
@@ -234,12 +245,34 @@ describe('theme palette tokens', () => {
     expect(css).toMatch(/html\.dark\s*\{[\s\S]*--app-theme-button-selected-bg:\s*color-mix\(in srgb, var\(--md-sys-color-primary\) 20%, transparent\);/);
   });
 
+  test('theme palette stays constrained to Android green + white/dark surfaces', () => {
+    const css = readThemeVariablesCss();
+
+    expect(css).toMatch(/:root\s*\{[\s\S]*--md-sys-color-primary:\s*#3ddc84;/);
+    expect(css).toMatch(/:root\s*\{[\s\S]*--md-sys-color-background:\s*#ffffff;/);
+    expect(css).toMatch(/:root\s*\{[\s\S]*--md-sys-color-surface:\s*#ffffff;/);
+    expect(css).toMatch(/:root\s*\{[\s\S]*--app-footer-text-color:\s*var\(--md-sys-color-on-surface\);/);
+
+    expect(css).toMatch(/html\.dark\s*\{[\s\S]*--md-sys-color-primary:\s*#3ddc84;/);
+    expect(css).toMatch(/html\.dark\s*\{[\s\S]*--md-sys-color-background:\s*#0e1510;/);
+    expect(css).toMatch(/html\.dark\s*\{[\s\S]*--md-sys-color-surface:\s*#0e1510;/);
+    expect(css).toMatch(/html\.dark\s*\{[\s\S]*--app-footer-text-color:\s*var\(--md-sys-color-on-surface\);/);
+  });
+
+
+  test('home action cards keep rounded shape for GitHub tools and workspaces', () => {
+    const css = readPagesCss();
+
+    expect(css).toMatch(/\.action-card\s*\{[\s\S]*border-radius:\s*var\(--app-screenshot-radius\);/);
+  });
+
   test('navigation app bar, drawer, and active rows use app semantic tokens', () => {
     const css = readNavigationCss();
 
-    expect(css).toMatch(/\.app-top-app-bar\s*\{[\s\S]*background-color:\s*var\(--app-surface\);/);
-    expect(css).toMatch(/\.app-top-app-bar\s*\{[\s\S]*color:\s*var\(--app-on-surface\);/);
-    expect(css).toMatch(/\.navigation-drawer\s*\{[\s\S]*background-color:\s*var\(--app-drawer-bg-color\);/);
+    expect(css).toMatch(/\.app-top-app-bar\s*\{[\s\S]*background-color:\s*var\(--app-surface\)\s*!important;/);
+    expect(css).toMatch(/\.app-top-app-bar\s*\{[\s\S]*color:\s*var\(--app-on-surface\)\s*!important;/);
+    expect(css).toMatch(/\.navigation-drawer\s*\{[\s\S]*background-color:\s*var\(--app-drawer-bg-color\)\s*!important;/);
+    expect(css).toMatch(/\.navigation-drawer-backdrop\s*\{[\s\S]*background:\s*var\(--app-overlay-bg-color\);/);
     expect(css).toMatch(/\.app-navigation\s+li\.nav-item\.active,[\s\S]*background-color:\s*var\(--app-primary-container\)\s*!important;/);
     expect(css).toMatch(/\.app-navigation\s+li\.nav-item\.active\s+\.nav-link,[\s\S]*color:\s*var\(--app-on-primary-container\);/);
   });

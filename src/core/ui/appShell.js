@@ -130,9 +130,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- App Bar Scroll Behavior ---
     if (topAppBarEl) {
-        // Change Rationale: BeerCSS expects the app bar to use the `fill` surface class
-        // with an elevated state on scroll; toggling the framework class keeps the
-        // header aligned with stock behavior without custom styling.
+        // Change Rationale: Keep app-bar elevation behavior while avoiding BeerCSS `fill`
+        // tint drift so the shell remains locked to the Android-green + surface palette.
         applyAppBarScrollState(topAppBarEl);
         window.addEventListener('scroll', () => applyAppBarScrollState(topAppBarEl));
     }
@@ -169,7 +168,6 @@ function applyInitialThemeClassFromStorage() {
  */
 function applyAppBarScrollState(appBarEl) {
     const isScrolled = window.scrollY > 0;
-    appBarEl.classList.add('fill');
     appBarEl.classList.toggle('elevate', isScrolled);
 }
 

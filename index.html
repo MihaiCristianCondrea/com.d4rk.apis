@@ -51,7 +51,7 @@
      component, keeping the shell structure consistent across routes. -->
 <div id="appNavigationMount"></div>
 <div id="pageLoadingOverlay" class="page-loading-overlay"></div>
-<header id="topAppBar" class="app-top-app-bar fixed fill" data-drawer-inert-target="">
+<header id="topAppBar" class="app-top-app-bar fixed">
   <nav>
     <!-- Change Rationale: App bar actions now use the single BeerCSS icon-button contract shared with drawer/theme controls for predictable styling and regression checks. -->
     <button id="menuButton" class="button transparent circle app-nav-icon-button" aria-label="Open navigation menu">
@@ -62,7 +62,7 @@
 </header>
 <!-- Change Rationale: The app shell now ships a minimal placeholder so feature screens are injected
      through the router instead of being compiled as standalone entrypoints. -->
-<main class="content-wrapper responsive app-shell-main" id="pageContentArea" data-drawer-inert-target="">
+<main class="content-wrapper responsive app-shell-main" id="pageContentArea">
   <div id="mainContentPage" class="page-section app-shell-panel page active"></div>
 </main>
 <footer class="app-footer app-shell-footer">
