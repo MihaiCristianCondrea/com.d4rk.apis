@@ -1,10 +1,10 @@
 // Change Rationale: Feature-specific services now live under `app/workspaces/app-toolkit/data/services`
 // to mirror the flattened Android-style module pattern while keeping component behavior unchanged.
-import {probeImage} from '@/features/app-toolkit/data/services/imageProbeService.js';
+import {probeImage} from '@/features/app-toolkit/data/services/image-probe-service.js';
 import {formatAspectRatio, formatDimensionLabel, normalizeImageUrl} from '@/features/app-toolkit/domain/images.js';
 // Change Rationale: Screenshot field markup now lives in the feature UI views folder
 // so the component loads from the canonical Screen + Views location.
-import screenshotFieldTemplate from '../views/ScreenshotFieldView.html?raw';
+import screenshotFieldTemplate from '../views/screenshot-field.view.html?raw';
 
 const styleHref = new URL('../../../../../../styles/features/workspaces/app-toolkit/screenshot-field.css', import.meta.url);
 

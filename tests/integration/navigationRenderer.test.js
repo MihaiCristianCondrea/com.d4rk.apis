@@ -69,9 +69,9 @@ describe('navigationRenderer', () => {
   it('keeps github feature screens on BeerCSS button class patterns', () => {
     const repoRoot = path.join(__dirname, '..', '..');
     const screenPaths = [
-      path.join(repoRoot, 'src', 'features', 'github-tools', 'releasestats', 'ui', 'ReleaseStatsScreen.html'),
-      path.join(repoRoot, 'src', 'features', 'github-tools', 'repomapper', 'ui', 'RepoMapperScreen.html'),
-      path.join(repoRoot, 'src', 'features', 'github-tools', 'gitpatch', 'ui', 'GitPatchScreen.html'),
+      path.join(repoRoot, 'src', 'features', 'github-tools', 'releasestats', 'ui', 'release-stats.page.html'),
+      path.join(repoRoot, 'src', 'features', 'github-tools', 'repomapper', 'ui', 'repo-mapper.page.html'),
+      path.join(repoRoot, 'src', 'features', 'github-tools', 'gitpatch', 'ui', 'git-patch.page.html'),
     ];
 
     const html = screenPaths.map((screenPath) => fs.readFileSync(screenPath, 'utf8')).join('\n');
@@ -91,7 +91,7 @@ describe('navigationRenderer', () => {
       'ui',
       'components',
       'navigation',
-      'AppNavigationView.html',
+      'app-navigation.view.html',
     );
     const html = fs.readFileSync(navTemplatePath, 'utf8');
     const parser = new DOMParser();
@@ -139,7 +139,7 @@ describe('navigationRenderer', () => {
       'ui',
       'components',
       'navigation',
-      'AppNavigationView.html',
+      'app-navigation.view.html',
     );
     const html = fs.readFileSync(navTemplatePath, 'utf8');
     const parser = new DOMParser();

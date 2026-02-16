@@ -7,7 +7,8 @@
  * - Canonical SPA migration now depends on Feature-Sliced layers including
  *   `widgets`, `entities`, and `shared`.
  * - This guard ensures required layers exist, kebab-case naming patterns are
- *   respected, and `src/app` stays limited to bootstrap/providers/shell/route runtime glue.
+ *   respected, route/page/view/component filename conventions are enforced,
+ *   and `src/app` stays limited to bootstrap/providers/shell/route runtime glue.
  */
 
 const fs = require('fs');
@@ -68,6 +69,27 @@ function listDirectories(absolute) {
   return dirs;
 }
 
+/** @param {string} absolute */
+function listFiles(absolute) {
+  const files = [];
+  const stack = [absolute];
+  while (stack.length) {
+    const current = stack.pop();
+    const entries = fs.readdirSync(current, { withFileTypes: true });
+    entries.forEach((entry) => {
+      const full = path.join(current, entry.name);
+      if (entry.isDirectory()) {
+        stack.push(full);
+        return;
+      }
+      if (entry.isFile()) {
+        files.push(full);
+      }
+    });
+  }
+  return files;
+}
+
 const violations = [];
 
 REQUIRED_DIRS.forEach((relativePath) => {
@@ -97,6 +119,31 @@ if (fs.existsSync(APP_DIR)) {
     if (!KEBAB_CASE.test(name)) {
       const relativeDir = formatPath(path.relative(ROOT, absoluteDir));
       violations.push(`Directory names must be kebab-case: ${relativeDir}`);
+    }
+  });
+});
+
+['src/pages', 'src/widgets', 'src/features', 'src/entities', 'src/shared'].forEach((scopePath) => {
+  const absoluteScope = path.join(ROOT, ...scopePath.split('/'));
+  if (!fs.existsSync(absoluteScope)) {
+    return;
+  }
+
+  listFiles(absoluteScope).forEach((absoluteFile) => {
+    const relativeFile = formatPath(path.relative(ROOT, absoluteFile));
+    const fileName = path.basename(absoluteFile);
+    const directory = path.dirname(relativeFile);
+
+    if (fileName.endsWith('Screen.html')) {
+      violations.push(`Route screens must use *.page.html suffix: ${relativeFile}`);
+    }
+
+    if (fileName.endsWith('View.html')) {
+      violations.push(`Shared partials must use *.view.html suffix: ${relativeFile}`);
+    }
+
+    if (directory.includes('/ui/components') && fileName.endsWith('.js') && !fileName.endsWith('.ce.js')) {
+      violations.push(`Component modules must use *.ce.js suffix: ${relativeFile}`);
     }
   });
 });

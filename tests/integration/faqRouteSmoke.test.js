@@ -15,7 +15,7 @@ jest.mock(
   { virtual: true },
 );
 jest.mock(
-  '../../src/shared/workspaces/ui/views/WorkspaceInsightCardView.html?raw',
+  '../../src/shared/workspaces/ui/views/workspace-insight-card.view.html?raw',
   /**
    * Returns a mock workspace insight card template string for Jest.
    *

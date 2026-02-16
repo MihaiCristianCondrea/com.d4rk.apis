@@ -98,3 +98,26 @@ npm test
 ## License
 
 GPL-3.0-or-later (`LICENSE`).
+
+
+## Validation and governance checks
+
+Run full validation:
+
+```bash
+npm test
+```
+
+Run architecture guards directly:
+
+```bash
+npm run verify:spa-structure
+npm run verify:spa-import-rules
+```
+
+Naming governance now enforces:
+
+- kebab-case disk names in canonical SPA layers
+- `*.page.html` for route screens
+- `*.view.html` for shared partials
+- `*.ce.js` for component modules

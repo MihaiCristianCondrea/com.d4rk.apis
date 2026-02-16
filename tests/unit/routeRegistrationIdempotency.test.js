@@ -7,37 +7,37 @@
  */
 
 jest.mock(
-  '../../src/features/github-tools/gitpatch/ui/GitPatchScreen.html?raw',
+  '../../src/features/github-tools/gitpatch/ui/git-patch.page.html?raw',
   () => '<div>Git Patch Screen</div>',
   { virtual: true }
 );
 jest.mock(
-  '../../src/features/github-tools/gitpatch/ui/views/GitPatchFormView.html?raw',
+  '../../src/features/github-tools/gitpatch/ui/views/git-patch-form.view.html?raw',
   () => '<div>Git Patch Form</div>',
   { virtual: true }
 );
 jest.mock(
-  '../../src/features/github-tools/releasestats/ui/ReleaseStatsScreen.html?raw',
+  '../../src/features/github-tools/releasestats/ui/release-stats.page.html?raw',
   () => '<div>Release Stats Screen</div>',
   { virtual: true }
 );
 jest.mock(
-  '../../src/features/github-tools/releasestats/ui/views/ReleaseStatsFormView.html?raw',
+  '../../src/features/github-tools/releasestats/ui/views/release-stats-form.view.html?raw',
   () => '<div>Release Stats Form</div>',
   { virtual: true }
 );
 jest.mock(
-  '../../src/features/github-tools/common/ui/views/GitHubToolHeaderView.html?raw',
+  '../../src/features/github-tools/common/ui/views/github-tool-header.view.html?raw',
   () => '<header>Header</header>',
   { virtual: true }
 );
 jest.mock(
-  '../../src/features/github-tools/common/ui/views/GitHubToolCardView.html?raw',
+  '../../src/features/github-tools/common/ui/views/github-tool-card.view.html?raw',
   () => '<section>Card</section>',
   { virtual: true }
 );
 jest.mock(
-  '../../src/features/github-tools/common/ui/views/GitHubEmptyStateView.html?raw',
+  '../../src/features/github-tools/common/ui/views/github-empty-state.view.html?raw',
   () => '<div>Empty</div>',
   { virtual: true }
 );

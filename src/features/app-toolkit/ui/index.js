@@ -1,4 +1,4 @@
-import { createScreenshotField } from './components/screenshotField.js';
+import { createScreenshotField } from './components/screenshot-field.ce.js';
 
 const globalScope = typeof window !== 'undefined' ? window : globalThis;
 

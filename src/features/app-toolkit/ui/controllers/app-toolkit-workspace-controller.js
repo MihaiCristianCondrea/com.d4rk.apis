@@ -1,4 +1,4 @@
-import { createWorkspaceActivationController } from '../../domain/workspaceActivationController.js';
+import { createWorkspaceActivationController } from '../../domain/workspace-activation-controller.js';
 // Change Rationale: The app-toolkit workspace controller sits five levels below `src/`,
 // so dashboard template imports must traverse one additional segment to resolve
 // correctly in Vite and keep the shell render pipeline available (including drawer UI).
@@ -12,17 +12,17 @@ import { isValidPackageName } from '@/entities/app-toolkit-category/index.js';
 // Change Rationale: Screenshot carousel navigation now uses the shared action button
 // helper so tertiary buttons remain consistent with the global button-role policy.
 import { createTertiaryActionButton } from '@/core/ui/components/actionButtons.js';
-import { createFileHandleStore } from '../../data/services/fileHandleStoreService.js';
-import { wireSortMenuController } from './sortMenuController.js';
-import { wireFetchPresetsController } from './fetchPresetsController.js';
-import { wireGithubDialogController } from './githubDialogController.js';
-import { wireToolbarController } from './toolbarController.js';
-import { APP_TOOLKIT_ACTION } from '../contract/AppToolkitAction.js';
-import { APP_TOOLKIT_EVENT } from '../contract/AppToolkitEvent.js';
-import { createAppToolkitUiState } from '../contract/state/AppToolkitUiState.js';
-import { wireDashboardUpdatesController } from './dashboardUpdatesController.js';
-import { fetchAppToolkitJson, requestGithubContents } from '../../data/services/appToolkitNetworkService.js';
-import { createAppToolkitRouteViewModel } from '../viewmodels/AppToolkitRouteViewModel.js';
+import { createFileHandleStore } from '../../data/services/file-handle-store-service.js';
+import { wireSortMenuController } from './sort-menu-controller.js';
+import { wireFetchPresetsController } from './fetch-presets-controller.js';
+import { wireGithubDialogController } from './github-dialog-controller.js';
+import { wireToolbarController } from './toolbar-controller.js';
+import { APP_TOOLKIT_ACTION } from '../contract/app-toolkit-action.js';
+import { APP_TOOLKIT_EVENT } from '../contract/app-toolkit-event.js';
+import { createAppToolkitUiState } from '../contract/state/app-toolkit-ui-state.js';
+import { wireDashboardUpdatesController } from './dashboard-updates-controller.js';
+import { fetchAppToolkitJson, requestGithubContents } from '../../data/services/app-toolkit-network-service.js';
+import { createAppToolkitRouteViewModel } from '../viewmodels/app-toolkit-route-view-model.js';
 
 let routeLifecycleMount = () => {};
 

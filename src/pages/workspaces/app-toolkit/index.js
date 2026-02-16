@@ -2,7 +2,7 @@ import { RouterRoutes } from '@/core/ui/router/routes.js';
 import {
   mountAppToolkitRoute,
   unmountAppToolkitRoute,
-} from '@/features/app-toolkit/ui/controllers/appToolkitWorkspaceController.js';
+} from '@/features/app-toolkit/ui/controllers/app-toolkit-workspace-controller.js';
 
 /**
  * @file Route registration entrypoint for the App Toolkit workspace feature.

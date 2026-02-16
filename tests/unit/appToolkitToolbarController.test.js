@@ -1,4 +1,4 @@
-import { wireToolbarController } from '../../src/features/app-toolkit/ui/controllers/toolbarController.js';
+import { wireToolbarController } from '../../src/features/app-toolkit/ui/controllers/toolbar-controller.js';
 
 describe('wireToolbarController', () => {
   test('wires toolbar actions to callbacks', async () => {

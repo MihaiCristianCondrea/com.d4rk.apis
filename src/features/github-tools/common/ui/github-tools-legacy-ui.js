@@ -1,20 +1,20 @@
 // Change Rationale: GitHub tool domain logic now imports shared side-effect services from
 // `core/data/services` to keep feature domain code free of legacy paths while preserving
 // identical functionality and side effects.
-import { copyToClipboard, downloadJson, downloadText } from '@/features/github-tools/common/data/services/githubToolsBrowserService.js';
+import { copyToClipboard, downloadJson, downloadText } from '@/features/github-tools/common/data/services/github-tools-browser-service.js';
 import {
   fetchCommitPatch,
   fetchReleaseStats,
   fetchRepositoryTree,
 } from '@/core/data/services/githubService.js';
-import { GitHubToolsEvent } from './contract/GitHubToolsEvent.js';
+import { GitHubToolsEvent } from './contract/github-tools-event.js';
 import {
   consumePrefill as consumePrefillFromStorage,
   navigateWithHash,
   readFavorites as readFavoritesFromStorage,
   savePrefill as savePrefillToStorage,
   writeFavorites as writeFavoritesToStorage,
-} from '@/features/github-tools/common/data/services/githubToolsStorageService.js';
+} from '@/features/github-tools/common/data/services/github-tools-storage-service.js';
 import {
   buildRepoTreeModel,
   formatDate,
@@ -31,7 +31,7 @@ import { setStatusRegionState } from '@/core/ui/templates/statusRegionView.js';
 
 /**
  * Change Rationale: Pure parsing/validation/transform helpers moved into
- * `common/domain/githubToolsDomain.js` so UI orchestration stays focused on
+ * `common/domain/github-tools-domain.js` so UI orchestration stays focused on
  * DOM composition and event wiring while domain remains side-effect free.
  */
 

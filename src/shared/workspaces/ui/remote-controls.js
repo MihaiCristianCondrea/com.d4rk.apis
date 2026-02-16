@@ -1,6 +1,6 @@
 // Change Rationale: The shared builder template now lives under the workspaces shared UI views
 // folder, so update the import to the canonical Screen + Views location.
-import builderRemoteTemplateSource from './views/BuilderRemoteView.html?raw';
+import builderRemoteTemplateSource from './views/builder-remote.view.html?raw';
 
 // Change Rationale: Remote fetch and publish controls were duplicated across workspaces, leading to mismatched labels,
 // missing IDs, and preset drift. Centralizing hydration keeps the BeerCSS layout consistent, wires existing listeners via

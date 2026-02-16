@@ -1,5 +1,5 @@
 import { createFocusTimerController } from '../../src/core/data/services/focusTimerController.js';
-import { createGithubWizardController } from '../../src/shared/workspaces/data/services/githubWizardController.js';
+import { createGithubWizardController } from '../../src/shared/workspaces/data/services/github-wizard-controller.js';
 
 /**
  * Builds a minimal set of elements required by the focus timer controller.

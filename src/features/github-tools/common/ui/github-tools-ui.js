@@ -17,9 +17,9 @@ export {
   renderAsciiTree,
   renderPathList,
   savePrefill,
-} from './githubToolsLegacyUi.js';
+} from './github-tools-legacy-ui.js';
 
-export { initRepoMapper } from './surfaces/mapper/RepoMapperToolUi.js';
-export { initGitPatch } from './surfaces/gitpatch/GitPatchToolUi.js';
-export { initReleaseStats } from './surfaces/releasestats/ReleaseStatsToolUi.js';
-export { initFavoritesPage } from './surfaces/favorites/FavoritesToolUi.js';
+export { initRepoMapper } from './surfaces/mapper/repo-mapper-tool-ui.js';
+export { initGitPatch } from './surfaces/gitpatch/git-patch-tool-ui.js';
+export { initReleaseStats } from './surfaces/releasestats/release-stats-tool-ui.js';
+export { initFavoritesPage } from './surfaces/favorites/favorites-tool-ui.js';

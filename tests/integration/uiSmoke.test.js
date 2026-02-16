@@ -54,7 +54,7 @@ describe('UI smoke', () => {
       'ui',
       'components',
       'navigation',
-      'AppNavigationView.html'
+      'app-navigation.view.html'
     );
     const doc = loadHtmlDocument(navViewPath);
 

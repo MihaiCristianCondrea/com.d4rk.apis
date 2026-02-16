@@ -12,4 +12,4 @@ export {
   savePrefill,
   renderError,
   setButtonBusy,
-} from '../githubToolsLegacyUi.js';
+} from '../github-tools-legacy-ui.js';

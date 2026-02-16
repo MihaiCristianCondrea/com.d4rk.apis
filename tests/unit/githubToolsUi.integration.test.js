@@ -1,6 +1,6 @@
 const {
   initFavoritesPage,
-} = require('../../src/features/github-tools/common/ui/githubToolsUi.js');
+} = require('../../src/features/github-tools/common/ui/github-tools-ui.js');
 
 describe('githubTools UI integration', () => {
   beforeEach(() => {
