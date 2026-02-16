@@ -35,6 +35,11 @@
   padding: clamp(1.5rem, 4vw, 2.5rem);
   margin-bottom: 2.5rem;
   background-color: var(--md-sys-color-surface-container);
+  /* Change Rationale: Home hero previously rendered with square corners against
+   * rounded cards, which felt visually inconsistent. Aligning radius values keeps
+   * all primary home surfaces on the same Material container shape language.
+   */
+  border-radius: 24px;
 }
 
 .hero-copy {
@@ -115,6 +120,10 @@
 
 .feature-surface {
   background-color: var(--md-sys-color-surface-container);
+  /* Change Rationale: The section wrappers now share the same rounded corners as
+   * hero and cards to remove the remaining sharp edges visible on home.
+   */
+  border-radius: 24px;
 }
 
 .workspace-surface,
@@ -250,7 +259,10 @@
 
 .action-card-kicker {
   margin: 0;
-  letter-spacing: 0.05em;
+  /* Change Rationale: Tighten label tracking so card headings avoid the loose
+   * spacing that made text feel disconnected at tablet/desktop scale.
+   */
+  letter-spacing: 0.03em;
   text-transform: uppercase;
   color: var(--app-secondary-text-color);
 }
