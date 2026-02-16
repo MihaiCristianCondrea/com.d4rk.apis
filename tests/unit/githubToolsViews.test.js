@@ -10,7 +10,7 @@ const {
   renderEmptyStateView,
   renderToolCardView,
   renderToolHeaderView,
-} = require('../../src/app/githubtools/common/ui/githubToolsViewComposer.js');
+} = require('../../src/features/github-tools/common/ui/githubToolsViewComposer.js');
 
 describe('githubToolsViewComposer', () => {
   test('applyTemplateTokens replaces tokens with values', () => {

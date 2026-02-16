@@ -5,7 +5,7 @@ import {
   createCategoryId
 } from '../../src/entities/app-toolkit-category/index.js';
 import { isValidPackageName } from '../../src/entities/app-toolkit-category/index.js';
-import { createFileHandleStore } from '../../src/app/workspaces/app-toolkit/data/services/fileHandleStoreService.js';
+import { createFileHandleStore } from '../../src/features/app-toolkit/data/services/fileHandleStoreService.js';
 
 /**
  * Change Rationale:

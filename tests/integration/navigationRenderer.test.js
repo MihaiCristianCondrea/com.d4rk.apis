@@ -69,9 +69,9 @@ describe('navigationRenderer', () => {
   it('keeps github feature screens on BeerCSS button class patterns', () => {
     const repoRoot = path.join(__dirname, '..', '..');
     const screenPaths = [
-      path.join(repoRoot, 'app', 'src', 'main', 'js', 'app', 'githubtools', 'releasestats', 'ui', 'ReleaseStatsScreen.html'),
-      path.join(repoRoot, 'app', 'src', 'main', 'js', 'app', 'githubtools', 'repomapper', 'ui', 'RepoMapperScreen.html'),
-      path.join(repoRoot, 'app', 'src', 'main', 'js', 'app', 'githubtools', 'gitpatch', 'ui', 'GitPatchScreen.html'),
+      path.join(repoRoot, 'src', 'features', 'github-tools', 'releasestats', 'ui', 'ReleaseStatsScreen.html'),
+      path.join(repoRoot, 'src', 'features', 'github-tools', 'repomapper', 'ui', 'RepoMapperScreen.html'),
+      path.join(repoRoot, 'src', 'features', 'github-tools', 'gitpatch', 'ui', 'GitPatchScreen.html'),
     ];
 
     const html = screenPaths.map((screenPath) => fs.readFileSync(screenPath, 'utf8')).join('\n');
@@ -86,10 +86,7 @@ describe('navigationRenderer', () => {
     const repoRoot = path.join(__dirname, '..', '..');
     const navTemplatePath = path.join(
       repoRoot,
-      'app',
       'src',
-      'main',
-      'js',
       'core',
       'ui',
       'components',
@@ -137,10 +134,7 @@ describe('navigationRenderer', () => {
     const repoRoot = path.join(__dirname, '..', '..');
     const navTemplatePath = path.join(
       repoRoot,
-      'app',
       'src',
-      'main',
-      'js',
       'core',
       'ui',
       'components',

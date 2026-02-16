@@ -1,6 +1,6 @@
-import { wireSortMenuController } from '../../src/app/workspaces/app-toolkit/ui/controllers/sortMenuController.js';
-import { wireFetchPresetsController } from '../../src/app/workspaces/app-toolkit/ui/controllers/fetchPresetsController.js';
-import { wireDashboardUpdatesController } from '../../src/app/workspaces/app-toolkit/ui/controllers/dashboardUpdatesController.js';
+import { wireSortMenuController } from '../../src/features/app-toolkit/ui/controllers/sortMenuController.js';
+import { wireFetchPresetsController } from '../../src/features/app-toolkit/ui/controllers/fetchPresetsController.js';
+import { wireDashboardUpdatesController } from '../../src/features/app-toolkit/ui/controllers/dashboardUpdatesController.js';
 
 /**
  * Change Rationale:

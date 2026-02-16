@@ -1,4 +1,4 @@
-import { createAppToolkitRouteViewModel } from '../../src/app/workspaces/app-toolkit/ui/viewmodels/AppToolkitRouteViewModel.js';
+import { createAppToolkitRouteViewModel } from '../../src/features/app-toolkit/ui/viewmodels/AppToolkitRouteViewModel.js';
 
 describe('AppToolkitRouteViewModel', () => {
   test('provides stable route defaults for filename/token/channel paths', () => {

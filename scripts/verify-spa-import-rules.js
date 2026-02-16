@@ -1,12 +1,13 @@
 'use strict';
 
 /**
- * @file Enforces SPA import-direction rules for new canonical folders.
+ * @file Enforces SPA Feature-Sliced import-direction rules.
  *
- * Change Rationale: The migration introduces explicit boundaries for
- * `src/components`, `src/features`, `src/pages`, and `src/routes`.
- * This guard keeps dependencies directional and avoids recreating tightly
- * coupled Android-style module ownership.
+ * Change Rationale:
+ * - Migration now uses canonical layers (`app`, `pages`, `widgets`, `features`,
+ *   `entities`, `shared`) and requires strict downward imports.
+ * - This check prevents layer leaks (for example, `shared` importing from
+ *   `features/pages/app`) while route ownership remains centralized.
  */
 
 const fs = require('fs');
@@ -14,27 +15,12 @@ const path = require('path');
 
 const ROOT = path.join(__dirname, '..', 'src');
 
-const SCOPE_RULES = [
-  {
-    scope: 'features',
-    disallow: ['@/routes/', '@/pages/'],
-    message: 'Feature modules must not import routes/pages directly.',
-  },
-  {
-    scope: 'components',
-    disallow: ['@/routes/', '@/pages/', '@/features/'],
-    message: 'Shared components must stay UI-generic and not import routes/pages/features.',
-  },
-  {
-    scope: 'pages',
-    disallow: ['@/routes/'],
-    message: 'Page modules must not import route ownership modules.',
-  },
-];
+const LAYER_ORDER = ['app', 'pages', 'widgets', 'features', 'entities', 'shared'];
 
 /** @param {string} relativePath */
-function inScope(relativePath, scope) {
-  return relativePath.startsWith(`${scope}/`);
+function getLayer(relativePath) {
+  const [segment] = relativePath.split('/');
+  return LAYER_ORDER.includes(segment) ? segment : null;
 }
 
 /** @param {string} root */
@@ -62,19 +48,24 @@ function collectJsFiles(root) {
 const violations = [];
 collectJsFiles(ROOT).forEach((absolutePath) => {
   const relativePath = path.relative(ROOT, absolutePath).split(path.sep).join('/');
+  const sourceLayer = getLayer(relativePath);
+  if (!sourceLayer) {
+    return;
+  }
+
+  const sourceIndex = LAYER_ORDER.indexOf(sourceLayer);
   const content = fs.readFileSync(absolutePath, 'utf8');
 
-  SCOPE_RULES.forEach((rule) => {
-    if (!inScope(relativePath, rule.scope)) {
-      return;
+  LAYER_ORDER.slice(0, sourceIndex).forEach((higherLayer) => {
+    const token = `@/${higherLayer}/`;
+    if (content.includes(token)) {
+      violations.push(`${relativePath} -> ${sourceLayer} must not import higher layer "${higherLayer}" (${token}).`);
     }
-
-    rule.disallow.forEach((token) => {
-      if (content.includes(token)) {
-        violations.push(`${relativePath} -> ${rule.message} Found disallowed import token: ${token}`);
-      }
-    });
   });
+
+  if (sourceLayer === 'pages' && content.includes('@/app/')) {
+    violations.push(`${relativePath} -> pages must not import app layer directly.`);
+  }
 });
 
 if (violations.length) {

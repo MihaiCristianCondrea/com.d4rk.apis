@@ -7,37 +7,37 @@
  */
 
 jest.mock(
-  '../../src/app/githubtools/gitpatch/ui/GitPatchScreen.html?raw',
+  '../../src/features/github-tools/gitpatch/ui/GitPatchScreen.html?raw',
   () => '<div>Git Patch Screen</div>',
   { virtual: true }
 );
 jest.mock(
-  '../../src/app/githubtools/gitpatch/ui/views/GitPatchFormView.html?raw',
+  '../../src/features/github-tools/gitpatch/ui/views/GitPatchFormView.html?raw',
   () => '<div>Git Patch Form</div>',
   { virtual: true }
 );
 jest.mock(
-  '../../src/app/githubtools/releasestats/ui/ReleaseStatsScreen.html?raw',
+  '../../src/features/github-tools/releasestats/ui/ReleaseStatsScreen.html?raw',
   () => '<div>Release Stats Screen</div>',
   { virtual: true }
 );
 jest.mock(
-  '../../src/app/githubtools/releasestats/ui/views/ReleaseStatsFormView.html?raw',
+  '../../src/features/github-tools/releasestats/ui/views/ReleaseStatsFormView.html?raw',
   () => '<div>Release Stats Form</div>',
   { virtual: true }
 );
 jest.mock(
-  '../../src/app/githubtools/common/ui/views/GitHubToolHeaderView.html?raw',
+  '../../src/features/github-tools/common/ui/views/GitHubToolHeaderView.html?raw',
   () => '<header>Header</header>',
   { virtual: true }
 );
 jest.mock(
-  '../../src/app/githubtools/common/ui/views/GitHubToolCardView.html?raw',
+  '../../src/features/github-tools/common/ui/views/GitHubToolCardView.html?raw',
   () => '<section>Card</section>',
   { virtual: true }
 );
 jest.mock(
-  '../../src/app/githubtools/common/ui/views/GitHubEmptyStateView.html?raw',
+  '../../src/features/github-tools/common/ui/views/GitHubEmptyStateView.html?raw',
   () => '<div>Empty</div>',
   { virtual: true }
 );
@@ -48,7 +48,7 @@ test('GitPatchRoute registers once even when imported twice', () => {
   jest.isolateModules(() => {
     const { RouterRoutes } = require('../../src/core/ui/router/routes.js');
     const { registerGitPatchRoute } = require(
-      '../../src/app/githubtools/gitpatch/ui/GitPatchRoute.js'
+      '../../src/pages/github-tools/routes/git-patch-route.js'
     );
     const initialRoutes = RouterRoutes.getRoutes();
 
@@ -70,7 +70,7 @@ test('ReleaseStatsRoute registers once even when imported twice', () => {
   jest.isolateModules(() => {
     const { RouterRoutes } = require('../../src/core/ui/router/routes.js');
     const { registerReleaseStatsRoute } = require(
-      '../../src/app/githubtools/releasestats/ui/ReleaseStatsRoute.js'
+      '../../src/pages/github-tools/routes/release-stats-route.js'
     );
     const initialRoutes = RouterRoutes.getRoutes();
 
@@ -87,19 +87,19 @@ test('ReleaseStatsRoute registers once even when imported twice', () => {
 });
 
 jest.mock(
-  '../../src/app/home/ui/HomeScreen.html?raw',
+  '../../src/pages/home/ui/home.page.html?raw',
   () => '<div>Home Screen</div>',
   { virtual: true }
 );
 
 jest.mock(
-  '../../src/app/home/ui/views/ActionCardView.html?raw',
+  '../../src/pages/home/ui/views/action-card.view.html?raw',
   () => '<template data-view="action-card"><article>Action Card</article></template>',
   { virtual: true }
 );
 
 jest.mock(
-  '../../src/app/home/ui/views/InfoCardView.html?raw',
+  '../../src/pages/home/ui/views/info-card.view.html?raw',
   () => '<template data-view="info-card"><article>Info Card</article></template>',
   { virtual: true }
 );
@@ -110,7 +110,7 @@ test('HomeRoute registers mount lifecycle through RouterRoutes without globals',
   let result;
   jest.isolateModules(() => {
     const { RouterRoutes } = require('../../src/core/ui/router/routes.js');
-    const homeRouteModule = require('../../src/app/home/ui/HomeRoute.js');
+    const homeRouteModule = require('../../src/pages/home/index.js');
 
     homeRouteModule.registerHomeRoute();
     const homeRoute = RouterRoutes.getRoute('home');

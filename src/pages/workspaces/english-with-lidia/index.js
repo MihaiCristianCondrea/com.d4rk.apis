@@ -9,9 +9,9 @@ import { createFocusTimerController } from '@/core/data/services/focusTimerContr
 import { RouterRoutes } from '@/core/ui/router/routes.js';
 // Change Rationale: Wizard controller now lives in `app/workspaces/shared/data/services`
 // to keep shared adapters within the feature layer while preserving initialization behavior.
-import { createGithubWizardController } from '@/app/workspaces/shared/data/services/githubWizardController.js';
+import { createGithubWizardController } from '@/shared/workspaces/data/services/githubWizardController.js';
 import { renderWorkspaceDashboards } from '@/widgets/workspace-dashboard/workspace-dashboard.ce.js';
-import { initBuilderRemoteControls } from '@/app/workspaces/shared/ui/remoteControls.js';
+import { initBuilderRemoteControls } from '@/shared/workspaces/ui/remoteControls.js';
 
 // Change Rationale: Replaced workspace-specific focus and GitHub wiring with shared controllers to deliver consistent flows
 // across experiences and simplify maintenance without altering existing UI affordances.

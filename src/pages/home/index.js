@@ -3,14 +3,14 @@
  */
 // Change Rationale: Home content data and screens now live under the feature-first home tree,
 // keeping configuration and UI assets co-located without changing runtime behavior.
-import { githubTools, workspaceCards } from '@/app/home/data/homeContentDataSource.js';
+import { githubTools, workspaceCards } from '@/pages/home/data/home-content-data-source.js';
 // Change Rationale: The Home screen now follows the Screen naming convention, so import the
 // new screen path for bundling and future router usage.
 import homeScreenSource from './ui/home.page.html?raw';
 // Change Rationale: Home cards now hydrate from dedicated view templates so action/info
 // card roles remain consistent without per-screen class overrides.
-import actionCardViewSource from '@/app/home/ui/views/ActionCardView.html?raw';
-import infoCardViewSource from '@/app/home/ui/views/InfoCardView.html?raw';
+import actionCardViewSource from '@/pages/home/ui/views/action-card.view.html?raw';
+import infoCardViewSource from '@/pages/home/ui/views/info-card.view.html?raw';
 import statusRegionViewTemplate from '@/widgets/status-region/status-region.widget.html?raw';
 import { RouterRoutes } from '@/core/ui/router/routes.js';
 import { renderStatusRegionView, setStatusRegionState } from '@/widgets/status-region/status-region.ce.js';

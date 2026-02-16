@@ -12,7 +12,7 @@
  *   legacy feature folder names to web-native SPA naming without URL churn.
  */
 
-import '@/app/workspaces/app-toolkit/ui/index.js';
+import '@/features/app-toolkit/ui/index.js';
 import '@/pages/workspaces/app-toolkit/index.js';
 import '@/pages/workspaces/faq/index.js';
 import '@/pages/workspaces/english-with-lidia/index.js';

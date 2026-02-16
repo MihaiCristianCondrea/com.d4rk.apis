@@ -6,7 +6,7 @@
 import { resolveAssetUrl } from '../../data/config/appConfig.js';
 // Change Rationale: GitHub tooling now lives under the `app/githubtools/common` domain path,
 // so router imports must use the canonical location to avoid Vite resolution errors.
-import { initFavoritesPage } from '@/app/githubtools/common/ui/githubToolsUi.js';
+import { initFavoritesPage } from '@/features/github-tools/common/ui/githubToolsUi.js';
 
 // Change Rationale: Feature screens resolve from `/screens/*`, which mirrors `src/app/*`
 // in both dev middleware and production compatibility copies. Keeping this path stable

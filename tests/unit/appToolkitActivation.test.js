@@ -7,7 +7,7 @@
  */
 const {
   createWorkspaceActivationController,
-} = require('../../src/app/workspaces/app-toolkit/domain/workspaceActivationController.js');
+} = require('../../src/features/app-toolkit/domain/workspaceActivationController.js');
 
 /**
  * Verifies the activation controller keeps buttons disabled until ready.

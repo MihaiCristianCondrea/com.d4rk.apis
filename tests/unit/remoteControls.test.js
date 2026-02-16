@@ -4,7 +4,7 @@
  * Change Rationale: Shared remote controls now live in `app/workspaces/shared/ui` after
  * removing compatibility barrels, so tests import the canonical module path.
  */
-import { initBuilderRemoteControls } from '../../src/app/workspaces/shared/ui/remoteControls.js';
+import { initBuilderRemoteControls } from '../../src/shared/workspaces/ui/remoteControls.js';
 
 // Change Rationale: Ensure the shared remote controls partial hydrates correctly for workspaces so preset buttons and IDs
 // remain aligned with existing import and publish listeners.

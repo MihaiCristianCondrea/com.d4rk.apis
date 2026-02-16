@@ -5,19 +5,19 @@
 // Change Rationale: Git Patch routes now register with composed Screen + View markup so the
 // GitHub tools suite shares reusable UI fragments without duplicating layout HTML.
 import { RouterRoutes } from '@/core/ui/router/routes.js';
-import { initGitPatch } from '@/app/githubtools/common/ui/githubToolsUi.js';
+import { initGitPatch } from '@/features/github-tools/common/ui/githubToolsUi.js';
 import gitPatchScreenTemplate from '../ui/git-patch.page.html?raw';
-import gitPatchFormView from '@/app/githubtools/gitpatch/ui/views/GitPatchFormView.html?raw';
-import toolHeaderViewTemplate from '@/app/githubtools/common/ui/views/GitHubToolHeaderView.html?raw';
-import toolCardViewTemplate from '@/app/githubtools/common/ui/views/GitHubToolCardView.html?raw';
-import emptyStateViewTemplate from '@/app/githubtools/common/ui/views/GitHubEmptyStateView.html?raw';
+import gitPatchFormView from '@/features/github-tools/gitpatch/ui/views/GitPatchFormView.html?raw';
+import toolHeaderViewTemplate from '@/features/github-tools/common/ui/views/GitHubToolHeaderView.html?raw';
+import toolCardViewTemplate from '@/features/github-tools/common/ui/views/GitHubToolCardView.html?raw';
+import emptyStateViewTemplate from '@/features/github-tools/common/ui/views/GitHubEmptyStateView.html?raw';
 import statusRegionViewTemplate from '@/widgets/status-region/status-region.widget.html?raw';
 import {
   composeGitHubToolScreen,
   renderEmptyStateView,
   renderToolCardView,
   renderToolHeaderView,
-} from '@/app/githubtools/common/ui/githubToolsViewComposer.js';
+} from '@/features/github-tools/common/ui/githubToolsViewComposer.js';
 import { renderStatusRegionView } from '@/widgets/status-region/status-region.ce.js';
 
 /**
