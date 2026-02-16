@@ -208,6 +208,14 @@ export class NavigationDrawerController {
       return;
     }
 
+    // Change Rationale: Prefer BeerCSS's canonical `ui("#selector")` trigger
+    // when available so the off-canvas nav drawer uses framework-consistent
+    // open behavior while preserving a no-framework fallback for tests/static docs.
+    if (this.triggerBeerCssDrawer({ shouldOpen: true })) {
+      this.syncDrawerStateFromDom({ focusAfterOpen: true });
+      return;
+    }
+
     this.navDrawer.classList.add('active');
     this.syncDrawerStateFromDom({ focusAfterOpen: true });
   }
@@ -230,8 +238,45 @@ export class NavigationDrawerController {
       return;
     }
 
+    // Change Rationale: Delegate close to BeerCSS first so drawer/backdrop state
+    // remains aligned with framework-managed active-class transitions.
+    if (this.triggerBeerCssDrawer({ shouldOpen: false })) {
+      this.syncDrawerStateFromDom({ focusMenuAfterClose: true });
+      return;
+    }
+
     this.navDrawer.classList.remove('active');
     this.syncDrawerStateFromDom({ focusMenuAfterClose: true });
+  }
+
+  /**
+   * Uses BeerCSS global `ui` helper to open/close the navigation drawer.
+   *
+   * @param {{ shouldOpen: boolean }} options Desired drawer visibility state.
+   * @returns {boolean} True when BeerCSS handled the state change.
+   */
+  triggerBeerCssDrawer({ shouldOpen }) {
+    const selector = this.navDrawer?.id ? `#${this.navDrawer.id}` : null;
+    const uiGlobal = typeof window !== 'undefined' ? window.ui : null;
+
+    if (!selector || typeof uiGlobal !== 'function') {
+      return false;
+    }
+
+    // Change Rationale: Desktop drawer behavior is custom/CSS-driven in this app
+    // shell; limit BeerCSS `ui` toggling to compact layouts to avoid framework
+    // breakpoint helpers suppressing desktop open/close animations.
+    if (!this.isCompactLayout()) {
+      return false;
+    }
+
+    const isOpen = this.navDrawer.classList.contains('active');
+    if (isOpen === shouldOpen) {
+      return false;
+    }
+
+    uiGlobal(selector);
+    return true;
   }
 
   handleKeydown(event) {

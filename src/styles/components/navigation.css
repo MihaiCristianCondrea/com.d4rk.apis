@@ -96,6 +96,7 @@
   visibility: hidden;
   pointer-events: none;
   transition: transform 220ms var(--app-motion-ease-standard), opacity 220ms var(--app-motion-ease-standard);
+  will-change: transform, opacity;
   z-index: 2;
 }
 
@@ -192,8 +193,8 @@
  * offsetting the main shell surfaces instead of centering underneath it.
  */
 @media (min-width: 960px) {
-  /* Change Rationale: Restore overlay-drawer behavior on desktop so the drawer
-   * appears above the top app bar/content instead of using a persistent side rail.
+  /* Change Rationale: Keep desktop drawer layered above content while avoiding
+   * overlap with the fixed top app bar so open/closed states feel intentional.
    */
   #appNavigationMount {
     z-index: 100;
@@ -203,9 +204,33 @@
     display: none;
   }
 
-  .navigation-drawer,
+  /* Change Rationale: BeerCSS size helper class (`.s`) can hide elements on
+   * desktop, so force the desktop drawer/backdrop display contract explicitly.
+   */
+  .navigation-drawer {
+    display: flex !important;
+  }
+
   .navigation-drawer-backdrop {
-    display: block;
+    display: block !important;
+  }
+
+  /* Change Rationale: Constrain desktop drawer to start below the top app bar,
+   * so open state reads as a structured side sheet instead of covering controls.
+   */
+  .navigation-drawer {
+    inset-block-start: var(--app-top-app-bar-height);
+    block-size: calc(100vh - var(--app-top-app-bar-height));
+    border-start-end-radius: 1rem;
+    border-end-end-radius: 1rem;
+    box-shadow: 0 16px 36px rgba(0, 0, 0, 0.18);
+  }
+
+  /* Change Rationale: Desktop scrim should dim routed content but keep the app
+   * bar interactive/visible for predictable close affordances.
+   */
+  .navigation-drawer-backdrop {
+    inset-block-start: var(--app-top-app-bar-height);
   }
 
   /* Change Rationale: Desktop no longer reserves horizontal space for a persistent
