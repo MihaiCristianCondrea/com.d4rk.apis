@@ -2,7 +2,7 @@
  * Change Rationale: JSON utilities live under `core/domain/`, but the previous import pointed at a non-existent `core/data/core/` path, which Vite could not resolve during production builds. Correcting the relative path preserves the intended domain layering and keeps JSON previews available across Material Design 3 surfaces.
  */
 import { cloneJson, formatJson } from '@/shared/lib/json/operations.js';
-import { setValidationStatus } from './validation/statusService.js';
+import { setValidationStatus } from '@/core/data/services/validation/statusService.js';
 import { sharedJsonWorkerClient } from './json-worker-client.js';
 
 /**
