@@ -1,6 +1,14 @@
 /* Change Rationale: Body text previously depended on Google Sans Regular from a third-party host, which limited variable weights and caused subtle reflows on load. Pointing the global font stack to Google Sans Flex leverages Material 3’s variable font support for smoother optical sizing and consistent typography across the app. */
 body {
   font-family: var(--app-font-family-primary);
+  /* Change Rationale: Enable consistent kerning/ligatures and font smoothing so
+   * home copy renders with tighter glyph spacing across Chromium/WebKit builds.
+   */
+  font-kerning: normal;
+  font-variant-ligatures: common-ligatures;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
   background-color: var(--app-bg-color);
   color: var(--app-text-color);
   margin: 0;
