@@ -112,7 +112,7 @@ describe('navigationDrawerService', () => {
     jest.clearAllMocks();
   });
 
-  test('first menu click opens drawer and second click closes it', () => {
+  test('menu button opens drawer and does not close it on a second click', () => {
     const menuButtonElement = document.getElementById('menuButton');
     const navDrawerElement = document.getElementById('navDrawer');
     const navDrawerBackdrop = document.getElementById('navDrawerBackdrop');
@@ -127,11 +127,11 @@ describe('navigationDrawerService', () => {
 
     menuButtonElement.click();
 
-    expect(navDrawerElement.classList.contains('active')).toBe(false);
-    expect(navDrawerBackdrop.classList.contains('active')).toBe(false);
-    expect(document.body.classList.contains('drawer-is-open')).toBe(false);
-    expect(menuButtonElement.getAttribute('aria-expanded')).toBe('false');
-    expect(navDrawerElement.getAttribute('aria-hidden')).toBe('true');
+    expect(navDrawerElement.classList.contains('active')).toBe(true);
+    expect(navDrawerBackdrop.classList.contains('active')).toBe(true);
+    expect(document.body.classList.contains('drawer-is-open')).toBe(true);
+    expect(menuButtonElement.getAttribute('aria-expanded')).toBe('true');
+    expect(navDrawerElement.getAttribute('aria-hidden')).toBe('false');
   });
 
   test('drawer is not visible/open by default', () => {
