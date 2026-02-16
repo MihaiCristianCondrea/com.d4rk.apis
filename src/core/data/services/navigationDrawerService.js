@@ -1,7 +1,7 @@
 // Change Rationale: Drawer state/behavior remains in core/data, while all DOM lookup
 // responsibilities moved to core/ui orchestrators.
-// Change Rationale: Compact drawer interactions now follow BeerCSS nav-left behavior,
-// using one canonical source (`.active`) for open state instead of dialog APIs.
+// Change Rationale: Compact drawer interactions now use one canonical source
+// (`.active`) for open state so motion stays deterministic across breakpoints.
 import {
   createDrawerState,
   openDrawerState,
@@ -208,14 +208,8 @@ export class NavigationDrawerController {
       return;
     }
 
-    // Change Rationale: Prefer BeerCSS's canonical `ui("#selector")` trigger
-    // when available so the off-canvas nav drawer uses framework-consistent
-    // open behavior while preserving a no-framework fallback for tests/static docs.
-    if (this.triggerBeerCssDrawer({ shouldOpen: true })) {
-      this.syncDrawerStateFromDom({ focusAfterOpen: true });
-      return;
-    }
-
+    // Change Rationale: Keep sheet motion fully controlled by app CSS classes
+    // so the drawer always slides (never fades) with parity across desktop/mobile.
     this.navDrawer.classList.add('active');
     this.syncDrawerStateFromDom({ focusAfterOpen: true });
   }
@@ -238,46 +232,13 @@ export class NavigationDrawerController {
       return;
     }
 
-    // Change Rationale: Delegate close to BeerCSS first so drawer/backdrop state
-    // remains aligned with framework-managed active-class transitions.
-    if (this.triggerBeerCssDrawer({ shouldOpen: false })) {
-      this.syncDrawerStateFromDom({ focusMenuAfterClose: true });
-      return;
-    }
-
+    // Change Rationale: Close is driven by local class removal so the scrim and
+    // sheet transitions share one timing model in every viewport size.
     this.navDrawer.classList.remove('active');
     this.syncDrawerStateFromDom({ focusMenuAfterClose: true });
   }
 
-  /**
-   * Uses BeerCSS global `ui` helper to open/close the navigation drawer.
-   *
-   * @param {{ shouldOpen: boolean }} options Desired drawer visibility state.
-   * @returns {boolean} True when BeerCSS handled the state change.
-   */
-  triggerBeerCssDrawer({ shouldOpen }) {
-    const selector = this.navDrawer?.id ? `#${this.navDrawer.id}` : null;
-    const uiGlobal = typeof window !== 'undefined' ? window.ui : null;
 
-    if (!selector || typeof uiGlobal !== 'function') {
-      return false;
-    }
-
-    // Change Rationale: Desktop drawer behavior is custom/CSS-driven in this app
-    // shell; limit BeerCSS `ui` toggling to compact layouts to avoid framework
-    // breakpoint helpers suppressing desktop open/close animations.
-    if (!this.isCompactLayout()) {
-      return false;
-    }
-
-    const isOpen = this.navDrawer.classList.contains('active');
-    if (isOpen === shouldOpen) {
-      return false;
-    }
-
-    uiGlobal(selector);
-    return true;
-  }
 
   handleKeydown(event) {
     if (event.key === 'Escape' && this.state.isOpen) {

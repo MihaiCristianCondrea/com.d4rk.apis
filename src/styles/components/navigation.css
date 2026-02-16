@@ -63,7 +63,7 @@
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
-  transition: opacity var(--app-motion-duration-short) var(--app-motion-ease-standard), visibility 0ms linear var(--app-motion-duration-short);
+  transition: opacity var(--app-motion-duration-medium) var(--app-motion-ease-standard), visibility 0ms linear var(--app-motion-duration-medium);
   /* Change Rationale: Backdrop should sit below the drawer sheet but above app
    * content; z-index is scoped within #appNavigationMount.
    */
@@ -74,7 +74,7 @@
   opacity: 1;
   visibility: visible;
   pointer-events: auto;
-  transition: opacity var(--app-motion-duration-medium) var(--app-motion-ease-decelerate);
+  transition: opacity var(--app-motion-duration-medium) var(--app-motion-ease-standard);
 }
 
 /* Change Rationale: Drawer geometry and motion now mirror BeerCSS `dialog.left`
@@ -93,16 +93,24 @@
   /* Change Rationale: Match the native Material/Compose modal drawer surface
    * (`dialog.left`) so the sheet reads as a neutral side panel over app content.
    */
-  background-color: var(--md-sys-color-surface) !important;
+  background-color: var(--app-drawer-bg-color) !important;
   color: var(--app-text-color);
-  border-inline-end: 1px solid var(--md-sys-color-outline-variant);
+  /* Change Rationale: Desktop could show a thin tinted seam at the sheet edge,
+   * so the drawer surface now explicitly removes framework elevation artifacts.
+   */
+  border: 0 !important;
+  border-top: 0 !important;
+  outline: 0 !important;
+  background-image: none !important;
   border-start-end-radius: 1rem;
   border-end-end-radius: 1rem;
   box-shadow: 0 0.25rem 0.75rem 0 rgb(0 0 0 / 0.32);
   transform: translate3d(-100%, 0, 0);
+  opacity: 1 !important;
   visibility: hidden;
   pointer-events: none;
-  transition: transform var(--app-motion-duration-short) var(--app-motion-ease-accelerate), visibility 0ms linear var(--app-motion-duration-short);
+  animation: none !important;
+  transition: transform var(--app-motion-duration-medium) var(--app-motion-ease-decelerate), visibility 0ms linear var(--app-motion-duration-medium);
   will-change: transform;
   z-index: 2;
 }
@@ -240,7 +248,7 @@
    */
   .navigation-drawer {
     inset-block-start: 0;
-    block-size: 100vh;
+    block-size: 100dvh;
   }
 
   .navigation-drawer-backdrop {
