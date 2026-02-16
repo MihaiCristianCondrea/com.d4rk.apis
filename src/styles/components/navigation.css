@@ -11,7 +11,11 @@
 #appNavigationMount {
   position: fixed;
   inset: 0;
-  z-index: 6;
+  /* Change Rationale: In compact layouts the drawer must render over the top
+   * app bar (Material/BeerCSS behavior), so the mount sits above the app bar
+   * and the desktop breakpoint later lowers it for rail mode.
+   */
+  z-index: 100;
   pointer-events: none;
 }
 
@@ -26,7 +30,10 @@
  */
 .app-top-app-bar {
   width: 100%;
-  z-index: 9;
+  /* Change Rationale: Keep the app bar above page content/dropdowns while still
+   * allowing compact drawer surfaces to overlay it from a higher nav mount layer.
+   */
+  z-index: 90;
   /* Change Rationale: Keep the app bar tied to neutral surface tokens and
    * explicitly override BeerCSS tint helpers so the header never turns purple.
    */
@@ -57,7 +64,10 @@
   visibility: hidden;
   pointer-events: none;
   transition: opacity 220ms var(--app-motion-ease-standard), visibility 220ms var(--app-motion-ease-standard);
-  z-index: 8;
+  /* Change Rationale: Backdrop should sit below the drawer sheet but above app
+   * content; z-index is scoped within #appNavigationMount.
+   */
+  z-index: 1;
 }
 
 .navigation-drawer-backdrop.active {
@@ -86,7 +96,7 @@
   visibility: hidden;
   pointer-events: none;
   transition: transform 220ms var(--app-motion-ease-standard), opacity 220ms var(--app-motion-ease-standard);
-  z-index: 9;
+  z-index: 2;
 }
 
 .navigation-drawer.active {
@@ -166,7 +176,7 @@
   height: calc(100vh - var(--app-top-app-bar-height));
   padding: var(--app-nav-rail-padding);
   overflow-y: auto;
-  z-index: 5;
+  z-index: 0;
 }
 
 /* Change Rationale: Explicitly separate compact drawer and desktop rail behavior
@@ -182,6 +192,13 @@
  * offsetting the main shell surfaces instead of centering underneath it.
  */
 @media (min-width: 960px) {
+  /* Change Rationale: Desktop uses persistent rail navigation below the top app
+   * bar, so the navigation mount is lowered beneath the app-bar layer.
+   */
+  #appNavigationMount {
+    z-index: 60;
+  }
+
   .navigation-drawer,
   .navigation-drawer-backdrop {
     display: none;
