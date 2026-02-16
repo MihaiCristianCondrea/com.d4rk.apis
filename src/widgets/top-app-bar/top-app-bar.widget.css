@@ -1,0 +1,6 @@
+/* Change Rationale: Top app bar widget tokens remain isolated for predictable
+ * Material 3 elevation/scroll behavior across page mounts. */
+
+#topAppBar.elevate {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+}

@@ -11,14 +11,14 @@ import repoMapperFormView from '@/app/githubtools/repomapper/ui/views/RepoMapper
 import toolHeaderViewTemplate from '@/app/githubtools/common/ui/views/GitHubToolHeaderView.html?raw';
 import toolCardViewTemplate from '@/app/githubtools/common/ui/views/GitHubToolCardView.html?raw';
 import emptyStateViewTemplate from '@/app/githubtools/common/ui/views/GitHubEmptyStateView.html?raw';
-import statusRegionViewTemplate from '@/core/ui/views/StatusRegionView.html?raw';
+import statusRegionViewTemplate from '@/widgets/status-region/status-region.widget.html?raw';
 import {
   composeGitHubToolScreen,
   renderEmptyStateView,
   renderToolCardView,
   renderToolHeaderView,
 } from '@/app/githubtools/common/ui/githubToolsViewComposer.js';
-import { renderStatusRegionView } from '@/core/ui/templates/statusRegionView.js';
+import { renderStatusRegionView } from '@/widgets/status-region/status-region.ce.js';
 
 /**
  * Builds the Repo Mapper screen markup using shared GitHub tool views.

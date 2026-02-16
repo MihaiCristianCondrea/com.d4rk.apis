@@ -1,0 +1,6 @@
+/* Change Rationale: Shared status region styling is widget-scoped so loading/success
+ * feedback visuals stay consistent across screens. */
+
+.app-status-region[data-state='loading'] {
+  opacity: 1;
+}

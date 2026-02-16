@@ -11,9 +11,9 @@ import homeScreenSource from './ui/home.page.html?raw';
 // card roles remain consistent without per-screen class overrides.
 import actionCardViewSource from '@/app/home/ui/views/ActionCardView.html?raw';
 import infoCardViewSource from '@/app/home/ui/views/InfoCardView.html?raw';
-import statusRegionViewTemplate from '@/core/ui/views/StatusRegionView.html?raw';
+import statusRegionViewTemplate from '@/widgets/status-region/status-region.widget.html?raw';
 import { RouterRoutes } from '@/core/ui/router/routes.js';
-import { renderStatusRegionView, setStatusRegionState } from '@/core/ui/templates/statusRegionView.js';
+import { renderStatusRegionView, setStatusRegionState } from '@/widgets/status-region/status-region.ce.js';
 
 /**
  * Configuration for a workspace tile on the home page.

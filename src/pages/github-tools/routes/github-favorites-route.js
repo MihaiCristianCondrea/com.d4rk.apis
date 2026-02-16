@@ -5,9 +5,9 @@
 import { RouterRoutes } from '@/core/ui/router/routes.js';
 import { initFavoritesPage } from '@/app/githubtools/common/ui/githubToolsUi.js';
 import favoritesScreenTemplate from '../ui/github-favorites.page.html?raw';
-import statusRegionViewTemplate from '@/core/ui/views/StatusRegionView.html?raw';
+import statusRegionViewTemplate from '@/widgets/status-region/status-region.widget.html?raw';
 import { applyTemplateTokens } from '@/app/githubtools/common/ui/githubToolsViewComposer.js';
-import { renderStatusRegionView } from '@/core/ui/templates/statusRegionView.js';
+import { renderStatusRegionView } from '@/widgets/status-region/status-region.ce.js';
 
 /**
  * Builds the favorites screen markup with a shared status region.

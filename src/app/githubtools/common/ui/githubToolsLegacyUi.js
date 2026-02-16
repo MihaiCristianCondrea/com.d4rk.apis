@@ -26,7 +26,7 @@ import {
   renderAsciiTree,
   renderPathList,
 } from '@/entities/github-repo/index.js';
-import { setStatusRegionState } from '@/core/ui/templates/statusRegionView.js';
+import { setStatusRegionState } from '@/widgets/status-region/status-region.ce.js';
 
 
 /**

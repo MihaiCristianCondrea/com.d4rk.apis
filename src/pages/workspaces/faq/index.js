@@ -6,7 +6,7 @@
 // matching the GitHub tools Screen + Views contract and keeping routing free of workspace-specific
 // layout paths while preserving Material 3 surface structure.
 import { RouterRoutes } from '@/core/ui/router/routes.js';
-import { renderWorkspaceInsightCards } from '@/core/ui/templates/workspaceInsightCard.js';
+import { renderWorkspaceInsightCards } from '@/widgets/workspace-dashboard/workspace-insight-card.js';
 import faqScreenTemplate from './ui/faq.page.html?raw';
 
 /**

@@ -1,0 +1,15 @@
+/* Change Rationale: Widget-level drawer styles isolate Material 3 slide behavior
+ * from page-level CSS and keep BeerCSS navigation motion deterministic. */
+
+#navDrawer.navigation-drawer {
+  transition: transform 220ms cubic-bezier(0.2, 0, 0, 1), visibility 220ms;
+  will-change: transform;
+}
+
+#navDrawer.navigation-drawer[aria-hidden='true'] {
+  transform: translateX(-104%);
+}
+
+#navDrawer.navigation-drawer[aria-hidden='false'] {
+  transform: translateX(0);
+}
