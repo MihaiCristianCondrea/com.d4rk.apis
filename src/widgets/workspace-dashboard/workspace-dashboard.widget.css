@@ -1,0 +1,6 @@
+/* Change Rationale: Workspace dashboard styles are now owned by the widget slice
+ * to keep page compositions focused on placement instead of presentation rules. */
+
+.workspace-dashboard {
+  width: 100%;
+}

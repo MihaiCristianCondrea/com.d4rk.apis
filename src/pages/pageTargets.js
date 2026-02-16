@@ -16,19 +16,19 @@
  * @type {Readonly<Record<string, {screen: string, feature: string}>>}
  */
 export const PAGE_TARGETS = Object.freeze({
-  home: { screen: 'src/app/home/ui/HomeScreen.html', feature: 'home' },
-  'app-toolkit-api': { screen: 'src/app/workspaces/app-toolkit/ui/AppToolkitScreen.html', feature: 'app-toolkit' },
-  'faq-api': { screen: 'src/app/workspaces/faq/ui/FaqScreen.html', feature: 'faq' },
+  home: { screen: 'src/pages/home/ui/home.page.html', feature: 'home' },
+  'app-toolkit-api': { screen: 'src/pages/workspaces/app-toolkit/ui/app-toolkit.page.html', feature: 'app-toolkit' },
+  'faq-api': { screen: 'src/pages/workspaces/faq/ui/faq.page.html', feature: 'faq' },
   'english-with-lidia-api': {
-    screen: 'src/app/workspaces/english-with-lidia/ui/EnglishWithLidiaScreen.html',
+    screen: 'src/pages/workspaces/english-with-lidia/ui/english-with-lidia.page.html',
     feature: 'english-with-lidia',
   },
   'android-studio-tutorials-api': {
-    screen: 'src/app/workspaces/android-studio-tutorials/ui/AndroidStudioTutorialsScreen.html',
+    screen: 'src/pages/workspaces/android-studio-tutorials/ui/android-studio-tutorials.page.html',
     feature: 'android-studio-tutorials',
   },
-  favorites: { screen: 'src/app/githubtools/favorites/ui/GitHubFavoritesScreen.html', feature: 'github-favorites' },
-  'repo-mapper': { screen: 'src/app/githubtools/repomapper/ui/RepoMapperScreen.html', feature: 'repo-mapper' },
-  'release-stats': { screen: 'src/app/githubtools/releasestats/ui/ReleaseStatsScreen.html', feature: 'release-stats' },
-  'git-patch': { screen: 'src/app/githubtools/gitpatch/ui/GitPatchScreen.html', feature: 'git-patch' },
+  favorites: { screen: 'src/pages/github-tools/ui/github-favorites.page.html', feature: 'github-favorites' },
+  'repo-mapper': { screen: 'src/pages/github-tools/ui/repo-mapper.page.html', feature: 'repo-mapper' },
+  'release-stats': { screen: 'src/pages/github-tools/ui/release-stats.page.html', feature: 'release-stats' },
+  'git-patch': { screen: 'src/pages/github-tools/ui/git-patch.page.html', feature: 'git-patch' },
 });

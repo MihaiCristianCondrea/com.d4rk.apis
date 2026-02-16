@@ -3,8 +3,8 @@ import {
   createEmptyCategory,
   normalizeCategoryInput,
   createCategoryId
-} from '../../src/app/workspaces/app-toolkit/domain/NormalizeAppToolkitCategoryUseCase.js';
-import { isValidPackageName } from '../../src/app/workspaces/app-toolkit/domain/ValidateAppToolkitExportUseCase.js';
+} from '../../src/entities/app-toolkit-category/index.js';
+import { isValidPackageName } from '../../src/entities/app-toolkit-category/index.js';
 import { createFileHandleStore } from '../../src/app/workspaces/app-toolkit/data/services/fileHandleStoreService.js';
 
 /**

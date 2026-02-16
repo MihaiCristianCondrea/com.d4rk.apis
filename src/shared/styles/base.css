@@ -1,0 +1,229 @@
+/* Change Rationale: Body text previously depended on Google Sans Regular from a third-party host, which limited variable weights and caused subtle reflows on load. Pointing the global font stack to Google Sans Flex leverages Material 3’s variable font support for smoother optical sizing and consistent typography across the app. */
+body {
+  font-family: var(--app-font-family-primary);
+  background-color: var(--app-bg-color);
+  color: var(--app-text-color);
+  margin: 0;
+  padding: 0;
+  overflow-y: auto;
+  scrollbar-gutter: stable both-edges;
+  overscroll-behavior-y: contain;
+  transition:
+    background-color var(--app-motion-duration-medium, 300ms)
+      var(--app-motion-ease-standard, cubic-bezier(0, 0, 0.2, 1)),
+    color var(--app-motion-duration-medium, 300ms)
+      var(--app-motion-ease-standard, cubic-bezier(0, 0, 0.2, 1));
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* Change Rationale: Define a shared content max-width token so page layouts can
+ * scale more gracefully on large displays without hardcoding values per screen.
+ */
+:root {
+  --app-content-max-width: 1120px;
+}
+
+/* Change Rationale: Centralize Material 3 type styles so features can apply
+ * consistent typography classes without hardcoding font-size values in screens.
+ */
+.type-headline-large {
+  font-family: var(--md-sys-typescale-headline-large-font);
+  font-weight: var(--md-sys-typescale-headline-large-weight);
+  font-size: var(--md-sys-typescale-headline-large-size);
+  line-height: var(--md-sys-typescale-headline-large-line-height);
+}
+
+.type-title-large {
+  font-family: var(--md-sys-typescale-title-large-font);
+  font-weight: var(--md-sys-typescale-title-large-weight);
+  font-size: var(--md-sys-typescale-title-large-size);
+  line-height: var(--md-sys-typescale-title-large-line-height);
+}
+
+.type-title-medium {
+  font-family: var(--md-sys-typescale-title-medium-font);
+  font-weight: var(--md-sys-typescale-title-medium-weight);
+  font-size: var(--md-sys-typescale-title-medium-size);
+  line-height: var(--md-sys-typescale-title-medium-line-height);
+}
+
+.type-title-small {
+  font-family: var(--md-sys-typescale-title-small-font);
+  font-weight: var(--md-sys-typescale-title-small-weight);
+  font-size: var(--md-sys-typescale-title-small-size);
+  line-height: var(--md-sys-typescale-title-small-line-height);
+}
+
+.type-body-large {
+  font-family: var(--md-sys-typescale-body-large-font);
+  font-weight: var(--md-sys-typescale-body-large-weight);
+  font-size: var(--md-sys-typescale-body-large-size);
+  line-height: var(--md-sys-typescale-body-large-line-height);
+}
+
+.type-body-medium {
+  font-family: var(--md-sys-typescale-body-medium-font);
+  font-weight: var(--md-sys-typescale-body-medium-weight);
+  font-size: var(--md-sys-typescale-body-medium-size);
+  line-height: var(--md-sys-typescale-body-medium-line-height);
+}
+
+.type-body-small {
+  font-family: var(--md-sys-typescale-body-small-font);
+  font-weight: var(--md-sys-typescale-body-small-weight);
+  font-size: var(--md-sys-typescale-body-small-size);
+  line-height: var(--md-sys-typescale-body-small-line-height);
+}
+
+.type-label-large {
+  font-family: var(--md-sys-typescale-label-large-font);
+  font-weight: var(--md-sys-typescale-label-large-weight);
+  font-size: var(--md-sys-typescale-label-large-size);
+  line-height: var(--md-sys-typescale-label-large-line-height);
+}
+
+.type-label-medium {
+  font-family: var(--md-sys-typescale-label-medium-font);
+  font-weight: var(--md-sys-typescale-label-medium-weight);
+  font-size: var(--md-sys-typescale-label-medium-size);
+  line-height: var(--md-sys-typescale-label-medium-line-height);
+}
+
+main {
+  /* Change Rationale: The main container previously created a nested scroll region,
+   * which clipped the end of the home tool grid on taller pages. Letting the body
+   * handle scrolling keeps the full section visible while preserving drawer locking.
+   */
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: visible;
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--md-sys-color-outline-variant) transparent;
+}
+
+/* ===== Scrollbar ===== */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--md-sys-color-outline-variant);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: var(--md-sys-color-outline);
+}
+
+/* Only lock scrolling when the drawer overlay is visible; otherwise keep the page scrollable. */
+body.drawer-is-open {
+  /* Change Rationale: Beer CSS keeps gutters stable, so the old padding shim
+   * that pushed content sideways has been removed to prevent lateral jumps when
+   * the drawer opens.
+   */
+  overflow: hidden;
+}
+
+button,
+input,
+select,
+textarea,
+optgroup {
+  font-family: inherit;
+  font-size: 100%;
+  line-height: inherit;
+  margin: 0;
+}
+
+.content-wrapper {
+  /* Change Rationale: The app shell now references the shared content max-width
+   * token so layout density remains consistent across feature screens.
+   */
+  max-width: var(--app-content-max-width);
+  width: 100%;
+  margin: 0 auto;
+    padding: calc(70px + var(--safe-area-inset-top)) 1rem calc(1rem + var(--safe-area-max-inset-bottom));
+    padding-inline-start: calc(1rem + var(--safe-area-inset-left));
+  padding-inline-end: calc(1rem + var(--safe-area-inset-right));
+  flex-grow: 1;
+}
+
+.page-section {
+  display: none;
+}
+
+.page-section.active {
+  display: block;
+}
+
+.app-footer {
+  margin-top: auto;
+    padding: 1.5rem 1rem calc(1.5rem + var(--safe-area-max-inset-bottom));
+    padding-inline-start: calc(1rem + var(--safe-area-inset-left));
+  padding-inline-end: calc(1rem + var(--safe-area-inset-right));
+  color: var(--app-footer-text-color);
+  font-size: 0.875rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.page-section-title {
+  font-size: 1.75rem;
+  font-weight: 500;
+  margin-top: 2.5rem;
+  margin-bottom: 1.5rem;
+  color: var(--app-section-title-color);
+  text-align: left;
+}
+
+.material-symbols-outlined {
+  font-family:
+    var(--material-symbols-font, 'Material Symbols Outlined'),
+    'Material Symbols Outlined', sans-serif;
+  font-weight: normal;
+  font-style: normal;
+  font-size: 20px;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  font-feature-settings: 'liga';
+  -webkit-font-smoothing: antialiased;
+}
+
+.material-symbols-filled {
+  --material-symbols-font: 'Material Symbols Filled';
+  font-family:
+    'Material Symbols Filled', 'Material Symbols Outlined', sans-serif;
+}
+
+.material-symbols-semibold {
+  --material-symbols-font: 'Material Symbols SemiBold';
+  font-family:
+    'Material Symbols SemiBold', 'Material Symbols Outlined', sans-serif;
+}
+
+html.prefers-reduced-motion *,
+html.prefers-reduced-motion *::before,
+html.prefers-reduced-motion *::after {
+  animation-duration: var(--app-motion-reduced-duration, 180ms) !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: var(--app-motion-reduced-duration, 180ms) !important;
+  transition-delay: 0ms !important;
+  scroll-behavior: auto !important;
+}

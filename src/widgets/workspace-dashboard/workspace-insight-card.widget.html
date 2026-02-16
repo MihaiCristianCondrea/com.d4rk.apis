@@ -1,0 +1,11 @@
+<!-- Change Rationale: Consolidates insight card markup into a reusable partial so every workspace shares the same Material 3 spacing and helper semantics while still allowing per-card labels and IDs. -->
+<template data-partial="workspace-insight-card">
+  <div class="workspace-insight-card workspace-insight-card--stacked" role="group">
+    <div class="workspace-insight-card__header workspace-insight-card__header--inline" aria-hidden="true">
+      <span class="material-symbols-outlined workspace-insight-card__icon" data-slot-target="insight-icon">insights</span>
+      <span class="workspace-insight-card__label" data-slot-target="insight-label">Insight label</span>
+    </div>
+    <p class="workspace-insight-card__value" data-slot-target="insight-value">0</p>
+    <p class="workspace-insight-card__helper" data-slot-target="insight-helper">Helper description</p>
+  </div>
+</template>

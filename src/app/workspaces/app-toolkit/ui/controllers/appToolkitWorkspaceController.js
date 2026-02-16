@@ -2,13 +2,13 @@ import { createWorkspaceActivationController } from '../../domain/workspaceActiv
 // Change Rationale: The app-toolkit workspace controller sits five levels below `src/`,
 // so dashboard template imports must traverse one additional segment to resolve
 // correctly in Vite and keep the shell render pipeline available (including drawer UI).
-import { renderWorkspaceDashboards } from '../../../../../core/ui/templates/workspaceDashboard.js';
+import { renderWorkspaceDashboards } from '@/widgets/workspace-dashboard/workspace-dashboard.ce.js';
 import {
     createCategoryCatalog,
     createEmptyCategory,
     normalizeCategoryInput
-} from '../../domain/NormalizeAppToolkitCategoryUseCase.js';
-import { isValidPackageName } from '../../domain/ValidateAppToolkitExportUseCase.js';
+} from '@/entities/app-toolkit-category/index.js';
+import { isValidPackageName } from '@/entities/app-toolkit-category/index.js';
 // Change Rationale: Screenshot carousel navigation now uses the shared action button
 // helper so tertiary buttons remain consistent with the global button-role policy.
 import { createTertiaryActionButton } from '@/core/ui/components/actionButtons.js';

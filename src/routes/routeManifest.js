@@ -13,15 +13,12 @@
  */
 
 import '@/app/workspaces/app-toolkit/ui/index.js';
-import '@/app/workspaces/app-toolkit/ui/AppToolkitRoute.js';
-import '@/app/workspaces/faq/ui/FaqRoute.js';
-import '@/app/workspaces/english-with-lidia/ui/EnglishWithLidiaRoute.js';
-import '@/app/workspaces/android-studio-tutorials/ui/AndroidStudioTutorialsRoute.js';
-import '@/app/githubtools/repomapper/ui/RepoMapperRoute.js';
-import '@/app/githubtools/releasestats/ui/ReleaseStatsRoute.js';
-import '@/app/githubtools/gitpatch/ui/GitPatchRoute.js';
-import '@/app/githubtools/favorites/ui/GitHubFavoritesRoute.js';
-import '@/app/home/ui/HomeRoute.js';
+import '@/pages/workspaces/app-toolkit/index.js';
+import '@/pages/workspaces/faq/index.js';
+import '@/pages/workspaces/english-with-lidia/index.js';
+import '@/pages/workspaces/android-studio-tutorials/index.js';
+import '@/pages/github-tools/index.js';
+import '@/pages/home/index.js';
 
 /**
  * Canonical route manifest preserving public route IDs/hash links.

@@ -1,0 +1,37 @@
+<!-- Change Rationale: Git Patch now composes its screen with shared GitHub tool views to
+     keep headers, cards, and error states consistent across the suite. -->
+<div class="page-section app-shell-panel page active gh-tools-page">
+  <section class="gh-tools-section">
+    {{GH_TOOL_HEADER}}
+    {{GH_TOOL_CARD}}
+    {{GH_TOOL_STATUS}}
+    {{GH_TOOL_ERROR}}
+    <div id="patch-result" class="gh-result" hidden>
+      <div class="gh-result-bar">
+        <div class="gh-badge-group">
+          <span class="gh-stat-pill"><span class="material-symbols-outlined">check</span> <span>Ready to apply</span></span>
+        </div>
+        <div class="gh-action-row">
+        <!-- Change Rationale: Secondary actions now use BeerCSS-native button classes plus shared `app-ui-button` utilities so
+             outlined styling stays consistent across GitHub tools without legacy variant helpers. -->
+          <button type="button" id="patch-download-btn" class="button small border app-ui-button">
+            <span class="material-symbols-outlined">download</span>
+            <span>Download</span>
+          </button>
+          <button type="button" id="patch-copy-btn" class="button small border app-ui-button">
+            <span class="material-symbols-outlined">content_copy</span>
+            <span>Copy</span>
+          </button>
+        </div>
+      </div>
+      <div class="gh-output">
+        <div class="gh-output-header">
+          <span class="material-symbols-outlined">integration_instructions</span>
+          <span>Patch</span>
+        </div>
+        <pre><code id="patch-code"></code></pre>
+      </div>
+    </div>
+  </section>
+</div>
+<datalist id="patch-datalist"></datalist>

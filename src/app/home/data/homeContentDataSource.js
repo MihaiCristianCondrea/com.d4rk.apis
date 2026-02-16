@@ -1,7 +1,7 @@
 /**
  * @file Home feature data source for workspace and GitHub tool card configuration.
  */
-import { Workspaces, getWorkspaceAnchor } from '../../../core/domain/workspaces/registry.js';
+import { Workspaces, getWorkspaceAnchor } from '@/entities/workspace/index.js';
 
 /*
  * Change Rationale:
