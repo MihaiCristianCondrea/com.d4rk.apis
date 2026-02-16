@@ -58,6 +58,11 @@
   position: fixed;
   inset: 0;
   inset-block-start: 0;
+  inline-size: 100vw;
+  block-size: 100dvh;
+  min-block-size: 0;
+  padding: 0;
+  border-radius: 0 !important;
   background: var(--app-overlay-bg-color);
   border: 0;
   opacity: 0;
@@ -86,7 +91,10 @@
   inset-inline-start: 0;
   inset-block-start: 0;
   inline-size: var(--app-drawer-inline-size);
-  block-size: 100vh;
+  /* Change Rationale: Use dynamic viewport height at every breakpoint so drawer
+   * geometry matches compact/desktop and avoids top-strip scrim artifacts.
+   */
+  block-size: 100dvh;
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -115,11 +123,43 @@
   z-index: 2;
 }
 
+
 .navigation-drawer.active {
   transform: translate3d(0, 0, 0);
   visibility: visible;
   pointer-events: auto;
   transition: transform var(--app-motion-duration-medium) var(--app-motion-ease-decelerate);
+}
+
+
+/* Change Rationale: BeerCSS applies high-specificity `nav.left` and responsive
+ * helper rules (e.g. `.s` at desktop), so this guard ensures the drawer remains
+ * a fixed off-canvas sheet instead of collapsing into a top strip.
+ */
+nav.navigation-drawer.left.s {
+  position: fixed;
+  inset: 0 auto 0 0;
+  padding: 0;
+  margin: 0;
+  text-align: start;
+  display: flex !important;
+  transform: translate3d(-100%, 0, 0);
+}
+
+nav.navigation-drawer.left.s.active {
+  transform: translate3d(0, 0, 0);
+}
+
+/* Change Rationale: Backdrop is implemented with a native button element, and
+ * BeerCSS button active states can leak a 40px tinted bar unless reset here.
+ */
+button.navigation-drawer-backdrop {
+  inline-size: 100vw;
+  block-size: 100dvh;
+  min-block-size: 0;
+  padding: 0;
+  border-radius: 0 !important;
+  background: var(--app-overlay-bg-color) !important;
 }
 
 /* Change Rationale: Respect user motion preferences while preserving the same
@@ -243,17 +283,9 @@
     display: block !important;
   }
 
-  /* Change Rationale: Keep desktop open-state visuals equivalent to compact mode
-   * so the drawer remains fully visible and no partial-height scrim artifacts appear.
+  /* Change Rationale: Geometry is now defined in the base drawer/backdrop rules,
+   * so desktop only enforces BeerCSS visibility helpers and keeps motion parity.
    */
-  .navigation-drawer {
-    inset-block-start: 0;
-    block-size: 100dvh;
-  }
-
-  .navigation-drawer-backdrop {
-    inset-block-start: 0;
-  }
 
   /* Change Rationale: Desktop no longer reserves horizontal space for a persistent
    * rail, so app bar/content return to standard full-width shell alignment.
