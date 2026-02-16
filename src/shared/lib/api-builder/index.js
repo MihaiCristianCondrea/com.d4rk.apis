@@ -71,6 +71,6 @@ export { copyToClipboard } from '@/shared/api/clipboard-service.js';
 export { downloadJson } from '@/shared/api/download-service.js';
 export { readFileAsText } from '@/shared/api/file-service.js';
 export { attachFilePicker } from '@/shared/api/file-picker-service.js';
-export { setValidationStatus } from '../../data/services/validation/statusService.js';
+export { setValidationStatus } from '@/core/data/services/validation/statusService.js';
 export { renderJsonPreview } from '@/shared/api/json-preview-service.js';
 export { createDeferredTask, createIdleTask } from '@/shared/lib/scheduler/deferred-task.js';
