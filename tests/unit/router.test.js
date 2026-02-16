@@ -29,7 +29,7 @@ jest.mock('../../src/core/ui/components/navigation/navigationDrawerBindings.js',
 // Change Rationale: Mock the navigation view import so appShell can load under Jest
 // without requiring the raw Vite HTML loader in the test environment.
 jest.mock(
-  '../../src/core/ui/components/navigation/AppNavigationView.html?raw',
+  '../../src/core/ui/components/navigation/app-navigation.view.html?raw',
   () => '<div data-app-navigation></div>',
   { virtual: true }
 );

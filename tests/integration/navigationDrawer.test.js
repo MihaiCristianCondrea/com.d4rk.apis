@@ -277,7 +277,7 @@ describe('navigationDrawerService', () => {
       'ui',
       'components',
       'navigation',
-      'AppNavigationView.html',
+      'app-navigation.view.html',
     );
     const html = fs.readFileSync(navTemplatePath, 'utf8');
     const parser = new DOMParser();

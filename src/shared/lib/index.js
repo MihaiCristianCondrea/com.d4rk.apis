@@ -20,4 +20,3 @@ export * from './navigation/navigation-drawer-state.js';
 export * from './numbers/parsers.js';
 export * from './scheduler/deferred-task.js';
 export * from './strings/normalizers.js';
-export * from './workspaces/registry.js';

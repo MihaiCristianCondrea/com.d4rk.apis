@@ -9,11 +9,11 @@ import {
   initRepoMapper as initMapperFromIndex,
   normalizeRepoSlug,
   parseCommitInput,
-} from '../../src/app/githubtools/common/ui/githubToolsUi.js';
-import { initRepoMapper } from '../../src/app/githubtools/common/ui/surfaces/mapper/RepoMapperToolUi.js';
-import { initGitPatch } from '../../src/app/githubtools/common/ui/surfaces/gitpatch/GitPatchToolUi.js';
-import { initReleaseStats } from '../../src/app/githubtools/common/ui/surfaces/releasestats/ReleaseStatsToolUi.js';
-import { initFavoritesPage } from '../../src/app/githubtools/common/ui/surfaces/favorites/FavoritesToolUi.js';
+} from '../../src/features/github-tools/common/ui/github-tools-ui.js';
+import { initRepoMapper } from '../../src/features/github-tools/common/ui/surfaces/mapper/repo-mapper-tool-ui.js';
+import { initGitPatch } from '../../src/features/github-tools/common/ui/surfaces/gitpatch/git-patch-tool-ui.js';
+import { initReleaseStats } from '../../src/features/github-tools/common/ui/surfaces/releasestats/release-stats-tool-ui.js';
+import { initFavoritesPage } from '../../src/features/github-tools/common/ui/surfaces/favorites/favorites-tool-ui.js';
 
 describe('githubTools surface module index wiring', () => {
   test('central index composes mapper/patch/release/favorites surface initializers', () => {

@@ -1,7 +1,7 @@
 import {
   fetchAppToolkitJson,
   requestGithubContents
-} from '../../src/app/workspaces/app-toolkit/data/services/appToolkitNetworkService.js';
+} from '../../src/features/app-toolkit/data/services/app-toolkit-network-service.js';
 
 describe('appToolkitNetworkService', () => {
   test('delegates remote JSON fetch to global fetch', async () => {

@@ -1,12 +1,14 @@
 'use strict';
 
 /**
- * @file Verifies SPA folder contract and centralized route ownership.
+ * @file Verifies SPA folder contract, naming patterns, and route ownership.
  *
- * Change Rationale: Migration from Android-centric layout to web SPA conventions
- * requires a stable contract for canonical folders and route registration
- * ownership. This guard fails fast when bootstrap drifts back to ad-hoc route
- * imports or required SPA folders are missing.
+ * Change Rationale:
+ * - Canonical SPA migration now depends on Feature-Sliced layers including
+ *   `widgets`, `entities`, and `shared`.
+ * - This guard ensures required layers exist, kebab-case naming patterns are
+ *   respected, route/page/view/component filename conventions are enforced,
+ *   and `src/app` stays limited to bootstrap/providers/shell/route runtime glue.
  */
 
 const fs = require('fs');
@@ -15,17 +17,18 @@ const path = require('path');
 const ROOT = path.join(__dirname, '..');
 const REQUIRED_DIRS = [
   'public',
-  'src/assets',
-  'src/components',
-  'src/features',
+  'src/app',
   'src/pages',
+  'src/widgets',
+  'src/features',
+  'src/entities',
+  'src/shared',
   'src/routes',
-  'src/services',
-  'src/utils',
 ];
 
 const BOOTSTRAP_FILE = path.join(ROOT, 'src', 'app', 'bootstrap.js');
 const ROUTE_MANIFEST_FILE = path.join(ROOT, 'src', 'routes', 'routeManifest.js');
+const APP_DIR = path.join(ROOT, 'src', 'app');
 
 const REQUIRED_ROUTE_IDS = [
   'home',
@@ -39,9 +42,52 @@ const REQUIRED_ROUTE_IDS = [
   'git-patch',
 ];
 
+const KEBAB_CASE = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
+const ALLOWED_APP_TOP_LEVEL = new Set(['bootstrap.js', 'config.js', 'providers', 'shell', 'route-runtime']);
+
 /** @param {string} value */
 function formatPath(value) {
   return value.split(path.sep).join('/');
+}
+
+/** @param {string} absolute */
+function listDirectories(absolute) {
+  const dirs = [];
+  const stack = [absolute];
+  while (stack.length) {
+    const current = stack.pop();
+    const entries = fs.readdirSync(current, { withFileTypes: true });
+    entries.forEach((entry) => {
+      if (!entry.isDirectory()) {
+        return;
+      }
+      const full = path.join(current, entry.name);
+      dirs.push(full);
+      stack.push(full);
+    });
+  }
+  return dirs;
+}
+
+/** @param {string} absolute */
+function listFiles(absolute) {
+  const files = [];
+  const stack = [absolute];
+  while (stack.length) {
+    const current = stack.pop();
+    const entries = fs.readdirSync(current, { withFileTypes: true });
+    entries.forEach((entry) => {
+      const full = path.join(current, entry.name);
+      if (entry.isDirectory()) {
+        stack.push(full);
+        return;
+      }
+      if (entry.isFile()) {
+        files.push(full);
+      }
+    });
+  }
+  return files;
 }
 
 const violations = [];
@@ -53,22 +99,67 @@ REQUIRED_DIRS.forEach((relativePath) => {
   }
 });
 
+if (fs.existsSync(APP_DIR)) {
+  const appEntries = fs.readdirSync(APP_DIR);
+  appEntries.forEach((entry) => {
+    if (!ALLOWED_APP_TOP_LEVEL.has(entry)) {
+      violations.push(`src/app must only contain bootstrap/entrypoint + providers + shell + route runtime glue (unexpected: src/app/${entry})`);
+    }
+  });
+}
+
+['src/pages', 'src/widgets', 'src/features', 'src/entities', 'src/shared'].forEach((scopePath) => {
+  const absoluteScope = path.join(ROOT, ...scopePath.split('/'));
+  if (!fs.existsSync(absoluteScope)) {
+    return;
+  }
+
+  listDirectories(absoluteScope).forEach((absoluteDir) => {
+    const name = path.basename(absoluteDir);
+    if (!KEBAB_CASE.test(name)) {
+      const relativeDir = formatPath(path.relative(ROOT, absoluteDir));
+      violations.push(`Directory names must be kebab-case: ${relativeDir}`);
+    }
+  });
+});
+
+['src/pages', 'src/widgets', 'src/features', 'src/entities', 'src/shared'].forEach((scopePath) => {
+  const absoluteScope = path.join(ROOT, ...scopePath.split('/'));
+  if (!fs.existsSync(absoluteScope)) {
+    return;
+  }
+
+  listFiles(absoluteScope).forEach((absoluteFile) => {
+    const relativeFile = formatPath(path.relative(ROOT, absoluteFile));
+    const fileName = path.basename(absoluteFile);
+    const directory = path.dirname(relativeFile);
+
+    if (fileName.endsWith('Screen.html')) {
+      violations.push(`Route screens must use *.page.html suffix: ${relativeFile}`);
+    }
+
+    if (fileName.endsWith('View.html')) {
+      violations.push(`Shared partials must use *.view.html suffix: ${relativeFile}`);
+    }
+
+    if (directory.includes('/ui/components') && fileName.endsWith('.js') && !fileName.endsWith('.ce.js')) {
+      violations.push(`Component modules must use *.ce.js suffix: ${relativeFile}`);
+    }
+  });
+});
+
 if (!fs.existsSync(BOOTSTRAP_FILE)) {
   violations.push('Missing src/app/bootstrap.js');
 } else {
   const bootstrapContent = fs.readFileSync(BOOTSTRAP_FILE, 'utf8');
 
-  if (!/from ['"]@\/routes\/routeManifest\.js['"]/m.test(bootstrapContent)) {
-    violations.push('bootstrap.js must import route ownership from @/routes/routeManifest.js');
+  if (!/registerAppRouteRuntime\(\)/m.test(bootstrapContent)) {
+    violations.push('bootstrap.js must call registerAppRouteRuntime()');
   }
 
-  if (!/registerRouteManifest\(\)/m.test(bootstrapContent)) {
-    violations.push('bootstrap.js must call registerRouteManifest()');
-  }
-
-  const adHocRouteImportMatches = bootstrapContent.match(/import\s+['"].*\/ui\/.*Route\.js['"];?/g) || [];
+  const adHocRouteImportMatches = bootstrapContent.match(/import\s+['"].*\/(routes|ui)\/.*(Route|route)\.[cm]?js['"];?/g) || [];
   if (adHocRouteImportMatches.length) {
-    violations.push(`bootstrap.js must not contain ad-hoc ui/*Route.js imports (${adHocRouteImportMatches.length} found)`);
+    violations.push(`bootstrap.js must not contain ad-hoc route module imports (${adHocRouteImportMatches.length} found)`);
   }
 }
 

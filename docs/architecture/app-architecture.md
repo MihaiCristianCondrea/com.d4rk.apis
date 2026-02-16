@@ -2,61 +2,64 @@
 
 ## Overview
 
-The application is a **native web SPA** with hash/deep-link compatibility preserved for existing public route IDs.
+The application is a **native web SPA** with hash/deep-link compatibility preserved for public route IDs.
 
-- UI rendering: HTML templates + Vanilla JS modules.
-- Design system: BeerCSS + Material 3 tokens.
-- Data source compatibility: all `api/**` paths remain unchanged.
+- UI rendering: HTML templates + Vanilla JS ES modules.
+- Design system: BeerCSS + Material 3 tokenized styling.
+- Data source compatibility: all `api/**` payload paths remain unchanged.
 
 ## Canonical folder contract
 
-The migration target is a web-first structure:
+The active architecture target follows Feature-Sliced layers:
 
-- `public/` — shell/runtime static assets.
-- `src/assets` — app-level static assets referenced by source modules.
-- `src/components` — reusable shared UI components (BeerCSS-first, feature-agnostic).
-- `src/features` — business/domain feature modules.
-- `src/pages` — route target composition and page wrappers.
-- `src/routes` — route manifest and route ownership.
-- `src/services` — service adapters/orchestration.
-- `src/utils` — framework-agnostic utilities.
+- `public/` — static assets copied/served as-is.
+- `src/app` — bootstrap/entrypoint, providers, shell composition, route runtime glue.
+- `src/pages` — route-level slices and route-facing page composition.
+- `src/widgets` — reusable composed UI blocks.
+- `src/features` — user-facing behaviors and feature orchestration.
+- `src/entities` — domain entities and entity-level contracts.
+- `src/shared` — shared api/lib/config/styles/workers.
+- `src/routes` — centralized route manifest authority.
 
-Legacy module trees still exist during migration, but **new ownership rules apply**.
+## Naming contract
+
+- Disk names: kebab-case for folders and files.
+- Route templates: `*.page.html` and `*.page.css`.
+- Widget templates: `*.widget.html` and `*.widget.css`.
+- Shared partial templates: `*.view.html` and `*.view.css`.
+- Component modules: `*.ce.js`.
 
 ## Route ownership
 
-Route registration is centralized in:
+Route registration authority is centralized in:
 
 - `src/routes/routeManifest.js`
 
-`src/app/bootstrap.js` must import route ownership from the manifest and must not ad-hoc import feature `ui/*Route.js` modules directly.
-
-## Compatibility guarantees
-
-- Existing hash/deep-link route IDs are preserved (e.g. `home`, `faq-api`, `app-toolkit-api`, `repo-mapper`, `release-stats`, `git-patch`).
-- Existing `api/**` paths and payload locations are unchanged.
-- User-visible routes remain stable even when internal module names migrate away from Android-centric labels.
+`src/app/bootstrap.js` must consume app-level route runtime glue and must not import ad-hoc feature route modules directly.
 
 ## Import direction rules
 
-- `src/components` cannot import from `src/features`, `src/pages`, or `src/routes`.
-- `src/features` cannot import from `src/pages` or `src/routes`.
-- `src/pages` cannot import from `src/routes`.
-- `src/routes` may orchestrate pages/features/services and defines routing ownership.
+Allowed direction is strictly downward:
 
-## Automated guards
+`app → pages → widgets → features → entities → shared`
 
-The CI/test pipeline enforces migration constraints via:
+Constraints:
 
-- `scripts/check-canonical-paths.js`
+- `pages` must not import from `app`.
+- `features` must not import from `widgets/pages/app`.
+- `shared` must not import from higher layers.
+
+## Automated governance
+
+The validation pipeline enforces structure, naming, and layering via:
+
 - `scripts/verify-spa-structure.js`
 - `scripts/verify-spa-import-rules.js`
+- `scripts/check-canonical-paths.js`
 
-## Architecture check
+## Migration closeout checklist
 
-Current checks validate that:
-
-1. `data/domain/ui` split remains intact in active modules.
-2. Route ownership is centralized under `src/routes`.
-3. Material 3 + BeerCSS alignment remains unchanged.
-4. Documentation reflects canonical SPA conventions.
+1. `data/domain/ui` split remains coherent.
+2. Route ownership remains centralized in `src/routes/routeManifest.js`.
+3. Material 3 + BeerCSS alignment remains preserved.
+4. Documentation stays synchronized with implementation and naming contracts.

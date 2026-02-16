@@ -21,13 +21,13 @@ describe('SPA structure governance', () => {
     const repoRoot = path.join(__dirname, '..', '..');
     const required = [
       'public',
-      'src/assets',
-      'src/components',
+      'src/app',
       'src/features',
       'src/pages',
+      'src/widgets',
+      'src/entities',
+      'src/shared',
       'src/routes',
-      'src/services',
-      'src/utils',
       'src/routes/routeManifest.js',
       'src/pages/pageTargets.js',
     ];
@@ -45,8 +45,8 @@ describe('SPA structure governance', () => {
     const bootstrapPath = path.join(repoRoot, 'src', 'app', 'bootstrap.js');
     const bootstrap = fs.readFileSync(bootstrapPath, 'utf8');
 
-    expect(bootstrap).toMatch(/from ['"]@\/routes\/routeManifest\.js['"]/);
-    expect(bootstrap).toMatch(/registerRouteManifest\(\)/);
+    expect(bootstrap).toMatch(/from ['\"]@\/app\/route-runtime\/register-route-runtime\.js['\"]/);
+    expect(bootstrap).toMatch(/registerAppRouteRuntime\(\)/);
 
     const adHocRouteImports = bootstrap.match(/import\s+['"].*\/ui\/.*Route\.js['"];?/g) || [];
     if (adHocRouteImports.length) {

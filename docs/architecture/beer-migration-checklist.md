@@ -14,12 +14,12 @@
 
 | Area | Feature | Scope | State | Notes |
 | --- | --- | --- | --- | --- |
-| Workspaces | app-toolkit | `src/app/workspaces/app-toolkit/ui/AppToolkitScreen.html` | ✅ | Replaced md-* controls with BeerCSS/native semantic controls. |
-| Workspaces | faq | `src/app/workspaces/faq/ui/FaqScreen.html` | ✅ | Replaced md-* cards/buttons/icons with BeerCSS card/button patterns. |
-| Workspaces | shared views | `src/app/workspaces/shared/ui/views/WorkspaceInsightCardView.html` | ✅ | Removed utility-class mixing in favor of semantic insight-card modifiers. |
-| GitHub tools | repomapper | `src/app/githubtools/repomapper/ui/views/RepoMapperFormView.html` | ✅ | Migrated text fields, toggles, checkbox, and segmented controls. |
-| GitHub tools | releasestats | `src/app/githubtools/releasestats/ui/views/ReleaseStatsFormView.html` | ✅ | Migrated token and favorite controls to BeerCSS classes. |
-| GitHub tools | gitpatch | `src/app/githubtools/gitpatch/ui/views/GitPatchFormView.html` | ✅ | Migrated token and favorite controls to BeerCSS classes. |
+| Workspaces | app-toolkit | `src/app/workspaces/app-toolkit/ui/app-toolkit.page.html` | ✅ | Replaced md-* controls with BeerCSS/native semantic controls. |
+| Workspaces | faq | `src/app/workspaces/faq/ui/faq.page.html` | ✅ | Replaced md-* cards/buttons/icons with BeerCSS card/button patterns. |
+| Workspaces | shared views | `src/app/workspaces/shared/ui/views/workspace-insight-card.view.html` | ✅ | Removed utility-class mixing in favor of semantic insight-card modifiers. |
+| GitHub tools | repomapper | `src/app/githubtools/repomapper/ui/views/repo-mapper-form.view.html` | ✅ | Migrated text fields, toggles, checkbox, and segmented controls. |
+| GitHub tools | releasestats | `src/app/githubtools/releasestats/ui/views/release-stats-form.view.html` | ✅ | Migrated token and favorite controls to BeerCSS classes. |
+| GitHub tools | gitpatch | `src/app/githubtools/gitpatch/ui/views/git-patch-form.view.html` | ✅ | Migrated token and favorite controls to BeerCSS classes. |
 
 ## Validation checklist
 
