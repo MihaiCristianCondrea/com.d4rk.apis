@@ -63,7 +63,7 @@
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
-  transition: opacity 220ms var(--app-motion-ease-standard), visibility 220ms var(--app-motion-ease-standard);
+  transition: opacity var(--app-motion-duration-short) var(--app-motion-ease-standard), visibility 0ms linear var(--app-motion-duration-short);
   /* Change Rationale: Backdrop should sit below the drawer sheet but above app
    * content; z-index is scoped within #appNavigationMount.
    */
@@ -74,10 +74,12 @@
   opacity: 1;
   visibility: visible;
   pointer-events: auto;
+  transition: opacity var(--app-motion-duration-medium) var(--app-motion-ease-decelerate);
 }
 
-/* Change Rationale: Compact drawer now uses BeerCSS `nav.left.s` structure,
- * with explicit off-canvas behavior controlled by `.active` instead of dialog APIs.
+/* Change Rationale: Drawer geometry and motion now mirror BeerCSS `dialog.left`
+ * semantics (rounded trailing edge + full off-canvas translate) while keeping
+ * Material 3/Compose directional easing for Android-native behavior.
  */
 .navigation-drawer {
   position: fixed;
@@ -88,23 +90,41 @@
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  background-color: var(--app-drawer-bg-color) !important;
+  /* Change Rationale: Match the native Material/Compose modal drawer surface
+   * (`dialog.left`) so the sheet reads as a neutral side panel over app content.
+   */
+  background-color: var(--md-sys-color-surface) !important;
   color: var(--app-text-color);
   border-inline-end: 1px solid var(--md-sys-color-outline-variant);
-  transform: translateX(calc(-1 * var(--app-drawer-inline-size) - 1rem));
-  opacity: 0;
+  border-start-end-radius: 1rem;
+  border-end-end-radius: 1rem;
+  box-shadow: 0 0.25rem 0.75rem 0 rgb(0 0 0 / 0.32);
+  transform: translate3d(-100%, 0, 0);
   visibility: hidden;
   pointer-events: none;
-  transition: transform 220ms var(--app-motion-ease-standard), opacity 220ms var(--app-motion-ease-standard);
-  will-change: transform, opacity;
+  transition: transform var(--app-motion-duration-short) var(--app-motion-ease-accelerate), visibility 0ms linear var(--app-motion-duration-short);
+  will-change: transform;
   z-index: 2;
 }
 
 .navigation-drawer.active {
-  transform: translateX(0);
-  opacity: 1;
+  transform: translate3d(0, 0, 0);
   visibility: visible;
   pointer-events: auto;
+  transition: transform var(--app-motion-duration-medium) var(--app-motion-ease-decelerate);
+}
+
+/* Change Rationale: Respect user motion preferences while preserving the same
+ * open/closed state semantics for drawer and scrim interactions.
+ */
+@media (prefers-reduced-motion: reduce) {
+  .navigation-drawer,
+  .navigation-drawer.active,
+  .navigation-drawer-backdrop,
+  .navigation-drawer-backdrop.active {
+    transition-duration: var(--app-motion-reduced-duration);
+    transition-timing-function: linear;
+  }
 }
 
 /* Change Rationale: Drawer icon controls require explicit contrast tokens so
@@ -193,8 +213,8 @@
  * offsetting the main shell surfaces instead of centering underneath it.
  */
 @media (min-width: 960px) {
-  /* Change Rationale: Keep desktop drawer layered above content while avoiding
-   * overlap with the fixed top app bar so open/closed states feel intentional.
+  /* Change Rationale: Desktop now mirrors compact drawer geometry so opening the
+   * menu always reveals the full side sheet instead of only tinting a top strip.
    */
   #appNavigationMount {
     z-index: 100;
@@ -215,22 +235,16 @@
     display: block !important;
   }
 
-  /* Change Rationale: Constrain desktop drawer to start below the top app bar,
-   * so open state reads as a structured side sheet instead of covering controls.
+  /* Change Rationale: Keep desktop open-state visuals equivalent to compact mode
+   * so the drawer remains fully visible and no partial-height scrim artifacts appear.
    */
   .navigation-drawer {
-    inset-block-start: var(--app-top-app-bar-height);
-    block-size: calc(100vh - var(--app-top-app-bar-height));
-    border-start-end-radius: 1rem;
-    border-end-end-radius: 1rem;
-    box-shadow: 0 16px 36px rgba(0, 0, 0, 0.18);
+    inset-block-start: 0;
+    block-size: 100vh;
   }
 
-  /* Change Rationale: Desktop scrim should dim routed content but keep the app
-   * bar interactive/visible for predictable close affordances.
-   */
   .navigation-drawer-backdrop {
-    inset-block-start: var(--app-top-app-bar-height);
+    inset-block-start: 0;
   }
 
   /* Change Rationale: Desktop no longer reserves horizontal space for a persistent
