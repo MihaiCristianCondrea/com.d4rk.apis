@@ -276,4 +276,17 @@ describe('theme palette tokens', () => {
     expect(css).toMatch(/\.app-navigation\s+li\.nav-item\.active,[\s\S]*background-color:\s*var\(--app-primary-container\)\s*!important;/);
     expect(css).toMatch(/\.app-navigation\s+li\.nav-item\.active\s+\.nav-link,[\s\S]*color:\s*var\(--app-on-primary-container\);/);
   });
+
+
+  test('compact drawer layering places nav surfaces above app bar while desktop rail stays below', () => {
+    const css = readNavigationCss();
+
+    // Change Rationale: Compact navigation should overlay the top app bar,
+    // while desktop rail mode keeps the app bar as the top shell surface.
+    expect(css).toMatch(/#appNavigationMount\s*\{[\s\S]*z-index:\s*100;/);
+    expect(css).toMatch(/\.app-top-app-bar\s*\{[\s\S]*z-index:\s*90;/);
+    expect(css).toMatch(/\.navigation-drawer-backdrop\s*\{[\s\S]*z-index:\s*1;/);
+    expect(css).toMatch(/\.navigation-drawer\s*\{[\s\S]*z-index:\s*2;/);
+    expect(css).toMatch(/@media\s*\(min-width:\s*960px\)\s*\{[\s\S]*#appNavigationMount\s*\{[\s\S]*z-index:\s*60;/);
+  });
 });
