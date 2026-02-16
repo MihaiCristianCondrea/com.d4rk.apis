@@ -1,11 +1,6 @@
-export const PROFILE_AVATAR_FALLBACK_SRC =
-  'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
+/**
+ * @file Compatibility re-export shim.
+ * Change Rationale: Module moved to `src/shared/lib/constants.js` as part of shared-layer migration.
+ */
 
-export const STORAGE_KEYS = Object.freeze({
-  theme: 'theme',
-  lastWorkspace: 'api-console:last-workspace',
-});
-
-export const MEDIA_QUERY = Object.freeze({
-  prefersDark: '(prefers-color-scheme: dark)',
-});
+export * from '@/shared/lib/constants.js';

@@ -1,26 +1,2 @@
-/* Allow styling custom Material elements across component styles. */
-/* stylelint-disable selector-type-no-unknown */
-/* Change Rationale: Feature-specific styles were relocated under `features/` during the Android-style refactor, but this aggregator still pointed at now-missing sibling files. Vite's Tailwind plugin failed resolution, breaking production builds. Updating imports to the canonical feature paths restores bundling while preserving Material Design 3 surface/typography treatments across shared components. */
-@import './native/text-fields.css';
-@import './native/dropdowns.css';
-@import './native/buttons.css';
-@import './native/outlined-buttons.css';
-@import './native/icon-buttons.css';
-@import './native/dialogs.css';
-@import './native/cards.css';
-@import './native/outlined-cards.css';
-@import './native/scroll.css';
-@import './navigation.css';
-@import './native/loading-overlay.css';
-@import './native/inline-buttons.css';
-@import '../features/workspaces/shared/api-builder.css';
-@import '../features/workspaces/faq/faq-builder.css';
-@import './collection-rows.css';
-@import './misc.css';
-/* Change Rationale: Normalize GitHub tools styling to the `githubtools` feature name so
-   references align with route IDs and feature folder naming. This prevents drift between
-   CSS imports and the canonical tool identifiers without impacting Material 3 styling. */
-@import '../features/githubtools/githubtools.css';
-/* stylelint-enable selector-type-no-unknown */
-
-@import './native/status-region.css';
+/* Change Rationale: Reusable component tokens moved to shared styles during shared-layer migration. */
+@import '../../shared/styles/components.css';

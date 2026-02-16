@@ -1,9 +1,6 @@
-export function normalizeArray(value) {
-  if (!value) {
-    return [];
-  }
-  if (Array.isArray(value)) {
-    return value;
-  }
-  return [value];
-}
+/**
+ * @file Compatibility re-export shim.
+ * Change Rationale: Module moved to `src/shared/lib/arrays/normalizers.js` as part of shared-layer migration.
+ */
+
+export * from '@/shared/lib/arrays/normalizers.js';

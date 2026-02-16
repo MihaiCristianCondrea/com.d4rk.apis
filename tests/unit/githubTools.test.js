@@ -9,7 +9,7 @@ const {
   renderPathList,
 // Change Rationale: GitHub tools now live under the `app/githubtools/common` feature namespace,
 // so tests should import from the canonical path to stay aligned with the refactor.
-} = require('../../src/app/githubtools/common/domain/githubToolsDomain.js');
+} = require('../../src/entities/github-repo/github-tools-domain.js');
 
 describe('normalizeRepoSlug', () => {
   test('extracts owner and repo from full URL', () => {

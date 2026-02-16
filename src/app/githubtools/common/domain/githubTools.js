@@ -1,15 +1,6 @@
 /**
- * @file Backward-compatible domain entrypoint for pure GitHub tools helpers.
+ * @file Compatibility re-export shim.
+ * Change Rationale: Module moved to `src/entities/github-repo/index.js`.
  */
 
-export {
-  buildRepoTreeModel,
-  formatDate,
-  formatReleaseCsv,
-  formatReleaseSummary,
-  normalizeRepoInput,
-  normalizeRepoSlug,
-  parseCommitInput,
-  renderAsciiTree,
-  renderPathList,
-} from './githubToolsDomain.js';
+export * from '@/entities/github-repo/index.js';

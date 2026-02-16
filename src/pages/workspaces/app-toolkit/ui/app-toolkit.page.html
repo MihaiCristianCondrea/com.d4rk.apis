@@ -1,0 +1,541 @@
+<!--
+  App Toolkit API workspace
+
+  Purpose:
+  - This page lets us build and maintain the JSON catalog that powers the App Toolkit app.
+  - It mirrors the production schema (debug + release), so we can safely edit, preview, and publish.
+
+  Integration:
+  - JavaScript logic for this workspace lives in the App Toolkit builder module (appToolkit.js).
+  - JS selects this page by #appToolkitPage and #appToolkitBuilder, then wires:
+    - Insight counters (tracked apps, release ready, screenshot averages)
+    - Builder toolbar actions (add app, sort, reset)
+    - Quick fetch presets (debug / release)
+    - GitHub publish wizard and collapsible controls
+    - JSON preview, validation, and diff side sheet
+
+  Design:
+  - Uses Material Web Components (md-*) for cards, buttons, menus, dialogs, steppers, etc.
+  - Layout is controlled via CSS (api-builder.css, cards.css, text-fields.css, scroll.css).
+  - The builder layout is a two-column grid (forms + preview) with an optional diff side sheet.
+
+  Notes for agents:
+  - When modifying this file, keep IDs and data-* attributes stable unless you also update
+    the corresponding JS (appToolkit.js) and tests.
+  - New structural elements should be documented with a short comment describing:
+    - What the section shows
+    - How JS interacts with it (if at all)
+    - Any UX assumptions (e.g., “insights rely on live preview data”)
+-->
+<!-- Change Rationale: The workspace container previously omitted the BeerCSS page helper,
+     which left its spacing rules disconnected from the rest of the app shell. Adding the
+     `page` class lets BeerCSS manage the baseline page layout, keeping typography and
+     section rhythm consistent with Material 3 layout guidance. -->
+<div id="appToolkitPage" class="page-section app-shell-panel page active">
+  <!-- Page header: static description of what this workspace does -->
+  <header class="page-header">
+    <h1>App Toolkit API workspace</h1>
+    <p>
+      Configure the JSON payload that powers the App Toolkit catalog. The
+      builder mirrors the production schema so you can manage listings for both
+      debug and release channels with confidence.
+    </p>
+  </header>
+
+  <!--
+    Workspace dashboard:
+    - High-level metrics that summarize the current workspace state.
+    - JS updates the values by ID using the current JSON snapshot from the builder.
+  -->
+  <!-- Change Rationale: Dashboard cards now load from a shared partial so app/toolkit-specific IDs and copy stay configurable
+       while the insight and release scaffolding remains consistent. -->
+  <section
+    class="workspace-dashboard"
+    data-slot="workspace-dashboard"
+    data-home-icon="apps"
+    data-home-label="Apps in workspace"
+    data-home-helper="Live count mirrors the JSON preview."
+    data-home-count-id="appToolkitTrackedCount"
+    data-release-icon="rocket_launch"
+    data-release-label="Release ready"
+    data-release-helper="Entries with rich media and required fields."
+    data-release-ready-id="appToolkitReleaseReadyCount"
+    data-blocks-icon="photo_library"
+    data-blocks-label="Screenshot average"
+    data-blocks-helper="Target three or more images per listing."
+    data-blocks-count-id="appToolkitScreenshotAverage"
+    data-last-edited-id="appToolkitLastEdited"
+    data-last-edited-default="awaiting changes"
+    data-pulse-id="appToolkitWorkspacePulse"
+    data-pulse-default-text="Review entries to unlock insights."
+    data-progress-id="appToolkitReleaseProgress"
+    data-legend-primary-text="Debug"
+    data-legend-secondary-text="Release"
+  >
+    <template slot="plan-steps">
+      <!-- Change Rationale: Plan steps now use BeerCSS list rows with div.max, title, and small
+           helper text so list spacing and typography stay aligned with framework defaults. -->
+      <li class="wave round">
+        <div class="max">
+          <span>Curate metadata</span>
+          <small id="appToolkitReviewCount">0 entries queued</small>
+        </div>
+      </li>
+      <li class="wave round">
+        <div class="max">
+          <span>Validate JSON preview</span>
+          <small>Keep status green before publishing.</small>
+        </div>
+      </li>
+      <li class="wave round">
+        <div class="max">
+          <span>Publish to GitHub</span>
+          <small>Ship debug and release catalogs together.</small>
+        </div>
+      </li>
+    </template>
+    <template slot="release-tips">
+      <!-- Change Rationale: Release tips adopt BeerCSS list rows so ripple and spacing match
+           the rest of the shell and avoid custom list spacing overrides. -->
+      <li class="wave round">
+        <div class="max">
+          <span>Add icons and three screenshots to unlock release readiness.</span>
+        </div>
+      </li>
+      <li class="wave round">
+        <div class="max">
+          <span>Use quick presets below to pull the latest production data.</span>
+        </div>
+      </li>
+    </template>
+  </section>
+
+  <!--
+    Guidance card:
+    - Static checklist of schema and workflow rules.
+    - JS does not mutate this; it's a source of truth for required fields.
+  -->
+  <article class="guidance-card">
+    <div class="card-body">
+      <h2>Before you start</h2>
+      <ul>
+        <li>
+          Each app entry must include <strong>name</strong>,
+          <strong>packageName</strong>, a <strong>category</strong> with
+          <code>label</code> and <code>category_id</code>, and an
+          <strong>iconLogo</strong> URL.
+        </li>
+        <li>
+          Screenshots appear in the same order they are added. Provide at least
+          three URLs for release builds.
+        </li>
+        <li>
+          When you are done, export the JSON and replace the existing file in
+          <code>api/app_toolkit/v2/[debug|release]/en/home/api_android_apps.json</code>
+          to mirror the production structure.
+        </li>
+        <li>
+          Use <strong>Fetch existing JSON</strong> to pull the latest data from a
+          remote file before editing.
+        </li>
+      </ul>
+    </div>
+  </article>
+
+  <!--
+    Core builder section:
+
+    - Root hook for JS: #appToolkitBuilder (data-builder-type="app-toolkit").
+    - The JS module:
+      - Renders the list of app entries into #appToolkitEntries.
+      - Keeps #appToolkitPreview synced with the current JSON.
+      - Drives validation + toolbar status + diff side sheet.
+  -->
+  <section
+          class="api-builder"
+          id="appToolkitBuilder"
+          data-builder-type="app-toolkit"
+  >
+    <!--
+      Change Rationale: Quick fetch now leads the workflow so new sessions focus on loading a
+      trusted baseline before interacting with builder controls. This prioritizes data integrity
+      and follows Material motion guidance by revealing controls only after content is ready.
+    -->
+    <div class="builder-remote-inline-action builder-toolbar-fetch-card" id="appToolkitRemoteImport">
+      <div class="builder-toolbar-fetch">
+        <div>
+          <h2 class="builder-toolbar-title">Quick fetch</h2>
+          <p class="builder-toolbar-helper">
+            Use shortcuts to pull the latest catalog before editing entries.
+          </p>
+        </div>
+        <div
+                class="builder-remote-presets builder-remote-presets--buttons builder-toolbar-fetch__presets"
+                aria-label="Quick fetch shortcuts"
+                id="appToolkitFetchFieldset"
+        >
+          <span class="builder-remote-presets-label">Quick links</span>
+
+          <!-- Debug preset: loads the debug catalog for EN -->
+          <button
+                  class="builder-remote-inline-button"
+                  has-icon
+                  data-app-toolkit-preset="./api/app_toolkit/v2/debug/en/home/api_android_apps.json"
+                  id="appToolkitDebugPreset"
+          >
+            <span slot="icon">
+              <span class="material-symbols-outlined">download</span>
+            </span>
+            Debug · EN
+          </button>
+
+          <!-- Release preset: loads the release catalog for EN -->
+          <button
+                  class="builder-remote-inline-button"
+                  has-icon
+                  data-app-toolkit-preset="./api/app_toolkit/v2/release/en/home/api_android_apps.json"
+                  id="appToolkitReleasePreset"
+          >
+            <span slot="icon">
+              <span class="material-symbols-outlined">download</span>
+            </span>
+            Release · EN
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!--
+      Builder toolbar:
+      - Primary actions: Add app, Sort, Clear workspace.
+      - Secondary status: Workspace pulse text on the right.
+    -->
+    <div
+            class="builder-workspace-shell"
+            id="appToolkitWorkspaceContent"
+            data-state="pending"
+            hidden
+    >
+      <div class="builder-toolbar">
+        <div class="builder-toolbar-actions">
+          <!-- Add a new empty app entry -->
+          <button id="appToolkitAddApp" has-icon>
+            <span slot="icon">
+              <span class="material-symbols-outlined">add</span>
+            </span>
+            Add app
+          </button>
+
+          <!-- Sort menu trigger; JS syncs label + menu selection -->
+          <button
+                  id="appToolkitSortButton"
+                  has-icon
+                  trailing-icon
+                  aria-haspopup="menu"
+                  aria-expanded="false"
+          >
+            <span slot="icon">
+              <span class="material-symbols-outlined">sort</span>
+            </span>
+            <span class="builder-sort-label">
+              Sort · <span id="appToolkitSortLabel">App name (A–Z)</span>
+            </span>
+            <span slot="trailing-icon">
+              <span class="material-symbols-outlined">arrow_drop_down</span>
+            </span>
+          </button>
+
+          <!-- Sort options; JS applies 'data-sort-key' to the app list -->
+          <div id="appToolkitSortMenu" anchor="appToolkitSortButton">
+            <button type="radio" data-sort-key="name" selected>
+              <div slot="headline">App name (A–Z)</div>
+            </button>
+            <button type="radio" data-sort-key="category">
+              <div slot="headline">Category (A–Z)</div>
+            </button>
+            <button type="radio" data-sort-key="screenshots">
+              <div slot="headline">Screenshot count (high to low)</div>
+            </button>
+          </div>
+
+          <!-- Clear all entries and reset builder state -->
+          <button id="appToolkitResetButton" has-icon>
+            <span slot="icon">
+              <span class="material-symbols-outlined">refresh</span>
+            </span>
+            Clear workspace
+          </button>
+        </div>
+
+        <!-- Live textual summary of workspace health -->
+        <div class="builder-toolbar-meta">
+          <div class="toolbar-status" role="status" aria-live="polite">
+            <span class="toolbar-status-label">Workspace pulse</span>
+            <span class="toolbar-status-value" id="appToolkitToolbarPulse">Awaiting input</span>
+          </div>
+        </div>
+      </div>
+
+    <!--
+      GitHub publish card:
+      - Collapsible card that holds GitHub-specific guidance and controls.
+      - JS wires the toggle and opens the dialog when "Open publish wizard" is used.
+    -->
+    <article class="builder-remote-card" id="appToolkitGithubCard" data-collapsible-card data-collapsed="true">
+      <div class="card-body">
+        <div class="builder-remote-header builder-remote-header--split">
+          <div class="builder-remote-title">
+            <h2>Publish to GitHub</h2>
+            <p>Push catalog updates directly from the workspace.</p>
+          </div>
+          <div class="builder-remote-actions">
+            <!-- Launches the stepper dialog (GitHub wizard) -->
+            <button id="appToolkitGithubWizardButton" class="builder-github-launch-button" has-icon>
+              <span slot="icon">
+                <span class="material-symbols-outlined">rocket_launch</span>
+              </span>
+              Open publish wizard
+            </button>
+
+            <!-- Collapsible meta controls for GitHub publishing -->
+            <button
+                    id="appToolkitGithubToggle"
+                    class="builder-remote-toggle"
+                    data-collapsible-toggle
+                    aria-expanded="false"
+                    aria-controls="appToolkitGithubContent"
+                    type="button"
+                    aria-label="Toggle Publish to GitHub controls"
+            >
+              <span>
+                <span class="material-symbols-outlined" data-collapsible-indicator aria-hidden="true">
+                  expand_more
+                </span>
+              </span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Collapsible GitHub helper content; initially hidden -->
+        <div class="builder-github-content" id="appToolkitGithubContent" data-collapsible-content hidden>
+          <div class="builder-remote-header">
+            <div>
+              <p>
+                Use the GitHub Contents API to update the catalog once the JSON
+                preview is valid. Tokens are used only for this request and never
+                stored.
+              </p>
+            </div>
+          </div>
+          <div class="builder-github-note" role="note">
+            <p>
+              <strong>Create a personal access token</strong> from
+              <em>GitHub → Settings → Developer settings → Personal access tokens</em>.
+              Choose a fine-grained token when possible and limit it to the
+              repository you are publishing.
+            </p>
+            <ul>
+              <li>
+                Fine-grained tokens: enable
+                <strong>Repository permissions → Contents: Read &amp; write</strong>
+                (Metadata is added automatically).
+              </li>
+              <li>
+                Classic tokens: select only
+                <code>public_repo</code> for public catalogs or
+                <code>repo</code> for private catalogs.
+              </li>
+              <li>Copy the token once and keep it outside of source control.</li>
+            </ul>
+          </div>
+          <div class="builder-github-launch">
+            <p class="builder-github-helper">
+              Validate the preview first, then follow the guided steps to publish.
+            </p>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!--
+      Builder layout grid:
+      - Left: dynamic list of app entries (forms).
+      - Middle/right: JSON preview and validation.
+      - Optional: diff side sheet for comparing current vs last exported payload.
+    -->
+    <div class="builder-layout builder-columns">
+      <!-- JS injects app entry forms here -->
+      <div class="builder-forms" id="appToolkitEntries" aria-live="polite"></div>
+
+      <!-- JSON preview column -->
+      <aside class="builder-preview" aria-label="JSON preview">
+        <div class="preview-header">
+          <h2>Preview &amp; export</h2>
+          <p>Changes update automatically as you edit entries.</p>
+        </div>
+        <textarea
+                id="appToolkitPreview"
+                class="preview-textarea"
+                readonly
+                spellcheck="false"
+                aria-label="App Toolkit JSON preview"
+        ></textarea>
+        <div
+                class="preview-validation"
+                id="appToolkitValidation"
+                role="status"
+                aria-live="polite"
+        ></div>
+        <div class="preview-actions">
+          <!-- Copy current JSON to clipboard -->
+          <button id="appToolkitCopyButton" has-icon>
+            <span slot="icon">
+              <span class="material-symbols-outlined">content_copy</span>
+            </span>
+            Copy JSON
+          </button>
+
+          <!-- Download current JSON to a file -->
+          <button
+                  id="appToolkitDownloadButton"
+                  has-icon
+                  trailing-icon
+          >
+            Download
+            <span slot="icon">
+              <span class="material-symbols-outlined">download</span>
+            </span>
+          </button>
+        </div>
+      </aside>
+
+      <!--
+        Diff side sheet:
+        - Hidden by default, opened when user asks to compare against the last exported payload.
+        - JS populates #appToolkitDiffContent with a diff view.
+      -->
+      <aside
+              id="appToolkitDiffSheet"
+              class="builder-diff-sheet"
+              aria-label="Workspace diff"
+      >
+        <div slot="headline">Workspace diff</div>
+        <div slot="supporting-text">
+          Compare the current workspace against the last exported payload.
+        </div>
+        <div slot="content" class="diff-sheet-content">
+          <div
+                  id="appToolkitDiffContent"
+                  class="diff-view diff-view--empty"
+                  role="status"
+                  aria-live="polite"
+          ></div>
+        </div>
+      </aside>
+    </div>
+    </div>
+  </section>
+
+  <!--
+    GitHub publish dialog (wizard):
+
+    - md-steppers guides the user through:
+      1) Authenticate (token)
+      2) Target (repo / branch / message / channel)
+      3) Review & publish
+
+    - appToolkit.js controls:
+      - Step transitions (Next/Back)
+      - Token file loading
+      - API calls to GitHub
+      - Status messaging in #appToolkitGithubStatus
+  -->
+  <dialog id="appToolkitGithubDialog" class="app-dialog github-dialog">
+    <div slot="headline">Publish to GitHub</div>
+    <div slot="content" class="github-dialog-content">
+      <div id="appToolkitGithubStepper" value="authenticate">
+        <!-- Step 1: authenticate with a personal access token -->
+        <section value="authenticate" label="Authenticate">
+          <div class="github-step" data-step="authenticate">
+            <input
+                    id="appToolkitGithubToken"
+                    label="Personal access token"
+                    type="password"
+                    autocomplete="off"
+                    spellcheck="false"
+                    supporting-text="Tokens require Contents: Read &amp; write access."
+             />
+            <div class="github-step-actions">
+              <input
+                      type="file"
+                      id="appToolkitGithubTokenFile"
+                      accept="text/plain,.txt,.token"
+                      hidden
+              />
+              <button id="appToolkitGithubTokenFileButton" has-icon>
+                <span slot="icon">
+                  <span class="material-symbols-outlined">description</span>
+                </span>
+                Load token from file
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <!-- Step 2: choose repo, branch, commit message, and target channel -->
+        <section value="target" label="Target">
+          <div class="github-step" data-step="target">
+            <input
+                    id="appToolkitGithubRepo"
+                    label="Repository (owner/name)"
+                    value="MihaiCristianCondrea/com.d4rk.apis"
+                    supporting-text="Use owner/name format."
+                    spellcheck="false"
+             />
+            <input
+                    id="appToolkitGithubBranch"
+                    label="Branch"
+                    value="main"
+                    spellcheck="false"
+             />
+            <input
+                    id="appToolkitGithubMessage"
+                    label="Commit message"
+                    value="chore(app-toolkit): update catalog"
+                    spellcheck="false"
+             />
+            <select
+                    id="appToolkitGithubChannel"
+                    label="Target channel"
+                    value="debug"
+            >
+              <option value="debug">Debug</option>
+              <option value="release">Release</option>
+              <option value="both">Debug &amp; Release</option>
+            </select>
+          </div>
+        </section>
+
+        <!-- Step 3: review diff and publish -->
+        <section value="review" label="Review">
+          <div class="github-step" data-step="review">
+            <p class="github-review-copy">
+              Confirm the diff in the side sheet and publish when ready.
+            </p>
+            <div class="github-status" id="appToolkitGithubStatus" role="status" aria-live="polite"></div>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <!-- Dialog action buttons (Back / Next handled by JS) -->
+    <div slot="actions" class="github-dialog-actions">
+      <!-- Change Rationale: Dialog action roles now follow the primary/secondary
+           rule set so cancel/back use outlined styling and the confirm action
+           remains filled for emphasis. -->
+      <button dialog-action="close">Cancel</button>
+      <button id="appToolkitGithubBack">Back</button>
+      <button id="appToolkitGithubNext" data-dialog-initial-focus>Next</button>
+    </div>
+  </dialog>
+</div>

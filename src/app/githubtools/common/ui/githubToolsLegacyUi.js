@@ -25,7 +25,7 @@ import {
   parseCommitInput,
   renderAsciiTree,
   renderPathList,
-} from '@/app/githubtools/common/domain/githubTools.js';
+} from '@/entities/github-repo/index.js';
 import { setStatusRegionState } from '@/core/ui/templates/statusRegionView.js';
 
 

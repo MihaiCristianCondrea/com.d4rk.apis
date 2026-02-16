@@ -1,0 +1,309 @@
+:root {
+  --md-sys-color-primary: #3ddc84;
+  --md-sys-color-on-primary: #003912;
+  --md-sys-color-primary-container: #b1fbbb;
+  --md-sys-color-on-primary-container: #002108;
+  --md-sys-color-secondary: #516350;
+  --md-sys-color-on-secondary: #ffffff;
+  --md-sys-color-secondary-container: #d4e8d0;
+  --md-sys-color-on-secondary-container: #0f1f11;
+  --md-sys-color-tertiary: #3a665f;
+  --md-sys-color-on-tertiary: #ffffff;
+  --md-sys-color-tertiary-container: #bdece3;
+  --md-sys-color-on-tertiary-container: #00201c;
+  --md-sys-color-error: #ba1a1a;
+  --md-sys-color-on-error: #ffffff;
+  --md-sys-color-error-container: #ffdad6;
+  --md-sys-color-on-error-container: #410002;
+  --md-sys-color-background: #ffffff;
+  --md-sys-color-on-background: #191c1d;
+  --md-sys-color-surface: #ffffff;
+  --md-sys-color-on-surface: #191c1d;
+  --md-sys-color-surface-variant: #e8f5ec;
+  --md-sys-color-on-surface-variant: #21402a;
+  --md-sys-color-outline: #5c9f74;
+  --md-sys-color-outline-variant: #bde8cb;
+  --md-sys-color-shadow: #000000;
+  --md-sys-color-scrim: #000000;
+  --md-sys-color-inverse-surface: #2e3132;
+  --md-sys-color-inverse-on-surface: #eff1f1;
+  --md-sys-color-inverse-primary: #96dea1;
+  --md-sys-color-surface-dim: #ebf7ef;
+  --md-sys-color-surface-bright: #ffffff;
+  --md-sys-color-surface-container-lowest: #ffffff;
+  --md-sys-color-surface-container-low: #f4fff8;
+  --md-sys-color-surface-container: #ecfbf1;
+  --md-sys-color-surface-container-high: #f4fff8;
+  --md-sys-color-surface-container-highest: #ddf4e4;
+  /* Change Rationale: App-level surface tokens now sit above BeerCSS variables
+   * so shell components can reference stable semantic colors without hardcoding
+   * accent palettes (e.g. the previous purple drift).
+   */
+  --app-surface: var(--md-sys-color-surface);
+  --app-surface-container: var(--md-sys-color-surface-container);
+  --app-surface-container-high: var(--md-sys-color-surface-container-high);
+  --app-outline: var(--md-sys-color-outline);
+  --app-on-surface: var(--md-sys-color-on-surface);
+  --app-primary: var(--md-sys-color-primary);
+  --app-on-primary: var(--md-sys-color-on-primary);
+  --app-primary-container: var(--md-sys-color-primary-container);
+  --app-on-primary-container: var(--md-sys-color-on-primary-container);
+  /* Change Rationale: BeerCSS surfaces now reference the Material 3 tokens to
+   * eliminate the default purple palette while keeping the theme anchored to
+   * the same system colors used by Material Web Components.
+   */
+  --primary: var(--app-primary);
+  --on-primary: var(--app-on-primary);
+  --primary-container: var(--app-primary-container);
+  --on-primary-container: var(--app-on-primary-container);
+  --secondary: var(--md-sys-color-secondary);
+  --on-secondary: var(--md-sys-color-on-secondary);
+  --secondary-container: var(--md-sys-color-secondary-container);
+  --on-secondary-container: var(--md-sys-color-on-secondary-container);
+  --tertiary: var(--md-sys-color-tertiary);
+  --on-tertiary: var(--md-sys-color-on-tertiary);
+  --tertiary-container: var(--md-sys-color-tertiary-container);
+  --on-tertiary-container: var(--md-sys-color-on-tertiary-container);
+  --error: var(--md-sys-color-error);
+  --on-error: var(--md-sys-color-on-error);
+  --error-container: var(--md-sys-color-error-container);
+  --on-error-container: var(--md-sys-color-on-error-container);
+  --background: var(--md-sys-color-background);
+  --on-background: var(--md-sys-color-on-background);
+  --surface: var(--app-surface);
+  --on-surface: var(--app-on-surface);
+  --surface-variant: var(--md-sys-color-surface-variant);
+  --on-surface-variant: var(--md-sys-color-on-surface-variant);
+  --outline: var(--app-outline);
+  --outline-variant: var(--md-sys-color-outline-variant);
+  --shadow: var(--md-sys-color-shadow);
+  --scrim: var(--md-sys-color-scrim);
+  --inverse-surface: var(--md-sys-color-inverse-surface);
+  --inverse-on-surface: var(--md-sys-color-inverse-on-surface);
+  --inverse-primary: var(--md-sys-color-inverse-primary);
+  --surface-dim: var(--md-sys-color-surface-dim);
+  --surface-bright: var(--md-sys-color-surface-bright);
+  --surface-container-lowest: var(--md-sys-color-surface-container-lowest);
+  --surface-container-low: var(--md-sys-color-surface-container-low);
+  --surface-container: var(--app-surface-container);
+  --surface-container-high: var(--app-surface-container-high);
+  --surface-container-highest: var(--md-sys-color-surface-container-highest);
+  --app-bg-color: var(--app-surface);
+  --app-text-color: var(--app-on-surface);
+  --app-secondary-text-color: var(--md-sys-color-on-surface-variant);
+  --app-card-bg-color: var(--app-surface-container);
+  --app-outlined-card-bg-color: var(--app-surface-container);
+  --app-section-title-color: var(--md-sys-color-on-background);
+  --app-border-color: var(--md-sys-color-outline-variant);
+  --app-screenshot-radius: 20px;
+  --app-screenshot-gap: 0.75rem;
+  --app-screenshot-padding: clamp(0.75rem, 2vw, 1.25rem);
+  --app-contribute-card-bg: var(--md-sys-color-primary-container);
+  --app-contribute-card-text: var(--md-sys-color-on-primary-container);
+  --app-social-icon-color: var(--md-sys-color-on-surface-variant);
+  --app-social-icon-hover-color: var(--md-sys-color-primary);
+  --app-drawer-bg-color: var(--md-sys-color-surface-container-low);
+  --app-drawer-tint-color: var(--md-sys-color-primary);
+  --app-drawer-inline-size: min(360px, 100vw);
+  --app-overlay-bg-color: color-mix(in srgb, var(--md-sys-color-scrim) 32%, transparent);
+  --app-nested-list-bg: rgba(0, 0, 0, 0.02);
+  --app-theme-button-selected-bg: color-mix(in srgb, var(--md-sys-color-primary) 15%, transparent);
+  --app-footer-text-color: var(--md-sys-color-on-surface);
+  /* Change Rationale: Link color now derives from the Android green primary token so
+   * links remain consistent with the updated palette across light/dark themes.
+   */
+  --app-link-color: var(--md-sys-color-primary);
+  --app-dialog-bg-color: var(--md-sys-color-surface-container-low);
+  --app-top-app-bar-height: calc(56px + var(--safe-area-inset-top));
+  --app-motion-duration-short: 220ms;
+  --app-motion-duration-medium: 320ms;
+  --app-motion-duration-long: 520ms;
+  --app-motion-reduced-duration: 180ms;
+  --app-motion-ease-accelerate: cubic-bezier(0.4, 0, 1, 1);
+  --app-motion-ease-decelerate: cubic-bezier(0, 0, 0.2, 1);
+  --app-motion-ease-standard: var(--app-motion-ease-decelerate);
+  --app-motion-ease-emphasized: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --safe-area-inset-top: env(safe-area-inset-top, 0px);
+  --safe-area-inset-right: env(safe-area-inset-right, 0px);
+  --safe-area-inset-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-area-inset-left: env(safe-area-inset-left, 0px);
+  --safe-area-max-inset-bottom: max(
+    env(safe-area-max-inset-bottom, 36px),
+    var(--safe-area-inset-bottom)
+  );
+  --safe-area-bottom-offset: calc(
+    env(safe-area-inset-bottom, 0px) - var(--safe-area-max-inset-bottom)
+  );
+  /* Change Rationale: Material 3 type scale sizes are defined once at the
+   * token level so feature layouts can apply typography classes without
+   * per-component font-size overrides.
+   */
+  --md-sys-typescale-headline-large-size: 2rem;
+  --md-sys-typescale-headline-large-line-height: 2.5rem;
+  --md-sys-typescale-title-large-size: 1.375rem;
+  --md-sys-typescale-title-large-line-height: 1.75rem;
+  --md-sys-typescale-title-medium-size: 1rem;
+  --md-sys-typescale-title-medium-line-height: 1.5rem;
+  --md-sys-typescale-title-small-size: 0.875rem;
+  --md-sys-typescale-title-small-line-height: 1.25rem;
+  --md-sys-typescale-body-large-size: 1rem;
+  --md-sys-typescale-body-large-line-height: 1.5rem;
+  --md-sys-typescale-body-medium-size: 0.875rem;
+  --md-sys-typescale-body-medium-line-height: 1.25rem;
+  --md-sys-typescale-body-small-size: 0.75rem;
+  --md-sys-typescale-body-small-line-height: 1rem;
+  --md-sys-typescale-label-large-size: 0.875rem;
+  --md-sys-typescale-label-large-line-height: 1.25rem;
+  --md-sys-typescale-label-medium-size: 0.75rem;
+  --md-sys-typescale-label-medium-line-height: 1rem;
+  /* Change Rationale: Typographic tokens previously pointed to Google Sans Regular with a Poppins fallback, reducing access to variable weights and drifting from Material 3’s variable font guidance. Standardizing on the Google Sans Flex stack ensures consistent optical sizing, broader weight coverage, and alignment with the new site-wide font strategy. */
+  --md-sys-typescale-label-large-font-family-name: 'Google Sans Flex';
+  --md-sys-typescale-label-large-font: var(--app-font-family-primary);
+  --md-sys-typescale-label-large-weight: 500;
+  --md-sys-typescale-label-medium-font-family-name: 'Google Sans Flex';
+  --md-sys-typescale-label-medium-font: var(--app-font-family-primary);
+  --md-sys-typescale-label-medium-weight: 500;
+  --md-sys-typescale-label-small-font-family-name: 'Google Sans Flex';
+  --md-sys-typescale-label-small-font: var(--app-font-family-primary);
+  --md-sys-typescale-label-small-weight: 500;
+  --md-sys-typescale-body-large-font-family-name: 'Google Sans Flex';
+  --md-sys-typescale-body-large-font: var(--app-font-family-primary);
+  --md-sys-typescale-body-large-weight: 400;
+  --md-sys-typescale-body-medium-font-family-name: 'Google Sans Flex';
+  --md-sys-typescale-body-medium-font: var(--app-font-family-primary);
+  --md-sys-typescale-body-medium-weight: 400;
+  --md-sys-typescale-body-small-font-family-name: 'Google Sans Flex';
+  --md-sys-typescale-body-small-font: var(--app-font-family-primary);
+  --md-sys-typescale-body-small-weight: 400;
+  --md-sys-typescale-title-large-font-family-name: 'Google Sans Flex';
+  --md-sys-typescale-title-large-font: var(--app-font-family-primary);
+  --md-sys-typescale-title-large-weight: 500;
+  --md-sys-typescale-title-medium-font-family-name: 'Google Sans Flex';
+  --md-sys-typescale-title-medium-font: var(--app-font-family-primary);
+  --md-sys-typescale-title-medium-weight: 500;
+  --md-sys-typescale-title-small-font-family-name: 'Google Sans Flex';
+  --md-sys-typescale-title-small-font: var(--app-font-family-primary);
+  --md-sys-typescale-title-small-weight: 500;
+  --md-sys-typescale-headline-large-font-family-name: 'Google Sans Flex';
+  --md-sys-typescale-headline-large-font: var(--app-font-family-primary);
+  --md-sys-typescale-headline-large-weight: 500;
+  --md-sys-typescale-headline-medium-font-family-name: 'Google Sans Flex';
+  --md-sys-typescale-headline-medium-font: var(--app-font-family-primary);
+  --md-sys-typescale-headline-medium-weight: 500;
+  --md-sys-typescale-headline-small-font-family-name: 'Google Sans Flex';
+  --md-sys-typescale-headline-small-font: var(--app-font-family-primary);
+  --md-sys-typescale-headline-small-weight: 500;
+  --md-sys-typescale-display-large-font-family-name: 'Google Sans Flex';
+  --md-sys-typescale-display-large-font: var(--app-font-family-primary);
+  --md-sys-typescale-display-large-weight: 500;
+  --md-sys-typescale-display-medium-font-family-name: 'Google Sans Flex';
+  --md-sys-typescale-display-medium-font: var(--app-font-family-primary);
+  --md-sys-typescale-display-medium-weight: 500;
+  --md-sys-typescale-display-small-font-family-name: 'Google Sans Flex';
+  --md-sys-typescale-display-small-font: var(--app-font-family-primary);
+  --md-sys-typescale-display-small-weight: 500;
+}
+
+/* stylelint-disable function-no-unknown */
+@supports (animation-timing-function: linear(0, 0.5, 1)) {
+  :root {
+    --app-motion-spring: linear(0, 0.35 20%, 0.72 45%, 1.08 75%, 1);
+    --app-motion-bounce: linear(0, 0.55 25%, 1.05 60%, 1);
+  }
+}
+
+@supports not (animation-timing-function: linear(0, 0.5, 1)) {
+  :root {
+    --app-motion-spring: ease;
+    --app-motion-bounce: ease;
+  }
+}
+/* stylelint-enable function-no-unknown */
+
+html.dark {
+  --md-sys-color-primary: #3ddc84;
+  --md-sys-color-on-primary: #003912;
+  --md-sys-color-primary-container: #20512a;
+  --md-sys-color-on-primary-container: #b1fbbb;
+  --md-sys-color-secondary: #b8ccb5;
+  --md-sys-color-on-secondary: #243424;
+  --md-sys-color-secondary-container: #3a4b3a;
+  --md-sys-color-on-secondary-container: #d4e8d0;
+  --md-sys-color-tertiary: #a1d0c7;
+  --md-sys-color-on-tertiary: #033731;
+  --md-sys-color-tertiary-container: #204e47;
+  --md-sys-color-on-tertiary-container: #bdece3;
+  --md-sys-color-error: #ffb4ab;
+  --md-sys-color-on-error: #690005;
+  --md-sys-color-error-container: #93000a;
+  --md-sys-color-on-error-container: #ffdad6;
+  --md-sys-color-background: #0e1510;
+  --md-sys-color-on-background: #e1e4e4;
+  --md-sys-color-surface: #0e1510;
+  --md-sys-color-on-surface: #e1e4e4;
+  --md-sys-color-surface-variant: #1f3225;
+  --md-sys-color-on-surface-variant: #c3e8ce;
+  --md-sys-color-outline: #66b383;
+  --md-sys-color-outline-variant: #2d4a36;
+  --md-sys-color-shadow: #000000;
+  --md-sys-color-scrim: #000000;
+  --md-sys-color-inverse-surface: #e1e4e4;
+  --md-sys-color-inverse-on-surface: #191c1d;
+  --md-sys-color-inverse-primary: #3c6943;
+  --md-sys-color-surface-dim: #101415;
+  --md-sys-color-surface-bright: #1a2a20;
+  --md-sys-color-surface-container-lowest: #09100b;
+  --md-sys-color-surface-container-low: #122017;
+  --md-sys-color-surface-container: #16251b;
+  --md-sys-color-surface-container-high: #1c2d22;
+  --md-sys-color-surface-container-highest: #233729;
+
+  /* Change Rationale: Mirror BeerCSS semantic tokens in dark mode to keep palette
+   * authority centralized in this stylesheet and prevent framework defaults from drifting
+   * away from the Android-green brand scheme. */
+  --app-surface: var(--md-sys-color-surface);
+  --app-surface-container: var(--md-sys-color-surface-container);
+  --app-surface-container-high: var(--md-sys-color-surface-container-high);
+  --app-outline: var(--md-sys-color-outline);
+  --app-on-surface: var(--md-sys-color-on-surface);
+  --app-primary: var(--md-sys-color-primary);
+  --app-on-primary: var(--md-sys-color-on-primary);
+  --app-primary-container: var(--md-sys-color-primary-container);
+  --app-on-primary-container: var(--md-sys-color-on-primary-container);
+  --primary: var(--app-primary);
+  --on-primary: var(--app-on-primary);
+  --primary-container: var(--app-primary-container);
+  --on-primary-container: var(--app-on-primary-container);
+  --surface: var(--app-surface);
+  --on-surface: var(--app-on-surface);
+  --outline: var(--app-outline);
+  --surface-container: var(--app-surface-container);
+  --surface-container-high: var(--app-surface-container-high);
+  /* Change Rationale: Keep dark mode surfaces anchored to the Material 3
+   * surface token so the page background does not fall back to a near-black
+   * container variant.
+   */
+  --app-bg-color: var(--app-surface);
+  --app-text-color: var(--app-on-surface);
+  --app-secondary-text-color: var(--md-sys-color-on-surface-variant);
+  --app-card-bg-color: var(--md-sys-color-surface-container);
+  --app-outlined-card-bg-color: var(--md-sys-color-surface-container);
+  --app-section-title-color: var(--md-sys-color-on-background);
+  --app-border-color: var(--md-sys-color-outline-variant);
+  --app-contribute-card-bg: var(--md-sys-color-primary-container);
+  --app-contribute-card-text: var(--md-sys-color-on-primary-container);
+  --app-social-icon-color: var(--md-sys-color-on-surface-variant);
+  --app-social-icon-hover-color: var(--md-sys-color-primary);
+  --app-drawer-bg-color: var(--md-sys-color-surface-container);
+  --app-drawer-tint-color: var(--md-sys-color-primary);
+  --app-drawer-inline-size: min(360px, 100vw);
+  --app-overlay-bg-color: color-mix(in srgb, var(--md-sys-color-scrim) 32%, transparent);
+  --app-nested-list-bg: rgba(255, 255, 255, 0.03);
+  --app-theme-button-selected-bg: color-mix(in srgb, var(--md-sys-color-primary) 20%, transparent);
+  --app-footer-text-color: var(--md-sys-color-on-surface);
+  /* Change Rationale: Dark theme links now inherit the Android green primary token,
+   * keeping interactive text consistent with the rest of the palette.
+   */
+  --app-link-color: var(--md-sys-color-primary);
+  --app-dialog-bg-color: var(--md-sys-color-surface-container);
+}
