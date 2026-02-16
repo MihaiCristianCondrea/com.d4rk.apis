@@ -86,6 +86,11 @@ export class NavigationDrawerController {
       return;
     }
 
+    // Change Rationale: Some runtimes/hydration paths can preserve stale drawer
+    // classes/ARIA across navigations, so startup always normalizes to a closed
+    // drawer state on both compact and desktop layouts.
+    this.resetDrawerToClosedState();
+
     this.wireButtons();
     this.wireNavLinkCloseBehavior();
     this.initCompactLayoutWatcher();
@@ -135,6 +140,15 @@ export class NavigationDrawerController {
       return;
     }
 
+    this.resetDrawerToClosedState();
+  }
+
+  /**
+   * Normalizes drawer visuals and state to the default closed condition.
+   *
+   * @returns {void}
+   */
+  resetDrawerToClosedState() {
     this.navDrawer?.classList.remove('active');
     this.syncDrawerState(false);
     this.state = closeDrawerState(this.state);
@@ -142,9 +156,9 @@ export class NavigationDrawerController {
 
   wireButtons() {
     if (this.menuButton) {
-      // Change Rationale: Menu action now toggles the shared drawer surface so
-      // app-bar navigation remains available across compact and desktop layouts.
-      this.menuButton.addEventListener('click', () => this.toggle());
+      // Change Rationale: Restore the legacy open-only menu trigger interaction
+      // so repeated taps do not close the drawer unexpectedly.
+      this.menuButton.addEventListener('click', () => this.open());
       this.menuButton.setAttribute('aria-expanded', 'false');
       this.menuButton.setAttribute('aria-controls', 'navDrawer');
     }

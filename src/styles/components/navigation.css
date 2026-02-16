@@ -192,29 +192,29 @@
  * offsetting the main shell surfaces instead of centering underneath it.
  */
 @media (min-width: 960px) {
-  /* Change Rationale: Desktop uses persistent rail navigation below the top app
-   * bar, so the navigation mount is lowered beneath the app-bar layer.
+  /* Change Rationale: Restore overlay-drawer behavior on desktop so the drawer
+   * appears above the top app bar/content instead of using a persistent side rail.
    */
   #appNavigationMount {
-    z-index: 60;
+    z-index: 100;
+  }
+
+  .app-navigation-rail {
+    display: none;
   }
 
   .navigation-drawer,
   .navigation-drawer-backdrop {
-    display: none;
+    display: block;
   }
 
-
-  /* Change Rationale: When the rail is visible, the app bar headline and actions
-   * should align with the routed page content instead of rendering beneath the rail.
+  /* Change Rationale: Desktop no longer reserves horizontal space for a persistent
+   * rail, so app bar/content return to standard full-width shell alignment.
    */
-  .app-top-app-bar nav {
-    padding-inline-start: calc(1rem + var(--safe-area-inset-left) + var(--app-nav-rail-width));
-  }
-
+  .app-top-app-bar nav,
   .app-shell-main,
   .app-shell-footer {
-    padding-inline-start: calc(1rem + var(--safe-area-inset-left) + var(--app-nav-rail-width));
+    padding-inline-start: calc(1rem + var(--safe-area-inset-left));
   }
 }
 
