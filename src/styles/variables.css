@@ -105,7 +105,7 @@
   --app-drawer-bg-color: var(--md-sys-color-surface-container-low);
   --app-drawer-tint-color: var(--md-sys-color-primary);
   --app-drawer-inline-size: min(360px, 100vw);
-  --app-overlay-bg-color: color-mix(in srgb, var(--md-sys-color-primary) 18%, transparent);
+  --app-overlay-bg-color: color-mix(in srgb, var(--md-sys-color-scrim) 32%, transparent);
   --app-nested-list-bg: rgba(0, 0, 0, 0.02);
   --app-theme-button-selected-bg: color-mix(in srgb, var(--md-sys-color-primary) 15%, transparent);
   --app-footer-text-color: var(--md-sys-color-on-surface);
@@ -297,7 +297,7 @@ html.dark {
   --app-drawer-bg-color: var(--md-sys-color-surface-container);
   --app-drawer-tint-color: var(--md-sys-color-primary);
   --app-drawer-inline-size: min(360px, 100vw);
-  --app-overlay-bg-color: color-mix(in srgb, var(--md-sys-color-primary) 18%, transparent);
+  --app-overlay-bg-color: color-mix(in srgb, var(--md-sys-color-scrim) 32%, transparent);
   --app-nested-list-bg: rgba(255, 255, 255, 0.03);
   --app-theme-button-selected-bg: color-mix(in srgb, var(--md-sys-color-primary) 20%, transparent);
   --app-footer-text-color: var(--md-sys-color-on-surface);
