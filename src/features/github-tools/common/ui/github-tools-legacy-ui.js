@@ -889,6 +889,7 @@ function initRepoMapper() {
   const updateFormatButtons = () => {
     const isAscii = currentFormat === 'ascii';
     asciiBtn.toggleAttribute('selected', isAscii);
+    asciiBtn.classList.toggle('active', isAscii);
     // @ts-ignore: Material web components may define `.selected` at runtime.
     asciiBtn.selected = isAscii;
     asciiBtn.setAttribute('aria-pressed', isAscii ? 'true' : 'false');
@@ -896,6 +897,7 @@ function initRepoMapper() {
 
     const isPaths = currentFormat === 'paths';
     pathsBtn.toggleAttribute('selected', isPaths);
+    pathsBtn.classList.toggle('active', isPaths);
     // @ts-ignore
     pathsBtn.selected = isPaths;
     pathsBtn.setAttribute('aria-pressed', isPaths ? 'true' : 'false');
@@ -1035,9 +1037,20 @@ function initRepoMapper() {
   });
 
   const prefillSlug = consumePrefill('mapper');
-  if (prefillSlug && urlField) {
-    urlField.value = prefillSlug;
-    urlField.dispatchEvent(new Event('input'));
+  const demoRepositoryUrl = 'https://github.com/MihaiCristianCondrea/profile';
+  if (urlField) {
+    if (prefillSlug) {
+      urlField.value = prefillSlug;
+      urlField.dispatchEvent(new Event('input'));
+    } else if (!urlField.value.trim()) {
+      /* Change Rationale: Repo Mapper now ships with a canonical sample repository URL so
+       * first-load screenshots and empty-state sessions immediately render aligned output
+       * without requiring manual copy/paste before users understand the tool layout.
+       */
+      urlField.value = demoRepositoryUrl;
+      urlField.dispatchEvent(new Event('input'));
+      form.requestSubmit();
+    }
   }
 }
 
