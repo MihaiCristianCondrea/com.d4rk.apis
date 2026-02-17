@@ -73,7 +73,7 @@
 
 ## 7. End-of-Task Architecture Check (Required)
 Confirm all of the following before finalizing:
-- `data/domain/ui` split remains coherent.
+- SPA layer boundaries remain coherent across `app/pages/widgets/features/entities/shared`.
 - Route ownership is respected.
 - Material 3 + BeerCSS alignment is preserved.
 - Documentation reflects the current implementation.
