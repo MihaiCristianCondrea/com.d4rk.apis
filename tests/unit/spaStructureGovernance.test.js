@@ -28,7 +28,7 @@ describe('SPA structure governance', () => {
       'src/entities',
       'src/shared',
       'src/routes',
-      'src/routes/routeManifest.js',
+      'src/app/routes/route-manifest.js',
       'src/pages/pageTargets.js',
     ];
 
@@ -45,7 +45,7 @@ describe('SPA structure governance', () => {
     const bootstrapPath = path.join(repoRoot, 'src', 'app', 'bootstrap.js');
     const bootstrap = fs.readFileSync(bootstrapPath, 'utf8');
 
-    expect(bootstrap).toMatch(/from ['\"]@\/app\/route-runtime\/register-route-runtime\.js['\"]/);
+    expect(bootstrap).toMatch(/from ['\"]@\/app\/routes\/runtime\/register-route-runtime\.js['\"]/);
     expect(bootstrap).toMatch(/registerAppRouteRuntime\(\)/);
 
     const adHocRouteImports = bootstrap.match(/import\s+['"].*\/ui\/.*Route\.js['"];?/g) || [];
@@ -57,7 +57,7 @@ describe('SPA structure governance', () => {
 
   test('route manifest preserves public hash route IDs', () => {
     const repoRoot = path.join(__dirname, '..', '..');
-    const manifestPath = path.join(repoRoot, 'src', 'routes', 'routeManifest.js');
+    const manifestPath = path.join(repoRoot, 'src', 'app', 'routes', 'route-manifest.js');
     const content = fs.readFileSync(manifestPath, 'utf8');
 
     const requiredIds = [

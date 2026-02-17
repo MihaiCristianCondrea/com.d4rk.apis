@@ -27,7 +27,7 @@ const REQUIRED_DIRS = [
 ];
 
 const BOOTSTRAP_FILE = path.join(ROOT, 'src', 'app', 'bootstrap.js');
-const ROUTE_MANIFEST_FILE = path.join(ROOT, 'src', 'routes', 'routeManifest.js');
+const ROUTE_MANIFEST_FILE = path.join(ROOT, 'src', 'app', 'routes', 'route-manifest.js');
 const APP_DIR = path.join(ROOT, 'src', 'app');
 
 const REQUIRED_ROUTE_IDS = [
@@ -43,7 +43,7 @@ const REQUIRED_ROUTE_IDS = [
 ];
 
 const KEBAB_CASE = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
-const ALLOWED_APP_TOP_LEVEL = new Set(['bootstrap.js', 'config.js', 'providers', 'shell', 'route-runtime']);
+const ALLOWED_APP_TOP_LEVEL = new Set(['bootstrap.js', 'config.js', 'providers', 'shell', 'route-runtime', 'routes']);
 
 /** @param {string} value */
 function formatPath(value) {
