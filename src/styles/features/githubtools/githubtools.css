@@ -1,13 +1,12 @@
 :root {
   --gh-surface: var(--app-bg-color, var(--md-sys-color-surface));
-  --gh-card: var(--app-card-bg-color, var(--md-sys-color-surface-container));
-  --gh-card-strong: var(
-    --app-outlined-card-bg-color,
-    var(--md-sys-color-surface-container-high)
-  );
+  --gh-card: color-mix(in srgb, var(--md-sys-color-surface-container) 94%, white 6%);
+  --gh-card-strong: color-mix(in srgb, var(--md-sys-color-surface-container-high) 86%, var(--md-sys-color-primary-container) 14%);
   --gh-outline: var(--app-border-color, var(--md-sys-color-outline));
   --gh-text: var(--app-text-color);
   --gh-subtext: var(--app-secondary-text-color);
+  --gh-accent: var(--md-sys-color-primary);
+  --gh-accent-soft: color-mix(in srgb, var(--md-sys-color-primary) 18%, transparent);
   --gh-error-container: color-mix(in srgb, var(--md-sys-color-error) 55%, transparent);
   --gh-on-error-container: var(--md-sys-color-on-error);
   --gh-radius-lg: 24px;
@@ -31,15 +30,22 @@
 }
 
 .gh-tools-section {
-  max-width: 1100px;
+  max-width: var(--app-content-max-width, 1120px);
   margin: 0 auto;
   display: grid;
-  gap: 1.5rem;
+  gap: 1.1rem;
+}
+
+/* Change Rationale: GitHub tools now use the same content width budget as home
+ * so forms and output panels align with the app shell instead of appearing undersized.
+ */
+.gh-tools-section > * {
+  width: 100%;
+  margin-inline: 0;
 }
 
 .gh-tools-header {
-  display: grid;
-  gap: 0.5rem;
+  display: none;
 }
 
 .gh-tools-header h1 {
@@ -132,8 +138,43 @@
   background: var(--gh-card);
   border: var(--gh-border);
   border-radius: var(--gh-radius-lg);
-  padding: clamp(1rem, 3vw, 1.5rem);
+  padding: clamp(1rem, 2.5vw, 1.35rem);
   box-shadow: var(--gh-shadow);
+}
+
+/* Change Rationale: GitHub tools controls now use an explicit green-accented palette
+ * that matches the home screen Material tokens and avoids the default dark segmented
+ * button treatment that read as visually noisy.
+ */
+.gh-tools-page .button {
+  border-radius: 999px;
+  transition: background-color var(--gh-transition), border-color var(--gh-transition),
+    color var(--gh-transition);
+}
+
+.gh-tools-page .button.app-ui-button:not(.border):not(.tonal) {
+  background: var(--gh-accent);
+  color: var(--md-sys-color-on-primary);
+}
+
+.gh-tools-page .button.tonal {
+  background: color-mix(in srgb, var(--md-sys-color-primary-container) 70%, var(--gh-card));
+  color: var(--md-sys-color-on-primary-container);
+  border: 1px solid color-mix(in srgb, var(--gh-accent) 22%, transparent);
+}
+
+.gh-tools-page .button.border {
+  background: color-mix(in srgb, var(--gh-card) 82%, var(--gh-card-strong));
+  color: var(--gh-text);
+  border-color: color-mix(in srgb, var(--gh-accent) 28%, var(--gh-outline));
+}
+
+.gh-tools-page .button.border.active,
+.gh-tools-page .button.border[aria-pressed='true'],
+.gh-tools-page .button.border[aria-selected='true'] {
+  background: color-mix(in srgb, var(--gh-accent) 18%, var(--gh-card));
+  border-color: color-mix(in srgb, var(--gh-accent) 55%, var(--gh-outline));
+  color: var(--md-sys-color-primary);
 }
 
 .gh-form {
@@ -145,7 +186,11 @@
   display: grid;
   grid-template-columns: 1fr auto;
   gap: 0.75rem;
-  align-items: flex-start;
+  align-items: center;
+}
+
+.gh-repo-field .gh-favorite-button {
+  align-self: center;
 }
 
 .gh-token-dropdown {
@@ -176,6 +221,15 @@
   justify-content: flex-end;
   gap: 0.65rem;
   min-width: 280px;
+  flex-wrap: wrap;
+}
+
+.gh-segmented-wrapper.group {
+  gap: 0;
+}
+
+.gh-segmented-wrapper.group .button {
+  margin: 0;
 }
 
 .gh-control-row {
@@ -183,7 +237,8 @@
   justify-content: space-between;
   align-items: center;
   flex-wrap: wrap;
-  gap: 1rem;
+  gap: 0.9rem;
+  padding: 0.1rem 0;
 }
 
 /* Change Rationale: The token accordion lifts the left side of the control row when open.
@@ -345,6 +400,7 @@
   justify-content: space-between;
   align-items: center;
   gap: 0.75rem;
+  flex-wrap: wrap;
 }
 
 .gh-actions.end {
@@ -359,6 +415,10 @@
 .gh-result-grid {
   display: grid;
   gap: 1rem;
+}
+
+.gh-result {
+  margin-top: 0.45rem;
 }
 
 .gh-result-grid {
@@ -422,6 +482,10 @@
   box-shadow: var(--gh-shadow);
 }
 
+.gh-helper-text {
+  max-width: 68ch;
+}
+
 .gh-output-header {
   display: flex;
   align-items: center;
@@ -434,6 +498,9 @@
   font-size: 0.8rem;
 }
 
+/* Change Rationale: Repo output now preserves fixed-width tree indentation and line breaks;
+ * using `white-space: pre` avoids wrapped ASCII branches and keeps text background
+ * visually identical to the parent output card surface. */
 .gh-output pre {
   margin: 0;
   padding: 1rem 1.1rem;
@@ -443,9 +510,16 @@
   background: var(--gh-card);
   color: var(--gh-text);
   font-size: 0.9rem;
-  line-height: 1.6;
-  white-space: pre-wrap;
+  line-height: 1.55;
+  white-space: pre;
+  tab-size: 2;
   scrollbar-width: thin;
+}
+
+.gh-output code {
+  display: block;
+  white-space: inherit;
+  background: transparent;
 }
 
 .gh-error {
@@ -789,6 +863,10 @@
 }
 
 @media (max-width: 720px) {
+  .gh-tools-page {
+    padding: clamp(1rem, 3.5vw, 1.35rem);
+  }
+
   .gh-floating-row {
     flex-direction: column;
     align-items: stretch;
@@ -806,6 +884,11 @@
   .gh-actions,
   .gh-actions.end,
   .gh-inline-actions {
+    justify-content: flex-start;
+  }
+
+  .gh-segmented-wrapper {
+    min-width: 0;
     justify-content: flex-start;
   }
 }

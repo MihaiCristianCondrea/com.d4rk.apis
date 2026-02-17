@@ -19,7 +19,7 @@
       <span class="material-symbols-outlined" aria-hidden="true">star</span>
     </button>
   </div>
-  <p id="mapper-url-helper" class="gh-helper-text">Paste a GitHub repository URL, owner/repo slug, or compact OwnerRepo name with a dot.</p>
+  <p id="mapper-url-helper" class="gh-helper-text">Build a clean repo tree from a GitHub URL, owner/repo slug, or compact OwnerRepo name with a dot.</p>
   <p id="mapper-url-error" class="gh-error-text" hidden>Enter a GitHub URL or owner/repo slug.</p>
   <div class="gh-control-row">
     <div class="gh-token-settings" id="mapper-token-settings">
@@ -37,16 +37,18 @@
         </div>
       </div>
     </div>
-    <div class="gh-segmented-wrapper mapper-format-toggle" role="group" aria-label="Select mapper output format" id="mapper-format">
-      <button id="btn-format-ascii" value="ascii" class="button border active" type="button" aria-pressed="true" aria-selected="true">
+    <!-- Change Rationale: Repo Mapper format toggles now use BeerCSS `nav.group` semantics so
+         only one option is visually active while preserving the existing IDs and ARIA contracts. -->
+    <nav class="gh-segmented-wrapper group mapper-format-toggle" role="group" aria-label="Select mapper output format" id="mapper-format">
+      <button id="btn-format-ascii" value="ascii" class="button border left-round active" type="button" aria-pressed="true" aria-selected="true">
         <span class="material-symbols-outlined">terminal</span>
         <span>ASCII</span>
       </button>
-      <button id="btn-format-paths" value="paths" class="button border" type="button" aria-pressed="false" aria-selected="false">
+      <button id="btn-format-paths" value="paths" class="button border right-round" type="button" aria-pressed="false" aria-selected="false">
         <span class="material-symbols-outlined">view_list</span>
         <span>Paths</span>
       </button>
-    </div>
+    </nav>
   </div>
   <div class="gh-actions end">
     <button type="submit" id="mapper-submit" class="button app-ui-button">

@@ -8,7 +8,6 @@ import { RouterRoutes } from '@/core/ui/router/routes.js';
 import { initGitPatch } from '@/features/github-tools/common/ui/github-tools-ui.js';
 import gitPatchScreenTemplate from '../ui/git-patch.page.html?raw';
 import gitPatchFormView from '@/features/github-tools/gitpatch/ui/views/git-patch-form.view.html?raw';
-import toolHeaderViewTemplate from '@/features/github-tools/common/ui/views/github-tool-header.view.html?raw';
 import toolCardViewTemplate from '@/features/github-tools/common/ui/views/github-tool-card.view.html?raw';
 import emptyStateViewTemplate from '@/features/github-tools/common/ui/views/github-empty-state.view.html?raw';
 import statusRegionViewTemplate from '@/widgets/status-region/status-region.widget.html?raw';
@@ -16,7 +15,6 @@ import {
   composeGitHubToolScreen,
   renderEmptyStateView,
   renderToolCardView,
-  renderToolHeaderView,
 } from '@/features/github-tools/common/ui/github-tools-view-composer.js';
 import { renderStatusRegionView } from '@/widgets/status-region/status-region.ce.js';
 
@@ -26,12 +24,9 @@ import { renderStatusRegionView } from '@/widgets/status-region/status-region.ce
  * @returns {string} Composed screen HTML.
  */
 function buildGitPatchScreenHtml() {
-  const headerView = renderToolHeaderView({
-    template: toolHeaderViewTemplate,
-    eyebrow: 'GitHub Tools',
-    title: 'Git Patch',
-    subtext: 'Fetch raw .patch files from commit URLs.',
-  });
+  /* Change Rationale: The in-page GitHub tool title block is removed because the top app bar already
+   * communicates route context; keeping a second headline created off-center visual noise. */
+  const headerView = '';
 
   const cardView = renderToolCardView({
     template: toolCardViewTemplate,
