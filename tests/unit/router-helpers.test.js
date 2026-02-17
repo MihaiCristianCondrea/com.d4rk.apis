@@ -7,8 +7,8 @@
  * - Consolidating imports to src/core/ui/router removes the duplicate surface and ensures the tests exercise the single source of truth.
  * - This alignment reduces navigation drift, keeping routing behavior predictable for Material Design 3-driven flows.
  */
-const { RouterAnimation, fadeIn, fadeOut } = require('../../src/core/ui/router/animation.js');
-const { RouterHistory, updateTitle, pushState } = require('../../src/core/ui/router/history.js');
+const { RouterAnimation, fadeIn, fadeOut } = require('../../src/app/routes/internal/animation.js');
+const { RouterHistory, updateTitle, pushState } = require('../../src/app/routes/internal/history.js');
 
 describe('router helper modules', () => {
   beforeEach(() => {

@@ -20,6 +20,6 @@ export {
 } from './github-tools-legacy-ui.js';
 
 export { initRepoMapper } from './surfaces/mapper/repo-mapper-tool-ui.js';
-export { initGitPatch } from './surfaces/gitpatch/git-patch-tool-ui.js';
-export { initReleaseStats } from './surfaces/releasestats/release-stats-tool-ui.js';
+export { initGitPatch } from './surfaces/git-patch/git-patch-tool-ui.js';
+export { initReleaseStats } from './surfaces/release-stats/release-stats-tool-ui.js';
 export { initFavoritesPage } from './surfaces/favorites/favorites-tool-ui.js';

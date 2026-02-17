@@ -27,7 +27,7 @@ jest.mock(
   { virtual: true },
 );
 
-const { RouterRoutes } = require('../../src/core/ui/router/routes.js');
+const { RouterRoutes } = require('../../src/app/routes/internal/routes.js');
 
 require('../../src/pages/workspaces/faq/index.js');
 

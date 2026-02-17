@@ -7,7 +7,7 @@
 import { RouterRoutes } from '@/core/ui/router/routes.js';
 import { initGitPatch } from '@/features/github-tools/common/ui/github-tools-ui.js';
 import gitPatchScreenTemplate from '../ui/git-patch.page.html?raw';
-import gitPatchFormView from '@/features/github-tools/gitpatch/ui/views/git-patch-form.view.html?raw';
+import gitPatchFormView from '@/features/github-tools/git-patch/ui/views/git-patch-form.view.html?raw';
 import toolCardViewTemplate from '@/features/github-tools/common/ui/views/github-tool-card.view.html?raw';
 import emptyStateViewTemplate from '@/features/github-tools/common/ui/views/github-empty-state.view.html?raw';
 import statusRegionViewTemplate from '@/widgets/status-region/status-region.widget.html?raw';

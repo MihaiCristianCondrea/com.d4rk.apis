@@ -11,8 +11,8 @@ import {
   parseCommitInput,
 } from '../../src/features/github-tools/common/ui/github-tools-ui.js';
 import { initRepoMapper } from '../../src/features/github-tools/common/ui/surfaces/mapper/repo-mapper-tool-ui.js';
-import { initGitPatch } from '../../src/features/github-tools/common/ui/surfaces/gitpatch/git-patch-tool-ui.js';
-import { initReleaseStats } from '../../src/features/github-tools/common/ui/surfaces/releasestats/release-stats-tool-ui.js';
+import { initGitPatch } from '../../src/features/github-tools/common/ui/surfaces/git-patch/git-patch-tool-ui.js';
+import { initReleaseStats } from '../../src/features/github-tools/common/ui/surfaces/release-stats/release-stats-tool-ui.js';
 import { initFavoritesPage } from '../../src/features/github-tools/common/ui/surfaces/favorites/favorites-tool-ui.js';
 
 describe('githubTools surface module index wiring', () => {

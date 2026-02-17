@@ -6,7 +6,7 @@
  * drawer links so navigation stays synchronized across breakpoints.
  */
 const { initNavigationDrawer } = require('../../src/core/ui/components/navigation/navigationDrawerBindings.js');
-const { updateActiveNavLink } = require('../../src/core/ui/router/navigationState.js');
+const { updateActiveNavLink } = require('../../src/app/routes/internal/navigation-state.js');
 
 /**
  * Seeds the DOM with navigation rail + drawer links for active state testing.

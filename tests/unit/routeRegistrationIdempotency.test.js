@@ -7,22 +7,22 @@
  */
 
 jest.mock(
-  '../../src/features/github-tools/gitpatch/ui/git-patch.page.html?raw',
+  '../../src/pages/github-tools/ui/git-patch.page.html?raw',
   () => '<div>Git Patch Screen</div>',
   { virtual: true }
 );
 jest.mock(
-  '../../src/features/github-tools/gitpatch/ui/views/git-patch-form.view.html?raw',
+  '../../src/features/github-tools/git-patch/ui/views/git-patch-form.view.html?raw',
   () => '<div>Git Patch Form</div>',
   { virtual: true }
 );
 jest.mock(
-  '../../src/features/github-tools/releasestats/ui/release-stats.page.html?raw',
+  '../../src/pages/github-tools/ui/release-stats.page.html?raw',
   () => '<div>Release Stats Screen</div>',
   { virtual: true }
 );
 jest.mock(
-  '../../src/features/github-tools/releasestats/ui/views/release-stats-form.view.html?raw',
+  '../../src/features/github-tools/release-stats/ui/views/release-stats-form.view.html?raw',
   () => '<div>Release Stats Form</div>',
   { virtual: true }
 );
@@ -46,7 +46,7 @@ test('GitPatchRoute registers once even when imported twice', () => {
   jest.resetModules();
   let result;
   jest.isolateModules(() => {
-    const { RouterRoutes } = require('../../src/core/ui/router/routes.js');
+    const { RouterRoutes } = require('../../src/app/routes/internal/routes.js');
     const { registerGitPatchRoute } = require(
       '../../src/pages/github-tools/routes/git-patch-route.js'
     );
@@ -68,7 +68,7 @@ test('ReleaseStatsRoute registers once even when imported twice', () => {
   jest.resetModules();
   let result;
   jest.isolateModules(() => {
-    const { RouterRoutes } = require('../../src/core/ui/router/routes.js');
+    const { RouterRoutes } = require('../../src/app/routes/internal/routes.js');
     const { registerReleaseStatsRoute } = require(
       '../../src/pages/github-tools/routes/release-stats-route.js'
     );
@@ -109,7 +109,7 @@ test('HomeRoute registers mount lifecycle through RouterRoutes without globals',
   jest.resetModules();
   let result;
   jest.isolateModules(() => {
-    const { RouterRoutes } = require('../../src/core/ui/router/routes.js');
+    const { RouterRoutes } = require('../../src/app/routes/internal/routes.js');
     const homeRouteModule = require('../../src/pages/home/index.js');
 
     homeRouteModule.registerHomeRoute();
