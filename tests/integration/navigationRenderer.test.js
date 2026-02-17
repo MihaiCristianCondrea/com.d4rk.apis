@@ -6,7 +6,7 @@ import {
   createNavigationSection,
   renderNavigationSections,
 } from '../../src/core/ui/components/navigation/navigationRenderer.js';
-import { updateActiveNavLink } from '../../src/core/ui/router/navigationState.js';
+import { updateActiveNavLink } from '../../src/app/routes/internal/navigation-state.js';
 
 /**
  * Creates a stub navigation item for testing.
@@ -69,9 +69,9 @@ describe('navigationRenderer', () => {
   it('keeps github feature screens on BeerCSS button class patterns', () => {
     const repoRoot = path.join(__dirname, '..', '..');
     const screenPaths = [
-      path.join(repoRoot, 'src', 'features', 'github-tools', 'releasestats', 'ui', 'release-stats.page.html'),
-      path.join(repoRoot, 'src', 'features', 'github-tools', 'repomapper', 'ui', 'repo-mapper.page.html'),
-      path.join(repoRoot, 'src', 'features', 'github-tools', 'gitpatch', 'ui', 'git-patch.page.html'),
+      path.join(repoRoot, 'src', 'pages', 'github-tools', 'ui', 'release-stats.page.html'),
+      path.join(repoRoot, 'src', 'pages', 'github-tools', 'ui', 'repo-mapper.page.html'),
+      path.join(repoRoot, 'src', 'pages', 'github-tools', 'ui', 'git-patch.page.html'),
     ];
 
     const html = screenPaths.map((screenPath) => fs.readFileSync(screenPath, 'utf8')).join('\n');

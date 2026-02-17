@@ -7,7 +7,7 @@
 import { RouterRoutes } from '@/core/ui/router/routes.js';
 import { initReleaseStats } from '@/features/github-tools/common/ui/github-tools-ui.js';
 import releaseStatsScreenTemplate from '../ui/release-stats.page.html?raw';
-import releaseStatsFormView from '@/features/github-tools/releasestats/ui/views/release-stats-form.view.html?raw';
+import releaseStatsFormView from '@/features/github-tools/release-stats/ui/views/release-stats-form.view.html?raw';
 import toolCardViewTemplate from '@/features/github-tools/common/ui/views/github-tool-card.view.html?raw';
 import emptyStateViewTemplate from '@/features/github-tools/common/ui/views/github-empty-state.view.html?raw';
 import statusRegionViewTemplate from '@/widgets/status-region/status-region.widget.html?raw';

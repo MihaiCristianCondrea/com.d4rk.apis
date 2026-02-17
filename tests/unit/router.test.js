@@ -34,13 +34,13 @@ jest.mock(
   { virtual: true }
 );
 
-jest.mock('../../src/core/ui/router/index.js', () => ({
+jest.mock('../../src/app/routes/router.js', () => ({
   initRouter: jest.fn(),
   loadPageContent: jest.fn(),
   normalizePageId: jest.fn((id) => id),
 }));
 
-jest.mock('../../src/core/ui/router/routes.js', () => ({
+jest.mock('../../src/app/routes/internal/routes.js', () => ({
   __esModule: true,
   default: {},
 }));
@@ -50,7 +50,7 @@ jest.mock('../../src/core/ui/globals.js', () => ({
   registerCompatibilityGlobals: jest.fn(),
 }));
 
-const { updateActiveNavLink } = require('../../src/core/ui/router/navigationState.js');
+const { updateActiveNavLink } = require('../../src/app/routes/internal/navigation-state.js');
 
 function setupAppShellDom() {
   document.body.innerHTML = `
@@ -105,7 +105,7 @@ test('app shell initializes router without global lifecycle fallbacks', () => {
 
   document.dispatchEvent(new Event('DOMContentLoaded'));
 
-  const { initRouter } = require('../../src/core/ui/router/index.js');
+  const { initRouter } = require('../../src/app/routes/router.js');
   const { registerCompatibilityGlobals } = require('../../src/core/ui/globals.js');
 
   expect(initRouter).toHaveBeenCalled();

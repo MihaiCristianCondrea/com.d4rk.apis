@@ -7,7 +7,7 @@
 import { RouterRoutes } from '@/core/ui/router/routes.js';
 import { initRepoMapper } from '@/features/github-tools/common/ui/github-tools-ui.js';
 import repoMapperScreenTemplate from '../ui/repo-mapper.page.html?raw';
-import repoMapperFormView from '@/features/github-tools/repomapper/ui/views/repo-mapper-form.view.html?raw';
+import repoMapperFormView from '@/features/github-tools/repo-mapper/ui/views/repo-mapper-form.view.html?raw';
 import toolCardViewTemplate from '@/features/github-tools/common/ui/views/github-tool-card.view.html?raw';
 import emptyStateViewTemplate from '@/features/github-tools/common/ui/views/github-empty-state.view.html?raw';
 import statusRegionViewTemplate from '@/widgets/status-region/status-region.widget.html?raw';
