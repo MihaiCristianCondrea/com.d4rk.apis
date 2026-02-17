@@ -78,7 +78,7 @@ The modernization target is a native, feature-sliced structure:
 ### Phase 5 — Validation and closeout
 - Run `npm test`.
 - Re-check docs for architecture and API contract accuracy.
-- Confirm end-of-task checklist: data/domain/ui split, route ownership, Material 3 alignment, documentation consistency.
+- Confirm end-of-task checklist: route ownership, Material 3 alignment, and documentation consistency.
 
 ---
 

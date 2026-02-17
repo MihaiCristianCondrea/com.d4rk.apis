@@ -21,7 +21,7 @@ import * as jsondiffpatchConsoleFormatter from 'jsondiffpatch/formatters/console
 
 import { installCrashReportingProvider } from '@/app/providers/crash-reporting-provider.js';
 import { installThemeProvider } from '@/app/providers/theme-provider.js';
-import { registerAppRouteRuntime } from '@/app/route-runtime/register-route-runtime.js';
+import { registerAppRouteRuntime } from '@/app/routes/runtime/register-route-runtime.js';
 
 /**
  * Exposes jsondiffpatch helpers required by workspace tools.
