@@ -176,15 +176,15 @@ function renderFavoritesPage() {
         </div>
       </div>
       <div class="gh-favorite-actions">
-        <button class="button small app-ui-button" type="button" data-open-mapper>
+        <button class="button small app-ui-button wave" type="button" data-open-mapper>
           <span class="material-symbols-outlined">terminal</span>
           <span>Map</span>
         </button>
-        <button class="button small border app-ui-button" type="button" data-open-stats>
+        <button class="button small border app-ui-button wave" type="button" data-open-stats>
           <span class="material-symbols-outlined">bar_chart</span>
           <span>Stats</span>
         </button>
-        <a class="button small border app-ui-button" href="https://github.com/${slug}" target="_blank" rel="noopener noreferrer">
+        <a class="button small border app-ui-button wave" href="https://github.com/${slug}" target="_blank" rel="noopener noreferrer">
           <span class="material-symbols-outlined">open_in_new</span>
           <span>Open</span>
         </a>
@@ -1165,7 +1165,8 @@ function initReleaseStats() {
     releaseData.releases.forEach((release) => {
       const button = document.createElement('button');
       const isActive = selectedTag ? release.tagName === selectedTag : false;
-      button.className = isActive ? 'active' : '';
+      // Change Rationale: Release list rows now opt into BeerCSS `wave` interactions so click feedback mirrors the rest of the tool buttons.
+      button.className = `wave ${isActive ? 'active' : ''}`.trim();
       button.innerHTML = `
         <div class="gh-release-bar">
           <span>${release.name || release.tagName}</span>

@@ -15,7 +15,7 @@
       inputmode="url"
       required
     />
-    <button id="mapper-fav-btn" class="button circle border gh-favorite-button" type="button" aria-pressed="false" aria-label="Favorite repository">
+    <button id="mapper-fav-btn" class="button circle border gh-favorite-button wave" type="button" aria-pressed="false" aria-label="Favorite repository">
       <span class="material-symbols-outlined" aria-hidden="true">star</span>
     </button>
   </div>
@@ -23,7 +23,7 @@
   <p id="mapper-url-error" class="gh-error-text" hidden>Enter a GitHub URL or owner/repo slug.</p>
   <div class="gh-control-row">
     <div class="gh-token-settings" id="mapper-token-settings">
-      <button class="button tonal token-toggle" id="mapper-token-reveal" aria-expanded="false" type="button">
+      <button class="button tonal token-toggle wave" id="mapper-token-reveal" aria-expanded="false" type="button">
         <span class="material-symbols-outlined">vpn_key</span>
         <span class="favorite-label">Token settings</span>
         <span class="material-symbols-outlined">expand_more</span>
@@ -40,18 +40,18 @@
     <!-- Change Rationale: Repo Mapper format toggles now use BeerCSS `nav.group` semantics so
          only one option is visually active while preserving the existing IDs and ARIA contracts. -->
     <nav class="gh-segmented-wrapper group mapper-format-toggle" role="group" aria-label="Select mapper output format" id="mapper-format">
-      <button id="btn-format-ascii" value="ascii" class="button border left-round active" type="button" aria-pressed="true" aria-selected="true">
+      <button id="btn-format-ascii" value="ascii" class="button border left-round active wave" type="button" aria-pressed="true" aria-selected="true">
         <span class="material-symbols-outlined">terminal</span>
         <span>ASCII</span>
       </button>
-      <button id="btn-format-paths" value="paths" class="button border right-round" type="button" aria-pressed="false" aria-selected="false">
+      <button id="btn-format-paths" value="paths" class="button border right-round wave" type="button" aria-pressed="false" aria-selected="false">
         <span class="material-symbols-outlined">view_list</span>
         <span>Paths</span>
       </button>
     </nav>
   </div>
   <div class="gh-actions end">
-    <button type="submit" id="mapper-submit" class="button app-ui-button">
+    <button type="submit" id="mapper-submit" class="button app-ui-button wave">
       <span class="material-symbols-outlined">terminal</span>
       <span>Generate Map</span>
     </button>

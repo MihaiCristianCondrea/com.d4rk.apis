@@ -43,6 +43,31 @@ async function handlePageLoad(pageId, pushHistory) {
     }
 }
 
+
+/**
+ * Resolves the startup route from the current location, preferring hash links
+ * and falling back to pathname deep links.
+ *
+ * @param {Location} locationApi Browser location object.
+ * @returns {string} Raw route token suitable for router normalization.
+ */
+function getInitialRouteFromLocation(locationApi) {
+    if (!locationApi) {
+        return '#home';
+    }
+
+    const hashValue = typeof locationApi.hash === 'string' ? locationApi.hash : '';
+    if (hashValue) {
+        return hashValue;
+    }
+
+    // Change Rationale: GitHub tool pages now support path-style deep links
+    // (for example `/github-tools/repo-mapper`) produced by migration-friendly
+    // hosting setups; using pathname fallback prevents false Not Found screens.
+    const pathValue = typeof locationApi.pathname === 'string' ? locationApi.pathname : '';
+    return pathValue || '#home';
+}
+
 registerGlobalUtilities();
 registerCompatibilityGlobals({
     getDynamicElement,
@@ -110,15 +135,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     // --- Handle Initial Page Load & Browser History ---
-    const initialPageIdFromHash = window.location.hash || '#home';
-    void handlePageLoad(initialPageIdFromHash, false);
+    const initialRouteId = getInitialRouteFromLocation(window.location);
+    void handlePageLoad(initialRouteId, false);
 
     window.addEventListener('popstate', (event) => {
         let pageId = '#home';
         if (event.state && event.state.page) {
             pageId = event.state.page;
-        } else if (window.location.hash) {
-            pageId = window.location.hash;
+        } else {
+            pageId = getInitialRouteFromLocation(window.location);
         }
         void handlePageLoad(pageId, false);
     });

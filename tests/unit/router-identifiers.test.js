@@ -27,6 +27,19 @@ describe('normalizePageId', () => {
     expect(normalizePageId('/layout/githubtools/repo-mapper.html#section')).toBe('repo-mapper');
   });
 
+
+  test('maps clean GitHub tool path aliases to canonical route IDs', () => {
+    expect(normalizePageId('/github-tools/repo-mapper')).toBe('repo-mapper');
+    expect(normalizePageId('/github-tools/release-stats')).toBe('release-stats');
+    expect(normalizePageId('/github-tools/git-patch')).toBe('git-patch');
+    expect(normalizePageId('/github-tools/favorites')).toBe('favorites');
+  });
+
+  test('maps GitHub tool path aliases nested under deployment base paths', () => {
+    expect(normalizePageId('/com.d4rk.apis/github-tools/repo-mapper')).toBe('repo-mapper');
+    expect(normalizePageId('/preview/site/github-tools/release-stats/')).toBe('release-stats');
+  });
+
   test('ignores unrelated layout URLs', () => {
     expect(normalizePageId('/layout/faq.html')).toBe('/layout/faq.html');
   });
