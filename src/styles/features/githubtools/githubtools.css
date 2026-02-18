@@ -173,36 +173,37 @@
   box-shadow: var(--gh-shadow);
 }
 
-/* Change Rationale: GitHub tools controls now use an explicit green-accented palette
- * that matches the home screen Material tokens and avoids the default dark segmented
- * button treatment that read as visually noisy.
+/* Change Rationale: GitHub tool actions now follow BeerCSS's native `button` element
+ * contract (instead of relying on a `.button` class), so rounded shapes and state-layer
+ * animations remain consistent with the migration docs across Git Patch, Repo Mapper,
+ * Release Stats, and Favorites.
  */
-.gh-tools-page .button {
+.gh-tools-page :where(button, a.button) {
   border-radius: 999px;
   transition: background-color var(--gh-transition), border-color var(--gh-transition),
-    color var(--gh-transition);
+    color var(--gh-transition), box-shadow var(--gh-transition), transform var(--gh-transition);
 }
 
-.gh-tools-page .button.app-ui-button:not(.border):not(.tonal) {
+.gh-tools-page :where(button, a.button).app-ui-button:not(.border):not(.tonal) {
   background: var(--gh-accent);
   color: var(--md-sys-color-on-primary);
 }
 
-.gh-tools-page .button.tonal {
+.gh-tools-page :where(button, a.button).tonal {
   background: color-mix(in srgb, var(--md-sys-color-primary-container) 70%, var(--gh-card));
   color: var(--md-sys-color-on-primary-container);
   border: 1px solid color-mix(in srgb, var(--gh-accent) 22%, transparent);
 }
 
-.gh-tools-page .button.border {
+.gh-tools-page :where(button, a.button).border {
   background: color-mix(in srgb, var(--gh-card) 82%, var(--gh-card-strong));
   color: var(--gh-text);
   border-color: color-mix(in srgb, var(--gh-accent) 28%, var(--gh-outline));
 }
 
-.gh-tools-page .button.border.active,
-.gh-tools-page .button.border[aria-pressed='true'],
-.gh-tools-page .button.border[aria-selected='true'] {
+.gh-tools-page :where(button, a.button).border.active,
+.gh-tools-page :where(button, a.button).border[aria-pressed='true'],
+.gh-tools-page :where(button, a.button).border[aria-selected='true'] {
   background: color-mix(in srgb, var(--gh-accent) 18%, var(--gh-card));
   border-color: color-mix(in srgb, var(--gh-accent) 55%, var(--gh-outline));
   color: var(--md-sys-color-primary);
@@ -259,7 +260,7 @@
   gap: 0;
 }
 
-.gh-segmented-wrapper.group .button {
+.gh-segmented-wrapper.group > button {
   margin: 0;
 }
 
@@ -822,7 +823,7 @@
   justify-content: center;
 }
 
-.gh-favorite-actions .button.border.app-ui-button {
+.gh-favorite-actions .border.app-ui-button {
   border-color: color-mix(in srgb, var(--gh-outline) 55%, transparent);
 }
 
