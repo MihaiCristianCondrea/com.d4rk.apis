@@ -1,31 +1,37 @@
-<!-- Change Rationale: Migrated Release Stats inputs and controls to BeerCSS-style native
-     elements to remove mixed component families while keeping existing behavior contracts. -->
+<!-- Change Rationale: Release Stats text fields now use BeerCSS `field border round`
+     markup with inline outputs for helper and error text to match documented input patterns. -->
 <form id="releases-form" class="gh-form" autocomplete="off" name="releases-form">
   <div class="gh-field-row gh-repo-field">
-    <input id="releases-url" name="releases-url" type="url" class="gh-input" placeholder="Repository URL" autocomplete="off" aria-describedby="releases-url-helper releases-url-error" spellcheck="false" required />
+    <div id="releases-url-field" class="field label border round gh-input-field">
+      <input id="releases-url" name="releases-url" type="url" class="gh-input" placeholder=" " autocomplete="off" aria-describedby="releases-url-helper releases-url-error" spellcheck="false" required />
+      <label for="releases-url">Repository URL</label>
+      <output id="releases-url-helper" class="gh-helper-text">Use a GitHub URL, owner/repo slug, or compact OwnerRepo name with a dot.</output>
+      <output id="releases-url-error" class="gh-error-text invalid" hidden>Invalid repository URL.</output>
+    </div>
     <button id="releases-fav-btn" class="button circle border gh-favorite-button wave" type="button" aria-pressed="false" aria-label="Favorite repository">
       <span class="material-symbols-outlined">star</span>
     </button>
   </div>
-  <p id="releases-url-helper" class="gh-helper-text">Use a GitHub URL, owner/repo slug, or compact OwnerRepo name with a dot.</p>
-  <p id="releases-url-error" class="gh-error-text" hidden>Invalid repository URL.</p>
   <div class="gh-token-settings" id="releases-token-settings">
-    <button class="button tonal token-toggle wave" id="releases-token-reveal" aria-expanded="false" type="button">
+    <button class="button tonal small-round token-toggle wave" id="releases-token-reveal" aria-expanded="false" type="button">
       <span class="material-symbols-outlined">vpn_key</span>
       <span class="favorite-label">Token settings</span>
       <span class="material-symbols-outlined">expand_more</span>
     </button>
     <div class="gh-collapsible" id="releases-token-wrapper" hidden>
-      <input id="releases-token" type="password" class="gh-input gh-floating-input" placeholder="Personal Access Token (optional)" autocomplete="off" aria-describedby="releases-token-helper releases-token-error" spellcheck="false" />
-      <p id="releases-token-helper" class="gh-helper-text">Include when querying private repositories.</p>
-      <p id="releases-token-error" class="gh-error-text" hidden>Token required for private repos.</p>
+      <div id="releases-token-field" class="field label border round gh-input-field">
+        <input id="releases-token" type="password" class="gh-input gh-floating-input" placeholder=" " autocomplete="off" aria-describedby="releases-token-helper releases-token-error" spellcheck="false" />
+        <label for="releases-token">Personal Access Token (optional)</label>
+        <output id="releases-token-helper" class="gh-helper-text">Include when querying private repositories.</output>
+        <output id="releases-token-error" class="gh-error-text invalid" hidden>Token required for private repos.</output>
+      </div>
       <div class="gh-token-visibility">
         <label><input id="releases-token-toggle" type="checkbox" /><span data-token-visibility-label>Show token</span></label>
       </div>
     </div>
   </div>
   <div class="gh-actions end">
-    <button type="submit" id="releases-submit" class="button app-ui-button wave">
+    <button type="submit" id="releases-submit" class="button small-round app-ui-button wave">
       <span class="material-symbols-outlined">analytics</span>
       <span>Analyze</span>
     </button>

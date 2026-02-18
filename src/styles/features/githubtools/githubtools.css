@@ -61,16 +61,47 @@
 .gh-md-field,
 .gh-input {
   width: 100%;
-  border: var(--gh-border);
-  border-radius: 14px;
-  background: var(--gh-card-strong);
+  border: none;
+  background: transparent;
   color: var(--gh-text);
-  padding: 0.75rem 0.9rem;
+  box-shadow: none;
+}
+
+/* Change Rationale: GitHub tool text inputs now follow the BeerCSS `field border round`
+ * contract. These overrides keep the fields fully rounded and token-aligned while avoiding
+ * duplicated borders from legacy `.gh-input` decoration. */
+.gh-input-field.field {
+  width: 100%;
+  border: var(--gh-border);
+  border-radius: 999px;
+  background: var(--gh-card-strong);
+}
+
+.gh-input-field.field.invalid {
+  border-color: color-mix(in srgb, var(--md-sys-color-error) 65%, var(--gh-outline));
+}
+
+.gh-input-field > output {
+  display: block;
+}
+
+.gh-input-field .gh-error-text.invalid {
+  color: var(--md-sys-color-error);
 }
 
 .gh-favorite-button {
   border-radius: 14px;
-  color: var(--gh-subtext);
+  color: var(--gh-text);
+}
+
+/* Change Rationale: Favorite star icons could blend into the light card tint at rest.
+ * Pinning an explicit icon color/size keeps the unfavorited state visible while preserving
+ * the filled primary color treatment when the control is toggled on. */
+.gh-favorite-button .material-symbols-outlined {
+  color: var(--gh-text);
+  font-size: 22px;
+  line-height: 1;
+  font-variation-settings: 'FILL' 0, 'wght' 500, 'GRAD' 0, 'opsz' 24;
 }
 
 .gh-favorite-button.favorited,

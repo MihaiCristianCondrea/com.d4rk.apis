@@ -390,6 +390,30 @@ function hydrateInputs(container) {
 }
 
 /**
+ * Finds the BeerCSS field container for an input.
+ *
+ * @param {HTMLInputElement | null} field Input element linked to a `.field` wrapper.
+ * @returns {HTMLElement | null} The nearest field container.
+ */
+function getInputFieldContainer(field) {
+  if (!field) return null;
+  return field.closest('.field');
+}
+
+/**
+ * Toggles the BeerCSS invalid state on an input field wrapper.
+ *
+ * @param {HTMLInputElement | null} field Input element linked to a `.field` wrapper.
+ * @param {boolean} isInvalid Whether invalid visual state should be active.
+ * @returns {void}
+ */
+function setInputFieldInvalid(field, isInvalid) {
+  const container = getInputFieldContainer(field);
+  if (!container) return;
+  container.classList.toggle('invalid', isInvalid);
+}
+
+/**
  * Initializes the Repo Mapper form behavior.
  *
  * Responsibilities:
@@ -428,6 +452,7 @@ function setupRepoMapperForm(options = {}) {
     if (errorEl) {
       errorEl.hidden = true;
     }
+    setInputFieldInvalid(urlField, false);
   };
 
   /**
@@ -436,6 +461,7 @@ function setupRepoMapperForm(options = {}) {
   const showError = (message) => {
     if (!errorEl) return;
     errorEl.hidden = false;
+    setInputFieldInvalid(urlField, true);
     if (message) {
       errorEl.textContent = message;
     }
@@ -449,7 +475,9 @@ function setupRepoMapperForm(options = {}) {
     submitButton.disabled = !isValid;
     if (errorEl) {
       const hasText = !!urlField.value.trim();
-      errorEl.hidden = isValid || !hasText;
+      const isFieldInvalid = !isValid && hasText;
+      errorEl.hidden = !isFieldInvalid;
+      setInputFieldInvalid(urlField, isFieldInvalid);
     }
     return { slug, isValid };
   };
@@ -522,6 +550,7 @@ function setupReleaseStatsForm() {
 
   const hideError = () => {
     if (errorEl) errorEl.hidden = true;
+    setInputFieldInvalid(urlField, false);
   };
 
   /**
@@ -530,6 +559,7 @@ function setupReleaseStatsForm() {
   const showError = (message) => {
     if (!errorEl) return;
     errorEl.hidden = false;
+    setInputFieldInvalid(urlField, true);
     if (message) errorEl.textContent = message;
   };
 
@@ -539,7 +569,9 @@ function setupReleaseStatsForm() {
     submitButton.disabled = !isValid;
     if (errorEl) {
       const hasText = !!urlField.value.trim();
-      errorEl.hidden = isValid || !hasText;
+      const isFieldInvalid = !isValid && hasText;
+      errorEl.hidden = !isFieldInvalid;
+      setInputFieldInvalid(urlField, isFieldInvalid);
     }
     return { slug, isValid };
   };
@@ -595,6 +627,7 @@ function setupPatchForm() {
 
   const hideError = () => {
     if (errorEl) errorEl.hidden = true;
+    setInputFieldInvalid(urlField, false);
   };
 
   /**
@@ -603,6 +636,7 @@ function setupPatchForm() {
   const showError = (message) => {
     if (!errorEl) return;
     errorEl.hidden = false;
+    setInputFieldInvalid(urlField, true);
     if (message) errorEl.textContent = message;
   };
 
@@ -612,7 +646,9 @@ function setupPatchForm() {
     submitButton.disabled = !isValid;
     if (errorEl) {
       const hasText = !!urlField.value.trim();
-      errorEl.hidden = isValid || !hasText;
+      const isFieldInvalid = !isValid && hasText;
+      errorEl.hidden = !isFieldInvalid;
+      setInputFieldInvalid(urlField, isFieldInvalid);
     }
     return { parsed, isValid };
   };
