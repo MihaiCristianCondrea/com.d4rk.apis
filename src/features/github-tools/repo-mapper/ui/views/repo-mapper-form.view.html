@@ -1,37 +1,42 @@
-<!-- Change Rationale: Replaced Material Web form controls with BeerCSS-native button, input,
-     checkbox, and segmented controls so feature views rely on a single interactive component
-     family while preserving existing IDs used by route logic and accessibility hooks. -->
+<!-- Change Rationale: Repo Mapper text inputs now use BeerCSS `field border round`
+     markup with inline helper/error outputs to match the canonical input docs. -->
 <form id="mapper-form" class="gh-form" autocomplete="off" name="mapper-form">
   <div class="gh-field-row gh-repo-field">
-    <input
-      id="mapper-url"
-      name="mapper-url"
-      type="text"
-      class="gh-input"
-      placeholder="Repository URL"
-      autocomplete="off"
-      aria-describedby="mapper-url-helper mapper-url-error"
-      list="mapper-datalist"
-      inputmode="url"
-      required
-    />
+    <div id="mapper-url-field" class="field label border round gh-input-field">
+      <input
+        id="mapper-url"
+        name="mapper-url"
+        type="text"
+        class="gh-input"
+        placeholder=" "
+        autocomplete="off"
+        aria-describedby="mapper-url-helper mapper-url-error"
+        list="mapper-datalist"
+        inputmode="url"
+        required
+      />
+      <label for="mapper-url">Repository URL</label>
+      <output id="mapper-url-helper" class="gh-helper-text">Build a clean repo tree from a GitHub URL, owner/repo slug, or compact OwnerRepo name with a dot.</output>
+      <output id="mapper-url-error" class="gh-error-text invalid" hidden>Enter a GitHub URL or owner/repo slug.</output>
+    </div>
     <button id="mapper-fav-btn" class="button circle border gh-favorite-button wave" type="button" aria-pressed="false" aria-label="Favorite repository">
       <span class="material-symbols-outlined" aria-hidden="true">star</span>
     </button>
   </div>
-  <p id="mapper-url-helper" class="gh-helper-text">Build a clean repo tree from a GitHub URL, owner/repo slug, or compact OwnerRepo name with a dot.</p>
-  <p id="mapper-url-error" class="gh-error-text" hidden>Enter a GitHub URL or owner/repo slug.</p>
   <div class="gh-control-row">
     <div class="gh-token-settings" id="mapper-token-settings">
-      <button class="button tonal token-toggle wave" id="mapper-token-reveal" aria-expanded="false" type="button">
+      <button class="button tonal small-round token-toggle wave" id="mapper-token-reveal" aria-expanded="false" type="button">
         <span class="material-symbols-outlined">vpn_key</span>
         <span class="favorite-label">Token settings</span>
         <span class="material-symbols-outlined">expand_more</span>
       </button>
       <div class="gh-collapsible" id="mapper-token-wrapper" hidden>
-        <input id="mapper-token" name="mapper-token" type="password" class="gh-input" placeholder="Personal Access Token (optional)" autocomplete="off" aria-describedby="mapper-token-helper mapper-token-error" spellcheck="false" />
-        <p id="mapper-token-helper" class="gh-helper-text">Use when working with private repositories.</p>
-        <p id="mapper-token-error" class="gh-error-text" hidden>Token required for private repos.</p>
+        <div id="mapper-token-field" class="field label border round gh-input-field">
+          <input id="mapper-token" name="mapper-token" type="password" class="gh-input" placeholder=" " autocomplete="off" aria-describedby="mapper-token-helper mapper-token-error" spellcheck="false" />
+          <label for="mapper-token">Personal Access Token (optional)</label>
+          <output id="mapper-token-helper" class="gh-helper-text">Use when working with private repositories.</output>
+          <output id="mapper-token-error" class="gh-error-text invalid" hidden>Token required for private repos.</output>
+        </div>
         <div class="gh-token-visibility">
           <label><input id="mapper-token-toggle" type="checkbox" /><span data-token-visibility-label>Show token</span></label>
         </div>
@@ -51,7 +56,7 @@
     </nav>
   </div>
   <div class="gh-actions end">
-    <button type="submit" id="mapper-submit" class="button app-ui-button wave">
+    <button type="submit" id="mapper-submit" class="button small-round app-ui-button wave">
       <span class="material-symbols-outlined">terminal</span>
       <span>Generate Map</span>
     </button>
