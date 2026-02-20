@@ -7,12 +7,12 @@
         <h2 data-slot-target="fetch-title">Fetch existing JSON</h2>
         <p data-slot-target="fetch-helper">Pull the latest home or lesson payload before editing entries.</p>
       </div>
-      <div class="builder-remote-actions" aria-label="Fetch target">
-        <button class="builder-remote-toggle border" data-slot-target="home-target" data-remote-target="home" type="button">
+      <div class="builder-remote-actions app-button-group app-button-group--wrap" aria-label="Fetch target">
+        <button class="builder-remote-toggle button border round app-button app-button--outlined" data-slot-target="home-target" data-remote-target="home" type="button">
           <span class="material-symbols-outlined" aria-hidden="true">home</span>
           <span class="builder-remote-toggle-label">Home</span>
         </button>
-        <button class="builder-remote-toggle border" data-slot-target="lesson-target" data-remote-target="lesson" type="button">
+        <button class="builder-remote-toggle button border round app-button app-button--outlined" data-slot-target="lesson-target" data-remote-target="lesson" type="button">
           <span class="material-symbols-outlined" aria-hidden="true">menu_book</span>
           <span class="builder-remote-toggle-label">Lesson</span>
         </button>
@@ -36,28 +36,28 @@
             aria-label="Fetch from URL"
           />
         </label>
-        <button class="builder-remote-inline-button builder-button tonal" data-slot-target="fetch-button" type="button">
+        <button class="builder-remote-inline-button button tonal round app-button app-button--primary" data-slot-target="fetch-button" type="button">
           <span class="material-symbols-outlined" aria-hidden="true">cloud_download</span>
           Fetch JSON
         </button>
       </div>
       <p class="builder-remote-feedback" data-slot-target="fetch-status" role="status" aria-live="polite"></p>
     </div>
-    <div class="builder-remote-presets builder-remote-presets--buttons" aria-label="Quick fetch shortcuts">
+    <div class="builder-remote-presets builder-remote-presets--buttons app-button-group app-button-group--wrap" aria-label="Quick fetch shortcuts">
       <span class="builder-remote-presets-label" data-slot-target="preset-label">Quick links</span>
-      <button class="builder-remote-inline-button builder-button transparent" data-slot-target="home-debug" type="button">
+      <button class="builder-remote-inline-button button border round app-button app-button--outlined app-button--inline" data-slot-target="home-debug" type="button">
         <span class="material-symbols-outlined" aria-hidden="true">download</span>
         <span class="builder-remote-preset-label" data-slot-target="home-debug-label">Home · Debug</span>
       </button>
-      <button class="builder-remote-inline-button builder-button transparent" data-slot-target="home-release" type="button">
+      <button class="builder-remote-inline-button button border round app-button app-button--outlined app-button--inline" data-slot-target="home-release" type="button">
         <span class="material-symbols-outlined" aria-hidden="true">download</span>
         <span class="builder-remote-preset-label" data-slot-target="home-release-label">Home · Release</span>
       </button>
-      <button class="builder-remote-inline-button builder-button transparent" data-slot-target="lesson-debug" type="button">
+      <button class="builder-remote-inline-button button border round app-button app-button--outlined app-button--inline" data-slot-target="lesson-debug" type="button">
         <span class="material-symbols-outlined" aria-hidden="true">download</span>
         <span class="builder-remote-preset-label" data-slot-target="lesson-debug-label">Lesson · Debug</span>
       </button>
-      <button class="builder-remote-inline-button builder-button transparent" data-slot-target="lesson-release" type="button">
+      <button class="builder-remote-inline-button button border round app-button app-button--outlined app-button--inline" data-slot-target="lesson-release" type="button">
         <span class="material-symbols-outlined" aria-hidden="true">download</span>
         <span class="builder-remote-preset-label" data-slot-target="lesson-release-label">Lesson · Release</span>
       </button>
@@ -78,7 +78,7 @@
       </p>
     </div>
     <div class="builder-github-launch">
-      <button class="builder-github-launch-button builder-button" data-slot-target="github-launch" type="button">
+      <button class="builder-github-launch-button button round app-button app-button--primary app-button--full" data-slot-target="github-launch" type="button">
         <span class="material-symbols-outlined" aria-hidden="true">rocket_launch</span>
         Open publish wizard
       </button>
