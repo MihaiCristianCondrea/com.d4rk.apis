@@ -8,7 +8,7 @@
 <div class="app-navigation" data-app-navigation>
   <!-- Change Rationale: Add the BeerCSS-style scrim companion for compact drawer navigation so
        the panel closes on backdrop taps without relying on dialog/inert side effects. -->
-  <button id="navDrawerBackdrop" class="navigation-drawer-backdrop responsive" type="button" aria-label="Close navigation menu" aria-hidden="true" tabindex="-1"></button>
+  <button id="navDrawerBackdrop" class="navigation-drawer-backdrop" type="button" aria-label="Close navigation menu" aria-hidden="true" tabindex="-1"></button>
   <!-- Change Rationale: The navigation rail now defers to a data-driven renderer so rail
        and drawer sections stay in sync and extend cleanly without duplicating markup. -->
   <nav id="navRail" class="m l left app-navigation-rail surface-container" aria-label="Primary navigation">
@@ -22,7 +22,7 @@
       <!-- Change Rationale: Navigation and app-bar actions now share one BeerCSS contract (`button transparent circle app-nav-icon-button`) so icon controls render and test consistently. -->
       <nav>
         <h6 class="type-title-small max">Menu</h6>
-        <button id="closeDrawerButton" class="button transparent circle app-nav-icon-button responsive" aria-label="Close navigation" aria-controls="navDrawer" type="button">
+        <button id="closeDrawerButton" class="button transparent circle app-nav-icon-button" aria-label="Close navigation" aria-controls="navDrawer" type="button">
           <i aria-hidden="true">close</i>
         </button>
       </nav>
@@ -35,13 +35,13 @@
     <div class="drawer-footer padding">
       <div class="theme-toggle-title">Theme</div>
       <div class="theme-button-container">
-        <button id="lightThemeButton" data-theme="light" aria-label="Use light theme" aria-pressed="false" class="button transparent circle app-nav-icon-button responsive" type="button">
+        <button id="lightThemeButton" data-theme="light" aria-label="Use light theme" aria-pressed="false" class="button transparent circle app-nav-icon-button" type="button">
           <i class="material-symbols-outlined" aria-hidden="true">light_mode</i>
         </button>
-        <button id="darkThemeButton" data-theme="dark" aria-label="Use dark theme" aria-pressed="false" class="button transparent circle app-nav-icon-button responsive" type="button">
+        <button id="darkThemeButton" data-theme="dark" aria-label="Use dark theme" aria-pressed="false" class="button transparent circle app-nav-icon-button" type="button">
           <i class="material-symbols-outlined" aria-hidden="true">dark_mode</i>
         </button>
-        <button id="autoThemeButton" data-theme="auto" aria-label="Match system theme" aria-pressed="true" class="button transparent circle app-nav-icon-button responsive" type="button">
+        <button id="autoThemeButton" data-theme="auto" aria-label="Match system theme" aria-pressed="true" class="button transparent circle app-nav-icon-button" type="button">
           <i class="material-symbols-outlined" aria-hidden="true">brightness_auto</i>
         </button>
       </div>

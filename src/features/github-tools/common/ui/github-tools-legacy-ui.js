@@ -166,7 +166,7 @@ function renderFavoritesPage() {
             <span class="material-symbols-outlined" aria-hidden="true">bookmark_added</span>
             <span>Saved repository</span>
           </span>
-          <button class="gh-icon-button small circle transparent responsive" type="button" data-remove-favorite aria-label="Unfavorite ${slug}">
+          <button class="gh-icon-button small circle transparent" type="button" data-remove-favorite aria-label="Unfavorite ${slug}">
             <span class="material-symbols-outlined" aria-hidden="true">star</span>
           </button>
         </div>
@@ -176,15 +176,15 @@ function renderFavoritesPage() {
         </div>
       </div>
       <div class="gh-favorite-actions">
-        <button class="small round app-ui-button wave responsive" type="button" data-open-mapper>
+        <button class="small round app-ui-button wave" type="button" data-open-mapper>
           <span class="material-symbols-outlined">terminal</span>
           <span>Map</span>
         </button>
-        <button class="small border round app-ui-button wave responsive" type="button" data-open-stats>
+        <button class="small border round app-ui-button wave" type="button" data-open-stats>
           <span class="material-symbols-outlined">bar_chart</span>
           <span>Stats</span>
         </button>
-        <a class="small border round app-ui-button wave responsive" href="https://github.com/${slug}" target="_blank" rel="noopener noreferrer">
+        <a class="small border round app-ui-button wave" href="https://github.com/${slug}" target="_blank" rel="noopener noreferrer">
           <span class="material-symbols-outlined">open_in_new</span>
           <span>Open</span>
         </a>
