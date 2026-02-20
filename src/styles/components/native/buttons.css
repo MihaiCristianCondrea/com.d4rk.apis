@@ -1,8 +1,6 @@
 /* --- Native BeerCSS Button Contract --- */
-/*
- * Deprecation Notice:
- * `md-filled-button`, `md-outlined-button`, `md-text-button`, and `md-elevated-button`
- * are no longer style targets for new work. Use the `.app-button*` BeerCSS contract.
+/* Change Rationale: Keep button visuals centralized in `.app-button*` so new work
+ * never depends on `md-*button` token tuning and maintenance stays in one contract.
  */
 
 /*

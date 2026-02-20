@@ -79,6 +79,21 @@ This document captures the guiding principles for how we build and maintain the 
 - Actionable cards use **outlined** surfaces with a CTA.
 - Informational cards use **filled** surfaces without action affordances.
 
+## Button Source of Truth
+
+<!-- Change Rationale: Standardizing button implementation on native elements +
+     BeerCSS utilities removes repeated Material Web button token overrides. -->
+
+- All interactive buttons must be native `<button>`/`<a>` with BeerCSS classes.
+- No new `md-*button` style overrides.
+- Variants must map to shared `app-button*` utilities.
+
+### Migration Note (Search Checks)
+
+- `md-outlined-button`
+- `--md-*-button-*`
+- `.builder-button` (if used for appearance, not layout)
+
 ## BeerCSS Defaults (Do Not Override)
 
 - Use dialog and dialog.left for modals and drawers.
