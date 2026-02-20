@@ -114,6 +114,18 @@
    */
   --app-link-color: var(--md-sys-color-primary);
   --app-dialog-bg-color: var(--md-sys-color-surface-container-low);
+  --app-button-height: 44px;
+  --app-button-padding-inline: 24px;
+  --app-button-icon-size: 18px;
+  --app-button-gap: 8px;
+  --app-button-radius: 999px;
+  /* Change Rationale: Legacy button tokens remain as aliases while native screens migrate
+   * to the BeerCSS-first `.app-button*` contract without breaking existing references.
+   */
+  --app-button-inline-padding: var(--app-button-padding-inline);
+  --app-button-icon-leading-padding: var(--app-button-padding-inline);
+  --app-button-icon-trailing-padding: var(--app-button-padding-inline);
+  --app-button-shape: var(--app-button-radius);
   --app-top-app-bar-height: calc(56px + var(--safe-area-inset-top));
   --app-motion-duration-short: 220ms;
   --app-motion-duration-medium: 320ms;
