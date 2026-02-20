@@ -1,31 +1,18 @@
-/* --- Outlined Buttons --- */
-/* stylelint-disable selector-type-no-unknown */
-md-outlined-button {
-  padding-inline-start: var(--app-button-inline-padding);
-  padding-inline-end: var(--app-button-inline-padding);
-  --md-outlined-button-leading-space: var(--app-button-inline-padding);
-  --md-outlined-button-trailing-space: var(--app-button-inline-padding);
-  --md-outlined-button-with-leading-icon-leading-space: var(
-    --app-button-icon-leading-padding
-  );
-  --md-outlined-button-with-leading-icon-trailing-space: var(
-    --app-button-icon-trailing-padding
-  );
-  --md-outlined-button-with-trailing-icon-leading-space: var(
-    --app-button-icon-trailing-padding
-  );
-  --md-outlined-button-with-trailing-icon-trailing-space: var(
-    --app-button-icon-leading-padding
-  );
-}
+/* --- Native Outlined Button Tokens --- */
+/*
+ * Deprecation Notice:
+ * `md-filled-button`, `md-outlined-button`, `md-text-button`, and `md-elevated-button`
+ * are no longer style targets for new work. Use the `.app-button*` BeerCSS contract.
+ */
 
-md-outlined-button[has-icon]:not([trailing-icon]) {
-  padding-inline-start: var(--app-button-icon-leading-padding);
-  padding-inline-end: var(--app-button-icon-trailing-padding);
+/*
+ * Change Rationale: Outlined button styling is now token-driven through the shared
+ * native contract so screens compose BeerCSS classes without Material Web selectors.
+ */
+.app-button--outlined {
+  --_app-button-outlined-padding-inline: var(--app-button-padding-inline);
+  --_app-button-outlined-gap: var(--app-button-gap);
+  padding-inline: var(--_app-button-outlined-padding-inline);
+  gap: var(--_app-button-outlined-gap);
+  border-radius: var(--app-button-radius);
 }
-
-md-outlined-button[has-icon][trailing-icon] {
-  padding-inline-start: var(--app-button-icon-trailing-padding);
-  padding-inline-end: var(--app-button-icon-leading-padding);
-}
-/* stylelint-enable selector-type-no-unknown */

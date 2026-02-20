@@ -1,156 +1,48 @@
-/* --- Buttons --- */
-:root {
-  --app-button-inline-padding: 24px;
-  --app-button-icon-leading-padding: 16px;
-  --app-button-icon-trailing-padding: 24px;
-  --app-button-shape: 999px;
-}
+/* --- Native BeerCSS Button Contract --- */
+/*
+ * Deprecation Notice:
+ * `md-filled-button`, `md-outlined-button`, `md-text-button`, and `md-elevated-button`
+ * are no longer style targets for new work. Use the `.app-button*` BeerCSS contract.
+ */
 
-/* Allow styling custom Material elements throughout this file. */
-/* stylelint-disable selector-type-no-unknown */
-:where(
-    md-filled-button,
-    md-filled-tonal-button,
-    md-text-button,
-    md-elevated-button,
-    md-outlined-button
-  ) {
-  min-height: 44px;
-  /* Change Rationale: Native Material buttons previously used semibold (600) labels that read as
-   * bold across the experience and competed with body copy. Returning to the default (400) weight
-   * keeps button text consistent with Material Design 3's emphasis guidance while prioritizing
-   * readability and the user's request for normal-weight labels.
-   */
+/*
+ * Change Rationale: Native button variants now compose BeerCSS primitives (`button`,
+ * `border`, `tonal`, `transparent`, `round`, `small`) and keep app-specific behavior
+ * limited to spacing and alignment tokens for consistent Material 3-native rendering.
+ */
+
+.app-button {
+  min-height: var(--app-button-height);
+  padding-inline: var(--app-button-padding-inline);
+  gap: var(--app-button-gap);
+  border-radius: var(--app-button-radius);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  vertical-align: middle;
   font-weight: 400;
   letter-spacing: 0.01em;
-  padding-inline-start: var(--app-button-inline-padding);
-  padding-inline-end: var(--app-button-inline-padding);
-  --md-filled-button-container-shape: var(--app-button-shape);
-  --md-filled-tonal-button-container-shape: var(--app-button-shape);
-  --md-text-button-container-shape: var(--app-button-shape);
-  --md-elevated-button-container-shape: var(--app-button-shape);
-  --md-outlined-button-container-shape: var(--app-button-shape);
-  --md-filled-button-state-layer-shape: var(--app-button-shape);
-  --md-outlined-button-state-layer-shape: var(--app-button-shape);
-  --md-text-button-state-layer-shape: var(--app-button-shape);
-  --md-elevated-button-state-layer-shape: var(--app-button-shape);
-  --md-filled-tonal-button-state-layer-shape: var(--app-button-shape);
-  transition: box-shadow var(--app-motion-duration-short, 200ms)
-      var(--app-motion-ease-standard, cubic-bezier(0, 0, 0.2, 1)),
-    transform var(--app-motion-duration-short, 200ms)
-      var(--app-motion-ease-standard, cubic-bezier(0, 0, 0.2, 1));
 }
 
-:where(
-    md-filled-button,
-    md-filled-tonal-button,
-    md-text-button,
-    md-elevated-button
-  )[has-icon]:not([trailing-icon]) {
-  padding-inline-start: var(--app-button-icon-leading-padding);
-  padding-inline-end: var(--app-button-icon-trailing-padding);
+.app-button--primary,
+.app-button--outlined,
+.app-button--tonal,
+.app-button--inline {
+  border-radius: var(--app-button-radius);
 }
 
-:where(
-    md-filled-button,
-    md-filled-tonal-button,
-    md-text-button,
-    md-elevated-button
-  )[has-icon][trailing-icon] {
-  padding-inline-start: var(--app-button-icon-trailing-padding);
-  padding-inline-end: var(--app-button-icon-leading-padding);
+.app-button--inline {
+  gap: calc(var(--app-button-gap) * 0.75);
 }
 
-md-filled-button {
-  --md-filled-button-leading-space: var(--app-button-inline-padding);
-  --md-filled-button-trailing-space: var(--app-button-inline-padding);
-  --md-filled-button-with-leading-icon-leading-space: var(--app-button-icon-leading-padding);
-  --md-filled-button-with-leading-icon-trailing-space: var(--app-button-icon-trailing-padding);
-  --md-filled-button-with-trailing-icon-leading-space: var(--app-button-icon-trailing-padding);
-  --md-filled-button-with-trailing-icon-trailing-space: var(--app-button-icon-leading-padding);
-}
-
-md-filled-tonal-button {
-  --md-filled-tonal-button-leading-space: var(--app-button-inline-padding);
-  --md-filled-tonal-button-trailing-space: var(--app-button-inline-padding);
-  --md-filled-tonal-button-with-leading-icon-leading-space: var(--app-button-icon-leading-padding);
-  --md-filled-tonal-button-with-leading-icon-trailing-space: var(--app-button-icon-trailing-padding);
-  --md-filled-tonal-button-with-trailing-icon-leading-space: var(--app-button-icon-trailing-padding);
-  --md-filled-tonal-button-with-trailing-icon-trailing-space: var(--app-button-icon-leading-padding);
-}
-
-md-elevated-button {
-  --md-elevated-button-leading-space: var(--app-button-inline-padding);
-  --md-elevated-button-trailing-space: var(--app-button-inline-padding);
-  --md-elevated-button-with-leading-icon-leading-space: var(--app-button-icon-leading-padding);
-  --md-elevated-button-with-leading-icon-trailing-space: var(--app-button-icon-trailing-padding);
-  --md-elevated-button-with-trailing-icon-leading-space: var(--app-button-icon-trailing-padding);
-  --md-elevated-button-with-trailing-icon-trailing-space: var(--app-button-icon-leading-padding);
-}
-
-md-text-button {
-  padding-inline-start: calc(var(--app-button-inline-padding) - 8px);
-  padding-inline-end: calc(var(--app-button-inline-padding) - 8px);
-  --md-text-button-leading-space: calc(var(--app-button-inline-padding) - 8px);
-  --md-text-button-trailing-space: calc(var(--app-button-inline-padding) - 8px);
-  --md-text-button-with-leading-icon-leading-space: var(--app-button-icon-leading-padding);
-  --md-text-button-with-leading-icon-trailing-space: calc(
-    var(--app-button-icon-trailing-padding) - 8px
-  );
-  --md-text-button-with-trailing-icon-leading-space: calc(
-    var(--app-button-icon-trailing-padding) - 8px
-  );
-  --md-text-button-with-trailing-icon-trailing-space: var(--app-button-icon-leading-padding);
-}
-
-md-text-button[has-icon]:not([trailing-icon]) {
-  padding-inline-start: var(--app-button-icon-leading-padding);
-  padding-inline-end: calc(var(--app-button-icon-trailing-padding) - 8px);
-}
-
-md-text-button[has-icon][trailing-icon] {
-  padding-inline-start: calc(var(--app-button-icon-trailing-padding) - 8px);
-  padding-inline-end: var(--app-button-icon-leading-padding);
-}
-
-:where(
-    md-filled-button,
-    md-filled-tonal-button,
-    md-text-button,
-    md-elevated-button,
-    md-outlined-button,
-    md-icon-button
-  ):not([disabled]):hover {
-  box-shadow: var(--app-button-hover-shadow);
-  transform: translateY(0);
-}
-
-/* Change Rationale: Inline icon swaps were relying on raw <span> elements, leaving glyphs misaligned
-   whenever button states toggled (disabled/loading). Centralizing the layout primitives in the shared
-   button stylesheet keeps icon/text alignment consistent across all UIs while honoring Material defaults. */
-:where(
-    md-filled-button,
-    md-filled-tonal-button,
-    md-text-button,
-    md-elevated-button,
-    md-outlined-button
-  ) md-icon,
-:where(
-    md-filled-button,
-    md-filled-tonal-button,
-    md-text-button,
-    md-elevated-button,
-    md-outlined-button
-  ) .material-symbols-outlined {
+.app-button :is(md-icon, .material-symbols-outlined),
+.app-button:is(md-icon, .material-symbols-outlined) {
+  inline-size: var(--app-button-icon-size);
+  block-size: var(--app-button-icon-size);
+  font-size: var(--app-button-icon-size);
   display: inline-flex;
   align-items: center;
   justify-content: center;
   vertical-align: middle;
   line-height: 1;
 }
-
-/* Change Rationale: Legacy `.app-button*` helpers emulated component variants outside BeerCSS.
- * They are deprecated and intentionally removed from active styling so feature screens rely on
- * BeerCSS-native `.button` primitives plus shared `app-ui-*` utility classes. */
-
-/* stylelint-enable selector-type-no-unknown */
