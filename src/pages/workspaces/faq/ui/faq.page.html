@@ -19,7 +19,7 @@
              which made their tap targets and corner treatment drift from BeerCSS controls. Adding
              the BeerCSS `round` helper keeps the button geometry consistent with other actions and
              aligns with Material 3's guidance for cohesive component shape. -->
-        <button type="button" class="faq-landing-card round" data-faq-mode="catalog" aria-pressed="false">
+        <button type="button" class="faq-landing-card round responsive" data-faq-mode="catalog" aria-pressed="false">
           <span class="faq-landing-card__icon material-symbols-outlined">inventory_2</span>
           <div class="faq-landing-card__body">
             <p class="faq-landing-card__eyebrow">Catalog</p>
@@ -28,7 +28,7 @@
           </div>
         </button>
         <!-- Change Rationale: Normalize the workflow key to the singular `faq` slug so UI state matches api/faq and router anchors. -->
-        <button type="button" class="faq-landing-card round" data-faq-mode="faq" aria-pressed="false">
+        <button type="button" class="faq-landing-card round responsive" data-faq-mode="faq" aria-pressed="false">
           <span class="faq-landing-card__icon material-symbols-outlined">help_center</span>
           <div class="faq-landing-card__body">
             <p class="faq-landing-card__eyebrow">Product FAQs</p>
@@ -138,7 +138,7 @@
       <article class="faq-nav-card">
         <div class="faq-nav__header">
           <div class="faq-nav__header-actions">
-            <button id="faqStartOverButton" has-icon>
+            <button class="responsive" id="faqStartOverButton" has-icon>
               <span slot="icon">restart_alt</span>
               <span>Start over</span>
             </button>
@@ -200,11 +200,11 @@
               aria-label="Catalog presets"
             >
               <span class="builder-remote-presets-label">Build channel</span>
-              <button data-faq-catalog-preset="debug" class="builder-remote-inline-button" has-icon>
+              <button data-faq-catalog-preset="debug" class="builder-remote-inline-button responsive" has-icon>
                 <span slot="icon">download</span>
                 <span>Debug · EN</span>
               </button>
-              <button data-faq-catalog-preset="release" class="builder-remote-inline-button" has-icon>
+              <button data-faq-catalog-preset="release" class="builder-remote-inline-button responsive" has-icon>
                 <span slot="icon">download</span>
                 <span>Release · EN</span>
               </button>
@@ -222,11 +222,11 @@
               <p class="catalog-helper">Define every product and the FAQ sources it pulls together.</p>
             </div>
             <div class="catalog-actions__buttons">
-              <button id="faqCatalogAddProduct">
+              <button class="responsive" id="faqCatalogAddProduct">
                 <span slot="icon">add_circle</span>
                 <span>Add product</span>
               </button>
-              <button id="faqCatalogReset">
+              <button class="responsive" id="faqCatalogReset">
                 <span slot="icon">restart_alt</span>
                 <span>Reset catalog</span>
               </button>
@@ -242,11 +242,11 @@
           <textarea id="faqCatalogPreview" class="preview-textarea" readonly spellcheck="false" aria-label="Catalog JSON preview"></textarea>
           <div class="preview-validation" id="faqCatalogValidation" role="status" aria-live="polite"></div>
           <div class="preview-actions">
-            <button id="faqCatalogCopyButton">
+            <button class="responsive" id="faqCatalogCopyButton">
               <span slot="icon">content_copy</span>
               <span>Copy JSON</span>
             </button>
-            <button id="faqCatalogDownloadButton">
+            <button class="responsive" id="faqCatalogDownloadButton">
               <span slot="icon">download</span>
               <span>Download</span>
             </button>
@@ -265,7 +265,7 @@
           </div>
           <div class="builder-remote-picker" aria-label="Product selection">
             <div class="builder-remote-picker-select" id="faqCatalogSelect"></div>
-            <button id="faqCatalogFetchButton">
+            <button class="responsive" id="faqCatalogFetchButton">
               <span slot="icon">fact_check</span>
               <span id="faqCatalogButtonLabel">Fetch selected product</span>
             </button>
@@ -276,11 +276,11 @@
       <section class="api-builder" id="faqBuilder" data-builder-type="faq">
         <div class="builder-toolbar">
           <div class="builder-toolbar-actions">
-            <button id="faqAddEntry">
+            <button class="responsive" id="faqAddEntry">
               <span slot="icon">add</span>
               <span>Add FAQ</span>
             </button>
-            <button id="faqImportButton">
+            <button class="responsive" id="faqImportButton">
               <span slot="icon">upload</span>
               <span>Import JSON</span>
             </button>
@@ -304,11 +304,11 @@
                 <textarea id="faqPreview" class="preview-textarea" readonly spellcheck="false" aria-label="FAQ JSON preview"></textarea>
                 <div class="preview-validation" id="faqValidation" role="status" aria-live="polite"></div>
                 <div class="preview-actions">
-                  <button id="faqCopyButton">
+                  <button class="responsive" id="faqCopyButton">
                     <span slot="icon">content_copy</span>
                     <span>Copy JSON</span>
                   </button>
-                  <button id="faqDownloadButton">
+                  <button class="responsive" id="faqDownloadButton">
                     <span slot="icon">download</span>
                     <span>Download</span>
                   </button>
@@ -343,7 +343,7 @@
                  BeerCSS shape helpers, which made it feel inconsistent next to other icon buttons.
                  Adding BeerCSS `transparent` and `circle` helpers keeps the control aligned with
                  the framework's icon button pattern and Material 3 touch target expectations. -->
-            <button type="button" class="faq-icon-picker__close transparent circle" id="faqIconPickerClose" aria-label="Close icon picker"><span class="material-symbols-outlined">close</span></button>
+            <button type="button" class="faq-icon-picker__close transparent circle responsive" id="faqIconPickerClose" aria-label="Close icon picker"><span class="material-symbols-outlined">close</span></button>
           </header>
           <div class="faq-icon-picker__meta">
             <span>Selected: <strong id="faqIconPickerSelection">None</strong></span> <span>Showing <strong id="faqIconPickerResultCount">0</strong> icons</span>
@@ -358,7 +358,7 @@
           <div class="faq-icon-picker__footer">
             <!-- Change Rationale: Inline actions now use BeerCSS-native button classes with shared inline utilities
                  so lightweight footer actions stay within one control system and Material 3 sizing. -->
-            <button type="button" class="button small transparent round app-ui-inline-button" id="faqIconPickerClear"><span class="material-symbols-outlined app-ui-inline-icon">backspace</span> <span>Clear selection</span></button> <span class="material-symbols-outlined">done</span> Done
+            <button type="button" class="button small transparent round app-ui-inline-button responsive" id="faqIconPickerClear"><span class="material-symbols-outlined app-ui-inline-icon">backspace</span> <span>Clear selection</span></button> <span class="material-symbols-outlined">done</span> Done
           </div>
         </div>
       </div>
