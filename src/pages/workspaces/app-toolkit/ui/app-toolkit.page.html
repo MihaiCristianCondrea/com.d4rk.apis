@@ -178,7 +178,7 @@
 
           <!-- Debug preset: loads the debug catalog for EN -->
           <button
-                  class="builder-remote-inline-button"
+                  class="builder-remote-inline-button responsive"
                   has-icon
                   data-app-toolkit-preset="./api/app_toolkit/v2/debug/en/home/api_android_apps.json"
                   id="appToolkitDebugPreset"
@@ -191,7 +191,7 @@
 
           <!-- Release preset: loads the release catalog for EN -->
           <button
-                  class="builder-remote-inline-button"
+                  class="builder-remote-inline-button responsive"
                   has-icon
                   data-app-toolkit-preset="./api/app_toolkit/v2/release/en/home/api_android_apps.json"
                   id="appToolkitReleasePreset"
@@ -219,7 +219,7 @@
       <div class="builder-toolbar">
         <div class="builder-toolbar-actions">
           <!-- Add a new empty app entry -->
-          <button id="appToolkitAddApp" has-icon>
+          <button class="responsive" id="appToolkitAddApp" has-icon>
             <span slot="icon">
               <span class="material-symbols-outlined">add</span>
             </span>
@@ -227,7 +227,7 @@
           </button>
 
           <!-- Sort menu trigger; JS syncs label + menu selection -->
-          <button
+          <button class="responsive"
                   id="appToolkitSortButton"
                   has-icon
                   trailing-icon
@@ -247,19 +247,19 @@
 
           <!-- Sort options; JS applies 'data-sort-key' to the app list -->
           <div id="appToolkitSortMenu" anchor="appToolkitSortButton">
-            <button type="radio" data-sort-key="name" selected>
+            <button class="responsive" type="radio" data-sort-key="name" selected>
               <div slot="headline">App name (A–Z)</div>
             </button>
-            <button type="radio" data-sort-key="category">
+            <button class="responsive" type="radio" data-sort-key="category">
               <div slot="headline">Category (A–Z)</div>
             </button>
-            <button type="radio" data-sort-key="screenshots">
+            <button class="responsive" type="radio" data-sort-key="screenshots">
               <div slot="headline">Screenshot count (high to low)</div>
             </button>
           </div>
 
           <!-- Clear all entries and reset builder state -->
-          <button id="appToolkitResetButton" has-icon>
+          <button class="responsive" id="appToolkitResetButton" has-icon>
             <span slot="icon">
               <span class="material-symbols-outlined">refresh</span>
             </span>
@@ -290,7 +290,7 @@
           </div>
           <div class="builder-remote-actions">
             <!-- Launches the stepper dialog (GitHub wizard) -->
-            <button id="appToolkitGithubWizardButton" class="builder-github-launch-button" has-icon>
+            <button id="appToolkitGithubWizardButton" class="builder-github-launch-button responsive" has-icon>
               <span slot="icon">
                 <span class="material-symbols-outlined">rocket_launch</span>
               </span>
@@ -300,7 +300,7 @@
             <!-- Collapsible meta controls for GitHub publishing -->
             <button
                     id="appToolkitGithubToggle"
-                    class="builder-remote-toggle"
+                    class="builder-remote-toggle responsive"
                     data-collapsible-toggle
                     aria-expanded="false"
                     aria-controls="appToolkitGithubContent"
@@ -388,7 +388,7 @@
         ></div>
         <div class="preview-actions">
           <!-- Copy current JSON to clipboard -->
-          <button id="appToolkitCopyButton" has-icon>
+          <button class="responsive" id="appToolkitCopyButton" has-icon>
             <span slot="icon">
               <span class="material-symbols-outlined">content_copy</span>
             </span>
@@ -396,7 +396,7 @@
           </button>
 
           <!-- Download current JSON to a file -->
-          <button
+          <button class="responsive"
                   id="appToolkitDownloadButton"
                   has-icon
                   trailing-icon
@@ -472,7 +472,7 @@
                       accept="text/plain,.txt,.token"
                       hidden
               />
-              <button id="appToolkitGithubTokenFileButton" has-icon>
+              <button class="responsive" id="appToolkitGithubTokenFileButton" has-icon>
                 <span slot="icon">
                   <span class="material-symbols-outlined">description</span>
                 </span>
@@ -533,9 +533,9 @@
       <!-- Change Rationale: Dialog action roles now follow the primary/secondary
            rule set so cancel/back use outlined styling and the confirm action
            remains filled for emphasis. -->
-      <button dialog-action="close">Cancel</button>
-      <button id="appToolkitGithubBack">Back</button>
-      <button id="appToolkitGithubNext" data-dialog-initial-focus>Next</button>
+      <button class="responsive" dialog-action="close">Cancel</button>
+      <button class="responsive" id="appToolkitGithubBack">Back</button>
+      <button class="responsive" id="appToolkitGithubNext" data-dialog-initial-focus>Next</button>
     </div>
   </dialog>
 </div>
