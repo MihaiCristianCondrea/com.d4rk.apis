@@ -72,6 +72,13 @@ The validation pipeline enforces structure, naming, and layering via:
 - `--md-*-button-*`
 - `.builder-button` (if used for appearance, not layout)
 
+## Quality gate
+
+Use these checks before merge:
+
+- Run structure/layering validation scripts under **Automated governance**.
+- Apply the button review checklist: `docs/architecture/button-consistency-checklist.md`.
+
 ## Migration closeout checklist
 
 1. `data/domain/ui` split remains coherent.
