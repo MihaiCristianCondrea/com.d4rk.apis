@@ -1086,6 +1086,7 @@ let routeLifecycleMount = () => {};
                 utils.createInlineButton({
                     label: 'Add tag',
                     icon: 'add',
+                    variant: 'outlined',
                     onClick: () => {
                         state.cards[index].lesson_tags.push('');
                         render();
@@ -1121,6 +1122,7 @@ let routeLifecycleMount = () => {};
                 utils.createInlineButton({
                     label: 'Add field',
                     icon: 'add',
+                    variant: 'outlined',
                     onClick: () => {
                         state.cards[index].customFields.push({ key: '', value: '' });
                         render();
@@ -1146,6 +1148,7 @@ let routeLifecycleMount = () => {};
                 utils.createInlineButton({
                     label: 'Remove',
                     icon: 'close',
+                    variant: 'danger',
                     onClick: onRemove
                 })
             );
@@ -1362,6 +1365,7 @@ let routeLifecycleMount = () => {};
                 utils.createInlineButton({
                     label: 'Add field',
                     icon: 'add',
+                    variant: 'outlined',
                     onClick: () => {
                         state.metadata.push({ key: '', value: '' });
                         renderMetadata();
@@ -1522,6 +1526,7 @@ let routeLifecycleMount = () => {};
                 utils.createInlineButton({
                     label: 'Add field',
                     icon: 'add',
+                    variant: 'outlined',
                     onClick: () => {
                         state.blocks[index].customFields.push({ key: '', value: '' });
                         renderBlocks();
@@ -1759,6 +1764,7 @@ let routeLifecycleMount = () => {};
             utils.createInlineButton({
                 label: 'Remove',
                 icon: 'close',
+                variant: 'danger',
                 onClick: onRemove
             })
         );

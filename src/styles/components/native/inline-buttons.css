@@ -11,15 +11,15 @@
   gap: 0.5rem;
 }
 
-.app-ui-inline-button {
+.app-button--inline {
   gap: 0.35rem;
 }
 
-.app-ui-inline-button--danger {
+.app-button--danger {
   color: var(--md-sys-color-error);
 }
 
-.app-ui-inline-button--danger:hover {
+.app-button--danger:hover {
   background-color: color-mix(in srgb, var(--md-sys-color-error) 10%, transparent);
 }
 

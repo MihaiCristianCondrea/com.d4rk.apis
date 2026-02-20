@@ -92,16 +92,35 @@ export function createSelectField({ label, value = '', options = [], onChange = 
 }
 
 /**
- * @param {{label: string, icon?: string|null, onClick?: () => void, variant?: string, title?: string}} options
+ * Creates a BeerCSS-native inline action button.
+ *
+ * Variant contract:
+ * - `ghost` => `button small round app-button app-button--inline transparent`
+ * - `outlined` => `button small round app-button app-button--inline border`
+ * - `tonal` => `button small round app-button app-button--inline tonal`
+ * - `danger` => `button small round app-button app-button--inline border app-button--danger`
+ *
+ * @param {{
+ *  label: string,
+ *  icon?: string|null,
+ *  onClick?: () => void,
+ *  variant?: 'ghost'|'outlined'|'tonal'|'danger',
+ *  title?: string
+ * }} options
  * @returns {HTMLButtonElement} BeerCSS-aligned inline button element.
  */
-/* Change Rationale: Inline action factories previously emitted legacy `api-inline-button` classes
- * that duplicated component semantics outside BeerCSS. Emitting BeerCSS-native classes with
- * shared app utilities keeps generated controls consistent with the single UI policy while
- * preserving compact inline affordances for fast actions. */
+/* Change Rationale: Inline action factories now emit a strict BeerCSS class recipe so workspace
+ * controls no longer depend on legacy skinning utilities or ad-hoc post-processing classes. */
 export function createInlineButton({ label, icon = '', onClick = noop, variant = 'ghost', title = '' }) {
+  const variantClassMap = {
+    ghost: ['transparent'],
+    outlined: ['border'],
+    tonal: ['tonal'],
+    danger: ['border', 'app-button--danger'],
+  };
+  const variantClasses = variantClassMap[variant] || variantClassMap.ghost;
   const button = createElement('button', {
-    classNames: ['button', 'small', 'transparent', 'round', 'app-ui-inline-button', `app-ui-inline-button--${variant}`],
+    classNames: ['button', 'small', 'round', 'app-button', 'app-button--inline', ...variantClasses],
     attrs: { type: 'button', title },
   });
 
