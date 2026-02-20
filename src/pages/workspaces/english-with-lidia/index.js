@@ -1059,6 +1059,7 @@ let routeLifecycleMount = () => {};
             const addFieldButton = utils.createInlineButton({
                 label: 'Add field',
                 icon: 'add',
+                variant: 'outlined',
                 onClick: () => {
                     state.cards[index].customFields.push({ key: '', value: '' });
                     render();
@@ -1090,6 +1091,7 @@ let routeLifecycleMount = () => {};
             row.appendChild(utils.createInlineButton({
                 label: 'Remove',
                 icon: 'close',
+                variant: 'danger',
                 onClick: onRemove
             }));
             return row;
@@ -1279,6 +1281,7 @@ let routeLifecycleMount = () => {};
             header.appendChild(utils.createInlineButton({
                 label: 'Add field',
                 icon: 'add',
+                variant: 'outlined',
                 onClick: () => {
                     state.metadata.push({ key: '', value: '' });
                     renderMetadata();
@@ -1419,6 +1422,7 @@ let routeLifecycleMount = () => {};
             customSection.appendChild(utils.createInlineButton({
                 label: 'Add field',
                 icon: 'add',
+                variant: 'outlined',
                 onClick: () => {
                     state.blocks[index].customFields.push({ key: '', value: '' });
                     renderBlocks();

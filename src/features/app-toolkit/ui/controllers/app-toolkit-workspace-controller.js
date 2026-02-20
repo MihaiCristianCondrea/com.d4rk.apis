@@ -113,22 +113,6 @@ let routeLifecycleMount = () => {};
             success: 'Data loaded successfully.',
             error: 'Unable to fetch remote JSON.'
         };
-        const applyBuilderButtonStyle = (...elements) => {
-            elements
-                .filter(Boolean)
-                .forEach((element) => element.classList.add('builder-button'));
-        };
-
-        applyBuilderButtonStyle(
-            addButton,
-            sortButton,
-            resetButton,
-            copyButton,
-            downloadButton,
-            githubWizardButton,
-            githubBackButton,
-            githubNextButton
-        );
         let fetchPulseTimeout = null;
 
         const workspaceActivation = createWorkspaceActivationController({
@@ -2289,11 +2273,13 @@ let routeLifecycleMount = () => {};
             urlField.setAttribute('placeholder', 'https://example.com/screenshot.png');
             urlField.setAttribute('inputmode', 'url');
 
-            const addUrlButton = document.createElement('button');
-            addUrlButton.classList.add('builder-remote-inline-button', 'builder-button', 'border');
-            addUrlButton.type = 'button';
-            addUrlButton.innerHTML =
-                '<span class="material-symbols-outlined" aria-hidden="true">add_link</span><span>Add URL</span>';
+            const addUrlButton = utils.createInlineButton({
+                label: 'Add URL',
+                icon: 'add_link',
+                variant: 'outlined',
+                title: 'Add screenshot URL'
+            });
+            addUrlButton.classList.add('builder-remote-inline-button');
 
             const setUrlFeedback = (message, { isError = false } = {}) => {
                 const nextMessage = utils.trimString(message || '');
