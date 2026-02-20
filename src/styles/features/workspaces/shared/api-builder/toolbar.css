@@ -55,23 +55,19 @@
   align-items: center;
 }
 
-:where(md-filled-button, md-outlined-button, md-text-button).builder-button {
-  --md-filled-button-container-shape: var(--app-button-shape);
-  --md-outlined-button-container-shape: var(--app-button-shape);
-  --md-text-button-container-shape: var(--app-button-shape);
-  --md-filled-button-container-height: 44px;
-  --md-outlined-button-container-height: 44px;
-  --md-text-button-container-height: 44px;
-  /* Change Rationale: Builder buttons previously used semibold (600) labels that looked bold across
-   * the toolbars. Normalizing these weights to 400 keeps the controls readable while preventing the
-   * supporting actions from overpowering headlines, aligning with Material 3's preference for color
-   * and state to convey emphasis.
-   */
-  --md-filled-button-label-text-weight: 400;
-  --md-outlined-button-label-text-weight: 400;
-  --md-text-button-label-text-weight: 400;
-  --md-outlined-button-outline-color: color-mix(in srgb, var(--md-sys-color-outline) 70%, transparent);
-  min-width: 0;
+.app-button-group {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.app-button-group--wrap {
+  flex-wrap: wrap;
+}
+
+.app-button--full {
+  inline-size: 100%;
+  justify-content: center;
 }
 
 .builder-sort-label {
@@ -330,29 +326,8 @@
   min-width: min(280px, 100%);
 }
 
-.builder-remote-picker .builder-button {
-  min-height: 46px;
-}
-
 .builder-github-launch-button {
   margin-top: 0.15rem;
-}
-
-.builder-remote-toggle {
-  color: var(--app-text-color);
-}
-
-/* Change Rationale: Remote target toggles now render as native buttons in the shared BeerCSS partial,
- * so toolbar sizing and icon alignment move from md-* parts to class-based styling. */
-.builder-remote-toggle {
-  min-height: 44px;
-  border-radius: var(--app-button-shape);
-  border: 1px solid color-mix(in srgb, var(--md-sys-color-outline) 65%, transparent);
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
-  box-shadow: 0 10px 24px color-mix(in srgb, var(--md-sys-color-shadow) 12%, transparent);
-  padding: 0.55rem 0.9rem;
 }
 
 .builder-remote-toggle .material-symbols-outlined {
@@ -365,11 +340,6 @@
 .builder-remote-controls {
   display: grid;
   gap: 0.75rem;
-}
-
-.builder-remote-controls .builder-button {
-  height: 100%;
-  min-height: 100%;
 }
 
 .builder-remote-controls--stacked {
@@ -399,11 +369,6 @@
   display: flex;
   flex-wrap: wrap;
   gap: 0.75rem;
-}
-
-.builder-remote-presets--buttons .builder-button {
-  border-radius: var(--app-button-shape);
-  font-size: 0.95rem;
 }
 
 .builder-remote-presets--pulse {
@@ -471,10 +436,6 @@
 .builder-remote-inline-button { 
   min-block-size: var(--control-row-height);
   padding-inline: 1.25rem;
-  border-radius: 16px;
-  border: 1px solid var(--app-border-color);
-  color: var(--md-sys-color-primary);
-  font-weight: 600;
 }
 
 .builder-remote-feedback {
