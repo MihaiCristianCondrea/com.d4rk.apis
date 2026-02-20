@@ -1,13 +1,6 @@
 /* --- Native Outlined Button Tokens --- */
-/*
- * Deprecation Notice:
- * `md-filled-button`, `md-outlined-button`, `md-text-button`, and `md-elevated-button`
- * are no longer style targets for new work. Use the `.app-button*` BeerCSS contract.
- */
-
-/*
- * Change Rationale: Outlined button styling is now token-driven through the shared
- * native contract so screens compose BeerCSS classes without Material Web selectors.
+/* Change Rationale: Outlined variants stay inside the shared `.app-button*` contract
+ * so no `md-*button` selectors or token overrides are needed per screen.
  */
 .app-button--outlined {
   --_app-button-outlined-padding-inline: var(--app-button-padding-inline);

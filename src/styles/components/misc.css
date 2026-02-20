@@ -1,9 +1,7 @@
 /* --- Misc --- */
-.preview-actions md-filled-tonal-button,
-.preview-actions md-outlined-button {
-  --md-filled-tonal-button-container-shape: var(--app-button-shape);
-  --md-outlined-button-container-shape: var(--app-button-shape);
-}
+/* Change Rationale: Removed `md-*button` appearance overrides so button visuals are
+ * controlled by shared BeerCSS utilities (`app-button*`) instead of Material Web tokens.
+ */
 
 /* Change Rationale: The segmented controls inside the FAQ workspace and Repo Mapper
  * inherited surrounding layout colors, which left their outlines and selected states

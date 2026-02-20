@@ -57,6 +57,21 @@ The validation pipeline enforces structure, naming, and layering via:
 - `scripts/verify-spa-import-rules.js`
 - `scripts/check-canonical-paths.js`
 
+## Button Source of Truth
+
+<!-- Change Rationale: A single button policy prevents drift between BeerCSS-native
+     buttons and legacy Material Web overrides, reducing long-term maintenance cost. -->
+
+- All interactive buttons must be native `<button>`/`<a>` with BeerCSS classes.
+- No new `md-*button` style overrides.
+- Variants must map to shared `app-button*` utilities.
+
+### Migration Note (Search Checks)
+
+- `md-outlined-button`
+- `--md-*-button-*`
+- `.builder-button` (if used for appearance, not layout)
+
 ## Migration closeout checklist
 
 1. `data/domain/ui` split remains coherent.
