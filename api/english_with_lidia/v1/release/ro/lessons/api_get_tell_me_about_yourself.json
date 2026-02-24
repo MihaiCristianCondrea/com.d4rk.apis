@@ -13,7 +13,8 @@
           "content_album_title": "Job Interview English Guide",
           "content_genre": "English Learning",
           "content_description": "A practical guide to answering the 'Tell me about yourself' question in a job interview. Learn how to sell your value with clarity and confidence.",
-          "content_release_year": 2022
+          "content_release_year": 2022,
+          "writer": "Lidia Melinte"
         },
         {
           "content_id": "2",
@@ -125,7 +126,8 @@
           "content_id": "24",
           "content_type": "ad_banner"
         }
-      ]
+      ],
+      "writer": "Lidia Melinte"
     }
   ]
 }
