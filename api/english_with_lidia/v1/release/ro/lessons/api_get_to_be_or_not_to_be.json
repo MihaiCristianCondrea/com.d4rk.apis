@@ -13,7 +13,8 @@
           "content_album_title": "English with Colors and Emotions",
           "content_genre": "English Grammar & Expression",
           "content_description": "A dynamic English lesson exploring the verb 'to be' and colorful idioms like 'blue-eyed boy', 'see red', and 'green thumb' with cultural insights and pronunciation practice.",
-          "content_release_year": 2022
+          "content_release_year": 2022,
+          "writer": "Lidia Melinte"
         },
         {
           "content_id": "2",
@@ -109,7 +110,8 @@
           "content_id": "21",
           "content_type": "ad_banner"
         }
-      ]
+      ],
+      "writer": "Lidia Melinte"
     }
   ]
 }
