@@ -24,19 +24,36 @@ Below is an overview of the API’s structure, field definitions, and guidelines
 
 ## API Structure
 
-The API is returned as a single JSON object containing a key, `"data"`, which is an **array** of items:
+The home feed uses **file-based pagination** with a small index file plus one JSON file per page.
+Each page carries up to **20 items**.
+
+**Change Rationale:** Splitting pages into independent files enables true incremental loading on static hosts (CDN/GitHub Pages), keeps first payloads small, and scales without returning a large monolithic response.
+
+### 1) Index File (`api_get_lessons.json`)
 
 ```json
 {
-  "data": [
-    // item 1
-    // item 2
-    // ...
+  "per_page": 20,
+  "total_items": 24,
+  "total_pages": 2,
+  "first_page_url": "api_get_lessons_page_1.json"
+}
+```
+
+### 2) Page File (`api_get_lessons_page_<n>.json`)
+
+```json
+{
+  "page": 2,
+  "per_page": 20,
+  "total_pages": 2,
+  "items": [
+    // lessons + ad placeholders
   ]
 }
 ```
 
-Each **item** in `data` can be a **lesson** or an **ad**. The difference is determined by the `"lesson_type"` field.
+Each **item** in `items` can be a **lesson** or an **ad**. The difference is determined by the `"lesson_type"` field.
 
 ---
 
@@ -149,19 +166,21 @@ When you **add** new lessons or ads:
 
 ## Example Usage in the App
 
-1. **Fetching**: The app retrieves this JSON from a remote server or local storage.  
-2. **Parsing**: The app loops through `data`. Each item is read into an internal model (e.g., `UiHomeLesson`).  
-3. **Rendering**:
+1. **Fetch Index**: The app first requests `api_get_lessons.json` to read `per_page`, `total_pages`, and `first_page_url`.  
+2. **Fetch Page**: The app requests `api_get_lessons_page_1.json` for first render and `api_get_lessons_page_2.json`, `api_get_lessons_page_3.json`, etc. for load-more pagination.  
+3. **Parsing**: The app loops through the selected page file's `items`. Each item is read into an internal model (e.g., `UiHomeLesson`).  
+4. **Rendering**:
    - If `"lesson_type"` starts with `"square_image"` or `"full_banner"`, the app uses a “Lesson” composable with text, images, and tags.  
    - If `"lesson_type"` starts with `"ad_view_"`, the app displays an ad composable (e.g., `LargeBannerAdsComposable()` for `"ad_view_banner_large"`).  
-4. **Filtering Ads**: If the user has disabled ads, the client can **filter** out any item whose `lesson_type` starts with `"ad_view_"` before rendering.  
-5. **Deep Linking**: If the user clicks on a lesson item, the app navigates to `deep_link_path`.
+5. **Filtering Ads**: If the user has disabled ads, the client can **filter** out any item whose `lesson_type` starts with `"ad_view_"` before rendering.  
+6. **Deep Linking**: If the user clicks on a lesson item, the app navigates to `deep_link_path`.
 
 ---
 
 ### Summary
 
 - **Two main item categories**: lessons vs. ads.  
+- **Pagination** uses a file index plus page files (`api_get_lessons_page_<n>.json`), with **20 items per page**.  
 - **Lesson** items have numeric IDs, **ad** items have ID strings prefixed with `"ad_"` or `"ad_banner_"`.  
 - **Square** vs. **Full** banners for lessons let the app load the correct aspect ratio images.  
 - **Three** ad types (`banner`, `banner_full`, `banner_large`) let you display different ad sizes.  
