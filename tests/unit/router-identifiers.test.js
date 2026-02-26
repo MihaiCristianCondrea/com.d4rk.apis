@@ -40,6 +40,22 @@ describe('normalizePageId', () => {
     expect(normalizePageId('/preview/site/github-tools/release-stats/')).toBe('release-stats');
   });
 
+  test('maps workspace deep links to canonical route IDs', () => {
+    expect(normalizePageId('/app-toolkit-api')).toBe('app-toolkit-api');
+    expect(normalizePageId('/faq-api')).toBe('faq-api');
+    expect(normalizePageId('/english-with-lidia-api/')).toBe('english-with-lidia-api');
+    expect(normalizePageId('/android-studio-tutorials-api')).toBe('android-studio-tutorials-api');
+  });
+
+  test('maps workspace deep links nested under deployment base paths', () => {
+    expect(normalizePageId('/com.d4rk.apis/faq-api')).toBe('faq-api');
+    expect(normalizePageId('/preview/site/app-toolkit-api?lang=en')).toBe('app-toolkit-api');
+  });
+
+  test('maps deployment base-folder path to home', () => {
+    expect(normalizePageId('/com.d4rk.apis/')).toBe('home');
+  });
+
   test('ignores unrelated layout URLs', () => {
     expect(normalizePageId('/layout/faq.html')).toBe('/layout/faq.html');
   });

@@ -17,6 +17,20 @@ const GITHUB_TOOL_PATH_ALIASES = Object.freeze({
   'github-tools/git-patch': 'git-patch',
 });
 
+// Change Rationale: Primary workspace pages must resolve from clean paths
+// (e.g. `/faq-api`) when users deep-link directly without hash fragments.
+const WORKSPACE_PATH_ALIASES = Object.freeze({
+  home: 'home',
+  'app-toolkit-api': 'app-toolkit-api',
+  'faq-api': 'faq-api',
+  'english-with-lidia-api': 'english-with-lidia-api',
+  'android-studio-tutorials-api': 'android-studio-tutorials-api',
+  favorites: 'favorites',
+  'repo-mapper': 'repo-mapper',
+  'release-stats': 'release-stats',
+  'git-patch': 'git-patch',
+});
+
 /**
  * Resolves hash-less GitHub tools SPA paths to canonical route IDs.
  *
@@ -49,6 +63,60 @@ function resolveGitHubToolPathAlias(value) {
 
   const aliasCandidate = normalizedPath.substring(segmentIndex + 1);
   return GITHUB_TOOL_PATH_ALIASES[aliasCandidate] || null;
+}
+
+/**
+ * Resolves clean workspace path aliases to canonical route IDs.
+ *
+ * @param {string} value Raw path or route fragment to inspect.
+ * @returns {string|null} Canonical route ID or null when no alias matches.
+ */
+function resolveWorkspacePathAlias(value) {
+  const trimmed = value.trim();
+  if (!trimmed) {
+    return null;
+  }
+
+  const pathOnly = trimmed.split(/[?#]/)[0];
+  const normalizedPath = pathOnly
+    .replace(/\/index\.html?$/i, '')
+    .replace(/\/{2,}/g, '/')
+    .replace(/^\/+/, '')
+    .replace(/\/+$/, '')
+    .toLowerCase();
+
+  if (!normalizedPath) {
+    return 'home';
+  }
+
+  const directMatch = WORKSPACE_PATH_ALIASES[normalizedPath];
+  if (directMatch) {
+    return directMatch;
+  }
+
+  const segments = normalizedPath.split('/').filter(Boolean);
+  if (!segments.length) {
+    return 'home';
+  }
+
+  const singleSegmentMatch = WORKSPACE_PATH_ALIASES[segments.at(-1)];
+  if (singleSegmentMatch) {
+    return singleSegmentMatch;
+  }
+
+  // Change Rationale: Static hosting deployments often serve this SPA from a
+  // repository-name base folder (for example `/com.d4rk.apis/`). Mapping that
+  // single-segment folder path to `home` prevents false Not Found states.
+  if (segments.length === 1 && segments[0].includes('.')) {
+    return 'home';
+  }
+
+  if (segments.length >= 2) {
+    const trailingPair = `${segments.at(-2)}/${segments.at(-1)}`;
+    return GITHUB_TOOL_PATH_ALIASES[trailingPair] || null;
+  }
+
+  return null;
 }
 
 /**
@@ -99,6 +167,10 @@ export function normalizePageId(pageId) {
   const githubToolPathMatch = resolveGitHubToolPathAlias(normalizedId);
   if (githubToolPathMatch) {
     return githubToolPathMatch;
+  }
+  const workspacePathMatch = resolveWorkspacePathAlias(normalizedId);
+  if (workspacePathMatch) {
+    return workspacePathMatch;
   }
   if (normalizedId === '' || normalizedId === 'index.html') {
     normalizedId = 'home';
