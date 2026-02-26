@@ -940,188 +940,258 @@
   }
 }
 
-/* Change Rationale: Refresh GitHub tools with Google Cloud-like flat panels, rounded
- * Material Symbols, and Google Sans typography so Repo Mapper, Release Stats,
- * and Git Patch match the polished home page visual rhythm.
+/* Change Rationale: Consolidate GitHub Tools styling around semantic Material 3 tokens,
+ * 8pt spacing rhythm, and complete interaction states so dark mode and accessibility
+ * remain consistent across Repo Mapper, Release Stats, Git Patch, and Favorites.
  */
 :root {
-  --app-font-family-primary: 'Google Sans', 'Roboto', system-ui, sans-serif;
-  --app-font-family-code: 'Google Sans Code', 'SFMono-Regular', 'Consolas', 'Liberation Mono', monospace;
+  --app-font-family-primary: 'Google Sans', 'Roboto', system-ui, -apple-system, sans-serif;
+  --app-font-family-code: 'Google Sans Code', 'JetBrains Mono', 'SFMono-Regular', 'Consolas', monospace;
+
+  --gh-surface-base: var(--md-sys-color-surface-container-lowest, #ffffff);
+  --gh-surface-card: var(--md-sys-color-surface-container-low, #f7f8f9);
+  --gh-surface-inner: var(--md-sys-color-surface-container, #eff1f3);
+  --gh-surface-high: var(--md-sys-color-surface-container-high, #e8eaed);
+
+  --gh-outline: var(--md-sys-color-outline, #74777f);
+  --gh-outline-variant: var(--md-sys-color-outline-variant, #c4c6d0);
+
+  --gh-text-main: var(--md-sys-color-on-surface, #1f1f1f);
+  --gh-text-muted: var(--md-sys-color-on-surface-variant, #44474e);
+  --gh-primary: var(--md-sys-color-primary, #0b57d0);
+  --gh-on-primary: var(--md-sys-color-on-primary, #ffffff);
+
+  --gh-success-base: #146c2e;
+  --gh-success-container: color-mix(in srgb, var(--gh-success-base) 15%, var(--gh-surface-base));
+  --gh-on-success: color-mix(in srgb, var(--gh-success-base) 90%, var(--gh-text-main));
+  --gh-error-container: color-mix(in srgb, var(--md-sys-color-error, #ba1a1a) 12%, var(--gh-surface-base));
+  --gh-on-error: var(--md-sys-color-error, #ba1a1a);
+
+  --gh-radius-sm: 0.5rem;
+  --gh-radius-md: 1rem;
+  --gh-radius-lg: 1.5rem;
+  --gh-radius-full: 999px;
+
+  --gh-transition-standard: 200ms cubic-bezier(0.2, 0, 0, 1);
+  --gh-space-1: 0.25rem;
+  --gh-space-2: 0.5rem;
+  --gh-space-3: 0.75rem;
+  --gh-space-4: 1rem;
+  --gh-space-6: 1.5rem;
+  --gh-space-8: 2rem;
 }
 
 body {
   font-family: var(--app-font-family-primary);
+  color: var(--gh-text-main);
 }
 
 .gh-tools-page {
-  padding-bottom: 4rem;
+  padding-bottom: 5rem;
 }
 
 .gh-tools-section {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-  max-width: 1200px;
+  gap: var(--gh-space-6);
 }
 
-.gh-tools-header-block {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  margin-bottom: 1rem;
-}
-
-.gh-tools-header-block h1 {
-  margin: 0;
-  font-size: clamp(2rem, 3vw + 1rem, 2.8rem);
+.gh-tools-header-block h1,
+.gh-title {
+  font-size: clamp(2rem, 3vw + 1rem, 2.5rem);
   font-weight: 500;
-  line-height: 1.15;
+  line-height: 1.2;
   letter-spacing: -0.02em;
-  color: #001d35;
+  color: var(--gh-text-main);
+}
+
+.gh-eyebrow {
+  color: var(--gh-primary);
+  font-size: 0.875rem;
+  letter-spacing: 0.05em;
 }
 
 .gh-subtext {
+  color: var(--gh-text-muted);
   font-size: 1rem;
-  line-height: 1.6;
+  line-height: 1.5;
 }
 
 .gh-card,
-.gh-result {
-  background-color: var(--md-sys-color-surface-container-lowest);
-  border: 1px solid var(--md-sys-color-outline-variant);
-  border-radius: 16px;
-  overflow: hidden;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+.gh-result,
+.gh-result-card,
+.gh-output {
+  background: var(--gh-surface-card);
+  border: 1px solid var(--gh-outline-variant);
+  border-radius: var(--gh-radius-lg);
+  box-shadow: none;
 }
 
-.gh-stack {
-  gap: 1.25rem;
-  padding: 1.5rem;
+.gh-stack,
+.gh-result-grid {
+  gap: var(--gh-space-4);
+  padding: var(--gh-space-6);
 }
 
 .gh-result-bar {
-  padding: 1rem 1.5rem;
-  background-color: var(--md-sys-color-surface-container-lowest);
-  border-bottom: 1px solid var(--md-sys-color-outline-variant);
+  gap: var(--gh-space-4);
+  padding: var(--gh-space-4) var(--gh-space-6);
+  background: var(--gh-surface-card);
+  border-bottom: 1px solid var(--gh-outline-variant);
 }
 
-.gh-tool-button {
+.gh-tool-button,
+.hero-button,
+.app-ui-button {
   display: inline-flex;
   align-items: center;
-  gap: 0.35rem;
-  padding: 0.38rem 0.82rem;
-  border-radius: 999px;
-  border: 1px solid var(--md-sys-color-outline-variant);
+  justify-content: center;
+  gap: var(--gh-space-2);
+  min-height: 2.75rem;
+  min-width: 2.75rem;
+  padding: 0 var(--gh-space-4);
+  border-radius: var(--gh-radius-full);
+  border: 1px solid var(--gh-outline-variant);
   background: transparent;
-  color: var(--md-sys-color-on-surface);
-  font-family: var(--app-font-family-primary);
+  color: var(--gh-text-main);
   font-weight: 500;
-  font-size: 0.82rem;
-  line-height: 1.2;
-  cursor: pointer;
-  transition: all 150ms ease;
+  font-size: 0.875rem;
+  transition: background-color var(--gh-transition-standard), border-color var(--gh-transition-standard),
+    color var(--gh-transition-standard), opacity var(--gh-transition-standard), transform var(--gh-transition-standard);
+  position: relative;
 }
 
-.gh-tool-button .material-symbols-rounded {
-  font-size: 1rem;
+.gh-tool-button:hover,
+.hero-button:hover,
+.app-ui-button:hover {
+  background: color-mix(in srgb, currentColor 8%, transparent);
 }
 
-.gh-tool-button:hover {
-  background-color: color-mix(in srgb, var(--md-sys-color-primary) 8%, transparent);
-  border-color: var(--md-sys-color-primary);
-  color: var(--md-sys-color-primary);
+.gh-tool-button:active,
+.hero-button:active,
+.app-ui-button:active {
+  background: color-mix(in srgb, currentColor 12%, transparent);
 }
 
-.gh-stat-pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-  padding: 0.35rem 0.85rem;
-  border-radius: 999px;
-  background: #e8f0fe;
-  color: var(--md-sys-color-primary);
-  font-weight: 600;
-  font-size: 0.85rem;
+.gh-tool-button:focus-visible,
+.hero-button:focus-visible,
+.app-ui-button:focus-visible,
+.gh-release-list button:focus-visible,
+.gh-asset-link:focus-visible,
+.gh-favorite-button:focus-visible,
+.gh-token-settings summary:focus-visible {
+  outline: 2px solid var(--gh-primary);
+  outline-offset: 2px;
+}
+
+.gh-tool-button:disabled,
+.gh-tool-button.is-disabled,
+.app-ui-button:disabled,
+.app-ui-button.is-disabled,
+.gh-release-list button:disabled,
+.gh-asset-link.is-disabled {
+  opacity: 0.38;
+  pointer-events: none;
+}
+
+.gh-stat-pill,
+.gh-badge {
+  gap: var(--gh-space-1);
+  height: 2rem;
+  padding: 0 var(--gh-space-3);
+  border-radius: var(--gh-radius-full);
+  background: var(--gh-surface-inner);
+  color: var(--gh-text-main);
+  border: 1px solid transparent;
+  font-weight: 500;
+  font-size: 0.875rem;
 }
 
 .gh-stat-pill.success {
-  background: #e6f4ea;
-  color: #137333;
+  background: var(--gh-success-container);
+  color: var(--gh-on-success);
 }
 
-.gh-stat-pill.outline {
+.gh-stat-pill.outline,
+.gh-badge.outline {
   background: transparent;
-  border: 1px solid var(--md-sys-color-outline-variant);
-  color: var(--app-secondary-text-color);
+  border-color: var(--gh-outline-variant);
+  color: var(--gh-text-muted);
 }
 
-.gh-stat-pill .material-symbols-rounded {
-  font-size: 1.1rem;
+.gh-favorite-button {
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: var(--gh-radius-full);
+  background: color-mix(in srgb, var(--gh-primary) 8%, transparent);
+  border: 1px solid color-mix(in srgb, var(--gh-primary) 20%, transparent);
+  color: var(--gh-primary);
 }
 
-.icon-filled {
-  font-variation-settings: 'FILL' 1;
+.gh-favorite-button:hover {
+  background: color-mix(in srgb, var(--gh-primary) 14%, transparent);
 }
 
 .gh-output {
-  margin: 1.5rem;
-  border-radius: 12px;
-  border: 1px solid var(--md-sys-color-outline-variant);
-  background: var(--md-sys-color-surface-container-low);
+  margin: var(--gh-space-6);
+  background: var(--gh-surface-base);
 }
 
 .gh-output-header {
-  background: #f0f4f9;
-  padding: 0.65rem 1rem;
-  border-bottom: 1px solid var(--md-sys-color-outline-variant);
-  font-size: 0.85rem;
-  font-weight: 600;
+  gap: var(--gh-space-2);
+  padding: var(--gh-space-3) var(--gh-space-4);
+  background: var(--gh-surface-inner);
+  border-bottom: 1px solid var(--gh-outline-variant);
+  font-size: 0.8125rem;
   letter-spacing: 0.05em;
-  text-transform: uppercase;
+  color: var(--gh-text-muted);
 }
 
-.gh-output code,
-.google-sans-code-default {
+.gh-output pre {
+  padding: var(--gh-space-4) var(--gh-space-6);
   font-family: var(--app-font-family-code);
-}
-
-.gh-result-grid {
-  gap: 1.5rem;
-  padding: 1.5rem;
-}
-
-.gh-result-card {
-  gap: 1.25rem;
-  padding: 1.5rem;
-  border-radius: 12px;
-  background: var(--md-sys-color-surface-container-low);
-  border: 1px solid var(--md-sys-color-outline-variant);
-}
-
-.gh-badge.date-badge {
-  background: #f0f4f9;
-  color: var(--app-secondary-text-color);
-  font-family: var(--app-font-family-primary);
-}
-
-.gh-overview-header .helper-text {
-  font-size: 0.85rem;
-  font-style: italic;
+  font-size: 0.875rem;
+  line-height: 1.6;
+  color: var(--gh-text-main);
 }
 
 .gh-empty {
-  padding: 4rem 1rem;
-  gap: 1rem;
+  padding: calc(var(--gh-space-8) * 2) var(--gh-space-4);
+  gap: var(--gh-space-4);
+  border-radius: var(--gh-radius-lg);
+  border: 1px dashed var(--gh-outline-variant);
+  background: transparent;
 }
 
 .gh-empty-icon {
-  width: 64px;
-  height: 64px;
-  background: #f0f4f9;
-  color: var(--md-sys-color-outline);
-  border: 0;
+  width: 4.5rem;
+  height: 4.5rem;
+  border-radius: var(--gh-radius-full);
+  background: var(--gh-surface-inner);
+  color: var(--gh-outline);
 }
 
-.gh-empty-icon .material-symbols-rounded {
-  font-size: 32px;
+.material-symbols-rounded,
+.material-symbols-outlined {
+  font-size: 20px;
+  line-height: 1;
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 20;
+}
+
+.icon-filled {
+  font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 20;
+}
+
+@media (max-width: 768px) {
+  .gh-result-bar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .gh-action-row,
+  .gh-badge-group {
+    width: 100%;
+  }
+
+  .gh-action-row .gh-tool-button {
+    flex: 1 1 auto;
+  }
 }

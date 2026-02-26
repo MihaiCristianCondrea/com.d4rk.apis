@@ -47,6 +47,13 @@ describe('normalizePageId', () => {
     expect(normalizePageId('/android-studio-tutorials-api')).toBe('android-studio-tutorials-api');
   });
 
+  test('maps legacy GitHub tool -api aliases to canonical route IDs', () => {
+    expect(normalizePageId('#release-stats-api')).toBe('release-stats');
+    expect(normalizePageId('/repo-mapper-api')).toBe('repo-mapper');
+    expect(normalizePageId('favorites-api')).toBe('favorites');
+    expect(normalizePageId('/git-patch-api')).toBe('git-patch');
+  });
+
   test('maps workspace deep links nested under deployment base paths', () => {
     expect(normalizePageId('/com.d4rk.apis/faq-api')).toBe('faq-api');
     expect(normalizePageId('/preview/site/app-toolkit-api?lang=en')).toBe('app-toolkit-api');
