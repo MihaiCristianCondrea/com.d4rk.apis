@@ -78,7 +78,7 @@ describe('navigationRenderer', () => {
 
     expect(html.includes('app-button')).toBe(false);
     expect(html.includes('api-inline-button')).toBe(false);
-    expect(html.includes('class="small border round app-ui-button responsive"')).toBe(true);
+    expect(html.includes('class="gh-tool-button"')).toBe(true);
   });
 
 

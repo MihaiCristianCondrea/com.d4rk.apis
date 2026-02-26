@@ -4,7 +4,7 @@
      layout rhythm and transitions stay consistent with Material 3 surface guidance. -->
 <div class="page-section app-shell-panel page active gh-tools-page">
   <section class="gh-tools-section">
-    <header class="gh-tools-header">
+    <header class="gh-tools-header-block">
       <p class="gh-eyebrow">GitHub Tools</p>
       <h1>Favorites</h1>
       <p class="gh-subtext">Quick access to saved repositories for Repo Mapper and Release Stats.</p>
@@ -15,12 +15,12 @@
            follow BeerCSS spacing helpers. Replacing the inline style with the `medium-space`
            helper keeps spacing consistent with the rest of the UI and aligns with Material 3's
            emphasis on predictable vertical rhythm. -->
-      <div class="gh-stack medium-space">
+      <div class="gh-stack">
         <p class="gh-subtext">Star repositories from any GitHub tool to keep them close.</p>
         <div id="favorites-grid" class="gh-favorites-grid"></div>
         <div id="favorites-empty" class="gh-empty" hidden="">
           <div class="gh-empty-icon">
-            <span class="material-symbols-outlined">star_border</span>
+            <span class="material-symbols-rounded">star</span>
           </div>
           <div class="gh-empty-copy">
             <h3>No favorites yet</h3>

@@ -97,11 +97,26 @@
 /* Change Rationale: Favorite star icons could blend into the light card tint at rest.
  * Pinning an explicit icon color/size keeps the unfavorited state visible while preserving
  * the filled primary color treatment when the control is toggled on. */
-.gh-favorite-button .material-symbols-outlined {
-  color: var(--gh-text);
+
+/* Change Rationale: Keep star controls visible at a glance by giving favorite toggles a
+ * subtle container tint and explicit symbol styling in both outlined and rounded families.
+ */
+.gh-favorite-button {
+  background: color-mix(in srgb, var(--md-sys-color-primary) 8%, transparent);
+  border-color: color-mix(in srgb, var(--md-sys-color-primary) 35%, var(--gh-outline));
+}
+
+.gh-favorite-button :is(.material-symbols-outlined, .material-symbols-rounded) {
+  color: var(--md-sys-color-primary);
   font-size: 22px;
   line-height: 1;
-  font-variation-settings: 'FILL' 0, 'wght' 500, 'GRAD' 0, 'opsz' 24;
+  font-variation-settings: 'FILL' 0, 'wght' 600, 'GRAD' 0, 'opsz' 24;
+}
+.gh-favorite-button .material-symbols-outlined {
+  color: var(--md-sys-color-primary);
+  font-size: 22px;
+  line-height: 1;
+  font-variation-settings: 'FILL' 0, 'wght' 600, 'GRAD' 0, 'opsz' 24;
 }
 
 .gh-favorite-button.favorited,
@@ -115,9 +130,9 @@
  * hosts keeps the outlined star visible at rest and crisply filled when toggled,
  * matching Material 3's dual-state affordances.
  */
-.gh-favorite-button.favorited .material-symbols-outlined,
-.gh-favorite-button[selected=''] .material-symbols-outlined,
-.gh-favorite-button[aria-pressed='true'] .material-symbols-outlined {
+.gh-favorite-button.favorited :is(.material-symbols-outlined, .material-symbols-rounded),
+.gh-favorite-button[selected=''] :is(.material-symbols-outlined, .material-symbols-rounded),
+.gh-favorite-button[aria-pressed='true'] :is(.material-symbols-outlined, .material-symbols-rounded) {
   color: var(--md-sys-color-primary);
   font-variation-settings: 'FILL' 1, 'wght' 600, 'GRAD' 0, 'opsz' 24;
 }
@@ -923,4 +938,190 @@
     min-width: 0;
     justify-content: flex-start;
   }
+}
+
+/* Change Rationale: Refresh GitHub tools with Google Cloud-like flat panels, rounded
+ * Material Symbols, and Google Sans typography so Repo Mapper, Release Stats,
+ * and Git Patch match the polished home page visual rhythm.
+ */
+:root {
+  --app-font-family-primary: 'Google Sans', 'Roboto', system-ui, sans-serif;
+  --app-font-family-code: 'Google Sans Code', 'SFMono-Regular', 'Consolas', 'Liberation Mono', monospace;
+}
+
+body {
+  font-family: var(--app-font-family-primary);
+}
+
+.gh-tools-page {
+  padding-bottom: 4rem;
+}
+
+.gh-tools-section {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  max-width: 1200px;
+}
+
+.gh-tools-header-block {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.gh-tools-header-block h1 {
+  margin: 0;
+  font-size: clamp(2rem, 3vw + 1rem, 2.8rem);
+  font-weight: 500;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  color: #001d35;
+}
+
+.gh-subtext {
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+.gh-card,
+.gh-result {
+  background-color: var(--md-sys-color-surface-container-lowest);
+  border: 1px solid var(--md-sys-color-outline-variant);
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+}
+
+.gh-stack {
+  gap: 1.25rem;
+  padding: 1.5rem;
+}
+
+.gh-result-bar {
+  padding: 1rem 1.5rem;
+  background-color: var(--md-sys-color-surface-container-lowest);
+  border-bottom: 1px solid var(--md-sys-color-outline-variant);
+}
+
+.gh-tool-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.38rem 0.82rem;
+  border-radius: 999px;
+  border: 1px solid var(--md-sys-color-outline-variant);
+  background: transparent;
+  color: var(--md-sys-color-on-surface);
+  font-family: var(--app-font-family-primary);
+  font-weight: 500;
+  font-size: 0.82rem;
+  line-height: 1.2;
+  cursor: pointer;
+  transition: all 150ms ease;
+}
+
+.gh-tool-button .material-symbols-rounded {
+  font-size: 1rem;
+}
+
+.gh-tool-button:hover {
+  background-color: color-mix(in srgb, var(--md-sys-color-primary) 8%, transparent);
+  border-color: var(--md-sys-color-primary);
+  color: var(--md-sys-color-primary);
+}
+
+.gh-stat-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.35rem 0.85rem;
+  border-radius: 999px;
+  background: #e8f0fe;
+  color: var(--md-sys-color-primary);
+  font-weight: 600;
+  font-size: 0.85rem;
+}
+
+.gh-stat-pill.success {
+  background: #e6f4ea;
+  color: #137333;
+}
+
+.gh-stat-pill.outline {
+  background: transparent;
+  border: 1px solid var(--md-sys-color-outline-variant);
+  color: var(--app-secondary-text-color);
+}
+
+.gh-stat-pill .material-symbols-rounded {
+  font-size: 1.1rem;
+}
+
+.icon-filled {
+  font-variation-settings: 'FILL' 1;
+}
+
+.gh-output {
+  margin: 1.5rem;
+  border-radius: 12px;
+  border: 1px solid var(--md-sys-color-outline-variant);
+  background: var(--md-sys-color-surface-container-low);
+}
+
+.gh-output-header {
+  background: #f0f4f9;
+  padding: 0.65rem 1rem;
+  border-bottom: 1px solid var(--md-sys-color-outline-variant);
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.gh-output code,
+.google-sans-code-default {
+  font-family: var(--app-font-family-code);
+}
+
+.gh-result-grid {
+  gap: 1.5rem;
+  padding: 1.5rem;
+}
+
+.gh-result-card {
+  gap: 1.25rem;
+  padding: 1.5rem;
+  border-radius: 12px;
+  background: var(--md-sys-color-surface-container-low);
+  border: 1px solid var(--md-sys-color-outline-variant);
+}
+
+.gh-badge.date-badge {
+  background: #f0f4f9;
+  color: var(--app-secondary-text-color);
+  font-family: var(--app-font-family-primary);
+}
+
+.gh-overview-header .helper-text {
+  font-size: 0.85rem;
+  font-style: italic;
+}
+
+.gh-empty {
+  padding: 4rem 1rem;
+  gap: 1rem;
+}
+
+.gh-empty-icon {
+  width: 64px;
+  height: 64px;
+  background: #f0f4f9;
+  color: var(--md-sys-color-outline);
+  border: 0;
+}
+
+.gh-empty-icon .material-symbols-rounded {
+  font-size: 32px;
 }

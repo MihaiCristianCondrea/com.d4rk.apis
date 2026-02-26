@@ -9,27 +9,31 @@
     <div id="releases-result" class="gh-result" hidden>
       <div class="gh-result-bar">
         <div class="gh-badge-group">
-          <span class="gh-stat-pill"><span id="rel-total-downloads-pill">0</span> Downloads</span>
-          <span class="gh-stat-pill"><span id="rel-count">0</span> Releases</span>
+          <span class="gh-stat-pill">
+            <span class="material-symbols-rounded icon-filled">download</span>
+            <span id="rel-total-downloads-pill">0</span> Downloads
+          </span>
+          <span class="gh-stat-pill outline">
+            <span class="material-symbols-rounded icon-filled">new_releases</span>
+            <span id="rel-count">0</span> Releases
+          </span>
         </div>
         <div class="gh-action-row">
-        <!-- Change Rationale: Secondary actions now use BeerCSS-native button classes plus shared `app-ui-button` utilities so
-             outlined styling stays consistent across GitHub tools without legacy variant helpers. -->
-        <button type="button" id="rel-copy-json" class="small border round app-ui-button responsive">
-            <span class="material-symbols-outlined">content_copy</span>
+          <button type="button" id="rel-copy-json" class="gh-tool-button">
+            <span class="material-symbols-rounded">data_object</span>
             <span>Copy JSON</span>
           </button>
-        <button type="button" id="rel-download-json" class="small border round app-ui-button responsive">
-            <span class="material-symbols-outlined">save</span>
-            <span>Download JSON</span>
+          <button type="button" id="rel-download-json" class="gh-tool-button">
+            <span class="material-symbols-rounded">save</span>
+            <span>Save JSON</span>
           </button>
-        <button type="button" id="rel-copy-csv" class="small border round app-ui-button responsive">
-            <span class="material-symbols-outlined">table</span>
+          <button type="button" id="rel-copy-csv" class="gh-tool-button">
+            <span class="material-symbols-rounded">table_chart</span>
             <span>Copy CSV</span>
           </button>
-        <button type="button" id="rel-download-csv" class="small border round app-ui-button responsive">
-            <span class="material-symbols-outlined">download</span>
-            <span>Download CSV</span>
+          <button type="button" id="rel-download-csv" class="gh-tool-button">
+            <span class="material-symbols-rounded">download</span>
+            <span>Save CSV</span>
           </button>
         </div>
       </div>
@@ -40,7 +44,7 @@
             <h3 id="rel-detail-name" class="gh-title">—</h3>
             <div class="gh-badge-row">
               <span id="rel-detail-tag" class="gh-badge">tag</span>
-              <span id="rel-detail-date" class="gh-badge">date</span>
+              <span id="rel-detail-date" class="gh-badge date-badge">date</span>
             </div>
           </div>
           <div class="gh-stat-block">
@@ -62,7 +66,7 @@
           <div class="gh-overview-list">
             <div class="gh-overview-header">
               <p class="gh-subtext">All releases</p>
-              <p class="gh-subtext">Pick a tag to see asset breakdowns</p>
+              <p class="gh-subtext helper-text">Pick a tag to see asset breakdowns</p>
             </div>
             <div id="rel-list" class="gh-release-list"></div>
           </div>
