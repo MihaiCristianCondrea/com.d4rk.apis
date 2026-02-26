@@ -26,10 +26,20 @@ const WORKSPACE_PATH_ALIASES = Object.freeze({
   'english-with-lidia-api': 'english-with-lidia-api',
   'android-studio-tutorials-api': 'android-studio-tutorials-api',
   favorites: 'favorites',
+  'favorites-api': 'favorites',
   'repo-mapper': 'repo-mapper',
+  'repo-mapper-api': 'repo-mapper',
   'release-stats': 'release-stats',
+  'release-stats-api': 'release-stats',
   'git-patch': 'git-patch',
+  'git-patch-api': 'git-patch',
 });
+
+/* Change Rationale: Legacy bookmarks and cross-tool links still include `-api`
+ * suffixes for GitHub tools (for example `#release-stats-api`). Normalizing
+ * those aliases here preserves backwards-compatible deep links and prevents
+ * false Not Found states during route migration.
+ */
 
 /**
  * Resolves hash-less GitHub tools SPA paths to canonical route IDs.
