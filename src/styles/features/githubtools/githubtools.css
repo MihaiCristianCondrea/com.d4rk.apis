@@ -941,31 +941,29 @@
 }
 
 /* Change Rationale: Consolidate GitHub Tools styling around semantic Material 3 tokens,
- * 8pt spacing rhythm, and complete interaction states so dark mode and accessibility
+ * an 8pt spacing rhythm, and complete interaction states so dark mode and accessibility
  * remain consistent across Repo Mapper, Release Stats, Git Patch, and Favorites.
  */
 :root {
   --app-font-family-primary: 'Google Sans', 'Roboto', system-ui, -apple-system, sans-serif;
   --app-font-family-code: 'Google Sans Code', 'JetBrains Mono', 'SFMono-Regular', 'Consolas', monospace;
 
-  --gh-surface-base: var(--md-sys-color-surface-container-lowest, #ffffff);
-  --gh-surface-card: var(--md-sys-color-surface-container-low, #f7f8f9);
-  --gh-surface-inner: var(--md-sys-color-surface-container, #eff1f3);
-  --gh-surface-high: var(--md-sys-color-surface-container-high, #e8eaed);
+  --gh-surface-base: var(--md-sys-color-surface-container-lowest);
+  --gh-surface-card: var(--md-sys-color-surface-container-low);
+  --gh-surface-inner: var(--md-sys-color-surface-container);
+  --gh-surface-high: var(--md-sys-color-surface-container-high);
 
-  --gh-outline: var(--md-sys-color-outline, #74777f);
-  --gh-outline-variant: var(--md-sys-color-outline-variant, #c4c6d0);
+  --gh-outline: var(--md-sys-color-outline);
+  --gh-outline-variant: var(--md-sys-color-outline-variant);
 
-  --gh-text-main: var(--md-sys-color-on-surface, #1f1f1f);
-  --gh-text-muted: var(--md-sys-color-on-surface-variant, #44474e);
-  --gh-primary: var(--md-sys-color-primary, #0b57d0);
-  --gh-on-primary: var(--md-sys-color-on-primary, #ffffff);
+  --gh-text-main: var(--md-sys-color-on-surface);
+  --gh-text-muted: var(--md-sys-color-on-surface-variant);
+  --gh-primary: var(--md-sys-color-primary);
+  --gh-on-primary: var(--md-sys-color-on-primary);
+  --gh-error: var(--md-sys-color-error);
 
-  --gh-success-base: #146c2e;
-  --gh-success-container: color-mix(in srgb, var(--gh-success-base) 15%, var(--gh-surface-base));
-  --gh-on-success: color-mix(in srgb, var(--gh-success-base) 90%, var(--gh-text-main));
-  --gh-error-container: color-mix(in srgb, var(--md-sys-color-error, #ba1a1a) 12%, var(--gh-surface-base));
-  --gh-on-error: var(--md-sys-color-error, #ba1a1a);
+  --gh-success-container: color-mix(in srgb, var(--gh-primary) 14%, var(--gh-surface-base));
+  --gh-on-success: color-mix(in srgb, var(--gh-primary) 82%, var(--gh-text-main));
 
   --gh-radius-sm: 0.5rem;
   --gh-radius-md: 1rem;
@@ -973,6 +971,7 @@
   --gh-radius-full: 999px;
 
   --gh-transition-standard: 200ms cubic-bezier(0.2, 0, 0, 1);
+
   --gh-space-1: 0.25rem;
   --gh-space-2: 0.5rem;
   --gh-space-3: 0.75rem;
@@ -996,11 +995,28 @@ body {
 
 .gh-tools-header-block h1,
 .gh-title {
+  margin: 0;
   font-size: clamp(2rem, 3vw + 1rem, 2.5rem);
   font-weight: 500;
   line-height: 1.2;
   letter-spacing: -0.02em;
   color: var(--gh-text-main);
+}
+
+.gh-title-md {
+  margin: 0;
+  font-size: 1.4rem;
+  font-weight: 500;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+  color: var(--gh-text-main);
+}
+
+.gh-data-value {
+  margin: 0;
+  font-size: 1.75rem;
+  font-weight: 500;
+  letter-spacing: -0.01em;
 }
 
 .gh-eyebrow {
@@ -1040,13 +1056,16 @@ body {
 
 .gh-tool-button,
 .hero-button,
-.app-ui-button {
+.app-ui-button,
+.gh-release-list button,
+.gh-asset-link,
+.gh-favorite-button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: var(--gh-space-2);
-  min-height: 2.75rem;
-  min-width: 2.75rem;
+  min-height: 3rem;
+  min-width: 3rem;
   padding: 0 var(--gh-space-4);
   border-radius: var(--gh-radius-full);
   border: 1px solid var(--gh-outline-variant);
@@ -1061,13 +1080,19 @@ body {
 
 .gh-tool-button:hover,
 .hero-button:hover,
-.app-ui-button:hover {
+.app-ui-button:hover,
+.gh-release-list button:hover,
+.gh-asset-link:hover,
+.gh-favorite-button:hover {
   background: color-mix(in srgb, currentColor 8%, transparent);
 }
 
 .gh-tool-button:active,
 .hero-button:active,
-.app-ui-button:active {
+.app-ui-button:active,
+.gh-release-list button:active,
+.gh-asset-link:active,
+.gh-favorite-button:active {
   background: color-mix(in srgb, currentColor 12%, transparent);
 }
 
@@ -1087,9 +1112,17 @@ body {
 .app-ui-button:disabled,
 .app-ui-button.is-disabled,
 .gh-release-list button:disabled,
-.gh-asset-link.is-disabled {
+.gh-asset-link.is-disabled,
+.gh-favorite-button:disabled {
   opacity: 0.38;
   pointer-events: none;
+}
+
+.hero-button.primary,
+.app-ui-button:not(.border):not(.tonal) {
+  background: var(--gh-primary);
+  color: var(--gh-on-primary);
+  border-color: transparent;
 }
 
 .gh-stat-pill,
@@ -1111,23 +1144,17 @@ body {
 }
 
 .gh-stat-pill.outline,
-.gh-badge.outline {
+.gh-badge.outline,
+.date-badge {
   background: transparent;
   border-color: var(--gh-outline-variant);
   color: var(--gh-text-muted);
 }
 
 .gh-favorite-button {
-  width: 2.75rem;
-  height: 2.75rem;
-  border-radius: var(--gh-radius-full);
   background: color-mix(in srgb, var(--gh-primary) 8%, transparent);
-  border: 1px solid color-mix(in srgb, var(--gh-primary) 20%, transparent);
+  border-color: color-mix(in srgb, var(--gh-primary) 20%, var(--gh-outline-variant));
   color: var(--gh-primary);
-}
-
-.gh-favorite-button:hover {
-  background: color-mix(in srgb, var(--gh-primary) 14%, transparent);
 }
 
 .gh-output {
@@ -1167,6 +1194,13 @@ body {
   border-radius: var(--gh-radius-full);
   background: var(--gh-surface-inner);
   color: var(--gh-outline);
+}
+
+.gh-error-state,
+.gh-inline-error {
+  background: color-mix(in srgb, var(--gh-error) 10%, var(--gh-surface-base));
+  color: var(--gh-error);
+  border-color: color-mix(in srgb, var(--gh-error) 24%, var(--gh-outline-variant));
 }
 
 .material-symbols-rounded,
