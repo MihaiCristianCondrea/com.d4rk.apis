@@ -1,0 +1,6 @@
+{
+  "per_page": 20,
+  "total_items": 25,
+  "total_pages": 2,
+  "first_page_url": "api_get_lessons_page_1.json"
+}

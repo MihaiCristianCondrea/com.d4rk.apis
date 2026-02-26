@@ -1,0 +1,95 @@
+{
+  "data": [
+    {
+      "lesson_title": "Per-App Language Preferences in Android",
+      "lesson_content": [
+        {
+          "content_id": "1",
+          "content_type": "content_text",
+          "content_text": "<p>Modern Android development prioritizes creating inclusive and accessible apps for a global audience.  A key aspect of this is supporting multiple languages, allowing users to interact with your app in their preferred language. Android provides robust features and APIs to implement per-app language preferences, giving users greater control over their language experience.</p>"
+        },
+        {
+          "content_id": "2",
+          "content_type": "header",
+          "content_text": "Benefits of Per-App Language Support"
+        },
+        {
+          "content_id": "3",
+          "content_type": "content_text",
+          "content_text": "<ul>\n    <li><b>Enhanced User Experience:</b> Users can enjoy your app in their preferred language, regardless of their device's system language.</li>\n    <li><b>Improved Accessibility:</b>  Makes your app accessible to a wider range of users, including those who are more comfortable with languages other than the system default.</li>\n    <li><b>Increased Engagement:</b> Users are more likely to engage with and use apps that cater to their language preferences.</li>\n    <li><b>Global Reach:</b> Expand your app's reach to a wider international audience by removing language barriers.</li>\n    <li><b>Simplified Development:</b> Android provides APIs and tools that streamline the implementation of per-app language support.</li>\n</ul>"
+        },
+        {
+          "content_id": "4",
+          "content_type": "ad_large_banner"
+        },
+        {
+          "content_id": "5",
+          "content_type": "header",
+          "content_text": "Implementation Strategies"
+        },
+        {
+          "content_id": "6",
+          "content_type": "content_text",
+          "content_text": "<p>Android offers different approaches for implementing per-app language preferences based on your app's existing features and target Android versions:</p>"
+        },
+        {
+          "content_id": "7",
+          "content_type": "ad_large_banner"
+        },
+        {
+          "content_id": "8",
+          "content_type": "header",
+          "content_text": "1. Automatic Per-App Language Support (Recommended)"
+        },
+        {
+          "content_id": "9",
+          "content_type": "content_text",
+          "content_text": "<p>For apps running Android 13 (API level 33) and higher, Android Studio (Giraffe and later) with Android Gradle Plugin (AGP) 8.1+ offers automatic support. This simplifies the process by automatically generating the necessary configuration files based on your app's resources.</p>"
+        },
+        {
+          "content_id": "10",
+          "content_type": "content_code",
+          "content_code_programming_language": "Kotlin",
+          "content_code": "android {\n    androidResources {\n        generateLocaleConfig = true\n    }\n}"
+        },
+        {
+          "content_id": "11",
+          "content_type": "content_text",
+          "content_text": "<p>Specifying a Default Locale</p>"
+        },
+        {
+          "content_id": "12",
+          "content_type": "content_code",
+          "content_code_programming_language": "Properties",
+          "content_code": "unqualifiedResLocale=en-US // Example: US English"
+        },
+        {
+          "content_id": "13",
+          "content_type": "header",
+          "content_text": "Manual Configuration (For Android 13 and higher)"
+        },
+        {
+          "content_id": "14",
+          "content_type": "content_code",
+          "content_code_programming_language": "XML",
+          "content_code": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<locale-config xmlns:android=\"http://schemas.android.com/apk/res/android\">\n   <locale android:name=\"af\"/> <!-- Afrikaans -->\n   <locale android:name=\"am\"/> <!-- Amharic -->\n   <locale android:name=\"ar\"/> <!-- Arabic -->\n   <locale android:name=\"as\"/> <!-- Assamese -->\n   <locale android:name=\"az\"/> <!-- Azerbaijani -->\n   <locale android:name=\"be\"/> <!-- Belarusian -->\n   <locale android:name=\"bg\"/> <!-- Bulgarian -->\n   <locale android:name=\"bn\"/> <!-- Bengali -->\n   <locale android:name=\"bs\"/> <!-- Bosnian -->\n   <locale android:name=\"ca\"/> <!-- Catalan -->\n   <locale android:name=\"cs\"/> <!-- Czech -->\n   <locale android:name=\"da\"/> <!-- Danish -->\n   <locale android:name=\"de\"/> <!-- German -->\n   <locale android:name=\"el\"/> <!-- Greek -->\n   <locale android:name=\"en-AU\"/> <!-- English (Australia) -->\n   <locale android:name=\"en-CA\"/> <!-- English (Canada) -->\n   <locale android:name=\"en-GB\"/> <!-- English (United Kingdom) -->\n   <locale android:name=\"en-IN\"/> <!-- English (India) -->\n   <locale android:name=\"en-US\"/> <!-- English (United States) -->\n   <locale android:name=\"es\"/> <!-- Spanish (Spain) -->\n   <locale android:name=\"es-US\"/> <!-- Spanish (United States) -->\n   <locale android:name=\"et\"/> <!-- Estonian -->\n   <locale android:name=\"eu\"/> <!-- Basque -->\n   <locale android:name=\"fa\"/> <!-- Farsi -->\n   <locale android:name=\"fi\"/> <!-- Finnish -->\n   <locale android:name=\"fil\"/> <!-- Filipino -->\n   <locale android:name=\"fr\"/> <!-- French (France) -->\n   <locale android:name=\"fr-CA\"/> <!-- French (Canada) -->\n   <locale android:name=\"gl\"/> <!-- Galician -->\n   <locale android:name=\"gu\"/> <!-- Gujarati -->\n   <locale android:name=\"hi\"/> <!-- Hindi -->\n   <locale android:name=\"hr\"/> <!-- Croatian -->\n   <locale android:name=\"hu\"/> <!-- Hungarian -->\n   <locale android:name=\"hy\"/> <!-- Armenian -->\n   <locale android:name=\"in\"/> <!-- Indonesian -->\n   <locale android:name=\"is\"/> <!-- Icelandic -->\n   <locale android:name=\"it\"/> <!-- Italian -->\n   <locale android:name=\"iw\"/> <!-- Hebrew -->\n   <locale android:name=\"ja\"/> <!-- Japanese -->\n   <locale android:name=\"ka\"/> <!-- Georgian -->\n   <locale android:name=\"kk\"/> <!-- Kazakh -->\n   <locale android:name=\"km\"/> <!-- Khmer -->\n   <locale android:name=\"kn\"/> <!-- Kannada -->\n   <locale android:name=\"ko\"/> <!-- Korean -->\n   <locale android:name=\"ky\"/> <!-- Kyrgyz -->\n   <locale android:name=\"lo\"/> <!-- Lao -->\n   <locale android:name=\"lt\"/> <!-- Lithuanian -->\n   <locale android:name=\"lv\"/> <!-- Latvian -->\n   <locale android:name=\"mk\"/> <!-- Macedonian -->\n   <locale android:name=\"ml\"/> <!-- Malayalam -->\n   <locale android:name=\"mn\"/> <!-- Mongolian -->\n   <locale android:name=\"mr\"/> <!-- Marathi -->\n   <locale android:name=\"ms\"/> <!-- Malay -->\n   <locale android:name=\"my\"/> <!-- Burmese -->\n   <locale android:name=\"nb\"/> <!-- Norwegian -->\n   <locale android:name=\"ne\"/> <!-- Nepali -->\n   <locale android:name=\"nl\"/> <!-- Dutch -->\n   <locale android:name=\"or\"/> <!-- Odia -->\n   <locale android:name=\"pa\"/> <!-- Punjabi -->\n   <locale android:name=\"pl\"/> <!-- Polish -->\n   <locale android:name=\"pt-BR\"/> <!-- Portuguese (Brazil) -->\n   <locale android:name=\"pt-PT\"/> <!-- Portuguese (Portugal) -->\n   <locale android:name=\"ro\"/> <!-- Romanian -->\n   <locale android:name=\"ru\"/> <!-- Russian -->\n   <locale android:name=\"si\"/> <!-- Sinhala -->\n   <locale android:name=\"sk\"/> <!-- Slovak -->\n   <locale android:name=\"sl\"/> <!-- Slovenian -->\n   <locale android:name=\"sq\"/> <!-- Albanian -->\n   <locale android:name=\"sr\"/> <!-- Serbian (Cyrillic) -->\n   <locale android:name=\"sr-Latn\"/> <!-- Serbian (Latin) -->\n   <locale android:name=\"sv\"/> <!-- Swedish -->\n   <locale android:name=\"sw\"/> <!-- Swahili -->\n   <locale android:name=\"ta\"/> <!-- Tamil -->\n   <locale android:name=\"te\"/> <!-- Telugu -->\n   <locale android:name=\"th\"/> <!-- Thai -->\n   <locale android:name=\"tr\"/> <!-- Turkish -->\n   <locale android:name=\"uk\"/> <!-- Ukrainian -->\n   <locale android:name=\"ur\"/> <!-- Urdu -->\n   <locale android:name=\"uz\"/> <!-- Uzbek -->\n   <locale android:name=\"vi\"/> <!-- Vietnamese -->\n   <locale android:name=\"zh-Hans\"/> <!-- Chinese (Simplified) -->\n   <locale android:name=\"zh-Hant\"/> <!-- Chinese (Traditional) -->\n   <locale android:name=\"zu\"/> <!-- Zulu -->\n</locale-config>"
+        },
+        {
+          "content_id": "15",
+          "content_type": "content_code",
+          "content_code_programming_language": "XML",
+          "content_code": "<manifest>\n    <application\n        android:localeConfig=\"@xml/locales_config\">\n         <!-- ... -->\n    </application>\n</manifest>"
+        },
+        {
+          "content_id": "11",
+          "content_type": "content_text",
+          "content_text": "<p>Specifying a Default Locale</p>"
+        },
+        {
+          "content_id": "16",
+          "content_type": "ad_banner"
+        }
+      ]
+    }
+  ]
+}
