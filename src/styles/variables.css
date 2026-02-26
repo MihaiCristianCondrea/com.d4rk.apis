@@ -1,8 +1,8 @@
 :root {
-  --md-sys-color-primary: #3ddc84;
-  --md-sys-color-on-primary: #003912;
-  --md-sys-color-primary-container: #b1fbbb;
-  --md-sys-color-on-primary-container: #002108;
+  --md-sys-color-primary: #0b57d0;
+  --md-sys-color-on-primary: #ffffff;
+  --md-sys-color-primary-container: #d3e3fd;
+  --md-sys-color-on-primary-container: #041e49;
   --md-sys-color-secondary: #516350;
   --md-sys-color-on-secondary: #ffffff;
   --md-sys-color-secondary-container: #d4e8d0;
@@ -17,12 +17,12 @@
   --md-sys-color-on-error-container: #410002;
   --md-sys-color-background: #ffffff;
   --md-sys-color-on-background: #191c1d;
-  --md-sys-color-surface: #ffffff;
+  --md-sys-color-surface: #f8fafd;
   --md-sys-color-on-surface: #191c1d;
   --md-sys-color-surface-variant: #e8f5ec;
   --md-sys-color-on-surface-variant: #21402a;
-  --md-sys-color-outline: #5c9f74;
-  --md-sys-color-outline-variant: #bde8cb;
+  --md-sys-color-outline: #74777f;
+  --md-sys-color-outline-variant: #c4c7c5;
   --md-sys-color-shadow: #000000;
   --md-sys-color-scrim: #000000;
   --md-sys-color-inverse-surface: #2e3132;
@@ -31,9 +31,9 @@
   --md-sys-color-surface-dim: #ebf7ef;
   --md-sys-color-surface-bright: #ffffff;
   --md-sys-color-surface-container-lowest: #ffffff;
-  --md-sys-color-surface-container-low: #f4fff8;
-  --md-sys-color-surface-container: #ecfbf1;
-  --md-sys-color-surface-container-high: #f4fff8;
+  --md-sys-color-surface-container-low: #f0f4f9;
+  --md-sys-color-surface-container: #eef2fa;
+  --md-sys-color-surface-container-high: #e1e7f5;
   --md-sys-color-surface-container-highest: #ddf4e4;
   /* Change Rationale: App-level surface tokens now sit above BeerCSS variables
    * so shell components can reference stable semantic colors without hardcoding
@@ -109,7 +109,7 @@
   --app-nested-list-bg: rgba(0, 0, 0, 0.02);
   --app-theme-button-selected-bg: color-mix(in srgb, var(--md-sys-color-primary) 15%, transparent);
   --app-footer-text-color: var(--md-sys-color-on-surface);
-  /* Change Rationale: Link color now derives from the Android green primary token so
+  /* Change Rationale: Link color now derives from the Google Blue primary token so
    * links remain consistent with the updated palette across light/dark themes.
    */
   --app-link-color: var(--md-sys-color-primary);
@@ -233,10 +233,10 @@
 /* stylelint-enable function-no-unknown */
 
 html.dark {
-  --md-sys-color-primary: #3ddc84;
-  --md-sys-color-on-primary: #003912;
-  --md-sys-color-primary-container: #20512a;
-  --md-sys-color-on-primary-container: #b1fbbb;
+  --md-sys-color-primary: #a8c7fa;
+  --md-sys-color-on-primary: #062e6f;
+  --md-sys-color-primary-container: #0842a0;
+  --md-sys-color-on-primary-container: #d3e3fd;
   --md-sys-color-secondary: #b8ccb5;
   --md-sys-color-on-secondary: #243424;
   --md-sys-color-secondary-container: #3a4b3a;
@@ -272,7 +272,7 @@ html.dark {
 
   /* Change Rationale: Mirror BeerCSS semantic tokens in dark mode to keep palette
    * authority centralized in this stylesheet and prevent framework defaults from drifting
-   * away from the Android-green brand scheme. */
+   * away from the Google Blue brand scheme. */
   --app-surface: var(--md-sys-color-surface);
   --app-surface-container: var(--md-sys-color-surface-container);
   --app-surface-container-high: var(--md-sys-color-surface-container-high);
@@ -313,7 +313,7 @@ html.dark {
   --app-nested-list-bg: rgba(255, 255, 255, 0.03);
   --app-theme-button-selected-bg: color-mix(in srgb, var(--md-sys-color-primary) 20%, transparent);
   --app-footer-text-color: var(--md-sys-color-on-surface);
-  /* Change Rationale: Dark theme links now inherit the Android green primary token,
+  /* Change Rationale: Dark theme links now inherit the Google Blue primary token,
    * keeping interactive text consistent with the rest of the palette.
    */
   --app-link-color: var(--md-sys-color-primary);
