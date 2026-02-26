@@ -29,73 +29,78 @@
 
 .hero {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
   align-items: center;
-  gap: 2rem;
-  padding: clamp(2rem, 4vw, 3rem);
-  margin-bottom: 2.5rem;
-  background-color: var(--md-sys-color-primary-container);
-  /* Change Rationale: Home hero previously rendered with square corners against
-   * rounded cards, which felt visually inconsistent. Aligning radius values keeps
-   * all primary home surfaces on the same Material container shape language.
-   */
+  gap: 3rem;
+  padding: clamp(2.5rem, 5vw, 4rem);
+  margin-bottom: 3.5rem;
+  background:
+    radial-gradient(circle at 100% 0%, #e8f0fe 0%, var(--md-sys-color-primary-container) 100%);
   border-radius: 28px;
+  overflow: hidden;
 }
 
 .hero-copy {
-  display: grid;
+  display: flex;
+  flex-direction: column;
   gap: 1.25rem;
 }
 
 .hero-eyebrow {
-  /* Change Rationale: Reduce excessive letter spacing so the hero eyebrow reads
-   * tighter and aligns with Material 3 typography rhythm.
-   */
-  letter-spacing: 0.1em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
   font-weight: 600;
-  color: var(--md-sys-color-on-primary-container);
+  font-size: 0.85rem;
+  color: var(--md-sys-color-primary);
   margin: 0;
 }
 
 .hero-copy h1 {
   margin: 0;
-  color: var(--app-text-color);
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  color: #001d35;
+  max-width: 15ch;
 }
 
 .hero-body {
   margin: 0;
   color: var(--md-sys-color-on-primary-container);
   opacity: 0.85;
-  max-width: 65ch;
+  max-width: 55ch;
   line-height: 1.6;
+  margin-bottom: 0.5rem;
 }
 
 .hero-actions {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.75rem;
-  margin-top: 0.5rem;
+  gap: 1rem;
 }
 
 .hero-button {
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.75rem 1.5rem;
+  justify-content: center;
+  gap: 0.6rem;
+  padding: 0.85rem 1.75rem;
   border-radius: 999px;
   /* Change Rationale: Hero buttons previously used semibold (600) text that looked bold alongside the
    * page headlines. Normal weight (400) keeps the call-to-action readable without overwhelming the
    * hero copy, leaning on color and elevation per Material 3 rather than heavy typography.
    */
   font-weight: 500;
-  font-size: 0.95rem;
+  font-size: 1rem;
   text-decoration: none;
   transition: background-color 200ms ease, box-shadow 200ms ease, transform 200ms ease;
 }
 
 .hero-button .material-symbols-outlined {
   font-size: 1.25rem;
+}
+
+.hero-button .material-symbols-rounded {
+  font-size: 1.3rem;
 }
 
 .hero-button.primary {
@@ -128,8 +133,9 @@
 }
 
 .home-section {
-  margin-bottom: 2.5rem;
-  display: grid;
+  margin-bottom: 3.5rem;
+  display: flex;
+  flex-direction: column;
   gap: 1.5rem;
 }
 
@@ -163,8 +169,8 @@
 
 .feature-card-grid {
   display: grid;
-  gap: 1rem;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.25rem;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
 }
 
 .workspace-grid {
@@ -174,13 +180,15 @@
 }
 
 .feature-card {
-  --feature-card-gap: 0.75rem;
-  --feature-card-icon-size: 40px;
-  --feature-card-icon-font-size: 20px;
+  --feature-card-gap: 1rem;
+  --feature-card-icon-size: 44px;
+  --feature-card-icon-font-size: 24px;
   text-decoration: none;
   color: var(--app-text-color);
-  display: grid;
+  display: flex;
+  flex-direction: column;
   gap: var(--feature-card-gap);
+  padding: 1.5rem;
 }
 
 /* Change Rationale: Home cards now follow the action/info role system so
@@ -192,7 +200,8 @@
   border-radius: 16px;
   border: 1px solid var(--md-sys-color-outline-variant);
   background-color: var(--md-sys-color-surface-container-lowest);
-  transition: all 200ms cubic-bezier(0.2, 0, 0, 1);
+  transition: all 250ms cubic-bezier(0.2, 0, 0, 1);
+  position: relative;
 }
 
 .info-card {
@@ -207,8 +216,9 @@
 .action-card:hover {
   background-color: var(--md-sys-color-surface-container-lowest);
   border-color: var(--md-sys-color-primary);
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.15), 0 4px 8px 3px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 2px 6px rgba(11, 87, 208, 0.08), 0 8px 12px rgba(11, 87, 208, 0.04);
   transform: translateY(-2px);
+  z-index: 1;
 }
 
 .action-card:focus-visible {
@@ -220,9 +230,10 @@
   width: var(--feature-card-icon-size);
   height: var(--feature-card-icon-size);
   border-radius: 12px;
-  background: var(--md-sys-color-primary-container);
-  display: grid;
-  place-items: center;
+  background: #e8f0fe;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   font-size: var(--feature-card-icon-font-size);
   color: var(--md-sys-color-primary);
 }
@@ -247,13 +258,15 @@
 
 .action-card-header {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 1rem;
 }
 
 .action-card-title-group {
-  display: grid;
-  gap: 0.15rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  margin-top: 0.2rem;
 }
 
 .info-card-header {
@@ -266,7 +279,9 @@
 .info-card-title {
   margin: 0;
   font-weight: 500;
-  font-size: 1.1rem;
+  font-size: 1.15rem;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
 }
 
 .info-card-meta {
@@ -289,16 +304,17 @@
 .info-card-body {
   margin: 0;
   color: var(--app-secondary-text-color);
-  line-height: 1.5;
+  line-height: 1.6;
 }
 
 .action-card-list {
   margin: 0;
   padding-left: 1.2rem;
   color: var(--app-secondary-text-color);
-  display: grid;
-  gap: 0.5rem;
-  line-height: 1.5;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  line-height: 1.6;
 }
 
 .action-card-footer {
@@ -310,12 +326,22 @@
   margin-top: 0.5rem;
 }
 
+.action-card-footer .arrow-icon {
+  font-size: 1.1rem;
+  transition: transform 200ms ease;
+}
+
+.action-card:hover .action-card-footer .arrow-icon {
+  transform: translateX(4px);
+}
+
 .tool-card-wide {
   grid-column: span 2;
 }
 
 .section-header {
-  display: grid;
+  display: flex;
+  flex-direction: column;
   gap: 0.5rem;
   color: var(--app-text-color);
   padding: 0 0.5rem;
@@ -323,13 +349,15 @@
 
 .section-header h2 {
   margin: 0;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
 }
 
 .section-header p {
   margin: 0;
   color: var(--app-secondary-text-color);
   max-width: 65ch;
-  line-height: 1.5;
+  line-height: 1.6;
 }
 
 .workspace-list {

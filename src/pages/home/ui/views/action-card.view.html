@@ -1,10 +1,9 @@
-<!-- Change Rationale: Introduce a single actionable card template so home
-     navigation cards share one outlined treatment and consistent CTA styling
-     without per-screen class overrides. -->
+<!-- Change Rationale: Action cards now use rounded Material Symbols and a
+     directional arrow affordance to improve hierarchy and scanability. -->
 <template data-view="action-card">
-  <a class="feature-card action-card padding" href="#" aria-label="">
+  <a class="feature-card action-card" href="#" aria-label="">
     <div class="action-card-header">
-      <span class="feature-card-icon material-symbols-outlined" data-slot="icon" aria-hidden="true">link</span>
+      <span class="feature-card-icon material-symbols-rounded icon-filled" data-slot="icon" aria-hidden="true">folder_open</span>
       <div class="action-card-title-group">
         <p class="action-card-kicker type-label-medium" data-slot="kicker"></p>
         <h3 class="type-title-medium action-card-title" data-slot="title"></h3>
@@ -12,6 +11,9 @@
     </div>
     <p class="action-card-body type-body-medium" data-slot="description"></p>
     <ul class="action-card-list type-body-small" data-slot="features"></ul>
-    <span class="action-card-footer type-label-large" data-slot="cta"></span>
+    <span class="action-card-footer type-label-large">
+      <span data-slot="cta"></span>
+      <span class="material-symbols-rounded arrow-icon" aria-hidden="true">arrow_forward</span>
+    </span>
   </a>
 </template>
