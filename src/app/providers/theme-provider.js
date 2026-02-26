@@ -11,6 +11,7 @@
 import 'beercss';
 import '@lottiefiles/dotlottie-wc';
 import 'material-symbols/outlined.css';
+import 'material-symbols/rounded.css';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import '@fontsource/google-sans/latin-400.css';
 import '@fontsource/google-sans/latin-500.css';
