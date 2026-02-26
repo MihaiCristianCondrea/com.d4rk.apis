@@ -5,19 +5,25 @@
 -->
 <div id="mainContentPage" class="page-section app-shell-panel page active">
   {{HOME_STATUS_REGION}}
-  <!-- Change Rationale: Home hero typography now uses shared Material type
-       scale classes, replacing bespoke font sizing to reduce the oversized
-       headline effect and keep the hierarchy aligned with MD3 guidance. -->
+  <!-- Change Rationale: Hero section streamlined for a Google Workspace feel.
+       Uses a subtle primary-container background to make the Google Blue pop
+       without overwhelming the page. -->
   <section class="hero">
     <div class="hero-copy">
       <p class="hero-eyebrow type-label-medium">Purpose-built for Mihai-Cristian Condrea's apps</p>
       <h1 class="type-headline-large">Build JSON APIs visually and ship updates faster</h1>
       <p class="hero-body type-body-medium">Use reusable templates, smart defaults, and interactive previews to craft the App Toolkit, English with Lidia, and Android Studio Tutorials APIs without memorizing schemas.</p>
-      <!-- Change Rationale: Add direct call-to-action links for the most common
-           workspace and docs entry points so first-time users can start faster. -->
+      <!-- Change Rationale: Google-style pill buttons pair a primary action
+           with a lightweight secondary outline CTA. -->
       <div class="hero-actions">
-        <a class="hero-button primary" href="#app-toolkit-api">Open API workspace</a>
-        <a class="hero-button secondary" href="#faq-api">Open FAQ editor</a>
+        <a class="hero-button primary" href="#app-toolkit-api">
+          <span class="material-symbols-outlined" aria-hidden="true">api</span>
+          Open API workspace
+        </a>
+        <a class="hero-button secondary" href="#faq-api">
+          <span class="material-symbols-outlined" aria-hidden="true">edit_document</span>
+          Open FAQ editor
+        </a>
       </div>
     </div>
     <div class="hero-visual" aria-hidden="true"></div>

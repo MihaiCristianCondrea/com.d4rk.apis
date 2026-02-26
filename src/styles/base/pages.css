@@ -17,7 +17,7 @@
    * surrounding body copy. Moving to a 600 weight keeps the heading hierarchy intact while
    * aligning with Material 3's recommended semibold emphasis for readability.
    */
-  font-weight: 600;
+  font-weight: 500;
 }
 
 .page-header p {
@@ -29,17 +29,17 @@
 
 .hero {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   align-items: center;
   gap: 2rem;
-  padding: clamp(1.5rem, 4vw, 2.5rem);
+  padding: clamp(2rem, 4vw, 3rem);
   margin-bottom: 2.5rem;
-  background-color: var(--md-sys-color-surface-container);
+  background-color: var(--md-sys-color-primary-container);
   /* Change Rationale: Home hero previously rendered with square corners against
    * rounded cards, which felt visually inconsistent. Aligning radius values keeps
    * all primary home surfaces on the same Material container shape language.
    */
-  border-radius: 24px;
+  border-radius: 28px;
 }
 
 .hero-copy {
@@ -51,9 +51,10 @@
   /* Change Rationale: Reduce excessive letter spacing so the hero eyebrow reads
    * tighter and aligns with Material 3 typography rhythm.
    */
-  letter-spacing: 0.08em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--md-sys-color-primary);
+  font-weight: 600;
+  color: var(--md-sys-color-on-primary-container);
   margin: 0;
 }
 
@@ -64,56 +65,65 @@
 
 .hero-body {
   margin: 0;
-  color: var(--app-secondary-text-color);
+  color: var(--md-sys-color-on-primary-container);
+  opacity: 0.85;
   max-width: 65ch;
+  line-height: 1.6;
 }
 
 .hero-actions {
   display: flex;
   flex-wrap: wrap;
-  gap: 1rem;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
 }
 
 .hero-button {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.85rem 1.25rem;
+  padding: 0.75rem 1.5rem;
   border-radius: 999px;
   /* Change Rationale: Hero buttons previously used semibold (600) text that looked bold alongside the
    * page headlines. Normal weight (400) keeps the call-to-action readable without overwhelming the
    * hero copy, leaning on color and elevation per Material 3 rather than heavy typography.
    */
-  font-weight: 400;
+  font-weight: 500;
+  font-size: 0.95rem;
   text-decoration: none;
-  transition: transform 140ms ease, box-shadow 140ms ease,
-    background-color 140ms ease, border-color 140ms ease;
+  transition: background-color 200ms ease, box-shadow 200ms ease, transform 200ms ease;
+}
+
+.hero-button .material-symbols-outlined {
+  font-size: 1.25rem;
 }
 
 .hero-button.primary {
   background-color: var(--md-sys-color-primary);
   color: var(--md-sys-color-on-primary);
-  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.16);
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.3), 0 1px 3px 1px rgba(0, 0, 0, 0.15);
 }
 
 .hero-button.secondary {
-  border: 1px solid color-mix(in srgb, var(--md-sys-color-outline) 35%, transparent);
-  background: color-mix(in srgb, var(--md-sys-color-surface-container-high) 75%, transparent);
-  color: var(--app-text-color);
+  border: 1px solid var(--md-sys-color-outline);
+  background: transparent;
+  color: var(--md-sys-color-on-primary-container);
 }
 
-.hero-button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.12);
+.hero-button.primary:hover {
+  background-color: color-mix(in srgb, var(--md-sys-color-primary) 92%, #000);
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.3), 0 2px 6px 2px rgba(0, 0, 0, 0.15);
+  transform: translateY(-1px);
 }
 
 .hero-button:focus-visible {
-  outline: 2px solid var(--md-sys-color-primary);
-  outline-offset: 3px;
+  outline: 3px solid var(--md-sys-color-primary);
+  outline-offset: 2px;
 }
 
 .hero-button.secondary:hover {
-  border-color: color-mix(in srgb, var(--md-sys-color-primary) 45%, transparent);
+  background-color: color-mix(in srgb, var(--md-sys-color-primary) 8%, transparent);
+  border-color: var(--md-sys-color-primary);
   color: var(--md-sys-color-primary);
 }
 
@@ -124,16 +134,14 @@
 }
 
 .feature-surface {
-  background-color: var(--md-sys-color-surface-container);
-  /* Change Rationale: The section wrappers now share the same rounded corners as
-   * hero and cards to remove the remaining sharp edges visible on home.
-   */
+  background-color: var(--md-sys-color-surface-container-low);
   border-radius: 24px;
+  border: 1px solid var(--md-sys-color-outline-variant);
 }
 
 .workspace-surface,
 .github-tools-surface {
-  background-color: var(--md-sys-color-surface-container);
+  background-color: var(--md-sys-color-surface-container-low);
 }
 
 .github-tools-header {
@@ -143,7 +151,7 @@
   gap: 0.65rem;
   flex-wrap: nowrap;
   min-width: 0;
-  color: var(--app-text-color);
+  color: var(--md-sys-color-on-primary-container);
 }
 
 .github-tools-header p {
@@ -156,7 +164,7 @@
 .feature-card-grid {
   display: grid;
   gap: 1rem;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
 }
 
 .workspace-grid {
@@ -166,9 +174,9 @@
 }
 
 .feature-card {
-  --feature-card-gap: 0.5rem;
+  --feature-card-gap: 0.75rem;
   --feature-card-icon-size: 40px;
-  --feature-card-icon-font-size: 24px;
+  --feature-card-icon-font-size: 20px;
   text-decoration: none;
   color: var(--app-text-color);
   display: grid;
@@ -181,37 +189,38 @@
 .action-card {
   /* Change Rationale: GitHub helper cards now share the same rounded container
    * language as workspace cards so all home destinations feel part of one system. */
-  border-radius: var(--app-screenshot-radius);
+  border-radius: 16px;
   border: 1px solid var(--md-sys-color-outline-variant);
-  background-color: var(--md-sys-color-surface);
-  transition: border-color 160ms ease, box-shadow 160ms ease,
-    transform 160ms ease, background-color 160ms ease;
+  background-color: var(--md-sys-color-surface-container-lowest);
+  transition: all 200ms cubic-bezier(0.2, 0, 0, 1);
 }
 
 .info-card {
+  border-radius: 16px;
   background-color: var(--md-sys-color-surface-container);
-  transition: box-shadow 160ms ease, background-color 160ms ease;
+  border: 1px solid transparent;
 }
 
 /* Change Rationale: Clickable cards now surface a consistent hover/focus ring
  * so navigation intent is clear without relying on custom per-screen styling.
  */
 .action-card:hover {
-  border-color: color-mix(in srgb, var(--md-sys-color-primary) 40%, var(--md-sys-color-outline-variant));
-  box-shadow: 0 4px 16px color-mix(in srgb, var(--md-sys-color-primary) 18%, transparent);
-  transform: translateY(-1px);
+  background-color: var(--md-sys-color-surface-container-lowest);
+  border-color: var(--md-sys-color-primary);
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.15), 0 4px 8px 3px rgba(0, 0, 0, 0.05);
+  transform: translateY(-2px);
 }
 
 .action-card:focus-visible {
-  outline: 2px solid var(--md-sys-color-primary);
-  outline-offset: 3px;
+  outline: 3px solid var(--md-sys-color-primary);
+  outline-offset: 2px;
 }
 
 .feature-card-icon {
   width: var(--feature-card-icon-size);
   height: var(--feature-card-icon-size);
   border-radius: 12px;
-  background: color-mix(in srgb, var(--md-sys-color-primary) 16%, transparent);
+  background: var(--md-sys-color-primary-container);
   display: grid;
   place-items: center;
   font-size: var(--feature-card-icon-font-size);
@@ -219,7 +228,7 @@
 }
 
 .tool-card {
-  --feature-card-gap: 0.5rem;
+  --feature-card-gap: 0.75rem;
 }
 
 /* Change Rationale: Keep GitHub tools in a consistent 2-column layout and
@@ -239,23 +248,25 @@
 .action-card-header {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: 1rem;
 }
 
 .action-card-title-group {
   display: grid;
-  gap: 0.2rem;
+  gap: 0.15rem;
 }
 
 .info-card-header {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: 1rem;
 }
 
 .action-card-title,
 .info-card-title {
   margin: 0;
+  font-weight: 500;
+  font-size: 1.1rem;
 }
 
 .info-card-meta {
@@ -267,33 +278,36 @@
   /* Change Rationale: Tighten label tracking so card headings avoid the loose
    * spacing that made text feel disconnected at tablet/desktop scale.
    */
-  letter-spacing: 0.03em;
+  letter-spacing: 0.05em;
   text-transform: uppercase;
-  color: var(--app-secondary-text-color);
+  color: var(--md-sys-color-primary);
+  font-size: 0.75rem;
+  font-weight: 600;
 }
 
 .action-card-body,
 .info-card-body {
   margin: 0;
   color: var(--app-secondary-text-color);
-  line-height: 1.35;
+  line-height: 1.5;
 }
 
 .action-card-list {
   margin: 0;
-  padding-left: 1.1rem;
+  padding-left: 1.2rem;
   color: var(--app-secondary-text-color);
   display: grid;
-  gap: 0.4rem;
-  line-height: 1.35;
+  gap: 0.5rem;
+  line-height: 1.5;
 }
 
 .action-card-footer {
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
-  font-weight: 600;
+  font-weight: 500;
   color: var(--md-sys-color-primary);
+  margin-top: 0.5rem;
 }
 
 .tool-card-wide {
@@ -302,8 +316,9 @@
 
 .section-header {
   display: grid;
-  gap: 0.6rem;
+  gap: 0.5rem;
   color: var(--app-text-color);
+  padding: 0 0.5rem;
 }
 
 .section-header h2 {
@@ -314,12 +329,13 @@
   margin: 0;
   color: var(--app-secondary-text-color);
   max-width: 65ch;
+  line-height: 1.5;
 }
 
 .workspace-list {
   list-style: none;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 1.1rem;
   margin: 0;
   padding: 0;
@@ -390,8 +406,8 @@
 .workspace-insight-card__value {
   margin: 0;
   font-size: clamp(1.6rem, 3vw + 1rem, 2.6rem);
-  font-weight: 600;
-  color: var(--app-text-color);
+  font-weight: 500;
+  color: var(--md-sys-color-on-primary-container);
 }
 
 .workspace-insight-card__helper {
@@ -409,7 +425,7 @@
 .workspace-plan,
 .workspace-release {
   --md-filled-card-container-color: var(--md-sys-color-surface-container-high);
-  border-radius: 24px;
+  border-radius: 28px;
 }
 
 .workspace-plan .card-body,
@@ -432,8 +448,8 @@
 .plan-header h2 {
   margin: 0;
   font-size: 1.4rem;
-  font-weight: 600;
-  color: var(--app-text-color);
+  font-weight: 500;
+  color: var(--md-sys-color-on-primary-container);
 }
 
 .plan-updated {
@@ -445,7 +461,7 @@
 .plan-actions {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.75rem;
+  gap: 1rem;
 }
 
 .note-indicator {
@@ -462,8 +478,8 @@
 .release-header h2 {
   margin: 0;
   font-size: 1.4rem;
-  font-weight: 600;
-  color: var(--app-text-color);
+  font-weight: 500;
+  color: var(--md-sys-color-on-primary-container);
 }
 
 .release-header p {
@@ -474,7 +490,7 @@
 
 .release-progress {
   display: grid;
-  gap: 0.75rem;
+  gap: 1rem;
 }
 
 .release-progress-track {
@@ -511,7 +527,7 @@
   justify-content: space-between;
   font-size: 0.75rem;
   text-transform: uppercase;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.1em;
   color: var(--app-secondary-text-color);
 }
 
@@ -546,7 +562,7 @@
 .workspace-card {
   --md-elevated-card-container-color: var(--md-sys-color-surface-container);
   padding: 1.5rem;
-  border-radius: 24px;
+  border-radius: 28px;
   display: grid;
   gap: 1rem;
   border: 1px solid color-mix(in srgb, var(--md-sys-color-outline) 14%, transparent);
@@ -563,7 +579,7 @@
 .workspace-card h3 {
   margin: 0;
   font-size: 1.25rem;
-  font-weight: 600;
+  font-weight: 500;
 }
 
 .workspace-icon {
@@ -600,7 +616,7 @@
   align-items: center;
   gap: 0.35rem;
   text-decoration: none;
-  font-weight: 600;
+  font-weight: 500;
   padding: 0.6rem 0.9rem;
   border-radius: 12px;
   color: var(--md-sys-color-primary);
@@ -617,7 +633,7 @@
 
 /* --- Code of Conduct Page --- */
 .policy-section {
-  background-color: var(--md-sys-color-surface-container);
+  background-color: var(--md-sys-color-primary-container);
   border-radius: 20px;
   padding: 1.5rem;
   margin-bottom: 1.5rem;
@@ -627,8 +643,8 @@
 .policy-section h2 {
   margin: 0 0 0.75rem 0;
   font-size: 1.4rem;
-  font-weight: 600;
-  color: var(--app-text-color);
+  font-weight: 500;
+  color: var(--md-sys-color-on-primary-container);
 }
 
 .policy-section p,

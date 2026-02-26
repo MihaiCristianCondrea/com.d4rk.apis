@@ -211,19 +211,19 @@ describe('theme palette tokens', () => {
     return fs.readFileSync(pagesPath, 'utf8');
   }
 
-  test('light mode keeps Android-green brand token mapping for BeerCSS variables', () => {
+  test('light mode keeps Google Blue brand token mapping for BeerCSS variables', () => {
     const css = readThemeVariablesCss();
 
-    expect(css).toMatch(/:root\s*\{[\s\S]*--md-sys-color-primary:\s*#3ddc84;/);
+    expect(css).toMatch(/:root\s*\{[\s\S]*--md-sys-color-primary:\s*#0b57d0;/);
     expect(css).toMatch(/:root\s*\{[\s\S]*--app-primary:\s*var\(--md-sys-color-primary\);/);
     expect(css).toMatch(/:root\s*\{[\s\S]*--primary:\s*var\(--app-primary\);/);
     expect(css).toMatch(/:root\s*\{[\s\S]*--surface:\s*var\(--app-surface\);/);
   });
 
-  test('dark mode keeps Android-green brand token mapping for BeerCSS variables', () => {
+  test('dark mode keeps Google Blue brand token mapping for BeerCSS variables', () => {
     const css = readThemeVariablesCss();
 
-    expect(css).toMatch(/html\.dark\s*\{[\s\S]*--md-sys-color-primary:\s*#3ddc84;/);
+    expect(css).toMatch(/html\.dark\s*\{[\s\S]*--md-sys-color-primary:\s*#a8c7fa;/);
     expect(css).toMatch(/html\.dark\s*\{[\s\S]*--app-primary:\s*var\(--md-sys-color-primary\);/);
     expect(css).toMatch(/html\.dark\s*\{[\s\S]*--primary:\s*var\(--app-primary\);/);
     expect(css).toMatch(/html\.dark\s*\{[\s\S]*--surface:\s*var\(--app-surface\);/);
@@ -245,15 +245,15 @@ describe('theme palette tokens', () => {
     expect(css).toMatch(/html\.dark\s*\{[\s\S]*--app-theme-button-selected-bg:\s*color-mix\(in srgb, var\(--md-sys-color-primary\) 20%, transparent\);/);
   });
 
-  test('theme palette stays constrained to Android green + white/dark surfaces', () => {
+  test('theme palette stays constrained to Google Blue + white/dark surfaces', () => {
     const css = readThemeVariablesCss();
 
-    expect(css).toMatch(/:root\s*\{[\s\S]*--md-sys-color-primary:\s*#3ddc84;/);
+    expect(css).toMatch(/:root\s*\{[\s\S]*--md-sys-color-primary:\s*#0b57d0;/);
     expect(css).toMatch(/:root\s*\{[\s\S]*--md-sys-color-background:\s*#ffffff;/);
-    expect(css).toMatch(/:root\s*\{[\s\S]*--md-sys-color-surface:\s*#ffffff;/);
+    expect(css).toMatch(/:root\s*\{[\s\S]*--md-sys-color-surface:\s*#f8fafd;/);
     expect(css).toMatch(/:root\s*\{[\s\S]*--app-footer-text-color:\s*var\(--md-sys-color-on-surface\);/);
 
-    expect(css).toMatch(/html\.dark\s*\{[\s\S]*--md-sys-color-primary:\s*#3ddc84;/);
+    expect(css).toMatch(/html\.dark\s*\{[\s\S]*--md-sys-color-primary:\s*#a8c7fa;/);
     expect(css).toMatch(/html\.dark\s*\{[\s\S]*--md-sys-color-background:\s*#0e1510;/);
     expect(css).toMatch(/html\.dark\s*\{[\s\S]*--md-sys-color-surface:\s*#0e1510;/);
     expect(css).toMatch(/html\.dark\s*\{[\s\S]*--app-footer-text-color:\s*var\(--md-sys-color-on-surface\);/);
@@ -263,7 +263,7 @@ describe('theme palette tokens', () => {
   test('home action cards keep rounded shape for GitHub tools and workspaces', () => {
     const css = readPagesCss();
 
-    expect(css).toMatch(/\.action-card\s*\{[\s\S]*border-radius:\s*var\(--app-screenshot-radius\);/);
+    expect(css).toMatch(/\.action-card\s*\{[\s\S]*border-radius:\s*16px;/);
   });
 
   test('navigation app bar, drawer, and active rows use app semantic tokens', () => {
