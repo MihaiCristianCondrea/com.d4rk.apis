@@ -1,0 +1,136 @@
+{
+  "data": [
+    {
+      "lesson_title": "Implementing Parallax Scrolling in Jetpack Compose",
+      "lesson_content": [
+        {
+          "content_id": "1",
+          "content_type": "content_text",
+          "content_text": "<p><strong>Introduction:</strong> Parallax scrolling is a UI technique where the background and foreground move at different speeds, creating a sense of depth. This lesson demonstrates how to implement this effect in Jetpack Compose while following Material guidelines.</p>"
+        },
+        {
+          "content_id": "2",
+          "content_type": "header",
+          "content_text": "Version Compatibility and Dependencies"
+        },
+        {
+          "content_id": "3",
+          "content_type": "content_text",
+          "content_text": "<p>This implementation requires your project’s minSDK to be set to API level 21 or higher. To leverage the latest Compose features, include the following dependency declarations for the Compose BOM:</p>"
+        },
+        {
+          "content_id": "4",
+          "content_type": "content_code",
+          "content_code": "implementation platform('androidx.compose:compose-bom:2025.02.00')",
+          "content_code_programming_language": "Groovy"
+        },
+        {
+          "content_id": "5",
+          "content_type": "content_code",
+          "content_code": "implementation(platform(\"androidx.compose:compose-bom:2025.02.00\"))",
+          "content_code_programming_language": "Kotlin"
+        },
+        {
+          "content_id": "6",
+          "content_type": "header",
+          "content_text": "Image Loading Dependencies with Coil"
+        },
+        {
+          "content_id": "7",
+          "content_type": "content_text",
+          "content_text": "<p>Coil is an image loading library for Android and Compose Multiplatform. It is fast, lightweight, and Kotlin-first. To add Coil, include the following dependencies:</p>"
+        },
+        {
+          "content_id": "8",
+          "content_type": "content_code",
+          "content_code": "implementation \"io.coil-kt.coil3:coil-compose:3.1.0\"\nimplementation \"io.coil-kt.coil3:coil-network-okhttp:3.1.0\"",
+          "content_code_programming_language": "Groovy"
+        },
+        {
+          "content_id": "9",
+          "content_type": "content_code",
+          "content_code": "implementation(\"io.coil-kt.coil3:coil-compose:3.1.0\")\nimplementation(\"io.coil-kt.coil3:coil-network-okhttp:3.1.0\")",
+          "content_code_programming_language": "Kotlin"
+        },
+        {
+          "content_id": "10",
+          "content_type": "ad_large_banner"
+        },
+        {
+          "content_id": "11",
+          "content_type": "header",
+          "content_text": "Creating the Parallax Effect"
+        },
+        {
+          "content_id": "12",
+          "content_type": "content_text",
+          "content_text": "<p>To achieve the parallax effect, we define a custom layout modifier as an extension function for reusability and simplicity. This modifier applies a fraction of the scroll value to offset an element’s vertical position.</p>"
+        },
+        {
+          "content_id": "13",
+          "content_type": "content_code",
+          "content_code": "fun Modifier.parallaxLayoutModifier(scrollState: ScrollState, rate: Int) =\n    layout { measurable, constraints ->\n        val placeable = measurable.measure(constraints)\n        val height = if (rate > 0) scrollState.value / rate else scrollState.value\n        layout(placeable.width, placeable.height) {\n            placeable.place(0, height)\n        }\n    }",
+          "content_code_programming_language": "Kotlin"
+        },
+        {
+          "content_id": "14",
+          "content_type": "header",
+          "content_text": "Using the Parallax Modifier"
+        },
+        {
+          "content_id": "15",
+          "content_type": "content_code",
+          "content_code": "@Composable\nfun ParallaxEffectUsage() {\n    val scrollState = rememberScrollState()\n    Column(\n        modifier = Modifier\n            .fillMaxWidth()\n            .verticalScroll(scrollState)\n    ) {\n        // Background image with parallax effect loaded via Coil\n        AsyncImage(\n            model = \"https://s3.gifyu.com/images/bbMWU.gif\",\n            contentDescription = \"Sample background for parallax effect\",\n            contentScale = ContentScale.Crop,\n            modifier = parallaxLayoutModifier(scrollState, 2)\n        )\n        // Foreground text scrolling at normal speed\n        Text(\n            text = \"Foreground content scrolls faster than the background image.\",\n            modifier = Modifier\n                .background(Color.White)\n                .padding(horizontal = 8.dp)\n        )\n    }\n}",
+          "content_code_programming_language": "Kotlin"
+        },
+        {
+          "content_id": "16",
+          "content_type": "header",
+          "content_text": "Parallax Effect Visualization"
+        },
+        {
+          "content_id": "17",
+          "content_type": "image",
+          "content_image_url": "https://s3.gifyu.com/images/bbMWU.gif"
+        },
+        {
+          "content_id": "18",
+          "content_type": "content_text",
+          "content_text": "<p><strong>Figure:</strong> The visual above demonstrates the parallax effect, where the background image (loaded via Coil) scrolls at a slower pace than the overlaid foreground text.</p>"
+        },
+        {
+          "content_id": "19",
+          "content_type": "ad_banner_full"
+        },
+        {
+          "content_id": "20",
+          "content_type": "header",
+          "content_text": "Material Design Guidelines and Best Practices"
+        },
+        {
+          "content_id": "21",
+          "content_type": "content_text",
+          "content_text": "<p>According to Material guidelines, transitions and scrolling effects should be smooth and subtle. Your parallax implementation must enhance the user experience without distracting from core content. For more details, refer to the Material Motion guidelines.</p>"
+        },
+        {
+          "content_id": "22",
+          "content_type": "ad_large_banner"
+        },
+        {
+          "content_id": "23",
+          "content_type": "header",
+          "content_text": "Key Points and Troubleshooting"
+        },
+        {
+          "content_id": "24",
+          "content_type": "content_text",
+          "content_text": "<p>When implementing your custom parallax modifier, keep in mind the following points:</p><ul><li><strong>Scroll State Calculation:</strong> Ensure that the modifier accurately calculates the offset based on the current scroll state to prevent visual glitches.</li><li><strong>Performance:</strong> Test on multiple devices, especially low-end hardware, to verify that the modifier does not introduce lag.</li><li><strong>Layout Consistency:</strong> Confirm that your layout measurements and placements remain consistent across different screen sizes and orientations.</li><li><strong>Error Handling:</strong> Handle cases where the scroll state is zero or fluctuates rapidly, ensuring that the UI remains stable.</li><li><strong>Optimization:</strong> Utilize tools like Android Profiler to monitor performance and apply optimizations as necessary.</li></ul><p>Thorough testing and incremental improvements will help you resolve issues such as misalignment, performance bottlenecks, and unexpected visual behavior.</p>"
+        },
+        {
+          "content_id": "25",
+          "content_type": "ad_banner"
+        }
+      ]
+    }
+  ]
+}

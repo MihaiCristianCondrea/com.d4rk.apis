@@ -1,0 +1,67 @@
+{
+    "data": [
+        {
+            "lesson_title": "Designing Interfaces with Constraint Layout",
+            "lesson_content": [
+                {
+                    "content_id": "1",
+                    "content_type": "content_text",
+                    "content_text": "<p>Constraint Layout is a versatile and efficient layout manager for Android. It enables you to create complex layouts by defining constraints between UI components. In this lesson, you'll learn the basics of using Constraint Layout in XML.</p>"
+                },
+                {
+                    "content_id": "2",
+                    "content_type": "ad_large_banner"
+                },
+                {
+                    "content_id": "3",
+                    "content_type": "header",
+                    "content_text": "Key Features of Constraint Layout"
+                },
+                {
+                    "content_id": "4",
+                    "content_type": "content_text",
+                    "content_text": "<p>Constraint Layout offers:</p><ul><li>Positioning UI elements relative to each other or the parent layout.</li><li>Support for chains, guidelines, and barriers.</li><li>Optimized performance compared to nested layouts.</li></ul>"
+                },
+                {
+                    "content_id": "5",
+                    "content_type": "image",
+                    "content_image_url": "https://developer.android.com/static/codelabs/constraint-layout/img/2651ce934f150530.gif"
+                },
+                {
+                    "content_id": "6",
+                    "content_type": "header",
+                    "content_text": "XML Implementation"
+                },
+                {
+                    "content_id": "7",
+                    "content_type": "content_text",
+                    "content_text": "<p>Here's an example of a Constraint Layout in XML:</p>"
+                },
+                {
+                    "content_id": "8",
+                    "content_type": "content_code",
+                    "content_code": "<androidx.constraintlayout.widget.ConstraintLayout\n    xmlns:android=\"http://schemas.android.com/apk/res/android\"\n    xmlns:app=\"http://schemas.android.com/apk/res-auto\"\n    android:layout_width=\"match_parent\"\n    android:layout_height=\"match_parent\">\n\n    <TextView\n        android:id=\"@+id/title\"\n        android:layout_width=\"wrap_content\"\n        android:layout_height=\"wrap_content\"\n        android:text=\"Welcome to Constraint Layout!\"\n        app:layout_constraintTop_toTopOf=\"parent\"\n        app:layout_constraintStart_toStartOf=\"parent\"\n        app:layout_constraintEnd_toEndOf=\"parent\" />\n\n    <Button\n        android:id=\"@+id/button\"\n        android:layout_width=\"wrap_content\"\n        android:layout_height=\"wrap_content\"\n        android:text=\"Click Me\"\n        app:layout_constraintTop_toBottomOf=\"@id/title\"\n        app:layout_constraintStart_toStartOf=\"parent\"\n        app:layout_constraintEnd_toEndOf=\"parent\" />\n\n</androidx.constraintlayout.widget.ConstraintLayout>",
+                    "content_code_programming_language": "XML"
+                },
+                {
+                    "content_id": "9",
+                    "content_type": "ad_large_banner"
+                },
+                {
+                    "content_id": "10",
+                    "content_type": "header",
+                    "content_text": "Tips for Using Constraint Layout"
+                },
+                {
+                    "content_id": "11",
+                    "content_type": "content_text",
+                    "content_text": "<ul><li>Use the Layout Editor in Android Studio for visualizing constraints.</li><li>Keep layouts flat by avoiding unnecessary nesting.</li><li>Use chains for equal spacing between elements.</li><li>Employ guidelines to align multiple views consistently.</li></ul>"
+                },
+                {
+                    "content_id": "12",
+                    "content_type": "ad_banner"
+                }
+            ]
+        }
+    ]
+}
