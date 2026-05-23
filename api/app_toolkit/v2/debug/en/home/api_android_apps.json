@@ -9,7 +9,7 @@
           "category_id": "education"
         },
         "description": "Delve into Android development through hands-on lessons and real-world projects. This app guides you step by step in mastering Android Studio, from UI layouts to app logic, helping you build functional apps with confidence. Ideal for beginners and intermediates alike, it stays updated with the latest Android tooling and best practices.",
-        "iconLogo": "https://raw.githubusercontent.com/D4rK7355608/com.d4rk.androidtutorials/refs/heads/master/app/src/main/play/listings/en-US/graphics/ic_launcher-playstore.png",
+        "iconLogo": "https://play-lh.googleusercontent.com/Z3DoceeTZSD98GH7dOCgb8PiCp7eTHEJGs6eHkJerQh5S4E2UNXtrUwUZ35-NDAAJko=w240-h480-rw",
         "screenshots": [
           {
             "url": "https://play-lh.googleusercontent.com/6qJCkDMKFBxLLBqo183jtN3t76lrWFXrPzwYQIuaNUy2otkFnCmGzZYYA9GBfwRBPkY=w2560-h1440-rw",
@@ -69,7 +69,7 @@
           "category_id": "education"
         },
         "description": "Learn to build Android apps using Java in a structured, practical way. Through coding exercises, sample projects, and clear explanations, you’ll explore Android SDK features, activity lifecycles, UI design, and data handling all with Java. It’s tailored for developers who prefer Java or want to strengthen foundational skills before moving to Kotlin.",
-        "iconLogo": "https://raw.githubusercontent.com/D4rK7355608/com.d4rk.androidtutorials.java/refs/heads/main/app/src/main/play/listings/en-US/graphics/ic_launcher-playstore.png",
+        "iconLogo": "https://play-lh.googleusercontent.com/08PgRr8g2M_zY_6GwQ7uyEvH2ePbLYp5MEfyjMoygLLG9Kl3MmjtSvzyx7NobYI12J4=w240-h480-rw",
         "screenshots": [
           {
             "url": "https://play-lh.googleusercontent.com/yQKr9Klh7I2nWH9bb6BybjFU6kICI_tYIrW1m9GSqbzYKxRC_Q6srrJNAyKBJHpMzlY=w2560-h1440-rw",
@@ -129,7 +129,7 @@
           "category_id": "tools"
         },
         "description": "Cleaner for Android helps you reclaim storage by removing cache, junk files, residual data, and duplicates. It also helps you detect large files and unused apps. With a clean, minimal interface, it’s designed for users who want a lightweight, no-fuss way to keep their device running smoothly.",
-        "iconLogo": "https://raw.githubusercontent.com/D4rK7355608/com.d4rk.cleaner/refs/heads/master/app/src/main/play/listings/en-US/graphics/ic_launcher-playstore.png",
+        "iconLogo": "https://play-lh.googleusercontent.com/V5vQTjxiutmcHKk5Bm6X5NS3SiqvFJja3r5oGGz6aiL6KtbpV5b3CmUFI3z6W_oGZf8=w240-h480-rw",
         "screenshots": [
           {
             "url": "https://play-lh.googleusercontent.com/kZorcBMqxV0DQilcYiCkN-L36zPQ4Fv6j35JrrXT27G0HOdr6_aKFpY7PrvUb64Lqs8=w2560-h1440-rw",
@@ -161,7 +161,7 @@
           "category_id": "education"
         },
         "description": "An English learning app centered around Lidia’s teaching method. It offers lessons, exercises, and practical tools to build vocabulary, grammar, speaking, and comprehension skills, ideal for learners at beginner to intermediate levels. Thoughtfully structured to guide you from basics toward fluency.",
-        "iconLogo": "https://raw.githubusercontent.com/D4rK7355608/com.d4rk.englishwithlidia.plus/refs/heads/master/app/src/main/play/listings/en-US/graphics/ic_launcher-playstore.png",
+        "iconLogo": "https://play-lh.googleusercontent.com/yQijHFUEJvacz9yMOI7rJeqtn31TBk1smhqa-pb_a_EWqGtW9djn8Gg4maEKBmSWDyo0_BLJ-4TofOu3cK5wPH0=w240-h480-rw",
         "screenshots": [
           {
             "url": "https://play-lh.googleusercontent.com/00mqj3ioB--Ske24aQgoo1Do0tmJ33GQ9YRaC6avuYj7w6jOOGg39ZYakjpbm3eHBGT8RRSZ_uOEm-gpPcfz1A=w2560-h1440-rw",
@@ -189,7 +189,7 @@
           "category_id": "tools"
         },
         "description": "Low Brightness gives you finer control over your screen’s brightness beyond system limits. Useful in low-light environments, it lets you lower brightness more than the default minimum, reducing eye strain and saving battery when you’re in dark settings.",
-        "iconLogo": "https://raw.githubusercontent.com/D4rK7355608/com.d4rk.lowbrightness/refs/heads/master/app/src/main/play/listings/en-US/graphics/ic_launcher-playstore.png",
+        "iconLogo": "https://play-lh.googleusercontent.com/kEM4-UyGps_5_khAQ8egQCZBE3k-uR13GwhMzYFIhBu_Ry68ParJHnW41HO_AHBndw=w240-h480-rw",
         "screenshots": [
           {
             "url": "https://play-lh.googleusercontent.com/dRqiWuIwTgAU_YwQPGbSOl6lU-3BJF1ljTWLy8-XJaQ6oETqoUrYgruQ4Ld3ndGQ4Ds=w2560-h1440-rw",
@@ -233,7 +233,7 @@
           "category_id": "media"
         },
         "description": "Music Sleep Timer Plus lets you schedule playback pauses so your music winds down gracefully. Useful for listening while falling asleep, it supports adjustable timers, fade-out effects, and works with most music apps. Let your music help you drift off without playing all night.",
-        "iconLogo": "https://raw.githubusercontent.com/D4rK7355608/com.d4rk.musicsleeptimer.plus/refs/heads/master/app/src/main/play/listings/en-US/graphics/ic_launcher-playstore.png",
+        "iconLogo": "https://play-lh.googleusercontent.com/kHYUsuxg3so-SuVC_GWrInccbuViIr6w_Eeq3aQ54AgfeAjWMn6qS_TK-cKLRmLO2Xk=w240-h480-rw",
         "screenshots": [
           {
             "url": "https://play-lh.googleusercontent.com/DQ78LFvJvvUb_eA2t-WRWFS-nV1WrSbWNUfv-UExfrj7PeCrYcX9qLJJqbah7Yg60Y90EQi3YJkDUSPUYgXR5vw=w2560-h1440-rw",
@@ -265,7 +265,7 @@
           "category_id": "tools"
         },
         "description": "Net Probe is a network diagnostic utility for Android. Use it to test your connection, trace routes, ping servers, and monitor latency. Whether you’re debugging connectivity on mobile, Wi-Fi, or cellular, it helps you see where network issues might lie.",
-        "iconLogo": "https://raw.githubusercontent.com/D4rK7355608/com.d4rk.netprobe/refs/heads/main/app/src/main/play/listings/en-US/graphics/ic_launcher-playstore.png",
+        "iconLogo": "https://play-lh.googleusercontent.com/aSgWRCjkrCcSXiI7KUeg5sd7-avSRlXkQVh7_eb0DKewa5BHEL9Q0Ayl-hUKAMfWhKYr=w240-h480-rw",
         "screenshots": [
           {
             "url": "https://play-lh.googleusercontent.com/SLH4FzAS6cwe-uFxQn1_BX-yqI1qJ4vWln236C_fTPuBVMsAT3z6zjXAjsIpACZ3lP9H=w5120-h2880-rw",
@@ -289,7 +289,7 @@
           "category_id": "tools"
         },
         "description": "Scan QR codes and barcodes quickly and securely with QR & Bar Code Scanner Plus. It supports all common formats, works offline, saves scan history, and gives you links, product info, or embedded data. Lightweight and efficient, ideal for daily use.",
-        "iconLogo": "https://raw.githubusercontent.com/D4rK7355608/com.d4rk.qrcodescanner.plus/refs/heads/master/app/src/main/play/listings/en-US/graphics/ic_launcher-playstore.png",
+        "iconLogo": "https://play-lh.googleusercontent.com/mQ-U1IbiE9k1nb3ud4hnZ_GG9_LdsojFJ0NMmiYLhwOhJ2-i7jTtslpeNyFKBZ2O4oxCjV18VrFFjXB84Vp0Zw=w240-h480-rw",
         "screenshots": [
           {
             "url": "https://play-lh.googleusercontent.com/TzK2DPMKMM9i3VuJqi5tVQ47v3C0f3P-iQ1QdIgC5qT15wIDjDT_THC4HW6EJyMrQhOv=w5120-h2880-rw",
@@ -321,7 +321,7 @@
           "category_id": "utilities"
         },
         "description": "Shopping Cart Calculator helps you keep your shopping in check. Add items with price and quantity, and instantly see your total cost. Perfect for grocery runs or budgeting, it’s simple, intuitive, and lets you track your spend before you even reach checkout.",
-        "iconLogo": "https://raw.githubusercontent.com/D4rK7355608/com.d4rk.cartcalculator/refs/heads/master/app/src/main/play/listings/en-US/graphics/ic_launcher-playstore.png",
+        "iconLogo": "https://play-lh.googleusercontent.com/CkNaG6UIQAx-hWVpGApCjTK6Oq19iLjHdCtenNOV3fSbcx41mcnSDdB_sxtW5E9ujCs=w240-h480-rw",
         "screenshots": [
           {
             "url": "https://play-lh.googleusercontent.com/F3Dln9IlcbDahBIYOB4nPG_cykpO8uTmxNqBYFNkdulymo2b8ToWEY8iYrHaxPEodNVV=w2560-h1440-rw",
