@@ -21,7 +21,7 @@
   "license": "GPL-3.0-or-later",
   "type": "commonjs",
   "devDependencies": {
-    "@babel/core": "^7.26.0",
+    "@babel/core": "^7.29.6",
     "@babel/preset-env": "^7.26.0",
     "@tailwindcss/cli": "^4.1.13",
     "@tailwindcss/postcss": "^4.1.13",
