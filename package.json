@@ -57,7 +57,7 @@
     "@lottiefiles/dotlottie-wc": "^0.8.15",
     "beercss": "^3.13.1",
     "firebase": "^12.7.0",
-    "jsondiffpatch": "^0.7.3",
+    "jsondiffpatch": "^0.7.6",
     "material-dynamic-colors": "^1.1.2",
     "material-symbols": "^0.40.2"
   }
